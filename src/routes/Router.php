@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Router;
+namespace App\routes;
 
 /**
  * Routeur de l'application.
