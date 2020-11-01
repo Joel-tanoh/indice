@@ -1,0 +1,65 @@
+/* Bouton 'Créer' qui affiche la liste des liens pour ajouter des items */
+#addButton {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.add-button-icon {
+    padding: .3rem .5rem;
+    border-radius: .5rem;
+    cursor: pointer;
+    transition: .1s;
+}
+.add-button-icon:hover {
+    background-color: rgba(145, 211, 255, 0.24);
+}
+.add-button-content {
+    display: none;
+    position: absolute;
+    top: 2.4rem;
+}
+
+/** Bouton administrateur */
+.btn-administrateur {
+    position: relative;
+}
+#btnUserContent {
+    display: none;
+}
+#btnUserIcon:hover {
+    cursor: pointer;
+}
+.btn-administrateur .content {
+    position: absolute;
+    top: 2.75rem;
+}
+
+.add-button-content,
+.btn-administrateur .content {
+    width: 12rem;
+    background: rgba(255,255,255,1);
+    box-shadow: 0 0 .5rem rgba(0,0,0,0.1);
+    border-radius: .5rem;
+    padding: .4rem 0rem;
+    right: 0;
+}
+
+/* Les liens des menus */
+.add-button-content a,
+.btn-administrateur .content a {
+    display: block;
+    text-decoration: none;
+    padding: .5rem 1rem;
+    border-bottom: 1px solid rgb(231, 231, 231);
+}
+
+/* Le background des liens changent au survol */
+.add-button-content a:hover,
+.btn-administrateur .content a:hover {
+    background-color: rgba(176,220,239,.3);
+}
+/** Image utilisateur */
+.navbar-user-avatar {
+	width: 1.7rem;
+}

@@ -79,6 +79,10 @@ class ComposerStaticInit1fb9f3c0555421f94742fcd94f654a5d
             'Composer\\Semver\\' => 16,
             'Cocur\\Slugify\\' => 14,
         ),
+        'A' => 
+        array (
+            'App\\' => 4,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -219,6 +223,10 @@ class ComposerStaticInit1fb9f3c0555421f94742fcd94f654a5d
         'Cocur\\Slugify\\' => 
         array (
             0 => __DIR__ . '/..' . '/cocur/slugify/src',
+        ),
+        'App\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 

@@ -40,4 +40,5 @@ return array(
     'Composer\\XdebugHandler\\' => array($vendorDir . '/composer/xdebug-handler/src'),
     'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
     'Cocur\\Slugify\\' => array($vendorDir . '/cocur/slugify/src'),
+    'App\\' => array($baseDir . '/src'),
 );

@@ -1,0 +1,25 @@
+#slideBox {
+    position: relative;
+    height: 32rem;
+    overflow: hidden;
+}
+
+#slideText {
+    position: absolute;
+    top : 40%;
+    left: 8.99%;
+}
+
+#slideText h1 {
+    font-size: 3rem;
+    color : white;
+    text-shadow: 0 0 .5rem black;
+}
+
+#slideText div {
+    font-size: 2rem;
+}
+
+#slideText div span {
+    background-color: rgb(230, 0, 0);
+}
