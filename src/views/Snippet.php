@@ -105,18 +105,18 @@ HTML;
      */
     public function readItemContentHeader($item)
     {
-        $itemView = new ItemView($item);
+//         $itemView = new ItemView($item);
 
-        return <<<HTML
-        <div class="row mb-3">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center bg-white px-3 py-2 rounded">
-                    {$itemView->showTitle()}
-                    {$this->manageButtons($item)}
-                </div>
-            </div>
-        </div>
-HTML;
+//         return <<<HTML
+//         <div class="row mb-3">
+//             <div class="col-12">
+//                 <div class="d-flex justify-content-between align-items-center bg-white px-3 py-2 rounded">
+//                     {$itemView->showTitle()}
+//                     {$this->manageButtons($item)}
+//                 </div>
+//             </div>
+//         </div>
+// HTML;
     }
 
     /**

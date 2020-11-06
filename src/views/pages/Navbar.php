@@ -14,10 +14,7 @@
 
 namespace App\views\Pages;
 
-use App\backend\Cookie;
-use App\backend\Models\Users\Administrator;
-use App\backend\Session;
-use App\views\View;
+use App\views\Snippet;
 
 /**
  * Perlet de gérer tout ce qui concerne la barre de navigation supérieure.
@@ -28,7 +25,7 @@ use App\views\View;
  * @license  url.com License
  * @link     Link
  */
-class Navbar extends View
+class Navbar extends Snippet
 {
     /**
      * Barre de navigation supérieure de la partie publique.
@@ -38,20 +35,45 @@ class Navbar extends View
     public function publicNavbar()
     {
         return <<<HTML
-        <nav class="navbar navbar-expand-md navbar-dark bg-marron">
-            <div class="container">
-                {$this->navbarBrand(LOGOS_DIR_URL."/logo_3.png", PUBLIC_URL, APP_NAME)}
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="navbar-toggler-icon"></i>
-                </button>
-                <div class="collapse navbar-collapse d-md-flex justify-content-between" id="navbarNav">
-                    {$this->publicNavbarLinks()}
+        <aside>
+            <div class="d-flex justify-content-between align-items-center p-2">
+                {$this->navbarBrand(LOGOS_DIR_URL."/1.png", APP_URL, APP_NAME)}
+                {$this->ads()}
+                <div>
+                    <a href="creer-un-compte" class="btn btn-success">Créer son compte</a>
+                    <a href="creer-une-annonce" class="btn btn-primary">Créer une annonce</a>
                 </div>
+            </div>
+            <header>
+                <nav class="navbar">
+
+                </nav>
+            </header>
+        </aside>
+HTML;
+    }
+
+    /**
+     * Barre de navigation supérieure de la partie publique.
+     * 
+     * @return string
+     */
+    public function publicNavbar2()
+    {
+        return <<<HTML
+        <nav class="navbar navbar-expand-md navbar-light">
+            {$this->navbarBrand(LOGOS_DIR_URL."/1.png", APP_URL, APP_NAME)}
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="navbar-toggler-icon"></i>
+            </button>
+            <div class="collapse navbar-collapse d-md-flex justify-content-between" id="navbarNav">
+                {$this->publicNavbarLinks()}
             </div>
         </nav>
 HTML;
     }
+
 
     /**
      * Barre de navigation supérieure de la partie administration.
@@ -69,12 +91,25 @@ HTML;
         </nav>
 HTML;
     }
+    
+    /**
+     * Affiche la barre de publicité dans le topbar.
+     * 
+     * @return string
+     */
+    private function ads()
+    {
+        return <<<HTML
+        <img src="" alt="Une publicité apparaitra ici" class="d-none d-xl-block">
+HTML;
+    }
+
 
     /**
      * Permet d'afficher le logo dans la navbar.
      * 
-     * @param string $brandSrc        Le lien vers l'image.
-     * @param string $href  L'url exécuté lors du click sur le logo.
+     * @param string $brandSrc Le lien vers l'image.
+     * @param string $href     L'url exécuté lors du click sur le logo.
      * @param string $caption  Le texte à afficher si l'image introuvable.
      * 
      * @return string
@@ -83,7 +118,7 @@ HTML;
     {
         return <<<HTML
         <a class="navbar-brand" href="{$href}">
-            <img src="{$brandSrc}" alt="{$caption}" class="brand">
+            <img src="{$brandSrc}" alt="{$caption}" class="brand" style="width:15rem">
         </a>
 HTML;
     }
@@ -139,23 +174,23 @@ HTML;
      */
     private function manageAdministratorsButtons()
     {
-        $login = Session::getAdministratorSessionVar() ?? Cookie::getAdministratorCookieVar();
-        $adminUser = Administrator::getByLogin($login);
+        // $login = Session::getAdministratorSessionVar() ?? Cookie::getAdministratorCookieVar();
+        // $adminUser = Administrator::getByLogin($login);
 
-        return <<<HTML
-        <li class="btn-administrateur">
-            <a id="btnUserIcon" class="nav-link d-flex align-items-center">
-                {$this->navbarUserAvatar($adminUser->getAvatarSrc(), $adminUser->getLogin())}
-                <span class="fas fa-caret-down"></span>
-            </a>
-            <ul id="btnUserContent" class="content border list-unstyled">
-                {$this->administratorReservedActions()}
-                <li>
-                    <a class="bg-danger text-white" href="admin/deconnexion">Déconnexion</a>
-                </li>
-            </ul>
-        </li>
-HTML;
+        // return <<<HTML
+        // <li class="btn-administrateur">
+        //     <a id="btnUserIcon" class="nav-link d-flex align-items-center">
+        //         {$this->navbarUserAvatar($adminUser->getAvatarSrc(), $adminUser->getLogin())}
+        //         <span class="fas fa-caret-down"></span>
+        //     </a>
+        //     <ul id="btnUserContent" class="content border list-unstyled">
+        //         {$this->administratorReservedActions()}
+        //         <li>
+        //             <a class="bg-danger text-white" href="admin/deconnexion">Déconnexion</a>
+        //         </li>
+        //     </ul>
+        // </li>
+// HTML;
     }
 
     /**
@@ -175,33 +210,33 @@ HTML;
 HTML;
     }
 
-    /**
-     * Retourne les liens réservés qu'aux administrateurs dans la barre de navigation
-     * supérieure de la partie adminsitration.
-     * 
-     * @return string
-     */
-    private function administratorReservedActions()
-    {
-        $login = Session::getAdministratorSessionVar() ?? Cookie::getAdministratorCookieVar();
-        $adminUser = Administrator::getByLogin($login);
+//     /**
+//      * Retourne les liens réservés qu'aux administrateurs dans la barre de navigation
+//      * supérieure de la partie adminsitration.
+//      * 
+//      * @return string
+//      */
+//     private function administratorReservedActions()
+//     {
+//         $login = Session::getAdministratorSessionVar() ?? Cookie::getAdministratorCookieVar();
+//         $adminUser = Administrator::getByLogin($login);
 
-        $adminUrl = "admin";
+//         $adminUrl = "admin";
 
-        if ($adminUser->hasAllRights()) {
-            return <<<HTML
-            <li>
-                <a href="{$adminUrl}/administrateurs" class="text-primary">Lister les comptes</a>
-            </li>
-            <!-- <li>
-                <a href="{$adminUrl}/administrateurs/create" class="text-primary">Ajouter un nouveau compte</a>
-            </li>
-            <li>
-                <a href="{$adminUrl}/administrateurs/delete" class="text-primary">Supprimer un compte</a>
-            </li> -->
-HTML;
-        }
-    }
+//         if ($adminUser->hasAllRights()) {
+//             return <<<HTML
+//             <li>
+//                 <a href="{$adminUrl}/administrateurs" class="text-primary">Lister les comptes</a>
+//             </li>
+//             <!-- <li>
+//                 <a href="{$adminUrl}/administrateurs/create" class="text-primary">Ajouter un nouveau compte</a>
+//             </li>
+//             <li>
+//                 <a href="{$adminUrl}/administrateurs/delete" class="text-primary">Supprimer un compte</a>
+//             </li> -->
+// HTML;
+//         }
+//     }
 
     /**
      * Retourne les liens de la navbar publique.
@@ -210,28 +245,19 @@ HTML;
      */
     private function publicNavbarLinks()
     {
-        $public_url = PUBLIC_URL;
-
         return <<<HTML
         <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{$public_url}/a_propos">A propos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{$public_url}/communaute">Rejoindre la communauté</a>
-            </li>
+            {$this->navLink(APP_URL, "Accueil")}
         </ul>
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{$public_url}">Accueil</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{$public_url}/articles">Articles</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{$public_url}/videos">Vidéos</a>
-            </li>
-        </ul>
+HTML;
+    }
+
+    private function navLink(string $href, string $caption)
+    {
+        return <<<HTML
+        <li class="nav-item">
+            <a class="nav-link" href="{$href}">{$caption}</a>
+        </li>
 HTML;
     }
 

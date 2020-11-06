@@ -77,6 +77,9 @@ class Image extends File
      */
     const LOGOS_PATH = self::IMAGES_PATH . "logos" . DIRECTORY_SEPARATOR;
 
+    /**
+     * Dossier des slides.
+     */
     const SLIDERS_PATH = self::IMAGES_PATH . "slider" . DIRECTORY_SEPARATOR;
 
     /**

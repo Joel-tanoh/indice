@@ -1,19 +1,6 @@
 <?php
 
-/**
- * Fichier de classe.
- * 
- * PHP version 7.1.9
- * 
- * @category Category
- * @package  Package
- * @author   Joel <joel.developpeur@gmail.com>
- * @license  url.com license_name
- * @version  "CVS: cvs_id"
- * @link     Link
- */
-
-namespace App\backend\database;
+namespace App\database;
 
 use PDO;
 use PDOException;
@@ -51,14 +38,7 @@ class Database
      * @param string $dbCharset  L'encodage des caractères.
      * 
      */
-    public function __construct(
-        string $dbName = null,
-        string $dbLogin = null ,
-        string $dbPassword = null ,
-        string $dbAddress = "127.0.0.1",
-        string $sgbd = "mysql",
-        string $dbCharset = "utf8"
-    ) {
+    public function __construct(string $dbName = null, string $dbLogin = null , string $dbPassword = null , string $dbAddress = "127.0.0.1", string $sgbd = "mysql", string $dbCharset = "utf8") {
         $this->dbName       = $dbName;
         $this->dbLogin      = $dbLogin;
         $this->dbPassword   = $dbPassword;
@@ -119,13 +99,7 @@ class Database
      * @return array Retourne un tableau à deux dimensions, un niveua numérique et un niveau qui contient
      *               les résultats de la requête.
      */
-    public function get(
-        string $toGet, 
-        string $tableName, 
-        string $whereColName = null, 
-        $whereColValue = null, 
-        string $colToOrderBy = null
-    ) {
+    public function get(string $toGet,  string $tableName,  string $whereColName = null,  $whereColValue = null,  string $colToOrderBy = null) {
         $query = "SELECT $toGet FROM $tableName";
 
         if ($whereColName) {

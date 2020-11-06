@@ -1,6 +1,21 @@
 <?php
 
-namespace App\routes;
+/**
+ * Description
+ * 
+ * PHP version 7.1.9
+ * 
+ * @category Category
+ * @package  Package
+ * @author   Joel <joel.developpeur@gmail.com>
+ * @license  url.com license_name
+ * @version  GIT: Joel_tanoh
+ * @link     Link
+ */
+
+namespace App\Routes;
+
+use App\routes\Route;
 
 /**
  * Routeur de l'application.
@@ -57,7 +72,7 @@ class Router
      * @param string $path
      * @param string $action
      */
-    public function publish(string $path, string $action)
+    public function post(string $path, string $action)
     {
         $this->routes["POST"][] = new Route($path, $action);
     }

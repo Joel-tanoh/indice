@@ -360,38 +360,6 @@ class Validator
     }
 
     /**
-     * Permet de valider une variable.
-     * 
-     * @param mixed  $var               La variable à valider.
-     * @param int    $lvl               Le niveau de validation à appliquer.
-     * @param string $errorsTabKey      La clé identifiant le tableau des erreurs concernant la
-     *                                  variable checkée. 
-     * @param string $nameInErrorString Le nom identifiant la varibale et qui sera affiché dans la
-     *                                  chaîne de caractère retournée lorsqu'il y'a erreur.
-     * 
-     * @return void
-     */
-    public function validate($var, int $lvl, string $errorsTabKey, string $nameInErrorString)
-    {
-        if ($lvl === 1) {
-            if (empty($var)) $this->errors[$errorsTabKey][] = $nameInErrorString . " ne doit pas être vide";
-        }
-
-        if ($lvl === 2) {
-
-        }
-
-        if ($lvl === 3) {
-            if ($this->containsHTML($var)) $this->errors[$errorsTabKey][] = $nameInErrorString . " ne doit pas pas contenir du HTML";
-        }
-
-        if ($lvl === 4) {
-
-        }
-        
-    }
-
-    /**
      * Retourne true si la chaîne de caractère passée en paramètre contient du code
      * HTML.
      * 

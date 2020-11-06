@@ -13,7 +13,7 @@
  * @link     Link
  */
 
-namespace App\backend\database;
+namespace App\database;
 
 /**
  * Gère les requêtes SQL.

@@ -28,7 +28,7 @@ use App\views\Pages\Template;
  * @version  Release: 1
  * @link     Link
  */
-class PageBuilder extends View
+class Page extends View
 {
     private $metaTitle;
     private $description;
@@ -83,6 +83,18 @@ class PageBuilder extends View
     public function setView(string $content)
     {
         $this->content = $content;
+    }
+
+    /**
+     * Affiche la page.
+     */
+    public function show(string $appPart)
+    {
+        if ($appPart = "public") {
+            $this->publicPage();
+        } elseif ($appPart = "administration") {
+            $this->adminPage();
+        }
     }
 
     /**
@@ -179,7 +191,7 @@ HTML;
      */
     private function metaData()
     {
-        $base = PUBLIC_URL;
+        $base = APP_URL;
 
         return <<<HTML
         <meta charset="utf-8">
@@ -227,8 +239,6 @@ HTML;
      */
     private function adminCss()
     {
-        $theme = "default";
-
         return <<<HTML
         {$this->generalAppCss()}
         {$this->callCssFile("app/css/connexion.css")}
@@ -253,8 +263,6 @@ HTML;
      */
     private function adminJs()
     {
-        $theme = "default";
-        
         return <<<HTML
         {$this->generalAppJs()}
         {$this->callJsFile("app/js/admin.js")}
@@ -349,16 +357,16 @@ HTML;
     /**
      * Retourne une balise link pour le fichiers css.
      * 
-     * @param string $css_file_name Nom du fichier css.
+     * @param string $cssFileName Nom du fichier css.
      * 
      * @return string
      */
-    private function callCssFile($css_file_name)
+    private function callCssFile($cssFileName)
     {
-        $assetsDir = PUBLIC_URL . "/assets";
+        $assetsDir = ASSETS_DIR_URL;
 
         return <<<HTML
-        <link rel="stylesheet" type="text/css" href="{$assetsDir}/{$css_file_name}">
+        <link rel="stylesheet" type="text/css" href="{$assetsDir}/{$cssFileName}">
 HTML;
     }
 
@@ -366,16 +374,16 @@ HTML;
      * Retourne une balise script pour appeler le fichier javascript passé
      * en paramètre.
      * 
-     * @param string $js_file_name Nom du fichier javascript.
+     * @param string $jsFileName Nom du fichier javascript.
      * 
      * @return string
      */
-    private function callJsFile($js_file_name)
+    private function callJsFile($jsFileName)
     {
-        $assetsDir = PUBLIC_URL . "/assets";
+        $assetsDir = APP_URL . "/assets";
 
         return <<<HTML
-        <script src="{$assetsDir}/{$js_file_name}"></script>
+        <script src="{$assetsDir}/{$jsFileName}"></script>
 HTML;
     }
 

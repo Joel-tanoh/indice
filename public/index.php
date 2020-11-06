@@ -5,16 +5,23 @@
  */
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.php";
-require_once ROOT_PATH . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
 
 use App\routes\Router;
+use App\controllers\AppController;
 
 try {
 
-    $router = new Router(Router::RequestUri());
+    $cats = ["chips, Buffy, Globs, Cracs"];
 
-    echo "<pre>";
-    var_dump($router);
+    $router = new Router(Router::GETUrl());
+    
+    if ($router->matches("")) {
+        (new AppController())->index();
+    }
+
+    else {
+        (new AppController())->pageNotFound();
+    }
 
 } catch(Error|TypeError|Exception|PDOException $e) {
     $exception = 'Erreur : ' . $e->getMessage() . ', Fichier : ' . $e->getFile() . ', Ligne : ' . $e->getLine();

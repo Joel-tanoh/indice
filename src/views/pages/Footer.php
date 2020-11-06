@@ -14,7 +14,7 @@
 
 namespace App\views\Pages;
 
-use App\views\View;
+use App\views\Snippet;
 
 /**
  * Gère tout ce qui concerne le pied de page
@@ -24,7 +24,7 @@ use App\views\View;
  * @license  url.com License
  * @link     Link
  */
-class Footer extends View
+class Footer extends Snippet
 {
     /**
      * Pied de page
@@ -35,8 +35,9 @@ class Footer extends View
     public function publicFooter() : string
     {
         return <<<HTML
-        <footer class="footer bg-dark">
+        <footer class="footer">
             <div class="container">
+                
             </div>
         </footer>
 HTML;

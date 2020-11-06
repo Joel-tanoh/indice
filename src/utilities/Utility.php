@@ -1,18 +1,6 @@
 <?php
-/**
- * Description
- * 
- * PHP version 7.1.9
- * 
- * @category Category
- * @package  Package
- * @author   Joel <joel.developpeur@gmail.com>
- * @license  url.com license_name
- * @version  "CVS: cvs_id"
- * @link     Link
- */
 
-namespace App\backend\Utilities;
+namespace App\Utilities;
 
 use Cocur\Slugify\Slugify;
 
@@ -62,7 +50,7 @@ class Utility
      * 
      * @return void
      */
-    static function header(string $url = "")
+    static function redirect(string $url = "")
     {
         header("location: " . $url);
         exit();
@@ -87,8 +75,8 @@ class Utility
      * @param string $date      Au format YYYY-mm-dd HH:ii:ss.
      * @param string $precision Permet de spécifier si l'on veut seulement
      *                          le jour ou l'heure. Si l'on veut le jour, on
-     *                          passe en paramètre "day", si l'on veut l'heure
-     *                          , on passe en paramètre "hour".
+     *                          passe en paramètre "D", si l'on veut l'heure,
+     *                          on passe en paramètre "H".
      * 
      * @return string
      */
@@ -104,12 +92,12 @@ class Utility
 
         $month = Utility::convertMonth($month);
 
-        if ($precision === "day") {
+        if ($precision === "D") {
             return $day . " " . $month . " " . $year;
-        } elseif ($precision === "hour") {
+        } elseif ($precision === "H") {
             return $hour . ':' . $min;
         } else {
-            return $day ." ". $month ." ". $year ." ". $hour .':'. $min;
+            return "$day $month $year $hour : $min";
         }
     }
 

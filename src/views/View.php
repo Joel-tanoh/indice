@@ -1,17 +1,21 @@
 <?php
 
-/**
- * Fichier de classe.
- * 
- * @author Joel Tanoh <joel.developpeur@gmail.com>
- */
-
 namespace App\views;
 
 /**
  * Classe View. Regroupe toutes les vues de l'application.
  */
-abstract class View
+class View
 {
 
+    public function index()
+    {
+        return <<<HTML
+HTML;
+    }
+
+    public function pageNotFound()
+    {
+        return "Vue de la page 404";
+    }
 }
