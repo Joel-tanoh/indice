@@ -14,10 +14,10 @@
 
 namespace App\views;
 
-use App\backend\Models\Items\ItemParent;
-use App\backend\Models\Items\ItemChild;
-use App\backend\Models\Entity;
-use App\backend\Utilities\Utility;
+use App\Models\Items\ItemParent;
+use App\Models\Items\ItemChild;
+use App\Models\Entity;
+use App\Utilities\Utility;
 
 /**
  * Classe qui gère les formulaires.
@@ -921,7 +921,7 @@ HTML;
      * Retourne une textarea pour qui contient le contenu de l'article à modifier,
      * ce contenu est récupéré et afficher comme texte par défaut du textarea summernote.
      * 
-     * @param \App\backend\Models\Items\ItemChild $item
+     * @param \App\Models\Items\ItemChild $item
      * 
      * @return string Une balise de type textarea
      */

@@ -14,6 +14,7 @@
 
 namespace App\views\Pages;
 
+use App\Files\Image;
 use App\views\Snippet;
 
 /**
@@ -37,10 +38,10 @@ class Navbar extends Snippet
         return <<<HTML
         <aside>
             <div class="d-flex justify-content-between align-items-center p-2">
-                {$this->navbarBrand(LOGOS_DIR_URL."/1.png", APP_URL, APP_NAME)}
+                {$this->navbarBrand(Image::LOGOS_DIR_URL."/1.png", APP_URL, APP_NAME)}
                 {$this->ads()}
                 <div>
-                    <a href="creer-un-compte" class="btn btn-success">Créer son compte</a>
+                    <a href="connexion" class="btn btn-success">Se connecter</a>
                     <a href="creer-une-annonce" class="btn btn-primary">Créer une annonce</a>
                 </div>
             </div>
@@ -62,7 +63,7 @@ HTML;
     {
         return <<<HTML
         <nav class="navbar navbar-expand-md navbar-light">
-            {$this->navbarBrand(LOGOS_DIR_URL."/1.png", APP_URL, APP_NAME)}
+            {$this->navbarBrand(Image::LOGOS_DIR_URL."/1.png", APP_URL, APP_NAME)}
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="navbar-toggler-icon"></i>

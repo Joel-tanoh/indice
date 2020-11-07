@@ -9,8 +9,8 @@
 namespace App\views;
 
 use App\Router\Router;
-use App\backend\Models\Entity;
-use App\backend\Models\Users\Visitor;
+use App\Models\Entity;
+use App\Models\Users\Visitor;
 use App\views\Models\Items\ItemView;
 use App\views\Models\Items\ItemParentView;
 use App\views\Models\Items\ItemChildView;
@@ -99,7 +99,7 @@ HTML;
     /**
      * Retourne l'entête sur la page de lecture d'un item.
      * 
-     * @param \App\backend\Models\Items\ItemParent|\App\backend\Models\Items\ItemChild $item
+     * @param \App\Models\Items\ItemParent|\App\Models\Items\ItemChild $item
      * 
      * @return string
      */
@@ -122,7 +122,7 @@ HTML;
     /**
      * Retourne les boutons pour publier, supprimer ou modifier l'instance.
      * 
-     * @param \App\backend\Models\Items\ItemParent|\App\backend\Models\Items\ItemChild $item L'objet pour lequel on doit afficher le bouton.
+     * @param \App\Models\Items\ItemParent|\App\Models\Items\ItemChild $item L'objet pour lequel on doit afficher le bouton.
      * 
      * @return string
      */
@@ -166,7 +166,7 @@ HTML;
     /**
      * Affiche les données.
      * 
-     * @param \App\backend\Models\Items\ItemParent|\App\backend\Models\Items\ItemChild $item L'item dont on affiche les données.
+     * @param \App\Models\Items\ItemParent|\App\Models\Items\ItemChild $item L'item dont on affiche les données.
      * 
      * @return string
      */
@@ -192,7 +192,7 @@ HTML;
     /**
      * Retourne l'image de l'item passé en paramètre.
      * 
-     * @param \App\backend\Models\Items\ItemChild|\App\backend\Models\Items\ItemParent $item 
+     * @param \App\Models\Items\ItemChild|\App\Models\Items\ItemParent $item 
      * 
      * @return string
      */
@@ -261,7 +261,7 @@ HTML;
      * Retourne une vue qui affiche l'ensemble des données principales
      * pour l'item passé en paramètre.
      * 
-     * @param \App\backend\Models\Items\ItemParent|\App\backend\Models\Items\ItemChild $item
+     * @param \App\Models\Items\ItemParent|\App\Models\Items\ItemChild $item
      * 
      * @return string
      */
@@ -386,7 +386,7 @@ HTML;
     /**
      * Bouton d'édition d'un item.
      * 
-     * @param \App\backend\Models\Items\ItemParent|\App\backend\Models\Items\ItemChild $item L'objet pour lequel on doit afficher le bouton.
+     * @param \App\Models\Items\ItemParent|\App\Models\Items\ItemChild $item L'objet pour lequel on doit afficher le bouton.
      * 
      * @return string
      */
@@ -398,7 +398,7 @@ HTML;
     /**
      * Bouton de publish ou de unpublish d'un item.
      * 
-     * @param \App\backend\Models\Items\ItemParent|\App\backend\Models\Items\ItemChild $item L'objet pour lequel on doit afficher le bouton.
+     * @param \App\Models\Items\ItemParent|\App\Models\Items\ItemChild $item L'objet pour lequel on doit afficher le bouton.
      * 
      * @return string
      */
@@ -414,7 +414,7 @@ HTML;
     /**
      * Bouton de suppression d'un item.
      * 
-     * @param \App\backend\Models\Items\ItemParent|\App\backend\Models\Items\ItemChild $item L'objet pour lequel on doit afficher le bouton.
+     * @param \App\Models\Items\ItemParent|\App\Models\Items\ItemChild $item L'objet pour lequel on doit afficher le bouton.
      * 
      * @return string
      */
@@ -562,11 +562,11 @@ HTML;
     /**
      * Retourne l'image de couverture de l'item passé en paramètre.
      * 
-     * @param \App\backend\Models\Items\Item $item
+     * @param \App\Models\Items\Item $item
      * 
      * @return string
      */
-    private function thumbs(\App\backend\Models\Items\Item $item)
+    private function thumbs(\App\Models\Items\Item $item)
     {
         return <<<HTML
         <div>
@@ -610,7 +610,7 @@ HTML;
     /**
      * Retourne une ligne dans le tableau de suppression des éléments.
      * 
-     * @param \App\backend\Models\Items\ItemParent|\App\backend\Models\Items\ItemChild $item
+     * @param \App\Models\Items\ItemParent|\App\Models\Items\ItemChild $item
      * 
      * @return string
      */

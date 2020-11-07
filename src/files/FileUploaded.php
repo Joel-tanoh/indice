@@ -13,7 +13,7 @@
  * @link     Link
  */
 
-namespace App\backend\Files;
+namespace App\Files;
 
 /**
  * Gère une Les fichier uploadés.

@@ -15,6 +15,7 @@
 
 namespace App\views\Pages;
 
+use App\Files\Image;
 use App\views\View;
 use App\views\Pages\Template;
 
@@ -33,6 +34,8 @@ class Page extends View
     private $metaTitle;
     private $description;
     private $content;
+    private $navbarState;
+    private $footerState;
 
     /**
      * Permet de créer une page.
@@ -47,6 +50,8 @@ class Page extends View
         $this->metaTitle = $metaTitle;
         $this->description = $description;
         $this->content = $content;
+        $this->navbarState = true;
+        $this->footerState = true;
     }
 
     /**
@@ -86,15 +91,25 @@ class Page extends View
     }
 
     /**
-     * Affiche la page.
+     * Permet de spécifier si l'on veut voir la navbar sur la page.
+     * 
+     * @param bool $navbarState True si on veut que la navbar apparaisse sur la page,
+     *                          False sinon.
      */
-    public function show(string $appPart)
+    public function showNavbar(bool $navbarState)
     {
-        if ($appPart = "public") {
-            $this->publicPage();
-        } elseif ($appPart = "administration") {
-            $this->adminPage();
-        }
+        $this->navbarState = $navbarState;
+    }
+
+    /**
+     * Permet de spécifier si l'on veut voir le footer sur la page.
+     * 
+     * @param bool $navbarState true si on veut que le footer apparaisse sur la page,
+     *                          false sinon.
+     */
+    public function showFooter(bool $footerState)
+    {
+        $this->footerState = $footerState;
     }
 
     /**
@@ -102,12 +117,8 @@ class Page extends View
      * 
      * @return string
      **/
-    public function publicPage()
+    public function show()
     {
-        $navbar = new Navbar();
-        $footer = new Footer();
-        $template = new Template();
-
         echo <<<HTML
         {$this->debutDePage("fr")}
         <head>
@@ -115,34 +126,8 @@ class Page extends View
             {$this->publicCss()}
         </head>
         <body>
-            {$template->navbarAndContainerAndFooter($navbar->publicNavbar(), $this->content, $footer->publicFooter())}
-            {$this->generalAppJs()}
-        </body>
-        </html>
-HTML;
-    }
-
-    /**
-     * Affiche la page d'administration.
-     * 
-     * @return string
-     **/
-    public function adminPage()
-    {
-        $navbar = new Navbar();
-        $sidebar = new Sidebar();
-        $template = new Template();
-        $this->metaTitle = 'Administration - ' . APP_NAME;
-
-        echo <<<HTML
-        {$this->debutDePage("fr")}
-        <head>
-            {$this->metaData()}
-            {$this->adminCss()}
-        </head>
-        <body id="adminSite" class="bg-blueish">
-            {$template->navbarAndSidebarAndContainer($navbar->AdministrationNavbar(), $sidebar->adminSidebar(), $this->content)}
-            {$this->adminJs()}
+            {$this->template()}
+            {$this->publicJs()}
         </body>
         </html>
 HTML;
@@ -167,6 +152,30 @@ HTML;
         </body>
         </html>
 HTML;
+    }
+
+    /**
+     * Template
+     * 
+     * @return string
+     */
+    private function template()
+    {
+        $navbar = new Navbar();
+        $footer = new Footer();
+        $template = new Template();
+
+        if ($this->navbarState == true && $this->footerState == true) {
+            return $template->navbarAndContentAndFooter(
+                $navbar->publicNavbar(), $this->content, $footer->publicFooter()
+            );
+        } elseif ($this->navbarState == true && $this->footerState == false) {
+            return $template->navbarAndContent($navbar->publicNavbar(), $this->content);
+        } elseif ($this->navbarState == false && $this->footerState == true) {
+            return $template->contentAndFooter($this->content, $footer->publicFooter());
+        } else {
+            return $this->content;
+        }
     }
 
     /**
@@ -211,7 +220,7 @@ HTML;
      */
     private function appIcon()
     {
-        $logosDir = LOGOS_DIR_URL;
+        $logosDir = Image::LOGOS_DIR_URL;
 
         return <<<HTML
         <link rel="icon" href="{$logosDir}/favicon.svg" type="image/x-icon">
@@ -253,6 +262,7 @@ HTML;
     private function publicJs()
     {
         return <<<HTML
+        {$this->generalAppJs()}
 HTML;
     }
 

@@ -9,16 +9,16 @@
 define("APP_NAME", "Indice");
 
 /** Nom de la base de données */
-define("DB_NAME", "");
+define("DB_NAME", "indice");
 
 /** Adresse du serveur */
 define("DB_ADDRESS", "localhost");
 
 /** Login de la base de données */
-define("DB_LOGIN", "");
+define("DB_LOGIN", "root");
 
 /** Mot de passe de connexion à la base de données */
-define("DB_PASSWORD", "");
+define("DB_PASSWORD", "Joel1997@admin");
 
 // Chemin du dossier racine de l'application
 define("ROOT_PATH", dirname(__DIR__) . DIRECTORY_SEPARATOR);
@@ -31,3 +31,6 @@ require_once "constants.php";
 
 // Appel de l'autoloader
 require_once ROOT_PATH . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
+
+// Appel du fichier contenant les fonctions générales
+require_once ROOT_PATH . "src" . DIRECTORY_SEPARATOR . "functions.php";

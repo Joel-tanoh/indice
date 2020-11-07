@@ -10,11 +10,11 @@ class Session extends Authentification
     /**
      * Initie la variable de session.
      * 
-     * @param \App\backend\Models\Users\Administrator $administrator
+     * @param \App\Models\Users\Administrator $administrator
      * 
      * @return bool
      */
-    public static function setAdministratorSessionVar(\App\backend\Models\Users\Administrator $administrator)
+    public static function setAdministratorSessionVar(\App\Models\Users\Administrator $administrator)
     {
         $_SESSION["attitude_efficace_administrator_login"] = ucfirst($administrator->getLogin());
     }

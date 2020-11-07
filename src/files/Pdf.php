@@ -13,7 +13,7 @@
  * @link     Link
  */
 
-namespace App\backend\Files;
+namespace App\Files;
 
 use Exception;
 
@@ -39,7 +39,9 @@ class Pdf extends File
     /**
      * Le chemin du dossier qui contient les fichiers PDF.
      */
-    const PDF_PATH = parent::FILES_PATH . "pdf" . DIRECTORY_SEPARATOR;
+    const PDF_PATH = parent::FILES_DIR_PATH . "pdf" . DIRECTORY_SEPARATOR;
+
+    const PDF_DIR_URL = File::FILES_DIR_URL . "/pdf";
 
     /**
      * Vérifie que c'est un fichier PDF.

@@ -1,9 +1,11 @@
 <?php
 
-namespace App\backend;
+namespace App\auth;
 
+use App\Auth\Password;
 use App\Models\Users\Administrator;
 use App\Models\Learning\Users\Registered;
+use App\Models\User;
 use App\Utilities\Validator;
 
 /**
@@ -85,11 +87,10 @@ class Authentification
      * 
      * @param string $emailAddress
      * @param string $password
-     * @param string $userCategorie
      * 
      * @return bool
      */
-    public static function authentificateUser($emailAddress, $password, $userCategorie)
+    public static function authenticateUser($emailAddress, $password)
     {
         if (null === $emailAddress) {
             return false;
@@ -97,26 +98,14 @@ class Authentification
 
             $validator = new Validator();
 
-            if ($validator->validateEmail($emailAddress)) {
+            if ($validator->isEmailAddress($emailAddress)) {
 
-                if ($userCategorie === "registereds")
-                    $user = Registered::getByEmail($emailAddress);
-
-                elseif ($userCategorie === "administrateurs")
-                    $user = Administrator::getByEmail($emailAddress);
+                $user = User::getByEmailAddress($emailAddress);
 
                 if ($user) {
 
-                    if (password_verify($password, $user->getPassword())) {
-
-                        if ($user->getCategorie() === "administrateurs") {
-
-                        } elseif ($user->getCategorie() === "registereds") {
-
-                        }
-                        
+                    if (Password::verifyHash($password, $user->getPassword())) {
                         return true;
-                        
                     } else {
                         return false;
                     }

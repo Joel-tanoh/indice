@@ -91,24 +91,4 @@ HTML;
 HTML;
     }
 
-    /**
-     * Affiche une carte de miniservice.
-     * 
-     * @param \App\backend\Models\Items\ItemChild $item
-     * 
-     * @return string
-     */
-    public static function miniserviceCard(\App\backend\Models\Items\ItemChild $item)
-    {
-        return <<<HTML
-        <div class="col-12 col-sm-6 col-md-3">
-            <img class="img-fluid" src="{$item->getThumbsSrc()}" alt="{$item->getSlug()}">
-            <div class="bg-white p-3">
-                <p>{$item->getDescription()}</p>
-                <a class="btn-sm btn-success" href="{$item->getUrl()}">Voir plus</a>
-            </div>
-        </div>
-HTML;
-    }
-
 }

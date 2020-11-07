@@ -8,15 +8,27 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPAR
 
 use App\routes\Router;
 use App\controllers\AppController;
+use App\views\Pages\Page;
+use App\views\View;
 
 try {
-
-    $cats = ["chips, Buffy, Globs, Cracs"];
 
     $router = new Router(Router::GETUrl());
     
     if ($router->matches("")) {
-        (new AppController())->index();
+        AppController::index();
+    }
+
+    elseif ($router->matches("connexion")) {
+        App\controllers\UserController::userConnexion();
+    }
+
+    elseif ($router->matches("creer-un-compte")) {
+        App\controllers\UserController::createAccount();
+    }
+
+    elseif ($router->matches("creer-une-annonce")) {
+        App\controllers\AnnounceController::createAnnounce();
     }
 
     else {
@@ -24,6 +36,6 @@ try {
     }
 
 } catch(Error|TypeError|Exception|PDOException $e) {
-    $exception = 'Erreur : ' . $e->getMessage() . ', Fichier : ' . $e->getFile() . ', Ligne : ' . $e->getLine();
-    echo $exception;
+    $page = new Page("Le leader des petites annonces en Côte d'Ivoire", View::exception($e));
+    $page->show();
 }

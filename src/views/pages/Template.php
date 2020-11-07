@@ -44,12 +44,8 @@ class Template extends View
     public function navbarAndSidebarAndContainer($navbar = null, $sidebar = null, $content = null)
     {
         return <<<HTML
-        <header>
-            {$navbar}
-        </header>
-        <section>
-            {$sidebar}
-        </section>
+        {$navbar}
+        {$sidebar}
         <div class="container-fluid mb-3" id="containerWithFixedSidebarNavbar">
             {$content}
         </div>
@@ -65,16 +61,12 @@ HTML;
      * 
      * @return string
      */
-    public function navbarAndContainerAndFooter($navbar = null, $content = null, $footer = null)
+    public function navbarAndContentAndFooter($navbar = null, $content = null, $footer = null)
     {
         return <<<HTML
-        <header>
-            {$navbar}
-        </header>
+        {$navbar}
         {$content}
-        <footer>
-            {$footer}
-        </footer>
+        {$footer}
 HTML;
     }
 
@@ -86,15 +78,19 @@ HTML;
      * 
      * @return string
      */
-    public function fixedNavbarAndContainer($navbar = null, $content = null)
+    public function navbarAndContent($navbar, $content)
     {
         return <<<HTML
-        <header>
-            {$navbar}
-        </header>
-        <div id="content" class="container">
-            {$content}
-        </div>
+        {$navbar}
+        {$content}
+HTML;
+    }
+
+    public function contentAndFooter($content, $footer)
+    {
+        return <<<HTML
+        {$content}
+        {$footer}
 HTML;
     }
 
@@ -107,7 +103,7 @@ HTML;
      * 
      * @return string
      */
-    public function fixedSidebarAndContainer($sidebar = null, $content = null)
+    public function sidebarAndContainer($sidebar = null, $content = null)
     {
         return <<<HTML
         <section>
@@ -153,7 +149,7 @@ HTML;
         foreach ($itemsForCards as $item) {
 
             if ($item->getCategorie() === "mini-services") {
-                $cards .= Card::miniserviceCard($item);
+                $cards .= Card::card($item);
             } else {
                 $cards .= Card::card($item->getThumbsSrc(), $item->getTitle(), $item->getUrl("administrate"), $item->getCreatedAt());
             }

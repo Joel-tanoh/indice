@@ -10,7 +10,7 @@ class Cookie extends Authentification
     /**
      * Initie la variable de session.
      * 
-     * @param \App\backend\Models\Users\Administrator $administrator
+     * @param \App\Models\Users\Administrator $administrator
      * 
      * @return bool
      */
@@ -65,7 +65,7 @@ class Cookie extends Authentification
      * Permet de mettre le visiteur en session afin de pouvoir y accéder
      * sur toutes les pages, nom de la variable : attitude_efficace_visitor.
      * 
-     * @param \App\backend\Models\Users\Visitor $visitor
+     * @param \App\Models\Users\Visitor $visitor
      * 
      * @return void
      */

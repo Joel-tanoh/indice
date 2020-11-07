@@ -13,11 +13,11 @@
  * @link     Link
  */
 
-namespace App\backend\Utilities;
+namespace App\Utilities;
 
-use App\backend\Files\FileUploaded;
+use App\Auth\Password;
+use App\Files\FileUploaded;
 use App\views\Notification;
-use App\backend\Models\Items\ItemParent;
 
 /**
  * Permet de faire toutes les vérifications sur les données entrées dans les
@@ -66,6 +66,8 @@ class Validator
      */
     private $toValidate = [];
 
+    private $notifier;
+
     /**
      * Instancie un objet pour la validation.
      * 
@@ -86,15 +88,14 @@ class Validator
         }
 
         if (isset($password)) {
-            $this->validatePassword($password);
-        }
-
-        if (isset($confirm_password)) {
-            $this->validatePasswords($password, $confirm_password);
+            $password = new Password($password);
+            $password->isValid();
+            $password->validateConfirmation($confirm_password);
+            $this->errors[] = $password->getErrors();
         }
 
         if (!empty($email)) {
-            $this->validateEmail($email);
+            $this->isEmailAddress($email);
         }
         
         if (isset($title)) {
@@ -110,11 +111,11 @@ class Validator
         }
 
         if (!empty($price)) {
-            $this->validatePrix($price);
+            $this->validatePrice($price);
         }
 
         if (!empty($rank)) {
-            $this->validateRang($rank);
+            $this->validateRank($rank);
         }
 
         if (!empty($youtube_video_link) ) {
@@ -152,6 +153,7 @@ class Validator
     public function validateTitle(string $title = null)
     {
         $this->toValidate["title"] = $title;
+
         if (empty($title)) {
             $this->errors["title"] = $this->notifier->titleIsEmpty();
         } elseif ($this->containsHTML($title)) {
@@ -170,6 +172,7 @@ class Validator
     public function validateDescription(string $description = null)
     {
         $this->toValidate["description"] = $description;
+
         if (empty($description)) {
             $this->errors["description"] = $this->notifier->descriptionIsEmpty();
         } elseif ($this->containsHTML($description)) {
@@ -180,14 +183,15 @@ class Validator
     /**
      * Permet de vérifier que l'article a un contenu.
      * 
-     * @param string $article_content Le contenu de l'article.
+     * @param string $articleContent Le contenu de l'article.
      * 
      * @return string Une notification si l'article est vide.
      */
-    public function validateArticleContent(string $article_content = null)
+    public function validateArticleContent(string $articleContent = null)
     {
-        $this->toValidate["article_content"] = $article_content;
-        if (empty($article_content)) {
+        $this->toValidate["article_content"] = $articleContent;
+
+        if (empty($articleContent)) {
             $this->errors["article_content"] = $this->notifier->articleContentIsEmpty();
         }
     }
@@ -199,9 +203,10 @@ class Validator
      * 
      * @return string Une notification si le price n'est pas un entier.
      */
-    public function validatePrix(string $price = null)
+    public function validatePrice(string $price = null)
     {
         $this->toValidate["price"] = $price;
+
         if (!is_int((int)$price)) {
             $this->errors["price"] = $this->notifier->IsNotInt("price");
         }
@@ -214,7 +219,7 @@ class Validator
      * 
      * @return string Une notification si le rang n'est pas un entier.
      */
-    public function validateRang(string $rank = null)
+    public function validateRank(string $rank = null)
     {
         $rank = (int)$rank;
         $this->toValidate["rank"] = $rank;
@@ -234,51 +239,14 @@ class Validator
     public function validateLogin(string $login = null)
     {
         $this->toValidate["login"] = $login;
+
         if (empty($login)) {
             $this->errors["login"] = $this->notifier->loginIsEmpty();
         } elseif ($this->containsHTML($login)) {
             $this->errors["login"] = $this->notifier->loginContainsHTML();
         }
     }
-   
-    /**
-     * Effectue les validations sur le mot de passe.
-     * 
-     * @param string $password Mot de passe dont il faut vérifier la longueur.
-     * 
-     * @return string
-     */
-    public function validatePassword(string $password = null)
-    {
-        $this->toValidate["password"] = $password;
-        $password_length = strlen($password);
-        if (empty($password)) {
-            $this->errors["password"] = $this->notifier->passwordIsEmpty();
-        } elseif ($password_length < self::PASSWORD_LENGTH) {
-            $this->errors["password"] = $this->notifier->passwordLengthIsInvalid();
-        }
-    }
 
-    /**
-     * Compare les deux mots de passe passé en paramètre
-     * 
-     * @param string $password         Le premier mot de passe.
-     * @param string $confirm_password Le second mot de passe.
-     * 
-     * @author Joel
-     * @return bool
-     */
-    public function validatePasswords(string $password = null, string $confirm_password = null)
-    {
-        $this->toValidate["confirm_password"] = $confirm_password;
-        $password_hashed = password_hash($password, PASSWORD_DEFAULT);
-        if (empty($confirm_password)) {
-            $this->errors["confirm_password"] = $this->notifier->confirmPasswordIsEmpty();
-        } elseif (!password_verify($confirm_password, $password_hashed)) {
-            $this->errors["confirm_password"] = $this->notifier->passwordsNotIdentics();
-        }        
-    }
-   
     /**
      * Permet de valider que le fichier uploadé dans le champ image est une image
      * et qu'elle respecte les conditions de poids, d'extension et d'erreur.
@@ -327,18 +295,18 @@ class Validator
      * Effectue les validations sur un nom. Vérifie que le nom n'excède pas 250
      * caractères ou qu'il ne contient pas de code HTML.
      * 
-     * @param string $nameToValidate Le nom qu'il faut valider.
-     * @param string $postName        La valeur de l'attribut name dans le
-     *                                 le formulaire.
+     * @param string $name     Le nom qu'il faut valider.
+     * @param string $postName La valeur de l'attribut name dans le
+     *                         le formulaire.
      * 
      * @return string|null
      */
-    public function validateName(string $nameToValidate = null, string $postName = null)
+    public function validateName(string $name = null, string $postName = null)
     {
-        $this->toValidate[$postName] = $nameToValidate;
-        if (strlen($nameToValidate) > 250 ) {
+        $this->toValidate[$postName] = $name;
+        if (strlen($name) > 250 ) {
             $this->errors[$postName] = "Veuillez vérifier que le nom n'excède pas 250 caractères.";
-        } elseif ($this->containsHTML($nameToValidate)) {
+        } elseif ($this->containsHTML($name)) {
             $this->errors[$postName] = "Veuillez vérifier que le nom ne contient pas de code HTML.";
         }
     }
@@ -348,14 +316,17 @@ class Validator
      * 
      * @param string $email Email à vérifier.
      * 
-     * @return string|null
+     * @return bool
      */
-    public function validateEmail(string $email = null)
+    public function isEmailAddress(string $email)
     {
         $this->toValidate["email"] = $email;
+
         if (!preg_match(self::EMAIL_REGEX, $email)) {
             $this->errors["email"] = $this->notifier->emailIsInvalid();
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -363,13 +334,52 @@ class Validator
      * Retourne true si la chaîne de caractère passée en paramètre contient du code
      * HTML.
      * 
-     * @param string $string La chaîne dont il faut faire la vérification.
+     * @param string $var La chaîne dont il faut faire la vérification.
      * 
      * @return bool
      */
-    private function containsHTML(string $string) : bool
+    public function containsHTML(string $var) : bool
     {
-        return preg_match(self::HTML_REGEX, $string);
+        return preg_match(self::HTML_REGEX, $var);
     }
-    
+
+    /**
+     * Permet de vérifier que la valeur passée en paramètre est une chaîne
+     * de caractère.
+     * 
+     * @param string $var
+     * 
+     * @return bool
+     */
+    public function isString($var)
+    {
+        return is_string($var);
+    }
+
+    /**
+     * Permet de vérifier que la variable passée en paramètre est
+     * un format valide de numéro de téléphone.
+     * 
+     * @param $var
+     * 
+     * @return bool
+     */
+    public function isPhoneNumber($var)
+    {
+        return !$this->containsLetter($var);
+    }
+
+    /**
+     * Permet de vérifier si la variable passée en paramètre
+     * contient des lettres.
+     * 
+     * @param $var
+     * 
+     * @return bool
+     */
+    public function containsLetter($var)
+    {
+        return preg_match("#[A-Z]#i", $var);
+    }
+
 }

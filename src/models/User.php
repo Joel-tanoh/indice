@@ -18,6 +18,8 @@ class User extends Model
     protected $phoneNumber;
     protected $createdAt;
     protected $modifiedAt;
+    protected $types = ["annonceur", "administrateur"];
+    protected $type;
     const TABLE_NAME = "users";
 
     /**
@@ -31,7 +33,7 @@ class User extends Model
 
         $query = $queryFormatter->select(
             "id, code, name, first_names, email_address, pseudo, password, phone_number, created_at,
-            modified_at"
+            modified_at, type"
             )->from(self::TABLE_NAME)->where("id = ?");
 
         $rep = parent::connect()->prepare($query);
@@ -48,6 +50,7 @@ class User extends Model
         $this->phoneNumber = $result["phone_number"];
         $this->createdAt = $result["created_at"];
         $this->modifiedAt = $result["modified_at"];
+        $this->type = $result["type"];
     }
 
     /**
@@ -119,5 +122,32 @@ class User extends Model
     {
         return $this->phoneNumber;
     }
+
+    /**
+     * Permet d'instancier un objet user par son adresse email qu'on considère unique.
+     * 
+     * @param string $emailAddress
+     * 
+     * @return self
+     */
+    public static function getByEmailAddress($emailAddress)
+    {
+        $rep = parent::connect()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE email_address = ?");
+        $rep->execute([$emailAddress]);
+        
+        $user = $rep->fetch();
+        return new self($user["id"]);
+    }
+
+    /**
+     * Retourne le type d'utilisateur.
+     * 
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->types[$this->type];
+    }
+
 
 }

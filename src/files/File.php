@@ -12,7 +12,7 @@
  * @link     Link
  */
 
-namespace App\backend\Files;
+namespace App\Files;
 
 /**
  * Gère une Les fichiers.
@@ -64,7 +64,9 @@ class File
     /**
      * Le chemin du dossier des fichiers.
      */
-    const FILES_PATH = PUBLIC_PATH . "files" . DIRECTORY_SEPARATOR;
+    const FILES_DIR_PATH = PUBLIC_PATH . "files" . DIRECTORY_SEPARATOR;
+
+    const FILES_DIR_URL = APP_URL . "/files";
 
     /**
      * Constructeur d'un fichier.

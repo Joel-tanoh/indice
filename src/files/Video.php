@@ -1,6 +1,6 @@
 <?php
 
-namespace App\backend\Files;
+namespace App\Files;
 
 /**
  * Fichier de classe gestionnaire des fichiers de type vidéo.

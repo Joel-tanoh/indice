@@ -15,8 +15,8 @@
 
 namespace App\views\Pages;
 
-use App\backend\Models\Items\Item;
-use App\backend\Utilities\Utility;
+use App\Models\Items\Item;
+use App\Utilities\Utility;
 use App\views\Snippet;
 use App\views\View;
 

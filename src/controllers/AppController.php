@@ -14,15 +14,15 @@ class AppController
         $this->view = new View();
     }
 
-    public function index()
+    public static function index()
     {
-        $page = new Page("Le leader des petites annonces en Côte d'Ivoire", $this->view->index());
+        $page = new Page("Le leader des petites annonces en Côte d'Ivoire", View::index());
         $page->show("public");
     }
 
-    public function pageNotFound()
+    public static function pageNotFound()
     {
-        $page = new Page("Le leader des petites annonces en Côte d'Ivoire", $this->view->pageNotFound());
+        $page = new Page("Le leader des petites annonces en Côte d'Ivoire", View::pageNotFound());
         $page->show("public");
     }
 }

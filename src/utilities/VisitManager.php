@@ -1,11 +1,11 @@
 <?php
 
-namespace App\backend\Utilities;
+namespace App\Utilities;
 
-use App\backend\database\Database;;
-use App\backend\Models\Users\Visitor;
-use App\backend\Utilities\Utility;
-use App\backend\Session;
+use App\database\Database;;
+use App\Models\Users\Visitor;
+use App\Utilities\Utility;
+use App\Session;
 
 /**
  * Fichier de classe gestionnaire des visites sur l'app.
