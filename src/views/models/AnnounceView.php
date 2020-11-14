@@ -74,7 +74,7 @@ class AnnounceView extends View
      * 
      * @return string
      */
-    public static function createAnnounce()
+    public static function create()
     {
         return <<<HTML
         Vue de la création d'une annonce

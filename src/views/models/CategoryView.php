@@ -18,4 +18,14 @@ class CategoryView extends ModelView
     {
         $this->category = $category;
     }
+
+    /**
+     * La vue qui liste les annonces appartenant à cette catégorie.
+     * 
+     * @return string
+     */
+    public function read()
+    {
+        echo "Vue pour lire cette catégorie : " . $this->category->getTitle();
+    }
 }

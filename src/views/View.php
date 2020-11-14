@@ -9,6 +9,11 @@ use App\Views\Models\AnnounceView;
  */
 class View
 {
+    /**
+     * Vue de l'index de l'application.
+     * 
+     * @return string
+     */
     public static function index()
     {
         $announceView = new AnnounceView();
@@ -21,11 +26,6 @@ class View
 HTML;
     }
 
-    public static function pageNotFound()
-    {
-        return "Vue de la page 404";
-    }
-
     /**
      * La vue à afficher lorsqu'on rencontre une erreur de type exception.
      * 
@@ -36,9 +36,9 @@ HTML;
         return <<<HTML
         <div class="container">
             <div class="bg-white rounded p-3">
-                <h1 class="text-primary">Erreur</h1>
+                <h1 class="text-primary">Exception capturée.</h1>
                 <div class="h3 text-secondary">{$e->getMessage()}</div>
-                <div>{$e->getFile()} à la ligne {$e->getLine()}.</div>
+                <div>Excéption jetée dans {$e->getFile()} à la ligne {$e->getLine()}.</div>
             </div>
         </div>
 HTML;

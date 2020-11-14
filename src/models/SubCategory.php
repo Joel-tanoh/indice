@@ -10,7 +10,7 @@ use App\database\SqlQueryFormater;
 class SubCategory extends Category
 {
     protected $category;
-    const TABLE_NAME = "sub_categories";
+    const TABLE_NAME = "ind_sub_categories";
 
     /**
      * Constructeur d'une sous-catégorie.
@@ -66,4 +66,18 @@ class SubCategory extends Category
     {
         return new Category($this->idCategory);
     }
+    
+    /**
+     * Permet de vérifier si la variable passée en paramètre est un slug
+     * de catégorie.
+     * 
+     * @param $var
+     * 
+     * @return bool
+     */
+    static function isSubCategorySlug($var) : bool
+    {
+        return in_array($var, parent::slugs(self::TABLE_NAME));
+    }
+
 }

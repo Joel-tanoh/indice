@@ -9,8 +9,7 @@ class Route
 {
     protected $route;
     protected $action;
-    protected $matches;
-    protected $paramsValues = [];
+    protected $params = [];
 
     public function __construct(string $route, string $action)
     {
@@ -18,67 +17,78 @@ class Route
         $this->action = $action;
     }
 
-    public function matches(string $url)
+    /**
+     * Retourne true si la route coincide avec l'url.
+     * 
+     * @return bool
+     */
+    public function matches($url)
     {
-        $path = preg_replace("#:([\w]+)#", "([^/]+)", $this->route);
-        $pathToMatch = "#^$path$^#";
-
-        if (preg_match_all($pathToMatch, $url, $matches)) {
-            $this->matches = $matches;
-            return true;
+        if (!$this->hasParams()) {
+            return $this->route == $url;
         } else {
-            return false;
+            $this->getParams();
+            return $this->length() === Router::urlLength();
         }
     }
 
     /**
-     * Exécute la classe avec la méthode passée en paramètre.
+     * Exécute l'action de la route.
+     * 
+     * @return mixed
      */
     public function execute()
     {
         $actionParams = explode("@", $this->action);
-        $controller = new $actionParams[0]();
         $method = $actionParams[1];
-
-        if (!empty($this->matches)) {
-            return $controller->$method($this->matches);
+        
+        if (!$this->params) {
+            return $actionParams[0]::$method();
         } else {
-            return $controller->$method();
+            return $actionParams[0]::$method(Router::getUrlAsArray());
         }
     }
-    
+
     /**
-     * Retourne un tableau contenant les noms des paramètres passés
-     * dans la path s'il en existe.
+     * Rétourne les paramètres qui sont dans la route.
      * 
-     * @return array|null
-     */
-    public function getParams()
-    {
-        $pattern = "#:([\w]+)#";
-        $matches = preg_match_all($pattern, $this->path, $matches);
-        // array_shift($matches);
-
-        return $matches;
-    }
-
-    /**
      * @return array
      */
-    public function getParamsValue()
+    function getParams() : array
     {
-        $params = $this->getParams();
+        preg_match_all("#:([\w]+)#", $this->route, $matches);
+        $this->params = $matches[1];
+        return $this->params;
+    }
 
-        if ($params && $this->urlAsArray) {
-            $paramsNumber = count($this->getParams());
-            for ($i = 0; $i < $paramsNumber - 1; $i++) {
-                $paramsValues[$params[$i]] = $this->urlAsArray[$i];
-            }
-        }
+    /**
+     * Permet de vérifier si la route contient des paramètres.
+     * 
+     * @return bool
+     */
+    public function hasParams()
+    {
+        return count($this->getParams()) !== 0;
+    }
 
-        $this->paramsValue = $paramsValues;
+    /**
+     * Retourne les parties de la route.
+     * 
+     * @return array
+     */
+    function parts()
+    {
+        return explode("/", $this->route);
+    }
 
-        return $this->paramsValue;
+    /**
+     * Retourne la longeur de la route.
+     * 
+     * @return int
+     */
+    function length()
+    {
+        return count($this->parts());
     }
 
 }

@@ -20,7 +20,7 @@ class User extends Model
     protected $modifiedAt;
     protected $types = ["annonceur", "administrateur"];
     protected $type;
-    const TABLE_NAME = "users";
+    const TABLE_NAME = "ind_users";
 
     /**
      * Constructeur d'un User.
@@ -149,5 +149,22 @@ class User extends Model
         return $this->types[$this->type];
     }
 
+    /**
+     * Retourne un user grace à son code.
+     * 
+     * @param string $code
+     * 
+     * @return self
+     */
+    static function getByCode($code) : self
+    {
+        $rep = parent::connect()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE code = ?");
+        $rep->execute([$code]);
+        $user = $rep->fetch();
+
+        if ($user["id"]) {
+            return new self($user["id"]);
+        }
+    }
 
 }

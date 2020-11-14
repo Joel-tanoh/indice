@@ -16,14 +16,15 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `announces`
+-- Table structure for table `ind_announces`
 --
 
-DROP TABLE IF EXISTS `announces`;
+DROP TABLE IF EXISTS `ind_announces`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `announces` (
+CREATE TABLE `ind_announces` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `slug` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `id_category` int(11) NOT NULL,
@@ -34,6 +35,7 @@ CREATE TABLE `announces` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `posted_at` datetime DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
+  `views` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_id_user` (`id_user`),
   KEY `fk_id_category` (`id_category`),
@@ -42,93 +44,105 @@ CREATE TABLE `announces` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `announces`
+-- Dumping data for table `ind_announces`
 --
 
-LOCK TABLES `announces` WRITE;
-/*!40000 ALTER TABLE `announces` DISABLE KEYS */;
-/*!40000 ALTER TABLE `announces` ENABLE KEYS */;
+LOCK TABLES `ind_announces` WRITE;
+/*!40000 ALTER TABLE `ind_announces` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ind_announces` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `categories`
+-- Table structure for table `ind_categories`
 --
 
-DROP TABLE IF EXISTS `categories`;
+DROP TABLE IF EXISTS `ind_categories`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `categories` (
+CREATE TABLE `ind_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `modified_at` datetime DEFAULT NULL,
   `description` text,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uni_title` (`title`),
+  UNIQUE KEY `uni_slug` (`slug`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `categories`
+-- Dumping data for table `ind_categories`
 --
 
-LOCK TABLES `categories` WRITE;
-/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
+LOCK TABLES `ind_categories` WRITE;
+/*!40000 ALTER TABLE `ind_categories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ind_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `sub_categories`
+-- Table structure for table `ind_sub_categories`
 --
 
-DROP TABLE IF EXISTS `sub_categories`;
+DROP TABLE IF EXISTS `ind_sub_categories`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sub_categories` (
+CREATE TABLE `ind_sub_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `id_category` int(11) NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `modified_at` datetime DEFAULT NULL,
   `description` text,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uni_title` (`title`) USING BTREE,
+  UNIQUE KEY `uni_slug` (`slug`),
+  KEY `fk_id_category` (`id_category`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `sub_categories`
+-- Dumping data for table `ind_sub_categories`
 --
 
-LOCK TABLES `sub_categories` WRITE;
-/*!40000 ALTER TABLE `sub_categories` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sub_categories` ENABLE KEYS */;
+LOCK TABLES `ind_sub_categories` WRITE;
+/*!40000 ALTER TABLE `ind_sub_categories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ind_sub_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `users`
+-- Table structure for table `ind_users`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `ind_users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
+CREATE TABLE `ind_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `first_names` varchar(255) NOT NULL,
   `email_address` varchar(255) NOT NULL,
   `pseudo` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `phone_number` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `modified_at` datetime DEFAULT NULL,
+  `type` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_pseudo` (`pseudo`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `ind_users`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+LOCK TABLES `ind_users` WRITE;
+/*!40000 ALTER TABLE `ind_users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ind_users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -140,4 +154,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-05 10:22:25
+-- Dump completed on 2020-11-14 11:23:58

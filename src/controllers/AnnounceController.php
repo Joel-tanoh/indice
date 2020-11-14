@@ -7,18 +7,15 @@ use App\views\pages\Page;
 
 class AnnounceController extends AppController
 {
-    private $view;
-
-    public function __construct()
+    public static function create()
     {
-        $this->view = new AnnounceView();
-    }
-
-    public static function createAnnounce()
-    {
-        $page = new Page("Créer une annonce", AnnounceView::createAnnounce());
+        $page = new Page("Publier une annonce", AnnounceView::create());
         $page->setDescription("");
         $page->show();
     }
 
+    static function read(array $url)
+    {
+
+    }
 }

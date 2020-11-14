@@ -18,7 +18,7 @@ class Announce extends Model
     private $state;
     private $postedAt;
     private $views;
-    const TABLE_NAME = "announces";
+    const TABLE_NAME = "ind_announces";
     const IMAGES_DIR_PATH = Image::IMAGES_DIR_PATH . DIRECTORY_SEPARATOR . "announces" . DIRECTORY_SEPARATOR;
     const IMAGES_DIR_URL = Image::IMAGES_DIR_URL . "/announces";
     const DEFAULT_THUMBS = Image::IMAGES_DIR_URL . "/defaul-thumbs" . Image::EXTENSION;
@@ -130,21 +130,6 @@ class Announce extends Model
     public function getViews()
     {
         return $this->views;
-    }
-
-    /**
-     * Permet d'instancier une annonce par son slug.
-     * 
-     * @param string $slug 
-     * 
-     * @return self
-     */
-    public static function getBySlug(string $slug) : self
-    {
-        $rep = parent::connect()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE slug = ?");
-        $rep->execute([$slug]);
-        $res = $rep->fetch();
-        return new self($res["id"]);
     }
 
     /**

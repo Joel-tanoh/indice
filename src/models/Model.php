@@ -94,4 +94,37 @@ class Model
         return Utility::formatDate($this->modifiedAt);
     }
 
+    /**
+     * Retourne la liste des slugs de cette classe.
+     * 
+     * @param string $tableName
+     * 
+     * @return array
+     */
+    static function slugs(string $tableName) : array
+    {
+        $rep = self::connect()->query("SELECT slug FROM " . $tableName);
+        return $rep->fetchAll();
+    }
+
+    /**
+     * Retourne une objet de ce type grace au slug passé en
+     * paramètre.
+     * 
+     * @param string $slug
+     * @param string $tableName
+     * 
+     * @return self
+     */
+    static function getBySlug(string $slug, string $tableName) : self
+    {
+        $rep = self::connect()->prepare("SELECT id FROM " . $tableName . " WHERE slug = ?");
+        $rep->execute([$slug]);
+        $item = $rep->fetch();
+
+        if ($item["id"]) {
+            return new self($item["id"]);
+        }
+    }
+
 }

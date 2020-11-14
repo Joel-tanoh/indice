@@ -4,7 +4,6 @@
  * Fichier de configuration général de l'application ou du site.
  */
 
-
 /** Nom de l'application */
 define("APP_NAME", "Indice");
 
@@ -24,7 +23,7 @@ define("DB_PASSWORD", "Joel1997@admin");
 define("ROOT_PATH", dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
 // Url de l'application
-define("APP_URL", $_SERVER["REQUEST_SCHEME"] . "://indice.com");
+define("APP_URL", $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER["SERVER_NAME"]);
 
 // Appel du fichier contenant toutes les constantes importantes de l'application.
 require_once "constants.php";

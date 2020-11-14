@@ -11,7 +11,7 @@ class Category extends Model
 {
     protected $announces = [];
     private $subCategories = [];
-    const TABLE_NAME = "categories";
+    const TABLE_NAME = "ind_categories";
 
     /**
      * Constructeur d'une catégorie.
@@ -74,4 +74,18 @@ class Category extends Model
 
         return $this->subCategories;
     }
+
+    /**
+     * Permet de vérifier si la variable passée en paramètre est un slug
+     * de catégorie.
+     * 
+     * @param $var
+     * 
+     * @return bool
+     */
+    static function isCategorySlug($var) : bool
+    {
+        return in_array($var, parent::slugs(self::TABLE_NAME));
+    }
+
 }
