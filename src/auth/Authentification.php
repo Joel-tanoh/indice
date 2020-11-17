@@ -1,12 +1,10 @@
 <?php
 
-namespace App\auth;
+namespace App\Auth;
 
 use App\Auth\Password;
-use App\Models\Users\Administrator;
-use App\Models\Learning\Users\Registered;
-use App\Models\User;
-use App\Utilities\Validator;
+use App\Model\User;
+use App\Utility\Validator;
 
 /**
  * Fichier de classe gestionnaire de l'authentification des utilisateurs.

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\database;
+namespace App\Database;
 
 use PDO;
 use PDOException;
@@ -38,7 +38,7 @@ class Database
      * @param string $dbCharset  L'encodage des caractères.
      * 
      */
-    public function __construct(string $dbName = null, string $dbLogin = null , string $dbPassword = null , string $dbAddress = "127.0.0.1", string $sgbd = "mysql", string $dbCharset = "utf8") {
+    public function __construct(string $dbName = null, string $dbLogin = null , string $dbPassword = null , string $dbAddress = "localhost", string $sgbd = "mysql", string $dbCharset = "utf8") {
         $this->dbName       = $dbName;
         $this->dbLogin      = $dbLogin;
         $this->dbPassword   = $dbPassword;
@@ -64,6 +64,7 @@ class Database
             );
 
         } catch (PDOException $e) {
+            echo $e->getMessage();
             die('<h1>Erreur de connexion à la base de données, veuillez contacter votre administrateur !</h1>');
         }
     }

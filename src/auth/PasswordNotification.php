@@ -2,7 +2,7 @@
 
 namespace App\Auth;
 
-use App\views\Notification;
+use App\View\Notification;
 
 /**
  * Classe de gestion des notifications concernant les mots de passe.

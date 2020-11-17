@@ -1,6 +1,8 @@
 <?php
 
-namespace App\backend;
+namespace App;
+
+use App\Auth\Authentification;
 
 /**
  * Classe gestionnaire des variables relatives aux cookie.
@@ -10,7 +12,7 @@ class Cookie extends Authentification
     /**
      * Initie la variable de session.
      * 
-     * @param \App\Models\Users\Administrator $administrator
+     * @param \App\Model\User\Administrator $administrator
      * 
      * @return bool
      */
@@ -63,9 +65,9 @@ class Cookie extends Authentification
 
     /**
      * Permet de mettre le visiteur en session afin de pouvoir y accéder
-     * sur toutes les pages, nom de la variable : attitude_efficace_visitor.
+     * sur toutes les Page, nom de la variable : attitude_efficace_visitor.
      * 
-     * @param \App\Models\Users\Visitor $visitor
+     * @param \App\Model\User\Visitor $visitor
      * 
      * @return void
      */

@@ -16,7 +16,7 @@
 namespace App\backend;
 
 use App\Database\Database;
-use App\Models\Users\Registered;
+use App\Model\User\Registered;
 
 /**
  * Gère les envois d'email.
