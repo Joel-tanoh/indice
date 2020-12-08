@@ -11,7 +11,7 @@ use App\Utility\Validator;
  * 
  * @author Joel <joel.developpeur@gmail.com>
  */
-class Authentification
+class Authentication
 {
     /**
      * Retourne le tableau contenant les valeurs de session.

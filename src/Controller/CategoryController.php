@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Action\InsertData;
 use App\Exception\PageNotFoundException;
 use App\Model\Category;
 use App\Model\Model;
@@ -23,5 +24,15 @@ class CategoryController extends AppController
         } else {
             throw new PageNotFoundException("La catégorie que vous cherchez n'a pas été trouvée.");
         }
+    }
+
+    /**
+     * Controlleur de création d'une catégorie.
+     */
+    static function create()
+    {
+        $page = new Page("Créer une annonce", CategoryView::create());
+        $page->setDescription("");
+        $page->show();
     }
 }

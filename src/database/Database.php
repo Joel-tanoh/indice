@@ -28,7 +28,7 @@ class Database
     private $paramsArray = [];
 
     /**
-     * Permet d'instancier un Database.
+     * Permet d'instancier une base de données et de s'y connecter immédiatement.
      * 
      * @param string $dbName     Le nom de la base de données.
      * @param string $dbLogin    Le login pour se connecter à la base de données.

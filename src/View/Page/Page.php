@@ -223,11 +223,11 @@ HTML;
      */
     private function appIcon()
     {
-        $logosDir = Image::LOGOS_DIR_URL;
+        $logosDir = LOGOS_DIR_URL;
 
         return <<<HTML
-        <link rel="icon" href="{$logosDir}/favicon.svg" type="image/x-icon">
-        <link rel="shortcut icon" href="{$logosDir}/favicon.svg" type="image/x-icon">
+        <link rel="icon" href="{$logosDir}/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="{$logosDir}/favicon.ico" type="image/x-icon">
 HTML;
     }
 

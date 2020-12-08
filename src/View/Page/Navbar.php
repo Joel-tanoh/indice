@@ -28,6 +28,15 @@ use App\View\Snippet;
  */
 class Navbar extends Snippet
 {
+    private $brandImgSrc;
+    private $userAvatarSrc;
+
+    public function __construct(string $brandImgSrc = null, string $userAvatarSrc = null)
+    {
+        $this->brandImgSrc = LOGOS_DIR_URL ."/logo_1.png";
+        $this->userAvatarSrc = $userAvatarSrc;
+    }
+
     /**
      * Barre de navigation supérieure de la partie publique.
      * 
@@ -38,7 +47,7 @@ class Navbar extends Snippet
         return <<<HTML
         <aside>
             <div class="d-flex justify-content-between align-items-center p-2">
-                {$this->navbarBrand(Image::LOGOS_DIR_URL."/1.png", APP_URL, "Logo " . APP_NAME)}
+                {$this->navbarBrand($this->brandImgSrc, APP_URL, "Logo " . APP_NAME)}
                 {$this->ads()}
                 <div>
                     <a href="connexion" class="btn btn-success">Se connecter</a>
@@ -75,24 +84,6 @@ HTML;
 HTML;
     }
 
-
-    /**
-     * Barre de navigation supérieure de la partie administration.
-     *
-     * @author Joel
-     * @return string
-     */
-    public function AdministrationNavbar()
-    {
-        return <<<HTML
-        <nav class="navbar fixed-top navbar-content bg-white border-bottom w-100 d-flex justify-content-end">
-            <ul class="navbar-nav d-flex align-items-center flex-row">
-                {$this->utilsBar()}
-            </ul>
-        </nav>
-HTML;
-    }
-    
     /**
      * Affiche la barre de publicité dans le topbar.
      * 
@@ -125,76 +116,6 @@ HTML;
     }
 
     /**
-     * Barre d'outils de la barre de navigation de la partie admin
-     * 
-     * @return string
-     */
-    private function utilsBar()
-    {
-        return $this->addItemsLinksView()
-            . $this->manageAdministratorsButtons();
-    }
-
-    /**
-     * Affiche les liens pour créer des catégories et des éléments.
-     * 
-     * @return string code HTML
-     */
-    private function addItemsLinksView()
-    {
-        $adminUrl = "admin";
-
-        return <<<HTML
-        <li id="addButton" class="mr-3">
-            <a class="add-button-icon border">
-                <i class="fas fa-plus"></i>
-            </a>
-            <ul class="add-button-content list-unstyled border">
-                <li>
-                    <a href="{$adminUrl}/articles/create" class="text-primary">Ecrire un article</a>
-                </li>
-                <li>
-                    <a href="{$adminUrl}/videos/create" class="text-primary">Ajouter une vidéo</a>
-                </li>
-                <li>
-                    <a href="{$adminUrl}/livres/create" class="text-primary">Publier un livre</a>
-                </li>
-                <li>
-                    <a href="{$adminUrl}/ebooks/create" class="text-primary">Ajouter un ebook</a>
-                </li>
-            </ul>
-        <li>
-HTML;
-    }
-
-    /**
-     * Bouton administrateur se trouvant dans la navbar pour gérer les liens.
-     * 
-     * @author Joel
-     * @return string
-     */
-    private function manageAdministratorsButtons()
-    {
-        // $login = Session::getAdministratorSessionVar() ?? Cookie::getAdministratorCookieVar();
-        // $adminUser = Administrator::getByLogin($login);
-
-        // return <<<HTML
-        // <li class="btn-administrateur">
-        //     <a id="btnUserIcon" class="nav-link d-flex align-items-center">
-        //         {$this->navbarUserAvatar($adminUser->getAvatarSrc(), $adminUser->getLogin())}
-        //         <span class="fas fa-caret-down"></span>
-        //     </a>
-        //     <ul id="btnUserContent" class="content border list-unstyled">
-        //         {$this->administratorReservedActions()}
-        //         <li>
-        //             <a class="bg-danger text-white" href="admin/deconnexion">Déconnexion</a>
-        //         </li>
-        //     </ul>
-        // </li>
-// HTML;
-    }
-
-    /**
      * Retourne l'image miniature de l'utilisateur connecté dans la navbar.
      * 
      * @param string $avatarSrc
@@ -210,34 +131,6 @@ HTML;
         </div>
 HTML;
     }
-
-//     /**
-//      * Retourne les liens réservés qu'aux administrateurs dans la barre de navigation
-//      * supérieure de la partie adminsitration.
-//      * 
-//      * @return string
-//      */
-//     private function administratorReservedActions()
-//     {
-//         $login = Session::getAdministratorSessionVar() ?? Cookie::getAdministratorCookieVar();
-//         $adminUser = Administrator::getByLogin($login);
-
-//         $adminUrl = "admin";
-
-//         if ($adminUser->hasAllRights()) {
-//             return <<<HTML
-//             <li>
-//                 <a href="{$adminUrl}/administrateurs" class="text-primary">Lister les comptes</a>
-//             </li>
-//             <!-- <li>
-//                 <a href="{$adminUrl}/administrateurs/create" class="text-primary">Ajouter un nouveau compte</a>
-//             </li>
-//             <li>
-//                 <a href="{$adminUrl}/administrateurs/delete" class="text-primary">Supprimer un compte</a>
-//             </li> -->
-// HTML;
-//         }
-//     }
 
     /**
      * Retourne les liens de la navbar publique.

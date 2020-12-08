@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.19, for Win64 (x86_64)
 --
--- Host: localhost    Database: indice
+-- Host: localhost    Database: inoveinn_wp806
 -- ------------------------------------------------------
 -- Server version	5.7.19
 
@@ -24,12 +24,12 @@ DROP TABLE IF EXISTS `ind_announces`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ind_announces` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `slug` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
+  `slug` varchar(255) NOT NULL,
   `id_category` int(11) NOT NULL,
   `id_sub_category` int(11) NOT NULL,
-  `id_user` int(11) NOT NULL,
+  `user_email_address` varchar(255) NOT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   `state` int(11) DEFAULT '0',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -37,7 +37,7 @@ CREATE TABLE `ind_announces` (
   `modified_at` datetime DEFAULT NULL,
   `views` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `fk_id_user` (`id_user`),
+  UNIQUE KEY `user_email_address` (`user_email_address`),
   KEY `fk_id_category` (`id_category`),
   KEY `fk_id_sub_category` (`id_sub_category`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -69,7 +69,7 @@ CREATE TABLE `ind_categories` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_title` (`title`),
   UNIQUE KEY `uni_slug` (`slug`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,6 +78,7 @@ CREATE TABLE `ind_categories` (
 
 LOCK TABLES `ind_categories` WRITE;
 /*!40000 ALTER TABLE `ind_categories` DISABLE KEYS */;
+INSERT INTO `ind_categories` VALUES (1,'Jeu de football','jeu-de-football','2020-11-27 23:54:37',NULL,'C\'est un jeu de football');
 /*!40000 ALTER TABLE `ind_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +101,7 @@ CREATE TABLE `ind_sub_categories` (
   UNIQUE KEY `uni_title` (`title`) USING BTREE,
   UNIQUE KEY `uni_slug` (`slug`),
   KEY `fk_id_category` (`id_category`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,6 +110,7 @@ CREATE TABLE `ind_sub_categories` (
 
 LOCK TABLES `ind_sub_categories` WRITE;
 /*!40000 ALTER TABLE `ind_sub_categories` DISABLE KEYS */;
+INSERT INTO `ind_sub_categories` VALUES (1,'Jeu de football','jeu-de-football',1,'2020-11-27 23:57:24',NULL,'C\'est un jeu de football');
 /*!40000 ALTER TABLE `ind_sub_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -154,4 +156,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-14 11:23:58
+-- Dump completed on 2020-12-08 23:25:30

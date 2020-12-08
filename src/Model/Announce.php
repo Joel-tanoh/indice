@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Action\InsertData;
+use App\backend\Session;
 use App\File\Image;
 use App\Database\SqlQueryFormater;
 use App\Utility\Utility;
@@ -17,7 +19,7 @@ class Announce extends Model
     private $phoneNumber;
     private $state;
     private $postedAt;
-    private $View;
+    private $viewss;
     const TABLE_NAME = "ind_announces";
     const IMAGES_DIR_PATH = Image::IMAGES_DIR_PATH . DIRECTORY_SEPARATOR . "announces" . DIRECTORY_SEPARATOR;
     const IMAGES_DIR_URL = Image::IMAGES_DIR_URL . "/announces";
@@ -34,7 +36,7 @@ class Announce extends Model
 
         $query = $queryFormatter->select(
             "id, slug, title, description, id_category, id_sub_category, id_user, phone_number,
-             state, created_at, posted_at, modified_at, View"
+             state, created_at, posted_at, modified_at, views"
             )->from(self::TABLE_NAME)->where("id = ?");
 
         $rep = parent::connect()->prepare($query);
@@ -54,7 +56,7 @@ class Announce extends Model
         $this->createdAt = $result["created_at"];
         $this->postedAt = $result["posted_at"];
         $this->modifiedAt = $result["modified_at"];
-        $this->View = $result["View"];
+        $this->views = $result["views"];
         $this->thumbsPath = self::IMAGES_DIR_PATH . $this->id . DIRECTORY_SEPARATOR . "thumbs" . Image::EXTENSION;
         $this->thumbsSrc = self::IMAGES_DIR_URL . "/" . $this->id . "/thumbs" . Image::EXTENSION;
     }
@@ -127,9 +129,9 @@ class Announce extends Model
      * 
      * @return int
      */
-    public function getView()
+    public function getviews()
     {
-        return $this->View;
+        return $this->views;
     }
 
     /**
@@ -241,7 +243,7 @@ class Announce extends Model
      */
     public static function getMoreViewed(int $nbr = null) : array
     {
-        $query = "SELECT id FROM " . self::TABLE_NAME . " ORDER BY View DESC";
+        $query = "SELECT id FROM " . self::TABLE_NAME . " ORDER BY views DESC";
 
         if (null !== $nbr) {
             $query .= " LIMIT 0, 5";
@@ -271,6 +273,32 @@ class Announce extends Model
         } else {
             return self::DEFAULT_THUMBS;
         }
+    }
+        
+    /**
+     * Permet de créer une nouvelle ligne d'annonce et d'enregistrer les données.
+     */
+    public static function create()
+    {
+        $data["title"] = htmlspecialchars($_POST["title"]);
+        $data["description"] = htmlspecialchars($_POST["description"]);
+        $data["slug"] = Utility::slugify($_POST["title"]);
+        $data["id_category"] = htmlspecialchars($_POST["id_category"]);
+        $data["id_sub_category"] = htmlspecialchars($_POST["id_sub_category"]);
+        $data["user_email_address"] = htmlspecialchars(Session::getSessionId());
+        $data["phone_number"] = $_POST["phone_number"];
+
+        $insert = new InsertData($data, self::TABLE_NAME);
+        $insert->run();
+
+        // S'il y'a des images
+        if (isset($_FILES["image"]["name"])) {
+            // Formater le nom de l'image
+
+            // Enregistrer l'image dans le dossier concerné
+        }
+        
+        return true;
     }
 
 }

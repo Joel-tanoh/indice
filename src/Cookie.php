@@ -2,12 +2,12 @@
 
 namespace App;
 
-use App\Auth\Authentification;
+use App\Auth\Authentication;
 
 /**
  * Classe gestionnaire des variables relatives aux cookie.
  */
-class Cookie extends Authentification
+class Cookie extends Authentication
 { 
     /**
      * Initie la variable de session.

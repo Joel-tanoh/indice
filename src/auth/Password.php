@@ -32,12 +32,24 @@ class Password
      * 
      * @return string
      */
-    public function getHash()
+    public function getHashed()
     {
         if ($this->isValid()) {
             $this->hashed = password_hash($this->password, PASSWORD_DEFAULT);
             return $this->hashed;
         }
+    }
+
+    /**
+     * Permet de faire la validation d'un mot de passe et le mot de passe de
+     * confirmation.
+     * 
+     * @param string $confirmationPassword.
+     */
+    public function validate(string $confirmationPassword)
+    {
+        $this->isValid();
+        $this->validateConfirmation($confirmationPassword);
     }
 
     /**
@@ -66,9 +78,19 @@ class Password
     {
         if (empty($confirmPassword)) {
             $this->errors["password"] = $this->notifier->confirmPasswordIsEmpty();
-        } elseif (!password_verify($confirmPassword, $this->getHash())) {
+        } elseif (!password_verify($confirmPassword, $this->getHashed())) {
             $this->errors["password"] = $this->notifier->passwordsNotIdentics();
         }        
+    }
+
+    /**
+     * Retourne true s'il n'y a aucune erreur.
+     * 
+     * @return bool
+     */
+    public function noErrors() : bool
+    {
+        return count($this->errors) == 0;
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Action\InsertData;
+use App\Auth\Password;
 use App\Database\Database;
 use App\Utility\Utility;
 
@@ -125,6 +127,33 @@ class Model
         if ($item["id"]) {
             return new self($item["id"]);
         }
+    }
+
+    /**
+     * Permet d'insérer les données dans la base de donnée et ainsi de créer
+     * une nouvelle ligne qui constitue un nouvel item.
+     * 
+     * @param string $table    La table de la base de données dans laquelle
+     *                         on doit enregistrer les données.
+     * @param bool   $needCode Pour spéciifier si l'item a besoin d'un code
+     *                         à l'enregistrement dans la base de données.
+     * 
+     * @return bool
+     */
+    public static function create(string $table, bool $needCode = false)
+    {
+        $needCode ? $data["code"] = Utility::generateCode() : null;
+        isset($_POST["name"]) ? $data["name"] = htmlspecialchars($_POST["name"]) : null;
+        isset($_POST["first_names"]) ? $data["first_names"] = htmlspecialchars($_POST["first_names"]) : null;
+        isset($_POST["email_address"]) ? $data["email_address"] = htmlspecialchars($_POST["email_address"]) : null;
+        isset($_POST["pseudo"]) ? $data["pseudo"] = htmlspecialchars($_POST["pseudo"]) : null;
+        isset($_POST["password"]) ? $data["password"] = (new Password($_POST["password"]))->getHashed() : null;
+        isset($_POST["phone_number"]) ? $data["phone_number"] = $_POST["phone_number"] : null;
+
+        $insert = new InsertData($data, $table);
+        $insert->run();
+        
+        return true;
     }
 
 }

@@ -47,21 +47,21 @@ class Image extends File
 
     const IMAGES_DIR_PATH = parent::FILES_DIR_PATH . "images" . DIRECTORY_SEPARATOR;
 
-    const AVATARS_DIR_PATH =  self::IMAGES_DIR_PATH . "avatars" . DIRECTORY_SEPARATOR;
-
-    const LOGOS_DIR_PATH = self::IMAGES_DIR_PATH . "logos" . DIRECTORY_SEPARATOR;
-
-    const SLIDERS_DIR_PATH = self::IMAGES_DIR_PATH . "slider" . DIRECTORY_SEPARATOR;
-
-    const DEFAULT_THUMBS = self::IMAGES_DIR_URL . "/default-thumbs" . self::EXTENSION;
-
     const IMAGES_DIR_URL = File::FILES_DIR_URL . "/images";
+
+    const AVATARS_DIR_PATH =  self::IMAGES_DIR_PATH . "avatars" . DIRECTORY_SEPARATOR;
 
     const AVATARS_DIR_URL = self::IMAGES_DIR_URL . "/avatars";
 
-    const LOGOS_DIR_URL = self::IMAGES_DIR_URL . "/logos";
+    const LOGOS_DIR_PATH = self::IMAGES_DIR_PATH . "logos" . DIRECTORY_SEPARATOR;
+
+    const LOGOS_DIR_URL = ASSETS_DIR_URL . "/logos";
+
+    const SLIDERS_DIR_PATH = self::IMAGES_DIR_PATH . "slider" . DIRECTORY_SEPARATOR;
 
     const SLIDERS_DIR_URL = self::IMAGES_DIR_URL . "/slider";
+
+    const DEFAULT_THUMBS = self::IMAGES_DIR_URL . "/default-thumbs" . self::EXTENSION;
 
     /**
      * Permet de sauvegarder l'image dans les fichiers du serveur dans le dossier des

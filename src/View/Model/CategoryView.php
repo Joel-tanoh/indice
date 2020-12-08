@@ -28,4 +28,11 @@ class CategoryView extends ModelView
     {
         echo "Vue pour lire cette catégorie : " . $this->category->getTitle();
     }
+
+    static function create()
+    {
+        return <<<HTML
+        vue de création d'une catégorie.
+HTML;
+    }
 }

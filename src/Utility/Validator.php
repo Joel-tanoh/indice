@@ -66,70 +66,31 @@ class Validator
      */
     private $toValidate = [];
 
+    /**
+     * Le notificateur.
+     * 
+     * @var Notification
+     */
     private $notifier;
 
     /**
      * Instancie un objet pour la validation.
      * 
-     * @param $data Les données qu'on veut valider. Très souvent ces données
-     *              proviennent du formulaire donc de la variable superglobale
-     *              $_POST. Ils peuvent aussi provenir de GET.
-     * 
      * @author Joel 
      */
-    public function __construct(array $data = null)
+    public function __construct()
     {
         $this->notifier = new Notification();
+    }
 
-        extract($data);
-
-        if (isset($login)) {
-            $this->validateLogin($login);
-        }
-
-        if (isset($password)) {
-            $password = new Password($password);
-            $password->isValid();
-            $password->validateConfirmation($confirm_password);
-            $this->errors[] = $password->getErrors();
-        }
-
-        if (!empty($email)) {
-            $this->isEmailAddress($email);
-        }
-        
-        if (isset($title)) {
-            $this->validateTitle($title);
-        }
-
-        if (isset($description)) {
-            $this->validateDescription($description);
-        }
-
-        if (isset($article_content)) {
-            $this->validateArticleContent($article_content);
-        }
-
-        if (!empty($price)) {
-            $this->validatePrice($price);
-        }
-
-        if (!empty($rank)) {
-            $this->validateRank($rank);
-        }
-
-        if (!empty($youtube_video_link) ) {
-            $this->validateVideoLink($youtube_video_link);
-        }
-
-        if (!empty($_FILES["image_uploaded"]["name"])) {
-            $this->validateImage();
-        }
-
-        if (!empty($_FILES["pdf_uploaded"]["name"])) {
-            $this->validatePdfFile();
-        }
-        
+    /**
+     * Retourne true s'il n'y a aucune erreur.
+     * 
+     * @return bool
+     */
+    public function noErrors() : bool
+    {
+        return count($this->errors) == 0;
     }
 
     /**
@@ -147,10 +108,8 @@ class Validator
      * Valide le titre de l'item qu'on veut créer.
      * 
      * @param string $title Le titre de l'item à valider.
-     * 
-     * @return string
      */
-    public function validateTitle(string $title = null)
+    public function title(string $title)
     {
         $this->toValidate["title"] = $title;
 
@@ -166,10 +125,8 @@ class Validator
      * est invalide.
      * 
      * @param string $description La description à valider.
-     * 
-     * @return string
      */
-    public function validateDescription(string $description = null)
+    public function description(string $description)
     {
         $this->toValidate["description"] = $description;
 
@@ -181,17 +138,33 @@ class Validator
     }
 
     /**
+     * Permet de faire la validation d'un mot de passe.
+     * 
+     * @param string $password
+     * @param string $confirmationPassword 
+     */
+    public function password(string $password, string $confirmationPassword)
+    {
+        $this->toValidate["password"] = $password;
+        $password = new Password($password);
+
+        $password->validate($confirmationPassword);
+        
+        if (!$password->noErrors()) {
+            $this->errors["password"] = $password->getErrors();
+        }
+    }
+
+    /**
      * Permet de vérifier que l'article a un contenu.
      * 
-     * @param string $articleContent Le contenu de l'article.
-     * 
-     * @return string Une notification si l'article est vide.
+     * @param string $content Le contenu de l'article.
      */
-    public function validateArticleContent(string $articleContent = null)
+    public function article(string $content)
     {
-        $this->toValidate["article_content"] = $articleContent;
+        $this->toValidate["article_content"] = $content;
 
-        if (empty($articleContent)) {
+        if (empty($content)) {
             $this->errors["article_content"] = $this->notifier->articleContentIsEmpty();
         }
     }
@@ -203,7 +176,7 @@ class Validator
      * 
      * @return string Une notification si le price n'est pas un entier.
      */
-    public function validatePrice(string $price = null)
+    public function price(string $price = null)
     {
         $this->toValidate["price"] = $price;
 
@@ -219,7 +192,7 @@ class Validator
      * 
      * @return string Une notification si le rang n'est pas un entier.
      */
-    public function validateRank(string $rank = null)
+    public function rank(string $rank = null)
     {
         $rank = (int)$rank;
         $this->toValidate["rank"] = $rank;
@@ -236,7 +209,7 @@ class Validator
      * 
      * @return string Une notification si le login est invalide.
      */
-    public function validateLogin(string $login = null)
+    public function login(string $login)
     {
         $this->toValidate["login"] = $login;
 
@@ -253,12 +226,12 @@ class Validator
      * 
      * @return string
      */
-    public function validateImage()
+    public function image()
     {  
-        $this->toValidate["image_uploaded"] = $_FILES["image_uploaded"];
-        $image_uploaded = new FileUploaded($_FILES["image_uploaded"]);
-        if (!$image_uploaded->isAnImageHasValidSizeAndNoError()) {
-            $this->errors["image_uploaded"] = $this->notifier->imageIsInvalid();
+        $this->toValidate["image"] = $_FILES["image"];
+        $image = new FileUploaded($_FILES["image"]);
+        if (!$image->isAnImageHasValidSizeAndNoError()) {
+            $this->errors["image"] = $this->notifier->imageIsInvalid();
         }
     }
 
@@ -267,7 +240,7 @@ class Validator
      * 
      * @return string
      */
-    public function validatePdfFile()
+    public function pdf()
     {
         $this->toValidate["pdf_uploaded"] = $_FILES["pdf_uploaded"];
         $pdf_uploaded = new FileUploaded($_FILES["pdf_uploaded"]);
@@ -279,14 +252,12 @@ class Validator
     /**
      * Effectue les validations sur le lien de la vidéo.
      * 
-     * @param $youtube_video_link Lien de la vidéo de description.
-     * 
-     * @return string|null
+     * @param $youtubeVideoLink Lien de la vidéo de description.
      */
-    public function validateVideoLink(string $youtube_video_link = null)
+    public function videoLink(string $youtubeVideoLink = null)
     {
-        $this->toValidate["youtube_video_link"] = $youtube_video_link;
-        if ($this->containsHTML($youtube_video_link)) {
+        $this->toValidate["youtube_video_link"] = $youtubeVideoLink;
+        if ($this->containsHTML($youtubeVideoLink)) {
             $this->errors["youtube_video_link"] = $this->notifier->videoLinkIsInvalid();
         }
     }
@@ -301,13 +272,12 @@ class Validator
      * 
      * @return string|null
      */
-    public function validateName(string $name = null, string $postName = null)
+    public function name(string $name = null, string $postName = "name")
     {
         $this->toValidate[$postName] = $name;
-        if (strlen($name) > 250 ) {
-            $this->errors[$postName] = "Veuillez vérifier que le nom n'excède pas 250 caractères.";
-        } elseif ($this->containsHTML($name)) {
-            $this->errors[$postName] = "Veuillez vérifier que le nom ne contient pas de code HTML.";
+
+        if ($this->containsHTML($name)) {
+            $this->errors[$postName] = "Veuillez vérifier que le(s) nom(s) ne contient/contiennent pas de code HTML.";
         }
     }
   
@@ -315,18 +285,13 @@ class Validator
      * Effectue les validations sur un email.
      * 
      * @param string $email Email à vérifier.
-     * 
-     * @return bool
      */
-    public function isEmailAddress(string $email)
+    public function email(string $email)
     {
         $this->toValidate["email"] = $email;
 
         if (!preg_match(self::EMAIL_REGEX, $email)) {
             $this->errors["email"] = $this->notifier->emailIsInvalid();
-            return false;
-        } else {
-            return true;
         }
     }
 
@@ -351,7 +316,7 @@ class Validator
      * 
      * @return bool
      */
-    public function isString($var)
+    public function string($var)
     {
         return is_string($var);
     }
@@ -364,7 +329,7 @@ class Validator
      * 
      * @return bool
      */
-    public function isPhoneNumber($var)
+    public function phoneNumber($var)
     {
         return !$this->containsLetter($var);
     }

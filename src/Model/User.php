@@ -2,7 +2,10 @@
 
 namespace App\Model;
 
+use App\Action\InsertData;
+use App\Auth\Password;
 use App\Database\SqlQueryFormater;
+use App\Utility\Utility;
 
 /**
  * Classe de gestion des utilisateurs.
