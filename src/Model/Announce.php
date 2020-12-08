@@ -278,27 +278,27 @@ class Announce extends Model
     /**
      * Permet de créer une nouvelle ligne d'annonce et d'enregistrer les données.
      */
-    public static function create()
-    {
-        $data["title"] = htmlspecialchars($_POST["title"]);
-        $data["description"] = htmlspecialchars($_POST["description"]);
-        $data["slug"] = Utility::slugify($_POST["title"]);
-        $data["id_category"] = htmlspecialchars($_POST["id_category"]);
-        $data["id_sub_category"] = htmlspecialchars($_POST["id_sub_category"]);
-        $data["user_email_address"] = htmlspecialchars(Session::getSessionId());
-        $data["phone_number"] = $_POST["phone_number"];
+    // public static function create()
+    // {
+    //     $data["title"] = htmlspecialchars($_POST["title"]);
+    //     $data["description"] = htmlspecialchars($_POST["description"]);
+    //     $data["slug"] = Utility::slugify($_POST["title"]);
+    //     $data["id_category"] = htmlspecialchars($_POST["id_category"]);
+    //     $data["id_sub_category"] = htmlspecialchars($_POST["id_sub_category"]);
+    //     $data["user_email_address"] = htmlspecialchars(Session::getSessionId());
+    //     $data["phone_number"] = $_POST["phone_number"];
 
-        $insert = new InsertData($data, self::TABLE_NAME);
-        $insert->run();
+    //     $insert = new InsertData($data, self::TABLE_NAME);
+    //     $insert->run();
 
-        // S'il y'a des images
-        if (isset($_FILES["image"]["name"])) {
-            // Formater le nom de l'image
+    //     // S'il y'a des images
+    //     if (isset($_FILES["image"]["name"])) {
+    //         // Formater le nom de l'image
 
-            // Enregistrer l'image dans le dossier concerné
-        }
+    //         // Enregistrer l'image dans le dossier concerné
+    //     }
         
-        return true;
-    }
+    //     return true;
+    // }
 
 }

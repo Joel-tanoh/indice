@@ -33,7 +33,7 @@ class Page extends View
 {
     private $metaTitle;
     private $description;
-    private $content;
+    private $view;
     private $navbarState;
     private $footerState;
     private $cssFiles = [];
@@ -43,15 +43,15 @@ class Page extends View
      * Permet de créer une page.
      * 
      * @param string $metaTitle   Le titre qui sera affiché dans la page.
-     * @param string $content        Le contenu de la page qui sera affiché dans
+     * @param string $view        Le contenu de la page qui sera affiché dans
      *                            la page.
      * @param string $description La description de la page.
      */
-    public function __construct(string $metaTitle = null, string $content = null, string $description = null, array $cssFiles = null, array $jsFiles = null)
+    public function __construct(string $metaTitle = null, string $view = null, string $description = null, array $cssFiles = null, array $jsFiles = null)
     {
         $this->metaTitle = $metaTitle;
         $this->description = $description;
-        $this->content = $content;
+        $this->view = $view;
         $this->navbarState = true;
         $this->footerState = true;
         $this->cssFiles = $cssFiles;
@@ -85,13 +85,13 @@ class Page extends View
     /**
      * Permet de modifier le contenu de la page.
      * 
-     * @param string $content
+     * @param string $view
      * 
      * @return void
      */
-    public function setView(string $content)
+    public function setView(string $view)
     {
-        $this->content = $content;
+        $this->view = $view;
     }
 
     /**
@@ -170,14 +170,14 @@ HTML;
 
         if ($this->navbarState == true && $this->footerState == true) {
             return $template->navbarAndContentAndFooter(
-                $navbar->publicNavbar(), $this->content, $footer->publicFooter()
+                $navbar->publicNavbar(), $this->view, $footer->publicFooter()
             );
         } elseif ($this->navbarState == true && $this->footerState == false) {
-            return $template->navbarAndContent($navbar->publicNavbar(), $this->content);
+            return $template->navbarAndContent($navbar->publicNavbar(), $this->view);
         } elseif ($this->navbarState == false && $this->footerState == true) {
-            return $template->contentAndFooter($this->content, $footer->publicFooter());
+            return $template->contentAndFooter($this->view, $footer->publicFooter());
         } else {
-            return $this->content;
+            return $this->view;
         }
     }
 
@@ -320,35 +320,35 @@ HTML;
     {
         return <<<HTML
         <!-- Jquery -->
-        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/jquery/jquery.min.js")} -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/jquery/jquery.min.js")} -->
 
         <!-- Popper -->
-        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/popper/popper.min.js")} -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script>
+        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/popper/popper.min.js")} -->
 
         <!-- Bootstrap -->
-        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/bootstrap/js/bootstrap.bundle.min.js")} -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/bootstrap/js/bootstrap.bundle.min.js")} -->
 
         <!-- Fontawesome -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
         <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/fontawesome/js/all.min.js")} -->
 
         <!-- Bootstrap Custom File Input -->
-        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/bs-custom-file-input/bs-custom-file-input.min.js")} -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bs-custom-file-input/1.3.4/bs-custom-file-input.min.js"></script>
+        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/bs-custom-file-input/bs-custom-file-input.min.js")} -->
 
         <!-- Select2 -->
-        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/select2/js/select2.full.min.js")} -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/select2/js/select2.full.min.js")} -->
 
         <!-- Summernote -->
-        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/summernote/summernote-bs4.min.js")} -->
-        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/summernote/lang/summernote-fr-FR.min.js")} -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-fr-FR.min.js"></script>       
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-fr-FR.min.js"></script>
+        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/summernote/summernote-bs4.min.js")} -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL . "/vendor/summernote/lang/summernote-fr-FR.min.js")} -->      
 HTML;
     }
 
