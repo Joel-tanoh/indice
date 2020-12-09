@@ -4,7 +4,7 @@
  *  Fichier de routage de l'application.
  */
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.php";
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.php";
 
 use App\Route\Router;
 use App\View\Page\Page;
