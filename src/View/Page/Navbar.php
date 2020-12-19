@@ -14,7 +14,7 @@
 
 namespace App\View\Page;
 
-use App\File\Image;
+use App\File\Image\Logo;
 use App\View\Snippet;
 
 /**
@@ -33,7 +33,7 @@ class Navbar extends Snippet
 
     public function __construct(string $brandImgSrc = null, string $userAvatarSrc = null)
     {
-        $this->brandImgSrc = LOGOS_DIR_URL ."/logo_1.png";
+        $this->brandImgSrc = Logo::LOGOS_DIR_URL ."/logo1.png";
         $this->userAvatarSrc = $userAvatarSrc;
     }
 
@@ -72,7 +72,7 @@ HTML;
     {
         return <<<HTML
         <nav class="navbar navbar-expand-md navbar-light">
-            {$this->navbarBrand(Image::LOGOS_DIR_URL."/1.png", APP_URL, APP_NAME)}
+            {$this->navbarBrand(Logo::LOGOS_DIR_URL."/1.png", APP_URL, APP_NAME)}
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="navbar-toggler-icon"></i>

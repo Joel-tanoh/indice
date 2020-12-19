@@ -21,9 +21,9 @@ class Announce extends Model
     private $postedAt;
     private $viewss;
     const TABLE_NAME = "ind_announces";
-    const IMAGES_DIR_PATH = Image::IMAGES_DIR_PATH . DIRECTORY_SEPARATOR . "announces" . DIRECTORY_SEPARATOR;
-    const IMAGES_DIR_URL = Image::IMAGES_DIR_URL . "/announces";
-    const DEFAULT_THUMBS = Image::IMAGES_DIR_URL . "/defaul-thumbs" . Image::EXTENSION;
+    const IMG_DIR_PATH = Image::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "announces" . DIRECTORY_SEPARATOR;
+    const IMG_DIR_URL = Image::IMG_DIR_URL . "/announces";
+    const DEFAULT_THUMBS = Image::IMG_DIR_URL . "/defaul-thumbs" . Image::EXTENSION;
 
     /**
      * Constructeur de l'objet annonce.
@@ -57,8 +57,8 @@ class Announce extends Model
         $this->postedAt = $result["posted_at"];
         $this->modifiedAt = $result["modified_at"];
         $this->views = $result["views"];
-        $this->thumbsPath = self::IMAGES_DIR_PATH . $this->id . DIRECTORY_SEPARATOR . "thumbs" . Image::EXTENSION;
-        $this->thumbsSrc = self::IMAGES_DIR_URL . "/" . $this->id . "/thumbs" . Image::EXTENSION;
+        $this->thumbsPath = self::IMG_DIR_PATH . $this->id . DIRECTORY_SEPARATOR . "thumbs" . Image::EXTENSION;
+        $this->thumbsSrc = self::IMG_DIR_URL . "/" . $this->id . "/thumbs" . Image::EXTENSION;
     }
 
     /**
