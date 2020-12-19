@@ -13,6 +13,7 @@
   position: relative;
   vertical-align: middle;
   width: 44px;
+  z-index: 999;
 }
   .slicknav_btn .slicknav_icon-bar + .slicknav_icon-bar {
     margin-top: 0.188em; }
@@ -101,6 +102,7 @@
   -moz-transition: all 0.2s linear;
   -o-transition: all 0.2s linear;
   transition: all 0.2s linear;
+  z-index: 999;
 }
 
 .slicknav_nav {

@@ -42,10 +42,10 @@ class Navbar extends Snippet
      * 
      * @return string
      */
-    public function publicNavbar()
+    public function get()
     {
         $appUrl = APP_URL;
-        $logoAltText = Logo::ALT_TEXT;
+        $logoAltText = Logo::ALT_TEXT;  
 
         return <<<HTML
         <!-- Header Area wrapper Starts -->
@@ -263,7 +263,7 @@ class Navbar extends Snippet
                     </div>
                 </div>
             </div>
-        <!-- Hero Area End -->
+            <!-- Hero Area End -->
 
         </header>
     <!-- Header Area wrapper End -->
