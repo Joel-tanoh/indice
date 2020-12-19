@@ -28,8 +28,9 @@ CREATE TABLE `ind_announces` (
   `description` text NOT NULL,
   `slug` varchar(255) NOT NULL,
   `id_category` int(11) NOT NULL,
-  `id_sub_category` int(11) NOT NULL,
+  `id_sub_category` int(11) DEFAULT NULL,
   `user_email_address` varchar(255) NOT NULL,
+  `location` varchar(255) DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   `state` int(11) DEFAULT '0',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -158,4 +159,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-19 21:12:39
+-- Dump completed on 2020-12-19 21:26:22
