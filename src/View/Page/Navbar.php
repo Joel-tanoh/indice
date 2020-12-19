@@ -66,23 +66,24 @@ class Navbar extends Snippet
                     <div class="collapse navbar-collapse" id="main-navbar">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item dropdown active">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="{$appUrl}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Accueil
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="categories">
-                                Categories
-                                </a>
-                            </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Listings
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Catégories 
                                 </a>
+                                <!-- categoryDrumpdown -->
                                 <div class="dropdown-menu">
-                                <a class="dropdown-item" href="adlistinggrid.html">Ad Grid</a>
-                                <a class="dropdown-item" href="adlistinglist.html">Ad Listing</a>
-                                <a class="dropdown-item" href="ads-details.html">Listing Detail</a>
+                                    <a class="dropdown-item" href="about.html">About Us</a>
+                                    <a class="dropdown-item" href="services.html">Services</a>
+                                    <a class="dropdown-item" href="ads-details.html">Ads Details</a>
+                                    <a class="dropdown-item" href="post-ads.html">Ads Post</a>
+                                    <a class="dropdown-item" href="pricing.html">Packages</a>
+                                    <a class="dropdown-item" href="testimonial.html">Testimonial</a>
+                                    <a class="dropdown-item" href="faq.html">FAQ</a>
+                                    <a class="dropdown-item" href="404.html">404</a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
@@ -90,25 +91,14 @@ class Navbar extends Snippet
                                 Pages 
                                 </a>
                                 <div class="dropdown-menu">
-                                <a class="dropdown-item" href="about.html">About Us</a>
-                                <a class="dropdown-item" href="services.html">Services</a>
-                                <a class="dropdown-item" href="ads-details.html">Ads Details</a>
-                                <a class="dropdown-item" href="post-ads.html">Ads Post</a>
-                                <a class="dropdown-item" href="pricing.html">Packages</a>
-                                <a class="dropdown-item" href="testimonial.html">Testimonial</a>
-                                <a class="dropdown-item" href="faq.html">FAQ</a>
-                                <a class="dropdown-item" href="404.html">404</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Blog 
-                                </a>
-                                <div class="dropdown-menu">
-                                <a class="dropdown-item" href="blog.html">Blog - Right Sidebar</a>
-                                <a class="dropdown-item" href="blog-left-sidebar.html">Blog - Left Sidebar</a>
-                                <a class="dropdown-item" href="blog-grid-full-width.html"> Blog full width </a>
-                                <a class="dropdown-item" href="single-post.html">Blog Details</a>
+                                    <a class="dropdown-item" href="about.html">About Us</a>
+                                    <a class="dropdown-item" href="services.html">Services</a>
+                                    <a class="dropdown-item" href="ads-details.html">Ads Details</a>
+                                    <a class="dropdown-item" href="post-ads.html">Ads Post</a>
+                                    <a class="dropdown-item" href="pricing.html">Packages</a>
+                                    <a class="dropdown-item" href="testimonial.html">Testimonial</a>
+                                    <a class="dropdown-item" href="faq.html">FAQ</a>
+                                    <a class="dropdown-item" href="404.html">404</a>
                                 </div>
                             </li>
                             <li class="nav-item">
@@ -119,7 +109,7 @@ class Navbar extends Snippet
                         </ul>
                         <ul class="sign-in">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="lni-user"></i> My Account</a>
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="lni-user"></i> Mon compte</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="account-profile-setting.html"><i class="lni-home"></i> Account Home</a>
                                     <a class="dropdown-item" href="account-myads.html"><i class="lni-wallet"></i> My Ads</a>
@@ -132,7 +122,7 @@ class Navbar extends Snippet
                                 </div>
                             </li>
                         </ul>
-                        <a class="tg-btn" href="post-ads.html">
+                        <a class="tg-btn" href="creer-une-annonce">
                         <i class="lni-pencil-alt"></i> Poster une annonce
                         </a>
                     </div>
