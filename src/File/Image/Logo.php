@@ -12,7 +12,7 @@ class Logo extends Image
      * 
      * @var string
      */
-    const LOGOS_DIR_URL = ASSETS_DIR_URL . "/logo";
+    const LOGOS_DIR_URL = Image::IMG_DIR_URL . "/logo";
 
     /**
      * Chemin du dossier des logos.
