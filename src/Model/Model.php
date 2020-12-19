@@ -14,7 +14,7 @@ class Model
     protected $slug;
     protected $description;
     protected $createdAt;
-    protected $modifiedAt;
+    protected $updatedAt;
 
     /**
      * Retourne une instance Database.
@@ -91,9 +91,9 @@ class Model
      * 
      * @return string
      */
-    public function getModifiedAt()
+    public function getupdatedAt()
     {
-        return Utility::formatDate($this->modifiedAt);
+        return Utility::formatDate($this->updatedAt);
     }
 
     /**

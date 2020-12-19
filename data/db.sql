@@ -34,8 +34,9 @@ CREATE TABLE `ind_announces` (
   `state` int(11) DEFAULT '0',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `posted_at` datetime DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   `views` int(11) DEFAULT '0',
+  `icon_class` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_email_address` (`user_email_address`),
   KEY `fk_id_category` (`id_category`),
@@ -64,8 +65,9 @@ CREATE TABLE `ind_categories` (
   `title` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `modified_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   `description` text,
+  `icon_class` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_title` (`title`),
   UNIQUE KEY `uni_slug` (`slug`)
@@ -78,7 +80,7 @@ CREATE TABLE `ind_categories` (
 
 LOCK TABLES `ind_categories` WRITE;
 /*!40000 ALTER TABLE `ind_categories` DISABLE KEYS */;
-INSERT INTO `ind_categories` VALUES (1,'Jeu de football','jeu-de-football','2020-11-27 23:54:37',NULL,'C\'est un jeu de football');
+INSERT INTO `ind_categories` VALUES (1,'Jeu de football','jeu-de-football','2020-11-27 23:54:37',NULL,'C\'est un jeu de football',NULL);
 /*!40000 ALTER TABLE `ind_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +133,7 @@ CREATE TABLE `ind_users` (
   `password` varchar(255) NOT NULL,
   `phone_number` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `modified_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   `type` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_pseudo` (`pseudo`)
@@ -156,4 +158,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-08 23:25:30
+-- Dump completed on 2020-12-19 21:12:39

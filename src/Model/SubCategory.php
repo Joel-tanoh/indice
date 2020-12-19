@@ -22,7 +22,7 @@ class SubCategory extends Category
         $queryFormatter = new SqlQueryFormater();
 
         $query = $queryFormatter->select(
-            "id, title, slug, id_category, created_at, modified_at, description"
+            "id, title, slug, id_category, created_at, updated_at, description"
             )->from(self::TABLE_NAME)->where("id = ?");
 
         $rep = parent::connect()->prepare($query);
@@ -35,7 +35,7 @@ class SubCategory extends Category
         $this->slug = $result["slug"];
         $this->idCategory = $result["id_category"];
         $this->createdAt = $result["created_at"];
-        $this->modifiedAt = $result["modified_at"];
+        $this->updatedAt = $result["updated_at"];
         $this->description = $result["description"];
     }
 
