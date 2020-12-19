@@ -278,39 +278,46 @@ HTML;
     {
         return <<<HTML
         <!-- Bootstrap CSS -->
-        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/bootstrap.min.css")} -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <!-- Icon -->
-        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/font/line-icons.css")} -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css" integrity="sha512-QKC1UZ/ZHNgFzVKSAhV5v5j73eeL9EEN289eKAEFaAjgAiobVAnVv/AGuPbXsKl1dNoel3kNr6PYnSiTzVVBCw==" crossorigin="anonymous" />
         <!-- Slicknav -->
-        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/slicknav.css")} -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/slicknav.min.css" integrity="sha512-heyoieAHmpAL3BdaQMsbIOhVvGb4+pl4aGCZqWzX/f1BChRArrBy/XUZDHW9WVi5p6pf92pX4yjkfmdaIYa2QQ==" crossorigin="anonymous" />
         <!-- Nivo Lightbox -->
-        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/nivo-lightbox.css")} -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/nivo-lightbox/1.3.1/nivo-lightbox.min.js" integrity="sha512-fTsZSmOARwC81gLD0Cftat+G/ouB/dYN8q0DvJPdQdPK1Ec7ET4zmlwWGDO50vPKhu8wnEwaEpXYXkETtbsNBg==" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nivo-lightbox/1.3.1/nivo-lightbox.min.css" integrity="sha512-1+H7MGc+v6ZUF1LzWl8mGsU2vaFj6ZCKCaiO0K0zD71cqcFaWlXswBVv3P3eu27s1xpANVx08Cgg0tqxhd9rYA==" crossorigin="anonymous" />
         <!-- Animate -->
-        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/animate.css")} -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw==" crossorigin="anonymous" />
         <!-- Owl carousel -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css" integrity="sha512-X/RSQYxFb/tvuz6aNRTfKXDnQzmnzoawgEQ4X8nZNftzs8KFFH23p/BA6D2k0QCM4R0sY1DEy9MIY9b3fwi+bg==" crossorigin="anonymous" />
+        <!-- Summernote -->
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css">
+        <!-- Google Font: Source Sans Pro -->
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+        <!-- Bootstrap CSS -->
+        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/bootstrap.min.css")} -->
+        <!-- Icon -->
+        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/font/line-icons.css")} -->
+        <!-- Slicknav -->
+        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/slicknav.css")} -->
+        <!-- Nivo Lightbox -->
+        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/nivo-lightbox.css")} -->
+        <!-- Animate -->
+        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/animate.css")} -->
+        <!-- Owl carousel -->
         <!-- {$this->cssFile(ASSETS_DIR_URL."/css/owl.carousel.css")} -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js" integrity="sha512-9CWGXFSJ+/X0LWzSRCZFsOPhSfm6jbnL+Mpqo0o8Ke2SYr8rCTqb4/wGm+9n13HtDE1NQpAEOrMecDZw4FXQGg==" crossorigin="anonymous"></script>
         <!-- Owl Theme -->
-        {$this->cssFile(ASSETS_DIR_URL."/css/owl.theme.css")}
-        <!-- Main Style -->
-        {$this->cssFile(ASSETS_DIR_URL."/css/main.css")}
+        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/owl.theme.css")} -->
         <!-- Responsive Style -->
         <!-- {$this->cssFile(ASSETS_DIR_URL."/css/responsive.css")} -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/responsive/1.0.5/responsive.min.js" integrity="sha512-l2hGYjPCNX1kF58pLEQJruBUa7SaoJLqOCt5OtvKjUivOviFyj2+1G6B40QFDtkKZpEtSIib3am5kI9T2A+gmA==" crossorigin="anonymous"></script>
+        <!-- Summernote -->
+        <!-- {$this->cssFile(ASSETS_DIR_URL."/css/summernote.css")} -->
+        <!-- Main Style -->
+        {$this->cssFile(ASSETS_DIR_URL."/css/main.css")}
         <!-- Color Switcher -->
         {$this->cssFile(ASSETS_DIR_URL."/css/color-switcher.css")}
         <!-- Settings -->
         {$this->cssFile(ASSETS_DIR_URL."/css/settings.css")}
-        <!-- Summernote -->
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css">
-        {$this->cssFile(ASSETS_DIR_URL."/css/summernote.css")}
-        <!-- Google Font: Source Sans Pro -->
-        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 HTML;
     }
 
@@ -323,35 +330,52 @@ HTML;
     {
         return <<<HTML
         <!-- Jquery -->
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-        {$this->jsFile(ASSETS_DIR_URL."/jquery-min.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
         <!-- Popper -->
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script> -->
-        {$this->jsFile(ASSETS_DIR_URL."/popper.min.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.6.0/umd/popper.min.js" integrity="sha512-BmM0/BQlqh02wuK5Gz9yrbe7VyIVwOzD1o40yi1IsTjriX/NGF37NyXHfmFzIlMmoSIBXgqDiG1VNU6kB5dBbA==" crossorigin="anonymous"></script>
         <!-- Bootstrap -->
-        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
-        {$this->jsFile(ASSETS_DIR_URL."/js/bootstrap.min.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js" integrity="sha512-8qmis31OQi6hIRgvkht0s6mCOittjMa9GMqtK9hes5iEQBQE/Ca6yGE5FsW36vyipGoWQswBj/QBm2JR086Rkw==" crossorigin="anonymous"></script>
         <!-- Summernote -->
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script> -->
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-fr-FR.min.js"></script> -->
-        {$this->jsFile(ASSETS_DIR_URL."/summernote.js")}
-        {$this->jsFile(ASSETS_DIR_URL . "/summernote-fr-FR.min.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js" integrity="sha512-+cXPhsJzyjNGFm5zE+KPEX4Vr/1AbqCUuzAS8Cy5AfLEWm9+UI9OySleqLiSQOQ5Oa2UrzaeAOijhvV/M4apyQ==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-fr-FR.min.js" integrity="sha512-M/dO2WzUHujRv2L5krC41AAmXJm1edIN1B2rd6KFNH/Xpu8NK4X+Rj9aDMVeNevG7ibdnbzPH7QhUwig6Eo7ew==" crossorigin="anonymous"></script>
         <!-- CounterUp -->
-        {$this->jsFile(ASSETS_DIR_URL."/js/jquery.counterup.min.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js" integrity="sha512-d8F1J2kyiRowBB/8/pAWsqUl0wSEOkG5KATkVV4slfblq9VRQ6MyDZVxWl2tWd+mPhuCbpTB4M7uU/x9FlgQ9Q==" crossorigin="anonymous"></script>
         <!-- Waypoints -->
-        {$this->jsFile(ASSETS_DIR_URL."/js/waypoints.min.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js" integrity="sha512-fHXRw0CXruAoINU11+hgqYvY/PcsOWzmj0QmcSOtjlJcqITbPyypc8cYpidjPurWpCnlB8VKfRwx6PIpASCUkQ==" crossorigin="anonymous"></script>
         <!-- WOW -->
-        {$this->jsFile(ASSETS_DIR_URL."/js/wow.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js" integrity="sha512-Eak/29OTpb36LLo2r47IpVzPBLXnAMPAVypbSZiZ4Qkf8p/7S/XRG5xp7OKWPPYfJT6metI+IORkR5G8F900+g==" crossorigin="anonymous"></script>
         <!-- Carousel -->
-        {$this->jsFile(ASSETS_DIR_URL."/js/owl.carousel.min.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js" integrity="sha512-9CWGXFSJ+/X0LWzSRCZFsOPhSfm6jbnL+Mpqo0o8Ke2SYr8rCTqb4/wGm+9n13HtDE1NQpAEOrMecDZw4FXQGg==" crossorigin="anonymous"></script>
         <!-- Nivo Lightbox -->
-        {$this->jsFile(ASSETS_DIR_URL."/js/nivo-lightbox.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/nivo-lightbox/1.3.1/nivo-lightbox.min.js" integrity="sha512-fTsZSmOARwC81gLD0Cftat+G/ouB/dYN8q0DvJPdQdPK1Ec7ET4zmlwWGDO50vPKhu8wnEwaEpXYXkETtbsNBg==" crossorigin="anonymous"></script>
         <!-- Slicknav -->
-        {$this->jsFile(ASSETS_DIR_URL."/js/jquery.slicknav.js")}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/jquery.slicknav.min.js" integrity="sha512-FmCXNJaXWw1fc3G8zO3WdwR2N23YTWDFDTM3uretxVIbZ7lvnjHkciW4zy6JGvnrgjkcNEk8UNtdGTLs2GExAw==" crossorigin="anonymous"></script>
+        
+        <!-- Jquery -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/js/jquery-min.js")} -->
+        <!-- Popper -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/js/popper.min.js")} -->
+        <!-- Bootstrap -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/js/bootstrap.min.js")} -->
+        <!-- Summernote -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/summernote.js")} -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL . "/js/summernote-fr-FR.min.js")} -->
+        <!-- CounterUp -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/js/jquery.counterup.min.js")} -->
+        <!-- Waypoints -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/js/waypoints.min.js")} -->
+        <!-- WOW -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/js/wow.js")} -->
+        <!-- Carousel -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/js/owl.carousel.min.js")} -->
+        <!-- Nivo Lightbox -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/js/nivo-lightbox.js")} -->
+        <!-- Slicknav -->
+        <!-- {$this->jsFile(ASSETS_DIR_URL."/js/jquery.slicknav.js")} -->
+
         <!-- Main Js -->
         {$this->jsFile(ASSETS_DIR_URL."/js/main.js")}
         <!-- Form Validator -->
-        <script src="assets/"></script>
         {$this->jsFile(ASSETS_DIR_URL."/js/form-validator.min.js")}
         <!-- Contact Form script -->
         {$this->jsFile(ASSETS_DIR_URL."/js/contact-form-script.min.js")}

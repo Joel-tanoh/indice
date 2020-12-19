@@ -14,6 +14,9 @@ class Logo extends Image
      */
     const LOGOS_DIR_URL = Image::IMG_DIR_URL . "/logo";
 
+    // Le texte qui doit s'afficher si le logo n'est pas visible.
+    const ALT_TEXT = APP_NAME;
+
     /**
      * Chemin du dossier des logos.
      * 
