@@ -16,13 +16,135 @@ class View
      */
     public static function index()
     {
-        $announceView = new AnnounceView();
-
         return <<<HTML
-        <div class="container">
-            {$announceView->showLastPosted(5)}
-            {$announceView->showMoreViewed(5)}
-        </div>
+        <!-- Trending Categories Section Start -->
+        <section class="categories-icon section-padding bg-drack">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-car"></i>
+                                </div>
+                                <h4>Vehicle</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-display"></i>
+                                </div>
+                                <h4>Electronics</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-mobile"></i>
+                                </div>
+                                <h4>Mobiles</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-leaf"></i>
+                                </div>
+                                <h4>Furnitures</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-tshirt"></i>
+                                </div>
+                                <h4>Fashion</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-briefcase"></i>
+                                </div>
+                                <h4>Jobs</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-home"></i>
+                                </div>
+                                <h4>Real Estate</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-hand"></i>
+                                </div>
+                                <h4>Animals</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-graduation"></i>
+                                </div>
+                                <h4>Education</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-laptop"></i>
+                                </div>
+                                <h4>Laptops & PCs</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-paint-roller"></i>
+                                </div>
+                                <h4>Services</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                        <a href="category.html">
+                            <div class="icon-box">
+                                <div class="icon">
+                                <i class="lni-heart"></i>
+                                </div>
+                                <h4>Matrimony</h4>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Trending Categories Section End -->
 HTML;
     }
 

@@ -15,9 +15,7 @@
 
 namespace App\View\Page;
 
-use App\Utility\Utility;
 use App\View\Snippet;
-use App\View\View;
 
 /**
  * Permet de gérer les barres de menu sur le coté.
@@ -29,43 +27,8 @@ use App\View\View;
  * @version  "Release: package_version"
  * @link     Link
  */
-class SideBar extends View
+class SideBar extends Snippet
 {
-    /**
-     * Barre de gauche sur la partie Administration.
-     * 
-     * @return string
-     */
-    public function adminSidebar()
-    {
-        return $this->sidebar();
-    }
-
-    /**
-     * SideBar qui est visible sur les grands écrans.
-     * 
-     * @return string 
-     **/
-    public function sidebar()
-    {
-        $snippet = new Snippet();
-        $brand = $this->brand(LOGOS_DIR_URL. "/3.png", ADMIN_URL);
-        $searchBar = $snippet->searchBar();
-        $links = $this->links();
-
-        return <<<HTML
-        <input type="checkbox" id="check" checked>
-        <label for="check">
-            <i class="fas fa-bars" id="commandSidebar"></i>
-        </label>
-        <div id="sidebar" class="sidebar">
-            {$brand}
-            {$searchBar}
-            {$links}
-        </div>
-HTML;
-    }
-
     /**
      * Affiche le logo dans la sidebar.
      *
@@ -107,19 +70,7 @@ HTML;
      */
     private function links()
     {
-        $links = $this->setLink(null, "fas fa-home", "Aller vers le site");
-        $links .= $this->setLink("admin", "fas fa-desktop", "Tableau de bord");
-        $links .= $this->setLink("admin/formations", "fas fa-box", "Formations");
-        $links .= $this->setLink("admin/themes", "fas fa-box", "Thèmes");
-        $links .= $this->setLink("admin/etapes", "fas fa-box", "Etapes");
-        $links .= $this->setLink("admin/motivation-plus", "fas fa-tv", "Motivation plus");
-        $links .= $this->setLink("admin/articles", "fas fa-pen-square", "Articles");
-        $links .= $this->setLink("admin/videos", "fas fa-video", "Vidéos");
-        $links .= $this->setLink("admin/livres", "fas fa-book", "Livres");
-        $links .= $this->setLink("admin/ebooks", "fas fa-book", "Ebooks");
-        $links .= $this->setLink("admin/mini-services", "fas fa-shopping-basket", "Mini services");
-        $links .= $this->setLink("admin/orders", "fas fa-shopping-basket", "Commandes");
-
+        $links = null;
         return $links;
     }
 
@@ -129,23 +80,19 @@ HTML;
      * sidebar.
      * 
      * @param string $href                 Le lien vers lequel le bouton va diriger.
-     * @param string $fontawesomeIconClass La classe fontawesome pour l'icône.
+     * @param string $iconClass La classe fontawesome pour l'icône.
      * @param string $caption              Le texte qui sera visible dans la sidebar.
      * 
      * @return string
      */
-    private function setLink(string $href = null, string $fontawesomeIconClass = null, string $caption = null)
+    private function setLink(string $href = null, string $iconClass = null, string $caption = null)
     {
         $badge = null;
-
-        if ($caption !== "Aller vers le site" && $caption !== "Tableau de bord") {
-            $badge = '<span class="badge badge-success">' . Item::countAllItems(Utility::slugify($caption)) . '</span>';
-        }
 
         return <<<HTML
         <a class="py-2 px-4" href="{$href}">
             <div class="row">
-                <span class="col-2"><i class="{$fontawesomeIconClass} fa-lg"></i></span>
+                <span class="col-2"><i class="{$iconClass} fa-lg"></i></span>
                 <span class="col-8">{$caption}</span>
                 {$badge}
             </div>
