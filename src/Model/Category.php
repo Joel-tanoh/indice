@@ -23,7 +23,7 @@ class Category extends Model
         $queryFormatter = new SqlQueryFormater();
 
         $query = $queryFormatter->select(
-            "id, title, slug, created_at, modified_at, description"
+            "id, title, slug, created_at, updated_at, description"
             )->from(self::TABLE_NAME)->where("id = ?");
 
         $rep = parent::connect()->prepare($query);
@@ -35,7 +35,7 @@ class Category extends Model
         $this->title = $result["title"];
         $this->slug = $result["slug"];
         $this->createdAt = $result["created_at"];
-        $this->modifiedAt = $result["modified_at"];
+        $this->updatedAt = $result["updated_at"];
         $this->description = $result["description"];
     }
 

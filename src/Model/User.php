@@ -20,7 +20,7 @@ class User extends Model
     protected $password;
     protected $phoneNumber;
     protected $createdAt;
-    protected $modifiedAt;
+    protected $updatedAt;
     protected $types = ["annonceur", "administrateur"];
     protected $type;
     const TABLE_NAME = "ind_users";
@@ -36,7 +36,7 @@ class User extends Model
 
         $query = $queryFormatter->select(
             "id, code, name, first_names, email_address, pseudo, password, phone_number, created_at,
-            modified_at, type"
+            updated_at, type"
             )->from(self::TABLE_NAME)->where("id = ?");
 
         $rep = parent::connect()->prepare($query);
@@ -52,7 +52,7 @@ class User extends Model
         $this->password = $result["password"];
         $this->phoneNumber = $result["phone_number"];
         $this->createdAt = $result["created_at"];
-        $this->modifiedAt = $result["modified_at"];
+        $this->updatedAt = $result["updated_at"];
         $this->type = $result["type"];
     }
 

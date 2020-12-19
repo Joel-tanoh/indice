@@ -36,7 +36,7 @@ class Announce extends Model
 
         $query = $queryFormatter->select(
             "id, slug, title, description, id_category, id_sub_category, id_user, phone_number,
-             state, created_at, posted_at, modified_at, views"
+             state, created_at, posted_at, updated_at, views"
             )->from(self::TABLE_NAME)->where("id = ?");
 
         $rep = parent::connect()->prepare($query);
@@ -55,7 +55,7 @@ class Announce extends Model
         $this->state = $result["state"];
         $this->createdAt = $result["created_at"];
         $this->postedAt = $result["posted_at"];
-        $this->modifiedAt = $result["modified_at"];
+        $this->updatedAt = $result["updated_at"];
         $this->views = $result["views"];
         $this->thumbsPath = self::IMG_DIR_PATH . $this->id . DIRECTORY_SEPARATOR . "thumbs" . Image::EXTENSION;
         $this->thumbsSrc = self::IMG_DIR_URL . "/" . $this->id . "/thumbs" . Image::EXTENSION;
