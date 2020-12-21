@@ -8,12 +8,10 @@
 
 namespace App\View;
 
+use App\File\Image\Image;
 use App\Router\Router;
 use App\Model\Entity;
 use App\Model\User\Visitor;
-use App\View\Model\Items\ItemView;
-use App\View\Model\Items\ItemParentView;
-use App\View\Model\Items\ItemChildView;
 
 /**
  * Gère les fragments de code.
@@ -192,7 +190,7 @@ HTML;
     /**
      * Retourne l'image de l'item passé en paramètre.
      * 
-     * @param \App\Model\Items\ItemChild|\App\Model\Items\ItemParent $item 
+     * @param $item
      * 
      * @return string
      */
@@ -210,9 +208,6 @@ HTML;
     private function contextMenu()
     {
         return <<<HTML
-        <span>
-            {$this->button(Entity::getCategorieUrl(Router::GETUrlAsArray()[0], ADMIN_URL)."/create", "Ajouter", "btn-sm btn-success", null)}
-        </span>
 HTML;
     }
 
@@ -267,31 +262,7 @@ HTML;
      */
     public function showBddData($item)
     {
-        $itemView = new ItemView($item);
-
-        if ($item->isChild()) {
-            $itemChildView = new ItemChildView($item);
-            $parent = $itemChildView->showParent();
-            $registeredNumber = null;
-        } else {
-            $itemParentView = new ItemParentView($item);
-            $registeredNumber = $itemParentView->showRegisteredsNumber();
-            $parent = null;
-        }
-
         return <<<HTML
-        <table class="table bg-white p-3 rounded mb-3">
-            {$itemView->showCategorie()}
-            {$parent}
-            {$itemView->showPrice()}
-            {$itemView->showView()}
-            {$itemView->showCreatedAt()}
-            {$itemView->showUpdatedAt()}
-            {$itemView->showPostedAt()}
-            {$registeredNumber}
-            {$itemView->showDescription()}
-        </table>
-
 HTML;
     }
 
@@ -306,17 +277,16 @@ HTML;
      */
     public function deleteItemsTable($items, string $categorie)
     {
-        $form = new Form();
+        $form = new Form("post", $_SERVER['REQUEST_URI'], true);
         $tableRows = null;
-        $submitButton = $form->submitButton("suppression", "Supprimer");
+        $submitButton = $form->submit("suppression", "Supprimer");
 
         foreach($items as $item) {
-            $item = Entity::createObjectByCategorieAndCode($categorie, $item["code"]);
-            $tableRows .= $this->deleteItemsTableRow($item);
+            
         }
 
         return <<<HTML
-        <form id="myForm" method="post" enctype="multipart/form-data" action="{$_SERVER['REQUEST_URI']}">
+        {$form->open()}
             <table class="table mb-3">
                 <thead>
                     <th><input type="checkbox" id="checkAllItemsForDelete"></th><th>Titre</th>
@@ -335,17 +305,16 @@ HTML;
      */
     public function searchBar()
     {
-        $form = new Form();
-        $searchBar = $form->input("search", "recherche", "rechercheInput", null, "Rechercher", "app-search-bar-input p-1");
+        $form = new Form("post", null, false, "search-form", "d-flex justify-content-between");
 
         return <<<HTML
         <div class="app-search-bar bg-white mx-3 mt-3 mb-2 pl-2">
-            <form action="" method="post" class="d-flex justify-content-between">
-                {$searchBar}
+            {$form->open()}
+                {$form->input("search", "recherche", "rechercheInput", null, "Rechercher", "app-search-bar-input p-1")}
                 <button type="submit" class="app-search-bar-button">
                     <i class="fas fa-search"></i>
                 </button>
-            </form>
+            {$form->close()}
         </div>
 HTML;
     }
@@ -473,7 +442,7 @@ HTML;
      */
     public function showVisitorsOnlineNumber()
     {
-        $visitorsOnline = Visitor::countVisitorsOnline();
+        $visitorsOnline = null;
 
         return <<<HTML
         <div class="small-box text-small text-white bg-success rounded p-2">
@@ -492,7 +461,7 @@ HTML;
      */
     public function slider()
     {
-        $slide = SLIDERS_DIR_URL . "/" . random_int(1, 1) . ".jpg";
+        $slide = Image::SLIDERS_DIR_URL . "/" . random_int(1, 1) . ".jpg";
 
         return <<<HTML
         <div id="slideBox" class="d-none d-md-block">
@@ -511,6 +480,356 @@ HTML;
         </div>
 HTML;
     }
+
+    /**
+     * Hero Area
+     * 
+     * @param bool $showWelcomeText
+     * 
+     * @return string
+     */
+    public function heroArea(bool $showWelcomeText = true)
+    {
+        $welcomeText = null;
+        if ($showWelcomeText) {
+            $welcomeText = <<<HTML
+            <h1 class="head-title">Bienvenue sur <span class="year">Indice</span></h1>
+            <p>Achetez et vendez de tout, des voitures d'occasion aux téléphones mobiles et aux ordinateurs, <br> ou recherchez une propriété, des emplois et plus encore</p>
+HTML;
+        }
+
+        return <<<HTML
+        <!-- Hero Area Start -->
+        <div id="hero-area">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-xs-12 text-center">
+                        <div class="contents">
+                            {$welcomeText}
+                            {$this->heroAreaSearchBar()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hero Area End -->
+HTML;
+    }
+
+    /**
+     * Hero Area
+     * 
+     * @return string
+     */
+    public function heroArea2()
+    {
+        return <<<HTML
+        <!-- Hero Area Start -->
+        <div id="hero-area">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-xs-12 text-center">
+                        <div class="contents-ctg">
+                            {$this->heroAreaSearchBar()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hero Area End -->
+HTML;
+    }
+
+    /**
+     * La barre de recherche qui s'affiche au début de la page.
+     * 
+     * @return string
+     */
+    public function heroAreaSearchBar()
+    {
+        return <<<HTML
+        <div class="search-bar">
+            <div class="search-inner">
+                <form method="" action="" class="search-form">
+                    <div class="form-group inputwithicon">
+                        <i class="lni-tag"></i>
+                        <input type="text" name="customword" class="form-control" placeholder="Entrer un mot">
+                    </div>
+                    <div class="form-group inputwithicon">
+                        <i class="lni-map-marker"></i>
+                        <div class="select">
+                            <select>
+                                <option value="none">Locations</option>
+                                <option value="none">New York</option>
+                                <option value="none">California</option>
+                                <option value="none">Washington</option>
+                                <option value="none">Birmingham</option>
+                                <option value="none">Chicago</option>
+                                <option value="none">Phoenix</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group inputwithicon">
+                        <i class="lni-menu"></i>
+                        <div class="select">
+                            <select>
+                                <option value="none">Catégories</option>
+                                <option value="none">Jobs</option>
+                                <option value="none">Electronics</option>
+                                <option value="none">Mobile</option>
+                                <option value="none">Training</option>
+                                <option value="none">Pets</option>
+                                <option value="none">Real Estate</option>
+                                <option value="none">Services</option>
+                                <option value="none">Training</option>
+                                <option value="none">Vehicles</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-common" type="button"><i class="lni-search"></i> Chercher</button>
+                </form>
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Counter Area
+     * 
+     * @return string
+     */
+    public function counterArea()
+    {
+        return <<<HTML
+        <!-- Counter Area Start-->
+        <section class="counter-section section-padding">
+            <div class="container">
+                <div class="row">
+                    <!-- Counter Item -->
+                    <div class="col-md-3 col-sm-6 work-counter-widget text-center">
+                        <div class="counter">
+                            <div class="icon"><i class="lni-layers"></i></div>
+                            <h2 class="counterUp">12090</h2>
+                            <p>Regular Ads</p>
+                        </div>
+                    </div>
+                    <!-- Counter Item -->
+                    <div class="col-md-3 col-sm-6 work-counter-widget text-center">
+                        <div class="counter">
+                            <div class="icon"><i class="lni-map"></i></div>
+                            <h2 class="counterUp">350</h2>
+                            <p>Locations</p>
+                        </div>
+                    </div>
+                    <!-- Counter Item -->
+                    <div class="col-md-3 col-sm-6 work-counter-widget text-center">
+                        <div class="counter">
+                            <div class="icon"><i class="lni-user"></i></div>
+                            <h2 class="counterUp">23453</h2>
+                            <p>Reguler Members</p>
+                        </div>
+                    </div>
+                    <!-- Counter Item -->
+                    <div class="col-md-3 col-sm-6 work-counter-widget text-center">
+                        <div class="counter">
+                            <div class="icon"><i class="lni-briefcase"></i></div>
+                            <h2 class="counterUp">250</h2>
+                            <p>Premium Ads</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Counter Area End-->
+HTML;
+    }
+
+    /**
+     * Pricing Section.
+     * 
+     * @return string
+     */
+    public function pricingSection()
+    {
+        return <<<HTML
+        <!-- Pricing section Start --> 
+        <section id="pricing-table" class="section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mainHeading">
+                            <h2 class="section-title">Select A Package</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-xs-12">
+                        <div class="table">
+                            <div class="icon">
+                                <i class="lni-gift"></i>
+                            </div>
+                            <div class="title">
+                                <h3>SILVER</h3>
+                            </div>
+                            <div class="pricing-header">
+                                <p class="price-value"><sup>$</sup>29<span>/ Mo</span></p>
+                            </div>
+                            <ul class="description">
+                                <li><strong>Free</strong> ad posting</li>
+                                <li><strong>No</strong> Featured ads availability</li>
+                                <li><strong>For 30</strong> days</li>
+                                <li><strong>100%</strong> Secure!</li>
+                            </ul>
+                            <button class="btn btn-common">Buy Now</button>
+                        </div> 
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-xs-12">
+                        <div class="table" id="active-tb">
+                            <div class="icon">
+                                <i class="lni-leaf"></i>
+                            </div>
+                            <div class="title">
+                                <h3>STANDARD</h3>
+                            </div>
+                            <div class="pricing-header">
+                                <p class="price-value"><sup>$</sup>89<span>/ Mo</span></p>
+                            </div>
+                            <ul class="description">
+                                <li><strong>Free</strong> ad posting</li>
+                                <li><strong>6</strong> Featured ads availability</li>
+                                <li><strong>For 30</strong> days</li>
+                                <li><strong>100%</strong> Secure!</li>
+                            </ul>
+                            <button class="btn btn-common">Buy Now</button>
+                        </div> 
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-xs-12">
+                        <div class="table">
+                            <div class="icon">
+                                <i class="lni-layers"></i>
+                            </div>
+                            <div class="title">
+                                <h3>PLATINIUM</h3>
+                            </div>
+                            <div class="pricing-header">
+                                <p class="price-value"><sup>$</sup>99<span>/ Mo</span></p>
+                            </div>
+                            <ul class="description">
+                                <li><strong>Free</strong> ad posting</li>
+                                <li><strong>20</strong> Featured ads availability</li>
+                                <li><strong>For 25</strong> days</li>
+                                <li><strong>100%</strong> Secure!</li>
+                            </ul>
+                            <button class="btn btn-common">Buy Now</button>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Pricing Table Section End -->
+HTML;
+    }
+
+    /**
+     * Testimonail Section. Section des témoignages.
+     * 
+     * @return string
+     */
+    public function testimonialSection()
+    {
+        return <<<HTML
+        <!-- Testimonial Section Start -->
+        <section class="testimonial section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div id="testimonials" class="owl-carousel">
+                            <div class="item">
+                                <div class="testimonial-item">
+                                    <div class="img-thumb">
+                                        <img src="assets/img/testimonial/img1.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <h2><a href="#">John Doe</a></h2>
+                                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quidem, excepturi facere magnam illum, at accusantium doloremque odio.</p>
+                                        <h3>Developer at of <a href="#">xyz company</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="testimonial-item">
+                                    <div class="img-thumb">
+                                        <img src="assets/img/testimonial/img2.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <h2><a href="#">Jessica</a></h2>
+                                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quidem, excepturi facere magnam illum, at accusantium doloremque odio.</p>
+                                        <h3>Developer at of <a href="#">xyz company</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="testimonial-item">
+                                    <div class="img-thumb">
+                                        <img src="assets/img/testimonial/img3.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <h2><a href="#">Johnny Zeigler</a></h2>
+                                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quidem, excepturi facere magnam illum, at accusantium doloremque odio.</p>
+                                        <h3>Developer at of <a href="#">xyz company</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="testimonial-item">
+                                    <div class="img-thumb">
+                                        <img src="assets/img/testimonial/img1.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <h2><a href="#">John Doe</a></h2>
+                                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quidem, excepturi facere magnam illum, at accusantium doloremque odio.</p>
+                                        <h3>Developer at of <a href="#">xyz company</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="testimonial-item">
+                                    <div class="img-thumb">
+                                        <img src="assets/img/testimonial/img2.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <h2><a href="#">Jessica</a></h2>
+                                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quidem, excepturi facere magnam illum, at accusantium doloremque odio.</p>
+                                        <h3>Developer at of <a href="#">xyz company</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Testimonial Section End -->
+HTML;
+    }
+
+    /**
+     * Advertisement section.
+     * 
+     * @return string
+     */
+    public function advertisementSection()
+    {
+        return <<<HTML
+        <div class="widget">
+            <h4 class="widget-title">Advertisement</h4>
+            <div class="add-box">
+                <img class="img-fluid" src="assets/img/img1.jpg" alt="">
+            </div>
+        </div>
+HTML;
+    }
+
 
     // METHODE PRIVEES //
 
@@ -562,11 +881,11 @@ HTML;
     /**
      * Retourne l'image de couverture de l'item passé en paramètre.
      * 
-     * @param \App\Model\Items\Item $item
+     * @param $item
      * 
      * @return string
      */
-    private function thumbs(\App\Model\Items\Item $item)
+    private function thumbs($item)
     {
         return <<<HTML
         <div>

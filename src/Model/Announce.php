@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Action\InsertData;
 use App\backend\Session;
-use App\File\Image;
+use App\File\Image\Image;
 use App\Database\SqlQueryFormater;
 use App\Utility\Utility;
 
@@ -21,8 +21,8 @@ class Announce extends Model
     private $postedAt;
     private $viewss;
     const TABLE_NAME = "ind_announces";
-    const IMG_DIR_PATH = Image::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "announces" . DIRECTORY_SEPARATOR;
-    const IMG_DIR_URL = Image::IMG_DIR_URL . "/announces";
+    const IMG_DIR_PATH = Image::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "productinfo" . DIRECTORY_SEPARATOR;
+    const IMG_DIR_URL = Image::IMG_DIR_URL . "/productinfo";
     const DEFAULT_THUMBS = Image::IMG_DIR_URL . "/defaul-thumbs" . Image::EXTENSION;
 
     /**
@@ -57,8 +57,8 @@ class Announce extends Model
         $this->postedAt = $result["posted_at"];
         $this->updatedAt = $result["updated_at"];
         $this->views = $result["views"];
-        $this->thumbsPath = self::IMG_DIR_PATH . $this->id . DIRECTORY_SEPARATOR . "thumbs" . Image::EXTENSION;
-        $this->thumbsSrc = self::IMG_DIR_URL . "/" . $this->id . "/thumbs" . Image::EXTENSION;
+        $this->featuredImgPath = Image::FEATURED_DIR_PATH . $this->slug . Image::EXTENSION;
+        $this->featuredImgSrc = Image::FEATURED_DIR_URL . "/" . $this->slug . Image::EXTENSION;
     }
 
     /**

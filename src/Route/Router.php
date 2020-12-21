@@ -185,7 +185,7 @@ class Router
      * 
      * @return int
      */
-    static function urlLength()
+    public static function urlLength()
     {
         return count(self::explodeUrl(self::getRequestUri()));
     }

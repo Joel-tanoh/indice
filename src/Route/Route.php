@@ -54,7 +54,7 @@ class Route
      * 
      * @return array
      */
-    function getParams() : array
+    private function getParams() : array
     {
         preg_match_all("#:([\w]+)#", $this->route, $matches);
         $this->params = $matches[1];
@@ -66,7 +66,7 @@ class Route
      * 
      * @return bool
      */
-    public function hasParams()
+    private function hasParams()
     {
         return count($this->getParams()) !== 0;
     }
@@ -76,7 +76,7 @@ class Route
      * 
      * @return array
      */
-    function parts()
+    private function parts()
     {
         return explode("/", $this->route);
     }
@@ -86,7 +86,7 @@ class Route
      * 
      * @return int
      */
-    function length()
+    private function length()
     {
         return count($this->parts());
     }

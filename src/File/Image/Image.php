@@ -57,26 +57,14 @@ class Image extends File
      * @var string
      */
     const IMG_DIR_PATH = ASSETS_DIR_PATH . "img" . DIRECTORY_SEPARATOR;
-
-    /**
-     * Url du dossier contenant les images.
-     * 
-     * @var string
-     */
     const IMG_DIR_URL = ASSETS_DIR_URL . "/img";
 
     /**
-     * Chemin du dossier contenant les images des slides.
+     * Chemin et url du dossier contenant les images des slides.
      * 
      * @var string
      */
     const SLIDERS_DIR_PATH = self::IMG_DIR_PATH . "slider" . DIRECTORY_SEPARATOR;
-
-    /**
-     * Url du dossier contenant les images des slides.
-     * 
-     * @var string
-     */
     const SLIDERS_DIR_URL = self::IMG_DIR_URL . "/slider";
 
     /**
@@ -85,6 +73,15 @@ class Image extends File
      * @var string
      */
     const DEFAULT_THUMBS = self::IMG_DIR_URL . "/default-thumbs" . self::EXTENSION;
+
+    const PRODUCT_DIR_PATH = self::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "product";
+    const PRODUCT_DIR_URL = self::IMG_DIR_URL . "/product";
+
+    const FEATURED_DIR_PATH = self::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "featured";
+    const FEATURED_DIR_URL = self::IMG_DIR_URL . "/featured";
+
+    const PRODUCT_INFO_DIR_PATH = self::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "productinfo";
+    const PRODUCT_INFO_DIR_URL = self::IMG_DIR_URL . "/productinfo";
 
     /**
      * Permet de sauvegarder l'image dans les fichiers du serveur dans le dossier des
