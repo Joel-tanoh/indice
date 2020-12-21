@@ -45,12 +45,17 @@ class Footer extends Snippet
                         <div class="widget">
                             <h3 class="footer-logo"><img src="assets/img/logo/logo1.png" alt=""></h3>
                             <div class="textwidget">
+<<<<<<< HEAD
                                 <p>Indice est un site de petites annonces reputée pour être l'une des meilleurs en côte d'Ivoire , Indice vous offre la Possibilité de poster sans contrainte vos annonces sans prise de tête.</p>
+=======
+                                <p>Petit texte descrioptif, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque lobortis tincidunt est, et euismod purus suscipit quis. Etiam euismod ornare elementum. Sed ex est, consectetur eget facilisis sed, auctor ut purus.</p>
+>>>>>>> fbd9d76861163ef1a6f59acc5e0db793edc4e9c0
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                         <div class="widget">
+<<<<<<< HEAD
                             <h3 class="block-title">Derniers articles ajoutés</h3>
                             <ul class="media-content-list">
                                 <li>
@@ -78,10 +83,15 @@ class Footer extends Snippet
                                     </div>
                                 </li>
                             </ul>
+=======
+                            <h3 class="block-title">Dernières posté(e)s</h3>
+                            {$this->lastPostedInFooter("Titre de l'annonce", "28 Fev. 2020", "500")}
+>>>>>>> fbd9d76861163ef1a6f59acc5e0db793edc4e9c0
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                         <div class="widget">
+<<<<<<< HEAD
                             <h3 class="block-title">Aide et Support</h3>
                             <ul class="menu">
                                 <li><a href="#">FAQ</a></li>
@@ -93,9 +103,13 @@ class Footer extends Snippet
                         <div class="widget">
                             <h3 class="block-title">s'Inscrire</h3>
                             <p class="text-sub">Site d'annonce numero 1 en Côte d'Ivoire</p>
+=======
+                            <h3 class="block-title">Inscrivez-vous</h3>
+                            <p class="text-sub">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptate illo ipsa quod.</p>
+>>>>>>> fbd9d76861163ef1a6f59acc5e0db793edc4e9c0
                             <form method="post" id="subscribe-form" name="subscribe-form" class="validate">
                                 <div class="form-group is-empty">
-                                    <input type="email" value="" name="Email" class="form-control" id="EMAIL" placeholder="Email address" required="">
+                                    <input type="email" value="" name="Email" class="form-control" id="EMAIL" placeholder="Adresse" required="">
                                     <button type="submit" name="subscribe" id="subscribes" class="btn btn-common sub-btn"><i class="lni-check-box"></i></button>
                                     <div class="clearfix"></div>
                                 </div>
@@ -119,6 +133,7 @@ class Footer extends Snippet
                 <div class="row">
                     <div class="col-md-12">
                         <div class="site-info float-left">
+<<<<<<< HEAD
                             <p>Tout droit reservé &copy; 2018 - Designé par <a href="https://indice.com" rel="nofollow">Indice</a></p>
                         </div>
                         <div class="float-right">
@@ -136,6 +151,9 @@ class Footer extends Snippet
                                     <a href="#"><img src="assets/img/footer/card4.jpg" alt="card"></a>
                                 </li>
                             </ul>
+=======
+                            <p>Tous droits réservés &copy; 2020.</p>
+>>>>>>> fbd9d76861163ef1a6f59acc5e0db793edc4e9c0
                         </div>
                     </div>
                 </div>
@@ -156,6 +174,48 @@ class Footer extends Snippet
             <div class="loader" id="loader-1"></div>
         </div>
         <!-- End Preloader -->
+HTML;
+    }
+
+    /**
+     * Last posted in footer.
+     * 
+     * @return string
+     */
+    public function lastPostedInFooter()
+    {
+        return <<<HTML
+        <ul class="media-content-list">
+            {$this->lastPostedCode("Titre de l'annonce", 50, "20 Fev. 2020")}
+            {$this->lastPostedCode("Titre de l'annonce", 200, "31 Dec. 2020")}
+        </ul>
+HTML;
+    }
+
+    /**
+     * Last posted in footer code.
+     * 
+     * @param string $title
+     * @param int $price
+     * @param string $date
+     * 
+     * @return string
+     */
+    public function lastPostedCode(string $title, int $price = null, string $date = null)
+    {
+        return <<<HTML
+        <li>
+            <div class="media-left">
+                <img class="img-fluid" src="assets/img/art/img2.jpg" alt="">
+                <div class="overlay">
+                    <span class="price">{$price} XOF</span>
+                </div>
+            </div>
+            <div class="media-body">
+                <h4 class="post-title"><a href="ads-details.html">{$title}</a></h4>
+                <span class="date">{$date}</span>
+            </div>
+        </li>
 HTML;
     }
 

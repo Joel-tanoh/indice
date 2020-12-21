@@ -29,22 +29,28 @@ class Form extends View
     /**
      * @var string
      */
-    public $method;
+    private $method;
 
     /**
      * @var string
      */
-    public $action;
+    private $action;
 
     /**
      * @var bool
      */
-    public $uploadFile;
+    private $uploadFile;
+
+    /**
+     * Id du formulaire afin d'y accéder via Js.
+     * @var string
+     */
+    private $id;
 
     /**
      * @var string
      */
-    public $class;
+    private $class;
 
     /**
      * Le contenu du formulaire.
@@ -59,11 +65,12 @@ class Form extends View
      * @param bool   $uploadFile
      * @param string $class
      */
-    public function __construct(string $method, string $action, bool $uploadFile = true, string $class)
+    public function __construct(string $method = "post", string $action = null, bool $uploadFile = true,string $id="myForm", string $class = null)
     {
         $this->method = $method;
         $this->action = $action;
         $this->uploadFile = $uploadFile;
+        $this->id = $id;
         $this->class = $class;
     }
 
@@ -392,14 +399,16 @@ HTML;
     public function show()
     {
         return <<<HTML
-        <form id="myForm" method="{$this->method}" enctype="multipart/form-data" action="{$this->action}" class="{$this->class}">
+        {$this->open()}
             <div class="row">
                 {$this->content}
-                <div class="col-12">
-                    {$this->submit('enregistrement', 'Enregistrer')}
+                <div class="row">
+                    <div class="col-12">
+                        {$this->submit('enregistrement', 'Enregistrer')}
+                    </div>
                 </div>
             </div>
-        </form>
+        {$this->close()}
 HTML;
     }
 
@@ -495,6 +504,32 @@ HTML;
     {
         return <<<HTML
         <textarea name="{$name}" id="{$id}" rows="{$rows}" placeholder="{$placeholder}" class="col-12 {$class}">{$value}</textarea>
+HTML;
+    }
+
+    /**
+     * Début du code d'un formulaire
+     * 
+     * @author Joel-tanoh
+     * 
+     * @return string
+     */
+    public function open()
+    {
+        return <<<HTML
+        <form id="{$this->id}" method="{$this->method}" enctype="multipart/form-data" action="{$this->action}" class="{$this->class}">
+HTML;
+    }
+
+    /**
+     * Code de fin d'un formulaire
+     * 
+     * @return string
+     */
+    public function close()
+    {
+        return <<<HTML
+        </form>
 HTML;
     }
 
