@@ -45,13 +45,13 @@ class Footer extends Snippet
                         <div class="widget">
                             <h3 class="footer-logo"><img src="assets/img/logo/logo1.png" alt=""></h3>
                             <div class="textwidget">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque lobortis tincidunt est, et euismod purus suscipit quis. Etiam euismod ornare elementum. Sed ex est, consectetur eget facilisis sed, auctor ut purus.</p>
+                                <p>Indice est un site de petites annonces reputée pour être l'une des meilleurs en côte d'Ivoire , Indice vous offre la Possibilité de poster sans contrainte vos annonces sans prise de tête.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                         <div class="widget">
-                            <h3 class="block-title">Latest Ads</h3>
+                            <h3 class="block-title">Derniers articles ajoutés</h3>
                             <ul class="media-content-list">
                                 <li>
                                     <div class="media-left">
@@ -82,20 +82,17 @@ class Footer extends Snippet
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                         <div class="widget">
-                            <h3 class="block-title">Help & Support</h3>
+                            <h3 class="block-title">Aide et Support</h3>
                             <ul class="menu">
-                                <li><a href="#">Live Chat</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Purchase Protection</a></li>
-                                <li><a href="#">Support</a></li>
-                                <li><a href="#">Contact us</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="#">Nous Contacter</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                         <div class="widget">
-                            <h3 class="block-title">Subscribe us</h3>
-                            <p class="text-sub">We have over 5 years of experience Our suppoer avalable to help you 24 hours a day, seven days week</p>
+                            <h3 class="block-title">s'Inscrire</h3>
+                            <p class="text-sub">Site d'annonce numero 1 en Côte d'Ivoire</p>
                             <form method="post" id="subscribe-form" name="subscribe-form" class="validate">
                                 <div class="form-group is-empty">
                                     <input type="email" value="" name="Email" class="form-control" id="EMAIL" placeholder="Email address" required="">
@@ -122,7 +119,7 @@ class Footer extends Snippet
                 <div class="row">
                     <div class="col-md-12">
                         <div class="site-info float-left">
-                            <p>All copyrights reserved &copy; 2018 - Designed by <a href="https://uideck.com" rel="nofollow">UIdeck</a></p>
+                            <p>Tout droit reservé &copy; 2018 - Designé par <a href="https://indice.com" rel="nofollow">Indice</a></p>
                         </div>
                         <div class="float-right">
                             <ul class="bottom-card">

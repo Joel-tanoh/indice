@@ -27,7 +27,7 @@ class View
                                 <div class="icon">
                                 <i class="lni-car"></i>
                                 </div>
-                                <h4>Vehicle</h4>
+                                <h4>Vehicule</h4>
                             </div>
                         </a>
                     </div>
@@ -37,7 +37,7 @@ class View
                                 <div class="icon">
                                 <i class="lni-display"></i>
                                 </div>
-                                <h4>Electronics</h4>
+                                <h4>Electroniques</h4>
                             </div>
                         </a>
                     </div>
@@ -57,7 +57,7 @@ class View
                                 <div class="icon">
                                 <i class="lni-leaf"></i>
                                 </div>
-                                <h4>Furnitures</h4>
+                                <h4>Fournitures</h4>
                             </div>
                         </a>
                     </div>
@@ -67,7 +67,7 @@ class View
                                 <div class="icon">
                                 <i class="lni-tshirt"></i>
                                 </div>
-                                <h4>Fashion</h4>
+                                <h4>Mode</h4>
                             </div>
                         </a>
                     </div>
@@ -87,7 +87,7 @@ class View
                                 <div class="icon">
                                 <i class="lni-home"></i>
                                 </div>
-                                <h4>Real Estate</h4>
+                                <h4>Immobiliers</h4>
                             </div>
                         </a>
                     </div>
@@ -97,7 +97,7 @@ class View
                                 <div class="icon">
                                 <i class="lni-hand"></i>
                                 </div>
-                                <h4>Animals</h4>
+                                <h4>Animaux</h4>
                             </div>
                         </a>
                     </div>
@@ -117,7 +117,7 @@ class View
                                 <div class="icon">
                                 <i class="lni-laptop"></i>
                                 </div>
-                                <h4>Laptops & PCs</h4>
+                                <h4>Ordinateurs & PCs</h4>
                             </div>
                         </a>
                     </div>
@@ -137,7 +137,7 @@ class View
                                 <div class="icon">
                                 <i class="lni-heart"></i>
                                 </div>
-                                <h4>Matrimony</h4>
+                                <h4>Mariage</h4>
                             </div>
                         </a>
                     </div>
@@ -149,7 +149,7 @@ class View
         <!-- Featured Section Start -->
         <section class="featured section-padding">
             <div class="container">
-                <h1 class="section-title">Latest Products</h1>
+                <h1 class="section-title">Derniers Produits</h1>
                 <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4">
                         <div class="featured-box">
@@ -161,7 +161,7 @@ class View
                         </figure>
                         <div class="feature-content">
                             <div class="product">
-                            <a href="#"><i class="lni-folder"></i> Mobile Phones</a>
+                            <a href="#"><i class="lni-folder"></i> Telephones Portables</a>
                             </div>
                             <h4><a href="ads-details.html">Apple iPhone X</a></h4>
                             <span>Last Updated: 1 hours ago</span>
@@ -196,7 +196,7 @@ class View
                         </figure>
                         <div class="feature-content">
                             <div class="product">
-                            <a href="#"><i class="lni-folder"></i> Real Estate</a>
+                            <a href="#"><i class="lni-folder"></i> Immobilier</a>
                             </div>
                             <h4><a href="ads-details.html">Amazing Room for Rent</a></h4>
                             <span>Last Updated: 2 hours ago</span>
@@ -230,7 +230,7 @@ class View
                         </figure>
                         <div class="feature-content">
                             <div class="product">
-                            <a href="#"><i class="lni-folder"></i> Electronics</a>
+                            <a href="#"><i class="lni-folder"></i> Electroniques</a>
                             </div>
                             <h4><a href="ads-details.html">Canon SX Powershot D-SLR</a></h4>
                             <span>Last Updated: 4 hours ago</span>
@@ -264,7 +264,7 @@ class View
                         </figure>
                         <div class="feature-content">
                             <div class="product">
-                            <a href="#"><i class="lni-folder"></i> Vehicles</a>
+                            <a href="#"><i class="lni-folder"></i> Vehicules</a>
                             </div>
                             <h4><a href="ads-details.html">BMW 5 Series GT Car</a></h4>
                             <span>Last Updated: 5 hours ago</span>
