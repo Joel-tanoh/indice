@@ -9,8 +9,8 @@ class AppController
 {
     public static function index()
     {
-        $page = new Page("Le leader des petites annonces en Côte d'Ivoire", View::index());
-        $page->show("public");
+        $page = new Page("Le leader des petites annonces de Côte d'Ivoire", View::index());
+        $page->show();
     }
 
 }
