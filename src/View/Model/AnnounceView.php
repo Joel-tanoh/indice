@@ -36,6 +36,18 @@ HTML;
     }
 
     /**
+     * Permet  d'afficher la vue des détails de l'annonce.
+     * 
+     * @return string Le code HTML de la vue.
+     */
+    public function read()
+    {
+        return <<<HTML
+        
+HTML;
+    }
+
+    /**
      * Un bloc de code HTML qui affiche aucune annonce lorqu'il n'y a pas 
      * d'annonce à afficher dans une partie de la page.
      * 

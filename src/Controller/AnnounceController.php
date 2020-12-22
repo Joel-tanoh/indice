@@ -14,8 +14,18 @@ class AnnounceController extends AppController
         $page->show();
     }
 
-    static function read(array $url)
+    /**
+     * Controller pour afficher les détails d'une annonce.
+     * 
+     * @param array $url C'est le tableau qui contient l'url découpée.
+     *                   La partie de ce tableau nous interressant est
+     *                   l'index 1
+     * 
+     * @return void
+     */
+    static function read(array $url = null)
     {
-
+        $page = new Page("Titre de l'annonce", (new AnnounceView())->read());
+        $page->show();
     }
 }
