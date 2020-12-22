@@ -20,7 +20,7 @@ try {
     $router->get("/creer-une-annonce", "App\Controller\AnnounceController@create");
     $router->get("/category", "App\Controller\CategoryController@read");
     $router->get("/:category", "App\Controller\CategoryController@read");
-    $router->get("/category/annonce-slug", "App\Controller\AnnounceController@read");
+    $router->get("/category/annonce", "App\Controller\AnnounceController@read");
     $router->get("/:category/:slug", "App\Controller\AnnounceController@read");
 
     $router->run();
