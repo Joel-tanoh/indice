@@ -45,17 +45,14 @@ class Footer extends Snippet
                         <div class="widget">
                             <h3 class="footer-logo"><img src="assets/img/logo/logo1.png" alt=""></h3>
                             <div class="textwidget">
-<<<<<<< HEAD
+
                                 <p>Indice est un site de petites annonces reputée pour être l'une des meilleurs en côte d'Ivoire , Indice vous offre la Possibilité de poster sans contrainte vos annonces sans prise de tête.</p>
-=======
                                 <p>Petit texte descrioptif, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque lobortis tincidunt est, et euismod purus suscipit quis. Etiam euismod ornare elementum. Sed ex est, consectetur eget facilisis sed, auctor ut purus.</p>
->>>>>>> fbd9d76861163ef1a6f59acc5e0db793edc4e9c0
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                         <div class="widget">
-<<<<<<< HEAD
                             <h3 class="block-title">Derniers articles ajoutés</h3>
                             <ul class="media-content-list">
                                 <li>
@@ -83,10 +80,6 @@ class Footer extends Snippet
                                     </div>
                                 </li>
                             </ul>
-=======
-                            <h3 class="block-title">Dernières posté(e)s</h3>
-                            {$this->lastPostedInFooter("Titre de l'annonce", "28 Fev. 2020", "500")}
->>>>>>> fbd9d76861163ef1a6f59acc5e0db793edc4e9c0
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
@@ -103,10 +96,8 @@ class Footer extends Snippet
                         <div class="widget">
                             <h3 class="block-title">s'Inscrire</h3>
                             <p class="text-sub">Site d'annonce numero 1 en Côte d'Ivoire</p>
-=======
                             <h3 class="block-title">Inscrivez-vous</h3>
-                            <p class="text-sub">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptate illo ipsa quod.</p>
->>>>>>> fbd9d76861163ef1a6f59acc5e0db793edc4e9c0
+
                             <form method="post" id="subscribe-form" name="subscribe-form" class="validate">
                                 <div class="form-group is-empty">
                                     <input type="email" value="" name="Email" class="form-control" id="EMAIL" placeholder="Adresse" required="">
@@ -151,9 +142,8 @@ class Footer extends Snippet
                                     <a href="#"><img src="assets/img/footer/card4.jpg" alt="card"></a>
                                 </li>
                             </ul>
-=======
                             <p>Tous droits réservés &copy; 2020.</p>
->>>>>>> fbd9d76861163ef1a6f59acc5e0db793edc4e9c0
+
                         </div>
                     </div>
                 </div>
