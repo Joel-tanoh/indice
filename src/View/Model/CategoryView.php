@@ -72,7 +72,7 @@ HTML;
     {
         return <<<HTML
         <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
-            <a href="{$href}">
+            <a href="category">
                 <div class="icon-box">
                     <div class="icon">
                         <i class="{$lniClass}"></i>

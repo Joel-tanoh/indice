@@ -254,24 +254,24 @@ HTML;
         return <<<HTML
         <div class="feature-content">
             <div class="product">
-                <a href="#"><i class="lni-folder"></i> Catégorie de l'annonce</a>
+                <a href="category"><i class="lni-folder"></i> Catégorie de l'annonce</a>
             </div>
-            <h4><a href="ads-details.html">Titre de l'annonce</a></h4>
+            <h4><a href="category/annonce">Titre de l'annonce</a></h4>
             <span>Date de mise à jour</span>
             <ul class="address">
                 <li>
-                    <a href="#"><i class="lni-map-marker"></i> Ville, Pays</a>
+                    <i class="lni-map-marker"></i> Ville, Pays
                 </li>
                 <li>
-                    <a href="#"><i class="lni-alarm-clock"></i> Date de post</a>
+                    <i class="lni-alarm-clock"></i> Date de post
                 </li>
                 <li>
-                    <a href="#"><i class="lni-user"></i> Nom du user</a>
+                    <a href="users/posts"><i class="lni-user"></i> Nom du user</a>
                 </li>
             </ul>
             <div class="listing-bottom">
                 <h3 class="price float-left">Prix. XOF</h3>
-                <a href="account-myads.html" class="btn-verified float-right"><i class="lni-check-box"></i> Annonce certifiée</a>
+                <a href="category" class="btn-verified float-right"><i class="lni-check-box"></i> Annonce certifiée</a>
             </div>
         </div>
 HTML;
@@ -289,7 +289,7 @@ HTML;
             <div class="icon">
                 <i class="lni-heart"></i>
             </div>
-            <a href="#">
+            <a href="category/annonce">
                 <img class="img-fluid" src="assets/img/featured/img1.jpg" alt="">
             </a>
         </figure>
@@ -540,10 +540,10 @@ HTML;
                 </div>
                 <ul class="advertisement mb-4">
                     <li>
-                        <p><strong><i class="lni-folder"></i> Catégories :</strong> <a href="#">Electronics</a></p>
+                        <p><strong><i class="lni-folder"></i> Catégories :</strong> <a href="category">Electronics</a></p>
                     </li>
                     <li>
-                        <p><a href="#"><i class="lni-users"></i> More ads by <span>User</span></a></p>
+                        <p><a href="users/john/posts"><i class="lni-users"></i> Plus d'annonces de <span>John</span></a></p>
                     </li>
                 </ul>
                 {$this->infosForJoinUser()}
@@ -580,9 +580,9 @@ HTML;
     {
         return <<<HTML
         <div class="details-meta">
-            <span><a href="#"><i class="lni-alarm-clock"></i> Date et heure de post</a></span>
-            <span><a href="#"><i class="lni-map-marker"></i>  Ville</a></span>
-            <span><a href="#"><i class="lni-eye"></i> 200 vue(s)</a></span>
+            <span><i class="lni-alarm-clock"></i> Date et heure de post</span>
+            <span><i class="lni-map-marker"></i>  Ville</span>
+            <span><i class="lni-eye"></i> 200 vue(s)</span>
         </div>
 HTML;
     }
@@ -613,8 +613,8 @@ HTML;
     {
         return <<<HTML
         <div class="ads-btn mb-4">
-            <a href="" class="btn btn-common btn-reply"><i class="lni-envelope"></i> adresse@email.com</a>
-            <a href="" class="btn btn-common"><i class="lni-phone-handset"></i> 01154256643</a>
+            <a href="#" class="btn btn-common btn-reply"><i class="lni-envelope"></i> adresse@email.com</a>
+            <a href="#" class="btn btn-common"><i class="lni-phone-handset"></i> 01154256643</a>
         </div>
 HTML;
     }
@@ -628,7 +628,7 @@ HTML;
     {
         return <<<HTML
         <div class="share">
-            <span>Share: </span>
+            <span>Partager: </span>
             <div class="social-link">  
                 <a class="facebook" href="#"><i class="lni-facebook-filled"></i></a>
                 <a class="twitter" href="#"><i class="lni-twitter-filled"></i></a>
