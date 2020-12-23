@@ -15,6 +15,7 @@
 namespace App\View\Page;
 
 use App\File\Image\Logo;
+use App\View\Model\User\UserView;
 use App\View\Snippet;
 
 /**
@@ -45,7 +46,8 @@ class Navbar extends Snippet
     public function get()
     {
         $appUrl = APP_URL;
-        $logoAltText = Logo::ALT_TEXT;  
+        $logoAltText = Logo::ALT_TEXT;
+        $userView = new UserView(); 
 
         return <<<HTML
         <!-- Header Area wrapper Starts -->
@@ -66,23 +68,9 @@ class Navbar extends Snippet
                     <div class="collapse navbar-collapse" id="main-navbar">
                         <ul class="navbar-nav mr-auto">
                         </ul>
-                        <ul class="sign-in">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="lni-user"></i> Mon compte</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="account-profile-setting.html"><i class="lni-home"></i> Account Home</a>
-                                    <a class="dropdown-item" href="account-myads.html"><i class="lni-wallet"></i> My Ads</a>
-                                    <a class="dropdown-item" href="account-favourite-ads.html"><i class="lni-heart"></i> Favourite ads</a>
-                                    <a class="dropdown-item" href="account-archived-ads.html"><i class="lni-folder"></i> Archived</a>
-                                    <a class="dropdown-item" href="login.html"><i class="lni-lock"></i> Log In</a>
-                                    <a class="dropdown-item" href="signup.html"><i class="lni-user"></i> Signup</a>
-                                    <a class="dropdown-item" href="forgot-password.html"><i class="lni-reload"></i> Forgot Password</a>
-                                    <a class="dropdown-item" href="account-close.html"><i class="lni-close"></i>Account close</a>
-                                </div>
-                            </li>
-                        </ul>
-                        <a class="tg-btn" href="creer-une-annonce">
-                        <i class="lni-pencil-alt"></i> Poster une annonce
+                        {$userView->navbarMenu()}
+                        <a class="tg-btn" href="post">
+                            <i class="lni-pencil-alt"></i> Poster une annonce
                         </a>
                     </div>
                 </div>
@@ -104,7 +92,7 @@ HTML;
      * 
      * @return string
      */
-    public function mobileMenu()
+    private function mobileMenu()
     {
         return <<<HTML
         <ul class="mobile-menu">

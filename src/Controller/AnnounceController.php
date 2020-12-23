@@ -9,7 +9,7 @@ class AnnounceController extends AppController
 {
     public static function create()
     {
-        $page = new Page("Publier une annonce", AnnounceView::create());
+        $page = new Page("Publier une annonce", (new AnnounceView)->create());
         $page->setDescription("");
         $page->show();
     }

@@ -159,7 +159,7 @@ class User extends Model
      * 
      * @return self
      */
-    static function getByCode($code) : self
+    public static function getByCode($code) : self
     {
         $rep = parent::connect()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE code = ?");
         $rep->execute([$code]);
@@ -168,6 +168,19 @@ class User extends Model
         if ($user["id"]) {
             return new self($user["id"]);
         }
+    }
+
+    /**
+     * Permet de vérifier qu'un utilisateur est connecté.
+     * 
+     * @return bool
+     */
+    public static function isConnected()
+    {
+        // On vérifie que la session est activée.
+        // Si oui, on retourner true
+        // Si non, retourner false
+        return true;
     }
 
 }
