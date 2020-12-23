@@ -15,7 +15,7 @@ try {
     $router = new Router();
     $router->get("/", "App\Controller\AppController@index");
     $router->get("/connexion", "App\Controller\UserController@connexion");
-    $router->get("/creer-un-compte", "App\Controller\UserController@create");
+    $router->get("/post", "App\Controller\AnnounceController@create");
     $router->get("/creer-une-categorie", "App\Controller\CategoryController@create");
     $router->get("/creer-une-annonce", "App\Controller\AnnounceController@create");
     $router->get("/category", "App\Controller\CategoryController@read");

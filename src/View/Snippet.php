@@ -102,9 +102,12 @@ HTML;
      * Le header qui permet d'afficher le nom de la page sur laquelle
      * on se trouve avec le breadcrumbs.
      * 
+     * @param string $title
+     * @param string $current
+     * 
      * @return string
      */
-    public function pageHeader()
+    public function pageHeader(string $title, string $current) : string
     {
         return <<<HTML
         <!-- Page Header Start -->
@@ -113,10 +116,10 @@ HTML;
                 <div class="row">         
                     <div class="col-md-12">
                         <div class="breadcrumb-wrapper">
-                            <h2 class="product-title">Détails</h2>
+                            <h2 class="product-title">{$title}</h2>
                             <ol class="breadcrumb">
                                 <li><a href="#">Accueil /</a></li>
-                                <li class="current">Détails</li>
+                                <li class="current">{$current}</li>
                             </ol>
                         </div>
                     </div>
@@ -410,7 +413,7 @@ HTML;
     {
         return <<<HTML
         <div class="widget">
-            <h4 class="widget-title">Advertisement</h4>
+            <h4 class="widget-title">Publicité</h4>
             <div class="add-box">
                 <img class="img-fluid" src="assets/img/img1.jpg" alt="">
             </div>
