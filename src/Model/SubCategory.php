@@ -23,7 +23,7 @@ class SubCategory extends Category
 
         $query = $queryFormatter->select(
             "id, title, slug, id_category, created_at, updated_at, description"
-            )->from(self::TABLE_NAME)->where("id = ?");
+            )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
         $rep = parent::connect()->prepare($query);
         $rep->execute([$id]);
@@ -77,7 +77,7 @@ class SubCategory extends Category
      */
     static function isSubCategorySlug($var) : bool
     {
-        return in_array($var, parent::slugs(self::TABLE_NAME));
+        return in_array($var, parent::getSlugs(self::TABLE_NAME));
     }
 
 }

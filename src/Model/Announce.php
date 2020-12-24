@@ -37,7 +37,7 @@ class Announce extends Model
         $query = $queryFormatter->select(
             "id, slug, title, description, id_category, id_sub_category, id_user, phone_number,
              state, created_at, posted_at, updated_at, views"
-            )->from(self::TABLE_NAME)->where("id = ?");
+            )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
         $rep = parent::connect()->prepare($query);
         $rep->execute([$id]);

@@ -514,6 +514,8 @@ HTML;
      */
     private function enterAnnounceDetails()
     {
+        $categoryView = new CategoryView();
+        
         return <<<HTML
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
             <div class="inner-box">
@@ -530,13 +532,7 @@ HTML;
                         <div class="tg-select form-control">
                             <select>
                                 <option value="none">Sélectionner la catégorie</option>
-                                <option value="none">Mobiles</option>
-                                <option value="none">Electronics</option>
-                                <option value="none">Training</option>
-                                <option value="none">Real Estate</option>
-                                <option value="none">Services</option>
-                                <option value="none">Training</option>
-                                <option value="none">Vehicles</option>
+                                {$categoryView->selectOptions()}
                             </select>
                         </div>
                     </div>

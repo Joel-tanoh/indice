@@ -175,9 +175,9 @@ HTML;
     private function menuForConnectedUser()
     {
         return <<<HTML
-        <a class="dropdown-item" href="account-profile-setting.html"><i class="lni-home"></i> Mon profil</a>
-        <a class="dropdown-item" href="account-myads.html"><i class="lni-wallet"></i> Mes annonces</a>
-        <a class="dropdown-item" href="account-close.html"><i class="lni-close"></i>Se déconnecter</a>
+        <a class="dropdown-item" href="in-progress"><i class="lni-home"></i> Mon profil</a>
+        <a class="dropdown-item" href="in-progress"><i class="lni-wallet"></i> Mes annonces</a>
+        <a class="dropdown-item" href="in-progress"><i class="lni-close"></i>Se déconnecter</a>
 HTML;
     }
 
@@ -189,8 +189,8 @@ HTML;
     private function menuForUnconnectedUser()
     {
         return <<<HTML
-        <a class="dropdown-item" href="login.html"><i class="lni-lock"></i> Se connecter</a>
-        <a class="dropdown-item" href="signup.html"><i class="lni-user"></i> S'inscire</a>
+        <a class="dropdown-item" href="in-progress"><i class="lni-lock"></i> Se connecter</a>
+        <a class="dropdown-item" href="in-progress"><i class="lni-user"></i> S'inscire</a>
 HTML;
     }
 

@@ -11,6 +11,7 @@ class Category extends Model
 {
     protected $announces = [];
     private $subCategories = [];
+    private $iconClass;
     const TABLE_NAME = "ind_categories";
 
     /**
@@ -23,8 +24,8 @@ class Category extends Model
         $queryFormatter = new SqlQueryFormater();
 
         $query = $queryFormatter->select(
-            "id, title, slug, created_at, updated_at, description"
-            )->from(self::TABLE_NAME)->where("id = ?");
+            "id, title, slug, created_at, updated_at, description, icon_class"
+            )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
         $rep = parent::connect()->prepare($query);
         $rep->execute([$id]);
@@ -37,6 +38,7 @@ class Category extends Model
         $this->createdAt = $result["created_at"];
         $this->updatedAt = $result["updated_at"];
         $this->description = $result["description"];
+        $this->iconClass = $result["icon_class"];
     }
 
     /**
@@ -76,6 +78,31 @@ class Category extends Model
     }
 
     /**
+     * Retourne la classe pour l'icône de l'élément courant.
+     * 
+     * @return string
+     */
+    public function getIconClass() : string
+    {
+        return $this->iconClass;
+    }
+
+    /**
+     * Retourne toutes les catégories.
+     * 
+     * @param string $tableName Le nom de la table dont on veut récupérer tous
+     *                          les éléments.
+     * 
+     * @return array
+     */
+    public static function getAll(string $tableName)
+    {
+        $query = "SELECT id FROM $tableName";
+        $rep = self::connect()->query($query);
+        return $rep->fetchAll();        
+    }
+
+    /**
      * Permet de vérifier si la variable passée en paramètre est un slug
      * de catégorie.
      * 
@@ -83,9 +110,9 @@ class Category extends Model
      * 
      * @return bool
      */
-    static function isCategorySlug($var) : bool
+    public static function isCategorySlug($var) : bool
     {
-        return in_array($var, parent::slugs(self::TABLE_NAME));
+        return in_array($var, parent::getSlugs(self::TABLE_NAME));
     }
 
 }

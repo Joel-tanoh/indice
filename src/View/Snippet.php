@@ -12,6 +12,7 @@ use App\File\Image\Image;
 use App\Router\Router;
 use App\Model\Entity;
 use App\Model\User\Visitor;
+use App\View\Model\CategoryView;
 
 /**
  * Gère les fragments de code.
@@ -109,6 +110,8 @@ HTML;
      */
     public function pageHeader(string $title, string $current) : string
     {
+        $categoryView = new CategoryView();
+
         return <<<HTML
         <!-- Page Header Start -->
         <div class="page-header" style="background: url(assets/img/banner1.jpg);">
@@ -138,6 +141,8 @@ HTML;
      */
     public function heroAreaSearchBar()
     {
+        $categoryView = new CategoryView();
+
         return <<<HTML
         <div class="search-bar">
             <div class="search-inner">
@@ -150,7 +155,7 @@ HTML;
                         <i class="lni-map-marker"></i>
                         <div class="select">
                             <select>
-                                <option value="none">Locations</option>
+                                <option value="none">Villes</option>
                                 <option value="none">New York</option>
                                 <option value="none">California</option>
                                 <option value="none">Washington</option>
@@ -164,16 +169,8 @@ HTML;
                         <i class="lni-menu"></i>
                         <div class="select">
                             <select>
-                                <option value="none">Catégories</option>
-                                <option value="none">Jobs</option>
-                                <option value="none">Electronics</option>
-                                <option value="none">Mobile</option>
-                                <option value="none">Training</option>
-                                <option value="none">Pets</option>
-                                <option value="none">Real Estate</option>
-                                <option value="none">Services</option>
-                                <option value="none">Training</option>
-                                <option value="none">Vehicles</option>
+                                <option value="0">Catégories</option>
+                                {$categoryView->selectOptions()}
                             </select>
                         </div>
                     </div>

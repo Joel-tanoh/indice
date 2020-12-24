@@ -37,7 +37,7 @@ class User extends Model
         $query = $queryFormatter->select(
             "id, code, name, first_names, email_address, pseudo, password, phone_number, created_at,
             updated_at, type"
-            )->from(self::TABLE_NAME)->where("id = ?");
+            )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
         $rep = parent::connect()->prepare($query);
         $rep->execute([$id]);

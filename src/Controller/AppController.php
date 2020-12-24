@@ -13,4 +13,10 @@ class AppController
         $page->show();
     }
 
+    public static function page404()
+    {
+        $page = new Page("Le leader des petites annonces de Côte d'Ivoire - En cours", View::page404());
+        $page->show();
+    }
+
 }

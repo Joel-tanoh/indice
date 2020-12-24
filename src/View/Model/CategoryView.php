@@ -2,6 +2,7 @@
 
 namespace App\View\Model;
 
+use App\Model\Category;
 use App\Utility\Pagination;
 use App\View\Snippet;
 
@@ -37,22 +38,20 @@ HTML;
      */
     public function trendingCategoriesSection()
     {
+        $content = null;
+
+        foreach (Category::getAll(Category::TABLE_NAME) as $item) {
+            $category = new Category($item["id"]);
+            $content .= $this->trendingCategory(
+                $category->getSlug(), $category->getIconClass(), $category->getTitle()
+            );
+        }
+
         return <<<HTML
         <section class="categories-icon section-padding bg-drack">
             <div class="container">
                 <div class="row">
-                    {$this->trendingCategory(null, "lni-car", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-display", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-mobile", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-leaf", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-tshirt", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-briefcase", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-home", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-tshirt", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-home", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-home", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-briefcase", "Titre de catégorie")}
-                    {$this->trendingCategory(null, "lni-home", "Titre de catégorie")}
+                    {$content}
                 </div>
             </div>
         </section>
@@ -72,7 +71,7 @@ HTML;
     {
         return <<<HTML
         <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
-            <a href="category">
+            <a href="{$href}">
                 <div class="icon-box">
                     <div class="icon">
                         <i class="{$lniClass}"></i>
@@ -110,6 +109,26 @@ HTML;
             </div>
         </div>
         <!-- Main container End -->  
+HTML;
+    }
+
+    /**
+     * Retourne la liste des catégories dans le formulaire pour 
+     * la sélection lors de la création ou de la recherche d'une annonce.
+     * 
+     * @return string
+     */
+    public function selectOptions()
+    {
+        $options = null;
+
+        foreach (Category::getAll(Category::TABLE_NAME) as $item) {
+            $category = new Category($item["id"]);
+            $options .= '<option value="'. $category->getId() . '">' . $category->getTitle() . '</option>';
+        }
+
+        return <<<HTML
+        {$options}
 HTML;
     }
 
@@ -173,7 +192,7 @@ HTML;
         return <<<HTML
         <div class="widget_search">
             <form role="search" id="search-form">
-                <input type="search" class="form-control" autocomplete="off" name="s" placeholder="Search..." id="search-input" value="">
+                <input type="search" class="form-control" autocomplete="off" name="s" placeholder="Recherche..." id="search-input" value="">
                 <button type="submit" id="search-submit" class="search-btn"><i class="lni-search"></i></button>
             </form>
         </div>
@@ -189,7 +208,7 @@ HTML;
     {
         return <<<HTML
         <div class="widget categories">
-            <h4 class="widget-title">All Categories</h4>
+            <h4 class="widget-title">Toutes les catégories</h4>
             {$this->categoriesList()}
         </div>
 HTML;
@@ -311,7 +330,7 @@ HTML;
     {
         return <<<HTML
         <div class="short-name">
-            <span>Showing (1 - 12 products of 7371 products)</span>
+            <span>Annonces (1 - 12 sur 7371)</span>
         </div>
 HTML;
     }

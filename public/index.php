@@ -14,10 +14,9 @@ try {
     
     $router = new Router();
     $router->get("/", "App\Controller\AppController@index");
+    $router->get("/in-progress", "App\Controller\AppController@page404");
     $router->get("/connexion", "App\Controller\UserController@connexion");
     $router->get("/post", "App\Controller\AnnounceController@create");
-    $router->get("/creer-une-categorie", "App\Controller\CategoryController@create");
-    $router->get("/creer-une-annonce", "App\Controller\AnnounceController@create");
     $router->get("/category", "App\Controller\CategoryController@read");
     $router->get("/:category", "App\Controller\CategoryController@read");
     $router->get("/category/annonce", "App\Controller\AnnounceController@read");

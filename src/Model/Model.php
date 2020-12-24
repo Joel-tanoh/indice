@@ -103,7 +103,7 @@ class Model
      * 
      * @return array
      */
-    static function slugs(string $tableName) : array
+    static function getSlugs(string $tableName) : array
     {
         $rep = self::connect()->query("SELECT slug FROM " . $tableName);
         return $rep->fetchAll();
@@ -135,7 +135,7 @@ class Model
      * 
      * @param string $table    La table de la base de données dans laquelle
      *                         on doit enregistrer les données.
-     * @param bool   $needCode Pour spéciifier si l'item a besoin d'un code
+     * @param bool   $needCode Pour spécifier si l'item a besoin d'un code d'identification
      *                         à l'enregistrement dans la base de données.
      * 
      * @return bool
