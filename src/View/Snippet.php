@@ -50,7 +50,7 @@ HTML;
         $welcomeText = null;
         if ($showWelcomeText) {
             $welcomeText = <<<HTML
-            <h1 class="head-title">Bienvenue sur <span class="year">Lindice</span></h1>
+            <h1 class="head-title">Bienvenue sur <span class="year">L'indice</span></h1>
             <p>Achetez et vendez de tout, des voitures d'occasion aux téléphones mobiles et aux ordinateurs, <br> ou recherchez une propriété, des emplois et plus encore</p>
 HTML;
         }
