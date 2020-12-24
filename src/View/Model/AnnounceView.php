@@ -297,6 +297,33 @@ HTML;
     }
 
     /**
+     * Last posted in footer code.
+     * 
+     * @param string $title
+     * @param int $price
+     * @param string $date
+     * 
+     * @return string
+     */
+    public function lastPostedCardInFooter(string $title, int $price = null, string $date = null)
+    {
+        return <<<HTML
+        <li>
+            <div class="media-left">
+                <img class="img-fluid" src="assets/img/art/img2.jpg" alt="">
+                <div class="overlay">
+                    <span class="price">{$price} XOF</span>
+                </div>
+            </div>
+            <div class="media-body">
+                <h4 class="post-title"><a href="category/annonce">{$title}</a></h4>
+                <span class="date">{$date}</span>
+            </div>
+        </li>
+HTML;
+    }
+
+    /**
      * Contenu de la page créer une annonce.
      * 
      * @return string
@@ -515,7 +542,7 @@ HTML;
     private function enterAnnounceDetails()
     {
         $categoryView = new CategoryView();
-        
+
         return <<<HTML
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
             <div class="inner-box">

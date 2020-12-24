@@ -14,6 +14,7 @@
 
 namespace App\View\Page;
 
+use App\View\Model\AnnounceView;
 use App\View\Snippet;
 
 /**
@@ -114,38 +115,13 @@ HTML;
      */
     public function lastPostedInFooter()
     {
+        $announceView = new AnnounceView();
+        
         return <<<HTML
         <ul class="media-content-list">
-            {$this->lastPostedCode("Titre de l'annonce", 50, "20 Fev. 2020")}
-            {$this->lastPostedCode("Titre de l'annonce", 200, "31 Dec. 2020")}
+            {$announceView->lastPostedCardInFooter("Titre de l'annonce", 50, "20 Fev. 2020")}
+            {$announceView->lastPostedCardInFooter("Titre de l'annonce", 200, "31 Dec. 2020")}
         </ul>
-HTML;
-    }
-
-    /**
-     * Last posted in footer code.
-     * 
-     * @param string $title
-     * @param int $price
-     * @param string $date
-     * 
-     * @return string
-     */
-    public function lastPostedCode(string $title, int $price = null, string $date = null)
-    {
-        return <<<HTML
-        <li>
-            <div class="media-left">
-                <img class="img-fluid" src="assets/img/art/img2.jpg" alt="">
-                <div class="overlay">
-                    <span class="price">{$price} XOF</span>
-                </div>
-            </div>
-            <div class="media-body">
-                <h4 class="post-title"><a href="ads-details.html">{$title}</a></h4>
-                <span class="date">{$date}</span>
-            </div>
-        </li>
 HTML;
     }
 
