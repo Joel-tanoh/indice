@@ -133,31 +133,32 @@ HTML;
         <section class="cta section-padding">
             <div class="container">
                     <div class="row">
-                    <div class="col-xs-12 col-md-6 col-lg-4">
-                        <div class="single-cta">
-                            <div class="cta-icon">
-                                <i class="lni-grid"></i>
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="single-cta">
+                                <div class="cta-icon">
+                                    <i class="lni-grid"></i>
+                                </div>
+                                <h4>Refreshing Design</h4>
+                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
                             </div>
-                            <h4>Refreshing Design</h4>
-                            <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
                         </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 col-lg-4">
-                        <div class="single-cta">
-                            <div class="cta-icon">
-                                <i class="lni-brush"></i>
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="single-cta">
+                                <div class="cta-icon">
+                                    <i class="lni-brush"></i>
+                                </div>
+                                <h4>Easy to Customize</h4>
+                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
                             </div>
-                            <h4>Easy to Customize</h4>
-                            <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
                         </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 col-lg-4">
-                        <div class="single-cta">
-                            <div class="cta-icon">
-                                <i class="lni-headphone-alt"></i>
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="single-cta">
+                                <div class="cta-icon">
+                                    <i class="lni-headphone-alt"></i>
+                                </div>
+                                <h4>24/7 Support</h4>
+                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
                             </div>
-                            <h4>24/7 Support</h4>
-                            <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
                         </div>
                     </div>
                 </div>
@@ -227,9 +228,9 @@ HTML;
         return <<<HTML
         <nav class="navdashboard">
             <ul>
-                {$this->defineSidebarLink("Tableau de bord", "me/dashboard", "lni-dashboard")}
-                {$this->defineSidebarLink("Mes annonces", "me/posts", "lni-layers")}
-                {$this->defineSidebarLink("Se déconnecter", "disconnect", "lni-enter")}
+                {$this->defineSidebarLink("Tableau de bord", "in-progress", "lni-dashboard")}
+                {$this->defineSidebarLink("Mes annonces", "in-progress", "lni-layers")}
+                {$this->defineSidebarLink("Se déconnecter", "in-progress", "lni-enter")}
             </ul>
         </nav>
 HTML;
