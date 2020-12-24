@@ -1,28 +1,35 @@
--- MySQL dump 10.13  Distrib 5.7.19, for Win64 (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: inoveinn_wp806
--- ------------------------------------------------------
--- Server version	5.7.19
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  jeu. 24 déc. 2020 à 09:23
+-- Version du serveur :  5.7.19
+-- Version de PHP :  7.1.9
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Table structure for table `ind_announces`
+-- Base de données :  `inoveinn_wp806`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `ind_announces`
 --
 
 DROP TABLE IF EXISTS `ind_announces`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ind_announces` (
+CREATE TABLE IF NOT EXISTS `ind_announces` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
@@ -43,25 +50,15 @@ CREATE TABLE `ind_announces` (
   KEY `fk_id_category` (`id_category`),
   KEY `fk_id_sub_category` (`id_sub_category`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `ind_announces`
---
-
-LOCK TABLES `ind_announces` WRITE;
-/*!40000 ALTER TABLE `ind_announces` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ind_announces` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ind_categories`
+-- Structure de la table `ind_categories`
 --
 
 DROP TABLE IF EXISTS `ind_categories`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ind_categories` (
+CREATE TABLE IF NOT EXISTS `ind_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
@@ -73,26 +70,30 @@ CREATE TABLE `ind_categories` (
   UNIQUE KEY `uni_title` (`title`),
   UNIQUE KEY `uni_slug` (`slug`)
 ) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ind_categories`
+-- Déchargement des données de la table `ind_categories`
 --
 
-LOCK TABLES `ind_categories` WRITE;
-/*!40000 ALTER TABLE `ind_categories` DISABLE KEYS */;
-INSERT INTO `ind_categories` VALUES (4,'Bonnes affaires','bonnes-affaires','2020-12-24 06:30:57',NULL,NULL,'lni-control-panel'),(2,'Véhicules','vehicules','2020-12-24 06:17:23',NULL,NULL,'lni-car'),(3,'Immobiler','immobiler','2020-12-24 06:17:23',NULL,NULL,'lni-home'),(5,'High-Tech','high-tech','2020-12-24 06:30:57',NULL,NULL,'lni-laptop'),(6,'Emploi Formations','emploi-formations','2020-12-24 06:46:14',NULL,NULL,'lni-briefcase'),(7,'Rencontre','rencontre','2020-12-24 06:46:14',NULL,NULL,'lni-heart'),(8,'Matériel professionnel','materiel-professionnel','2020-12-24 06:46:14',NULL,NULL,'lni-notepad'),(9,'Communauté','communaute','2020-12-24 06:46:14',NULL,NULL,'lni-hand'),(10,'Bien-être','bien-etre','2020-12-24 06:46:14',NULL,NULL,'lni-leaf');
-/*!40000 ALTER TABLE `ind_categories` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `ind_categories` (`id`, `title`, `slug`, `created_at`, `updated_at`, `description`, `icon_class`) VALUES
+(4, 'Bonnes affaires', 'bonnes-affaires', '2020-12-24 06:30:57', NULL, NULL, 'lni-control-panel'),
+(2, 'Véhicules', 'vehicules', '2020-12-24 06:17:23', NULL, NULL, 'lni-car'),
+(3, 'Immobiler', 'immobiler', '2020-12-24 06:17:23', NULL, NULL, 'lni-home'),
+(5, 'High-Tech', 'high-tech', '2020-12-24 06:30:57', NULL, NULL, 'lni-laptop'),
+(6, 'Emploi Formations', 'emploi-formations', '2020-12-24 06:46:14', NULL, NULL, 'lni-briefcase'),
+(7, 'Rencontre', 'rencontre', '2020-12-24 06:46:14', NULL, NULL, 'lni-heart'),
+(8, 'Matériel professionnel', 'materiel-professionnel', '2020-12-24 06:46:14', NULL, NULL, 'lni-notepad'),
+(9, 'Communauté', 'communaute', '2020-12-24 06:46:14', NULL, NULL, 'lni-hand'),
+(10, 'Bien-être', 'bien-etre', '2020-12-24 06:46:14', NULL, NULL, 'lni-leaf');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `ind_sub_categories`
+-- Structure de la table `ind_sub_categories`
 --
 
 DROP TABLE IF EXISTS `ind_sub_categories`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ind_sub_categories` (
+CREATE TABLE IF NOT EXISTS `ind_sub_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
@@ -105,26 +106,22 @@ CREATE TABLE `ind_sub_categories` (
   UNIQUE KEY `uni_slug` (`slug`),
   KEY `fk_id_category` (`id_category`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ind_sub_categories`
+-- Déchargement des données de la table `ind_sub_categories`
 --
 
-LOCK TABLES `ind_sub_categories` WRITE;
-/*!40000 ALTER TABLE `ind_sub_categories` DISABLE KEYS */;
-INSERT INTO `ind_sub_categories` VALUES (1,'Jeu de football','jeu-de-football',1,'2020-11-27 23:57:24',NULL,'C\'est un jeu de football');
-/*!40000 ALTER TABLE `ind_sub_categories` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `ind_sub_categories` (`id`, `title`, `slug`, `id_category`, `created_at`, `modified_at`, `description`) VALUES
+(1, 'Jeu de football', 'jeu-de-football', 1, '2020-11-27 23:57:24', NULL, 'C\'est un jeu de football');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `ind_users`
+-- Structure de la table `ind_users`
 --
 
 DROP TABLE IF EXISTS `ind_users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ind_users` (
+CREATE TABLE IF NOT EXISTS `ind_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -139,24 +136,8 @@ CREATE TABLE `ind_users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_pseudo` (`pseudo`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+COMMIT;
 
---
--- Dumping data for table `ind_users`
---
-
-LOCK TABLES `ind_users` WRITE;
-/*!40000 ALTER TABLE `ind_users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ind_users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2020-12-24  9:09:24
