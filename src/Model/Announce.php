@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Action\Create;
 use App\Action\InsertData;
 use App\backend\Session;
 use App\File\Image\Image;
@@ -15,11 +16,14 @@ class Announce extends Model
 {
     private $category;
     private $subCategory;
+    private $price;
     private $user;
     private $phoneNumber;
+    private $location;
     private $state;
     private $postedAt;
-    private $viewss;
+    private $views;
+    private $iconClass;
     const TABLE_NAME = "ind_announces";
     const IMG_DIR_PATH = Image::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "productinfo" . DIRECTORY_SEPARATOR;
     const IMG_DIR_URL = Image::IMG_DIR_URL . "/productinfo";
@@ -35,9 +39,9 @@ class Announce extends Model
         $queryFormatter = new SqlQueryFormater();
 
         $query = $queryFormatter->select(
-            "id, slug, title, description, id_category, id_sub_category, id_user, phone_number,
-             state, created_at, posted_at, updated_at, views"
-            )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
+            "id, title, description, slug, id_category, id_sub_category, price,
+            user_email_address, phone_number, location, state, created_at, posted_at, updated_at, views, icon_class"
+        )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
         $rep = parent::connect()->prepare($query);
         $rep->execute([$id]);
@@ -45,20 +49,31 @@ class Announce extends Model
         $result = $rep->fetch();
 
         $this->id = $result["id"];
-        $this->slug = $result["slug"];
         $this->title = $result["title"];
         $this->description = $result["description"];
-        $this->idCategory = $result["id_category"];
-        $this->idSubCategory = $result["id_sub_category"];
-        $this->idUser = $result["id_user"];
+        $this->slug = $result["slug"];
+        $this->category = $result["id_category"];
+        $this->subCategory = $result["id_sub_category"];
+        $this->price = $result["price"];
+        $this->user = $result["user_email_address"];
         $this->phoneNumber = $result["phone_number"];
+        $this->location = $result["location"];
         $this->state = $result["state"];
         $this->createdAt = $result["created_at"];
         $this->postedAt = $result["posted_at"];
         $this->updatedAt = $result["updated_at"];
         $this->views = $result["views"];
+        $this->iconClass = $result["icon_class"];
+        $this->tableName = self::TABLE_NAME;
+
         $this->featuredImgPath = Image::FEATURED_DIR_PATH . $this->slug . Image::EXTENSION;
         $this->featuredImgSrc = Image::FEATURED_DIR_URL . "/" . $this->slug . Image::EXTENSION;
+
+        $this->productImgPath = Image::PRODUCT_DIR_PATH . $this->slug . Image::EXTENSION;
+        $this->productImgSrc = Image::PRODUCT_DIR_URL . "/" . $this->slug . Image::EXTENSION;
+
+        $this->productInfoImgPath = Image::PRODUCT_INFO_DIR_PATH . $this->slug . Image::EXTENSION;
+        $this->productInfoImgSrc = Image::PRODUCT_INFO_DIR_URL . "/" . $this->slug . Image::EXTENSION;
     }
 
     /**
@@ -90,7 +105,7 @@ class Announce extends Model
      */
     public function getUser()
     {
-        $this->user = new User($this->idUser);
+        $this->user = new User($this->userEmailAddress);
         return $this->user;
     }
 
@@ -135,6 +150,39 @@ class Announce extends Model
     }
 
     /**
+     * Retourne la source de l'image dans la carte de vedette de
+     * format 600x400.
+     * 
+     * @return string
+     */
+    public function getFeaturedImgSrc()
+    {
+        return $this->featuredImgSrc;
+    }
+
+    /**
+     * Retourne la source de l'image dans la carte product de format
+     * 640x420.
+     * 
+     * @return string
+     */
+    public function getProductImgSrc()
+    {
+        return $this->productImgSrc;
+    }
+    
+    /**
+     * Retourne la source de l'image qui se trouve dans le dossier
+     * product info de format 625x415.
+     * 
+     * @return string
+     */
+    public function getProductInfoImgSrc()
+    {
+        return $this->productInfoImgSrc;
+    }
+
+    /**
      * Retourne un certain nombre d'annonces en fonction des paramètres
      * passés à la méthode.
      * 
@@ -144,7 +192,7 @@ class Announce extends Model
      *                           une sous-catégorie précise.
      * @param int $nbr           Pour spécifier qu'on veut un nombre d'annonces précis.
      */
-    public function getAll($idCategory = null, $idSubCategory = null, $nbr = null)
+    public static function getAll($idCategory = null, $idSubCategory = null, $nbr = null)
     {
         // Format de la requête à la base.
         $query = "SELECT id FROM " . self::TABLE_NAME;
@@ -278,27 +326,109 @@ class Announce extends Model
     /**
      * Permet de créer une nouvelle ligne d'annonce et d'enregistrer les données.
      */
-    // public static function create()
-    // {
-    //     $data["title"] = htmlspecialchars($_POST["title"]);
-    //     $data["description"] = htmlspecialchars($_POST["description"]);
-    //     $data["slug"] = Utility::slugify($_POST["title"]);
-    //     $data["id_category"] = htmlspecialchars($_POST["id_category"]);
-    //     $data["id_sub_category"] = htmlspecialchars($_POST["id_sub_category"]);
-    //     $data["user_email_address"] = htmlspecialchars(Session::getSessionId());
-    //     $data["phone_number"] = $_POST["phone_number"];
+    public static function create() : bool
+    {
+        $image = new Image();
+        $data["title"] = htmlspecialchars($_POST["title"]);
+        $data["description"] = htmlspecialchars($_POST["description"]);
+        $data["id_category"] = htmlspecialchars($_POST["id_category"]);
+        $data["location"] = htmlspecialchars($_POST["location"]);
 
-    //     $insert = new InsertData($data, self::TABLE_NAME);
-    //     $insert->run();
+        //=== Fonctionnalité rétirée pour le moment ====/
+        // $data["id_sub_category"] = htmlspecialchars($_POST["id_sub_category"]);
 
-    //     // S'il y'a des images
-    //     if (isset($_FILES["image"]["name"])) {
-    //         // Formater le nom de l'image
+        //=== Si l'user veut qu'on l'appelle pour le prix ======================/
+        if (isset($_POST["price_on_call"]) && $_POST["price_on_call"] == "on" && empty($_POST["price"])) {
+            $data["price"] = htmlspecialchars($_POST["price_on_call"]);
+        } else {
+            $data["price"] = htmlspecialchars($_POST["price"]);
+        }
 
-    //         // Enregistrer l'image dans le dossier concerné
-    //     }
+        //=== Si user à choisi un autre utilisateur =================/
+        if (isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else") {
+            $data["user_email_address"] = $_POST["user_email_address"];
+            $data["phone_number"] = $_POST["phone_number"];
+        } else { //=== Sinon ===/
+            // $data["user_email_address"] = htmlspecialchars(Session::getSessionId());
+            $data["user_email_address"] = "tanohbassapatrick@gmail.com";
+            //=== On récupère le numéro de téléphone de l'user ====/
+            $data["phone_number"] = "+22549324696";
+        }
+
+        $insertion = new InsertData($data, self::TABLE_NAME);
+        $insertion->run();
+
+        /** Récupérer l'annonce qui vient d'être enregistrée */
+        $currentAnnounce = new self($insertion->getPDO()->lastInsertId());
+
+        // Enregistrement du slug
+        $slug = Utility::slugify($_POST["title"]) . "-" . $currentAnnounce->getId();
+        // Insertion du slug
+        $currentAnnounce->set("slug", $slug);
+
+        /** Récupérer l'annonce qui vient d'être enregistrée */
+        $currentAnnounce = new self($insertion->getPDO()->lastInsertId());
+
+        // S'il y'a des images
+        if (Create::fileIsUploaded("images")) {
+            // Formater le nom de l'image
+            $imgName = $currentAnnounce->getSlug();
+
+            // Enregistrer l'image dans les différents dossiers avec les formats adéquats
+            // Format featured
+            $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::FEATURED_DIR_PATH, 600, 400);
+
+            // Product 640 x 420
+            $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::PRODUCT_DIR_PATH, 640, 420);
+
+            // ProductInfo 625x415
+            $arrayLength = count($_FILES["images"]["tmp_name"]);
+            for ($i = 0; $i < $arrayLength; $i++) {
+                $image->save($_FILES['images']['tmp_name'][$i], $imgName."-".$i, Image::PRODUCT_INFO_DIR_PATH, 625, 415);
+            }
+        }
         
-    //     return true;
-    // }
+        return true;
+    }
+
+    /**
+     * Retourne les annonces validées.
+     * 
+     * @return array
+     */
+    public static function getValidated($idCategory) : array
+    {
+        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE state = 1 AND id_category = ?";
+        $rep = parent::connect()->prepare($query);
+        $rep->execute($idCategory);
+
+        return $rep->fetchAll();
+    }
+
+    /**
+     * Retourne les annonces en pending.
+     * 
+     * @return array
+     */
+    public static function getPending() : array
+    {
+        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE state = 0";
+        $rep = parent::connect()->query($query);
+
+        return $rep->fetchAll();
+    }
+
+    /**
+     * Retourne les annonces suspendue.
+     * 
+     * @return array
+     */
+    public static function getSuspended() : array
+    {
+        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE state = 2";
+        $rep = parent::connect()->query($query);
+
+        return $rep->fetchAll();
+    }
 
 }

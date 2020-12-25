@@ -35,68 +35,38 @@ HTML;
      * Retourne la liste des erreurs lors de l'exécution de la validation des
      * données issues d'un formulaire.
      * 
-     * @param $errors Liste des erreurs.
+     * @param array $errors Liste des erreurs, dans un tableau ou chaque erreur
+     *                      est indexé par une chaîne de caractère.
      * 
      * @return string Liste des erreurs bien formatée en balise ul.
      */
-    public function errors($errors)
+    public function errors(array $errors)
     {
-        $error = '';
-        foreach ($errors as $err) {
-            $error .= $err;
-            $error .= "<br/>";
+        $text = null;
+        foreach ($errors as $error) {
+            $text .= $error;
+            $text .= "<br/>";
         }
-        return $this->error($error);
-    }
-
-    /**
-     * Permet d'afficher un message d'erreur.
-     * 
-     * @param string $message Message d'erreur à afficher pour les alert-danger
-     * 
-     * @return string
-     */
-    public function error(string $message) : string
-    {
-        return <<<HTML
-        <div class="row">
-            <div class="col-12 mx-2 alert app-alert-danger d-flex align-items-center">
-                <i class="fas fa-exclamation-triangle text-danger mr-3"></i>
-                <div class="text-danger">{$message}</div>
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
-     * Permet d'afficher un message de succès.
-     * 
-     * @param string $success_message Message de succès à afficher
-     *                                pour les alert-success
-     * 
-     * @return string
-     */
-    public function success(string $success_message) : string
-    {
-        return <<<HTML
-        <div class="col-12 alert app-alert-success">
-            {$success_message}
-        </div>
-HTML;
+        
+        return $this->toast($text, "danger");
     }
 
     /**
      * Permet d'afficher un message de type information.
      * 
-     * @param string $info Information à afficher.
+     * @param string $message Information à afficher.
+     * @param string $type    Type de classe bootstrap pour le message.
      * 
      * @return string
      */
-    public function info(string $info) : string
+    public function toast(string $message, string $type) : string
     {
         return <<<HTML
-        <div class="col-12 alert app-alert-info">
-            {$info}
+        <div id="toast" class="alert alert-{$type} alert-dismissible fade show" style="position: fixed; top: 1rem; right: 1rem; min-width:13rem; max-width:25rem; z-index:999999;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="text-{$type}">{$message}</div>
         </div>
 HTML;
     }

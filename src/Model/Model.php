@@ -15,6 +15,7 @@ class Model
     protected $description;
     protected $createdAt;
     protected $updatedAt;
+    protected $tableName;
 
     /**
      * Retourne une instance Database.
@@ -97,13 +98,29 @@ class Model
     }
 
     /**
+     * C'est la requête basique pour la mise à jour d'un champ.
+     * 
+     * @param string $colName
+     * @param mixed  $value
+     * 
+     * @return bool
+     */
+    protected function set(string $colName, $value)
+    {
+        $rep = self::connect()->prepare("UPDATE $this->tableName SET $colName = ? WHERE id = ?");
+        if ($rep->execute([$value, $this->id])) {
+            return true;
+        }
+    }
+
+    /**
      * Retourne la liste des slugs de cette classe.
      * 
      * @param string $tableName
      * 
      * @return array
      */
-    static function getSlugs(string $tableName) : array
+    public static function getSlugs(string $tableName) : array
     {
         $rep = self::connect()->query("SELECT slug FROM " . $tableName);
         return $rep->fetchAll();
@@ -118,7 +135,7 @@ class Model
      * 
      * @return self
      */
-    static function getBySlug(string $slug, string $tableName) : self
+    public static function getBySlug(string $slug, string $tableName) : self
     {
         $rep = self::connect()->prepare("SELECT id FROM " . $tableName . " WHERE slug = ?");
         $rep->execute([$slug]);
@@ -127,33 +144,6 @@ class Model
         if ($item["id"]) {
             return new self($item["id"]);
         }
-    }
-
-    /**
-     * Permet d'insérer les données dans la base de donnée et ainsi de créer
-     * une nouvelle ligne qui constitue un nouvel item.
-     * 
-     * @param string $table    La table de la base de données dans laquelle
-     *                         on doit enregistrer les données.
-     * @param bool   $needCode Pour spécifier si l'item a besoin d'un code d'identification
-     *                         à l'enregistrement dans la base de données.
-     * 
-     * @return bool
-     */
-    public static function create(string $table, bool $needCode = false)
-    {
-        $needCode ? $data["code"] = Utility::generateCode() : null;
-        isset($_POST["name"]) ? $data["name"] = htmlspecialchars($_POST["name"]) : null;
-        isset($_POST["first_names"]) ? $data["first_names"] = htmlspecialchars($_POST["first_names"]) : null;
-        isset($_POST["email_address"]) ? $data["email_address"] = htmlspecialchars($_POST["email_address"]) : null;
-        isset($_POST["pseudo"]) ? $data["pseudo"] = htmlspecialchars($_POST["pseudo"]) : null;
-        isset($_POST["password"]) ? $data["password"] = (new Password($_POST["password"]))->getHashed() : null;
-        isset($_POST["phone_number"]) ? $data["phone_number"] = $_POST["phone_number"] : null;
-
-        $insert = new InsertData($data, $table);
-        $insert->run();
-        
-        return true;
     }
 
 }

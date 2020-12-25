@@ -17,9 +17,8 @@ try {
     $router->get("/in-progress", "App\Controller\AppController@page404");
     $router->get("/connexion", "App\Controller\UserController@connexion");
     $router->get("/post", "App\Controller\AnnounceController@create");
-    $router->get("/category", "App\Controller\CategoryController@read");
+    $router->post("/post", "App\Controller\AnnounceController@create");
     $router->get("/:category", "App\Controller\CategoryController@read");
-    $router->get("/category/annonce", "App\Controller\AnnounceController@read");
     $router->get("/:category/:slug", "App\Controller\AnnounceController@read");
 
     $router->run();

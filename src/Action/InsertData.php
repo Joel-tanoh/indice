@@ -37,9 +37,9 @@ class InsertData extends Create
     public function run(string $dbLogin = null, string $dbPassword = null)
     {
         if ($this->database !== DB_NAME) {
-            $pdo =  (new Database($this->database, $dbLogin, $dbPassword))->connect();
+            $this->pdo =  (new Database($this->database, $dbLogin, $dbPassword))->connect();
         } else {
-            $pdo = Model::connect();
+            $this->pdo = Model::connect();
         }
 
         // Formatage des composantes de la requête
@@ -52,20 +52,19 @@ class InsertData extends Create
             $valuesString .= ":$key, ";
         }
 
+        // Rétirer les dernières virgules et espaces à la fin de la chaine de caractère
         $keysString = rtrim($keysString, ", ");
         $valuesString = rtrim($valuesString, ", ");
 
         // Formatage et envoi de la requête
         $query = "INSERT INTO $this->table($keysString) VALUES($valuesString)";
-        $rep = $pdo->prepare($query);
+        $rep = $this->pdo->prepare($query);
         
         // Si tout s'est bien passé, retourner true
         if ($rep->execute($this->data)) {
-            die("Je crois que c'est bon !");
             return true;
         } else { 
             // Sinon, lancer une exception
-            die("La requête n'a pas marché !");
             throw new Exception("Action Insert in database failed.");
         }
     }

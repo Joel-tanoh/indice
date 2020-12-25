@@ -208,7 +208,7 @@ HTML;
     {
         return <<<HTML
         <div class="widget categories">
-            <h4 class="widget-title">Toutes les catégories</h4>
+            <h4 class="widget-title">Les catégories</h4>
             {$this->categoriesList()}
         </div>
 HTML;
@@ -221,15 +221,25 @@ HTML;
      */
     private function categoriesList()
     {
+        $content = null;
+
+        foreach (Category::getAll(Category::TABLE_NAME) as $item) {
+            $category = new Category($item["id"]);
+            $content .= $this->categoriesListRow(
+                $category->getTitle(), $category->getSlug(), $category->getIconClass(), $category->getAnnouncesNumber()
+            );
+        }
+        
         return <<<HTML
         <ul class="categories-list">
-            {$this->categoriesListRow("Titre de l'annonce", null, "lni-dinner", 5)}
+            {$content}
+            <!-- {$this->categoriesListRow("Titre de l'annonce", null, "lni-dinner", 5)}
             {$this->categoriesListRow("Titre de l'annonce", null, "lni-control-panel", 8)}
             {$this->categoriesListRow("Titre de l'annonce", null, "lni-github", 2)}
             {$this->categoriesListRow("Titre de l'annonce", null, "lni-coffee-cup", 3)}
             {$this->categoriesListRow("Titre de l'annonce", null, "lni-home", 4)}
             {$this->categoriesListRow("Titre de l'annonce", null, "lni-pencil", 5)}
-            {$this->categoriesListRow("Titre de l'annonce", null, "lni-display", 9)}
+            {$this->categoriesListRow("Titre de l'annonce", null, "lni-display", 9)} -->
         </ul>
 HTML;
     }

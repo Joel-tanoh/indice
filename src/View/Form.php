@@ -60,12 +60,12 @@ class Form extends View
     /**
      * Constructeur d'un formulaire.
      * 
-     * @param string $method
      * @param string $action
-     * @param bool   $uploadFile
      * @param string $class
+     * @param bool   $uploadFile
+     * @param string $method
      */
-    public function __construct(string $method = "post", string $action = null, bool $uploadFile = true,string $id="myForm", string $class = null)
+    public function __construct( string $action, string $class = null, bool $uploadFile = true, string $method = "post", string $id="myForm")
     {
         $this->method = $method;
         $this->action = $action;

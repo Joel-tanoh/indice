@@ -74,13 +74,13 @@ class Image extends File
      */
     const DEFAULT_THUMBS = self::IMG_DIR_URL . "/default-thumbs" . self::EXTENSION;
 
-    const PRODUCT_DIR_PATH = self::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "product";
+    const PRODUCT_DIR_PATH = self::IMG_DIR_PATH . "product" . DIRECTORY_SEPARATOR;
     const PRODUCT_DIR_URL = self::IMG_DIR_URL . "/product";
 
-    const FEATURED_DIR_PATH = self::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "featured";
+    const FEATURED_DIR_PATH = self::IMG_DIR_PATH . "featured" . DIRECTORY_SEPARATOR;
     const FEATURED_DIR_URL = self::IMG_DIR_URL . "/featured";
 
-    const PRODUCT_INFO_DIR_PATH = self::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "productinfo";
+    const PRODUCT_INFO_DIR_PATH = self::IMG_DIR_PATH . "productinfo" . DIRECTORY_SEPARATOR;
     const PRODUCT_INFO_DIR_URL = self::IMG_DIR_URL . "/productinfo";
 
     /**
@@ -124,14 +124,14 @@ class Image extends File
      * 
      * @return bool
      */
-    public static function save(string $imageName, string $dirPath, int $imageWidth = null, int $imageHeight = null)
+    public static function save(string $baseFilePath, string $imageName, string $dirPath, int $imageWidth = null, int $imageHeight = null)
     {
         if (!file_exists($dirPath)) {
             mkdir($dirPath);
         }
 
         $manager = new ImageManager();
-        $manager = $manager->make($_FILES['image_uploaded']['tmp_name']);
+        $manager = $manager->make($baseFilePath);
 
         if (null !== $imageWidth && null !== $imageHeight){
             $manager->fit($imageWidth, $imageHeight);

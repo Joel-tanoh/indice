@@ -13,11 +13,11 @@ class Session extends Authentication
      * Initie la variable de session qui permet d'identifier l'utilisateur
      * connecté.
      * 
-     * @param mixed $value
+     * @param string $userEmailAddress
      */
-    public static function setSessionId($value)
+    public static function activate(string $userEmailAddress)
     {
-        $_SESSION["session_id"] = $value;
+        $_SESSION["session_id"] = $userEmailAddress;
     }
 
     /**
@@ -28,5 +28,17 @@ class Session extends Authentication
     public static function getSessionId()
     {
         return $_SESSION["session_id"];
+    }
+
+    /**
+     * Permet de désactiver la session de l'user connecté.
+     * 
+     * @return void
+     */
+    public static function deactivate()
+    {
+        session_start();
+        session_unset();
+        session_destroy();
     }
 }

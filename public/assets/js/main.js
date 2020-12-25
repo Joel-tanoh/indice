@@ -192,9 +192,25 @@
           height: 250,                 // set editor height
           minHeight: null,             // set minimum height of editor
           maxHeight: null,             // set maximum height of editor
-          focus: false                  // set focus to editable area after initializing summernote
+          focus: false,                  // set focus to editable area after initializing summernote
+          placeholder: 'Décrivez votre article...',
+          tabsize: 2,
+          lang: 'fr-FR',
+          toolbar: [
+            ['undo', ['undo'] ],
+            ['redo', ['redo'] ],
+            ['style', ['style']],
+            ['fontname', ['fontname', 'fontsize'] ],
+            ['style', ['bold', 'italic', 'underline', 'clear'] ],
+            ['font', ['strikethrough', 'superscript', 'subscript'] ],
+            ['color', ['color'] ],
+            ['height', ['height'] ],
+            ['para', ['ul', 'ol', 'paragraph'] ],
+            ['insert', ['link'] ],
+            ['view', ['codeview', 'help'] ],
+          ],
         });
-
+        
     /* Back Top Link active
     ========================================================*/
       var offset = 200;
@@ -237,6 +253,26 @@
         itemList.addClass("make-grid");
         itemList.removeClass("make-list");
         itemList.removeClass("make-compact");
+      });
+
+      /* Hide enter price section if checkbox actived
+      =======================================================*/
+      $('#tg-priceoncall').click(function () {
+        if (this.checked) {
+          $('#enter_price_box').hide(250);
+        } else {
+          $('#enter_price_box').show(250);
+        }
+      });
+
+      /* Hide or show someonelse secion for posting announcement
+      =======================================================*/
+      $('#tg-sameuser').click(function () {
+        $('#someone_else').hide(500);
+      });
+
+      $('#tg-someoneelse').click(function () {
+        $('#someone_else').show(500);
       });
 
   });      

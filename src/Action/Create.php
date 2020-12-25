@@ -22,7 +22,12 @@ class Create
      */
     protected $table;
 
-        /**
+    /**
+     * Instance PDO
+     */
+    protected $pdo;
+
+    /**
      * Constructeur de l'action insert.
      * 
      * @param array  $data     Le tableau contenant les données à inserer.
@@ -35,6 +40,28 @@ class Create
         $this->data = $data;
         $this->table = $table;
         $this->database = $database === null ? DB_NAME : $database;
+    }
+
+    /**
+     * Retourne l'instance PDO.
+     * 
+     * @return PDO
+     */
+    public function getPDO()
+    {
+        return $this->pdo;
+    }
+
+    /**
+     * Permet de vérifier qu'un ou plusieurs fichiers ont été uploadés.
+     * 
+     * @param string $key La clé dans le tableau.
+     * 
+     * @return bool
+     */
+    public static function fileIsUploaded(string $key)
+    {
+        return !empty($_FILES[$key]);
     }
 
 }

@@ -105,18 +105,33 @@ class Validator
     }
 
     /**
+     * Permet d'ajouter une erreur soi-même à la liste des erreurs.
+     * 
+     * @param string $arrayKey La clé de l'erreur dans le tableau qui contient les
+     *                         les erreurs.
+     * @param string $text     Le texte à affiché.
+     * 
+     * @return void
+     */
+    public function addError(string $arrayKey, string $text)
+    {
+        $this->errors[$arrayKey] = $text;
+    }
+
+    /**
      * Valide le titre de l'item qu'on veut créer.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
      * @param string $title Le titre de l'item à valider.
      */
-    public function title(string $title)
+    public function title(string $name, string $title)
     {
-        $this->toValidate["title"] = $title;
+        $this->toValidate[$name] = $title;
 
         if (empty($title)) {
-            $this->errors["title"] = $this->notifier->titleIsEmpty();
+            $this->errors[$name] = $this->notifier->titleIsEmpty();
         } elseif ($this->containsHTML($title)) {
-            $this->errors["title"] = $this->notifier->titleContainsHTML();
+            $this->errors[$name] = $this->notifier->titleContainsHTML();
         }
     }
 
@@ -124,99 +139,103 @@ class Validator
      * Valide la description, retourne une chaine de caractère si la description
      * est invalide.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
      * @param string $description La description à valider.
      */
-    public function description(string $description)
+    public function description(string $name, string $description)
     {
-        $this->toValidate["description"] = $description;
+        $this->toValidate[$name] = $description;
 
         if (empty($description)) {
-            $this->errors["description"] = $this->notifier->descriptionIsEmpty();
-        } elseif ($this->containsHTML($description)) {
-            $this->errors["description"] = $this->notifier->descriptionContainsHTML();
+            $this->errors[$name] = $this->notifier->descriptionIsEmpty();
         }
     }
 
     /**
      * Permet de faire la validation d'un mot de passe.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
      * @param string $password
      * @param string $confirmationPassword 
      */
-    public function password(string $password, string $confirmationPassword)
+    public function password(string $name, string $password, string $confirmationPassword)
     {
-        $this->toValidate["password"] = $password;
+        $this->toValidate[$name] = $password;
         $password = new Password($password);
 
         $password->validate($confirmationPassword);
         
         if (!$password->noErrors()) {
-            $this->errors["password"] = $password->getErrors();
+            $this->errors[$name] = $password->getErrors();
         }
     }
 
     /**
      * Permet de vérifier que l'article a un contenu.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
      * @param string $content Le contenu de l'article.
      */
-    public function article(string $content)
+    public function article(string $name, string $content)
     {
-        $this->toValidate["article_content"] = $content;
+        $this->toValidate[$name] = $content;
 
         if (empty($content)) {
-            $this->errors["article_content"] = $this->notifier->articleContentIsEmpty();
+            $this->errors[$name] = $this->notifier->articleContentIsEmpty();
         }
     }
 
     /**
      * Permet de vérifier que le price saisi l'utilisateur est un entier.
-     * 
+     *
+     * @param string $name La valeur de l'attribut name dans le formulaire.
      * @param string $price Le price saisi par l'utilisateur.
      * 
      * @return string Une notification si le price n'est pas un entier.
      */
-    public function price(string $price = null)
+    public function price(string $name, string $price)
     {
-        $this->toValidate["price"] = $price;
+        $this->toValidate[$name] = $price;
 
         if (!is_int((int)$price)) {
-            $this->errors["price"] = $this->notifier->IsNotInt("price");
+            $this->errors[$name] = $this->notifier->IsNotInt($name);
         }
     }
 
     /**
      * Permet de vérifier que le rang saisi l'utilisateur est un entier.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
      * @param string $rang Le rang saisi par l'utilisateur.
      * 
      * @return string Une notification si le rang n'est pas un entier.
      */
-    public function rank(string $rank = null)
+    public function rank(string $name, string $rank)
     {
         $rank = (int)$rank;
-        $this->toValidate["rank"] = $rank;
+        $this->toValidate[$name] = $rank;
 
         if (!is_int($rank)) {
-            $this->errors["rank"] = $this->notifier->IsNotInt("rank");
+            $this->errors[$name] = $this->notifier->IsNotInt($name);
         }
     }
 
     /**
      * Permet de valider le login saisi par l'utilisateur.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
      * @param string $login Le login saisi par l'utilisateur.
      * 
      * @return string Une notification si le login est invalide.
      */
-    public function login(string $login)
+    public function login(string $name, string $login)
     {
-        $this->toValidate["login"] = $login;
+        $this->toValidate[$name] = $login;
 
         if (empty($login)) {
-            $this->errors["login"] = $this->notifier->loginIsEmpty();
+            $this->errors[$name] = $this->notifier->loginIsEmpty();
         } elseif ($this->containsHTML($login)) {
-            $this->errors["login"] = $this->notifier->loginContainsHTML();
+            $this->errors[$name] = $this->notifier->loginContainsHTML();
         }
     }
 
@@ -224,41 +243,46 @@ class Validator
      * Permet de valider que le fichier uploadé dans le champ image est une image
      * et qu'elle respecte les conditions de poids, d'extension et d'erreur.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
+     * 
      * @return string
      */
-    public function image()
+    public function image(string $name)
     {  
-        $this->toValidate["image"] = $_FILES["image"];
-        $image = new FileUploaded($_FILES["image"]);
-        if (!$image->isAnImageHasValidSizeAndNoError()) {
-            $this->errors["image"] = $this->notifier->imageIsInvalid();
+        $this->toValidate[$name] = $_FILES[$name];
+        $img = new FileUploaded($_FILES[$name]);
+        if (!$img->isAnImageHasValidSizeAndNoError()) {
+            $this->errors[$name] = $this->notifier->imageIsInvalid();
         }
     }
 
     /**
      * Permet de vérifier que le fichier pdf uplaodé est exactement un fichier PDF.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
+     * 
      * @return string
      */
-    public function pdf()
+    public function pdf(string $name)
     {
-        $this->toValidate["pdf_uploaded"] = $_FILES["pdf_uploaded"];
-        $pdf_uploaded = new FileUploaded($_FILES["pdf_uploaded"]);
-        if (!$pdf_uploaded->isPdfFile()) {
-            $this->errors["pdf_uploaded"] = $this->notifier->isNotPdfFile();
+        $this->toValidate[$name] = $_FILES[$name];
+        $pdfUploaded = new FileUploaded($_FILES[$name]);
+        if (!$pdfUploaded->isPdfFile()) {
+            $this->errors[$name] = $this->notifier->isNotPdfFile();
         }
     }
 
     /**
      * Effectue les validations sur le lien de la vidéo.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
      * @param $youtubeVideoLink Lien de la vidéo de description.
      */
-    public function videoLink(string $youtubeVideoLink = null)
+    public function videoLink(string $name, string $youtubeVideoLink = null)
     {
-        $this->toValidate["youtube_video_link"] = $youtubeVideoLink;
+        $this->toValidate[$name] = $youtubeVideoLink;
         if ($this->containsHTML($youtubeVideoLink)) {
-            $this->errors["youtube_video_link"] = $this->notifier->videoLinkIsInvalid();
+            $this->errors[$name] = $this->notifier->videoLinkIsInvalid();
         }
     }
     
@@ -270,55 +294,30 @@ class Validator
      * @param string $postName La valeur de l'attribut name dans le
      *                         le formulaire.
      * 
-     * @return string|null
+     * @return void
      */
-    public function name(string $name = null, string $postName = "name")
+    public function name(string $name, string $message, string $postName = "name")
     {
         $this->toValidate[$postName] = $name;
 
         if ($this->containsHTML($name)) {
-            $this->errors[$postName] = "Veuillez vérifier que le(s) nom(s) ne contient/contiennent pas de code HTML.";
+            $this->errors[$postName] = $message;
         }
     }
   
     /**
      * Effectue les validations sur un email.
      * 
+     * @param string $name La valeur de l'attribut name dans le formulaire.
      * @param string $email Email à vérifier.
      */
-    public function email(string $email)
+    public function email(string $name, string $email)
     {
-        $this->toValidate["email"] = $email;
+        $this->toValidate[$name] = $email;
 
         if (!preg_match(self::EMAIL_REGEX, $email)) {
-            $this->errors["email"] = $this->notifier->emailIsInvalid();
+            $this->errors[$name] = $this->notifier->emailIsInvalid();
         }
-    }
-
-    /**
-     * Retourne true si la chaîne de caractère passée en paramètre contient du code
-     * HTML.
-     * 
-     * @param string $var La chaîne dont il faut faire la vérification.
-     * 
-     * @return bool
-     */
-    public function containsHTML(string $var) : bool
-    {
-        return preg_match(self::HTML_REGEX, $var);
-    }
-
-    /**
-     * Permet de vérifier que la valeur passée en paramètre est une chaîne
-     * de caractère.
-     * 
-     * @param string $var
-     * 
-     * @return bool
-     */
-    public function string($var)
-    {
-        return is_string($var);
     }
 
     /**
@@ -329,9 +328,87 @@ class Validator
      * 
      * @return bool
      */
-    public function phoneNumber($var)
+    public function phone($name, $var, string $message)
     {
-        return !$this->containsLetter($var);
+        $this->toValidate[$name] = $var;
+
+        if ($this->containsLetter($var)) {
+            $this->errors[$name] = $message;
+        }
+    }
+
+    /**
+     * Permet de vérifier que le nombre de fichier uploadé est
+     * respecte la condition entrée.
+     * 
+     * @param string $name         C'est le contenu de l'attribut name dans le formulaire.
+     * @param string $comaparision Le mot ou le signe de la comparaison.
+     *                             Exemple : less|more|equal ou <=|=|>=.
+     * @param int    $fileNumber   Le nombre de fichier par rapport auquel on fait la comparaison.
+     * @param string $message      Le message à afficher au cas où la condition n'est
+     *                             pas respectée.
+     * 
+     * @param 
+     */
+    public function fileNumber(string $name, string $comparison, int $fileNumber, string $message)
+    {
+        $this->toValidate[$name] = $_FILES[$name]["name"];
+
+        if ($comparison == "less" || $comparison == "<") {
+            $condition = count($_FILES[$name]["name"]) <= $fileNumber;
+        } elseif ($comparison == "more" || $comparison == ">") {
+            $condition = count($_FILES[$name]["name"]) >= $fileNumber;
+        } elseif ($comparison == "equal" || $comparison == "=") {
+            $condition = count($_FILES[$name]["name"]) == $fileNumber;
+        }
+
+        if (!$condition) {
+            $this->errors[$name] = $message;
+        }
+    }
+
+    /**
+     * Permet de vérifier que l'extension d'un fichier est identique
+     * à celui passé en paramètre.
+     * 
+     * @param string $name
+     * @param string $extToValidate
+     * @param array  $validExtensions
+     * @param string $message
+     */
+    public function fileExtensions(string $name, string $extToValidate, array $validExtensions, string $message)
+    {
+        if (!in_array(mb_strtolower($extToValidate), $validExtensions)) {
+            $this->errors[$name] = $message;
+        }
+    }
+
+    /**
+     * Permet de valider la taille d'un fichier.
+     * 
+     * @param string $name
+     * @param string $fileSize
+     * @param array  $validSize
+     * @param string $message
+     */
+    public function fileSize(string $name, string $fileSize, $validSize, string $message)
+    {
+        if ($fileSize > $validSize) {
+            $this->errors[$name] = $message;
+        }
+    }
+
+    /**
+     * Retourne true si la chaîne de caractère passée en paramètre contient du code
+     * HTML.
+     * 
+     * @param string $string La chaîne dont il faut faire la vérification.
+     * 
+     * @return bool
+     */
+    private function containsHTML(string $string) : bool
+    {
+        return preg_match(self::HTML_REGEX, $string);
     }
 
     /**
@@ -342,7 +419,7 @@ class Validator
      * 
      * @return bool
      */
-    public function containsLetter($var)
+    private function containsLetter($var)
     {
         return preg_match("#[A-Z]#i", $var);
     }

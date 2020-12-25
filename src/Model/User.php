@@ -54,6 +54,7 @@ class User extends Model
         $this->createdAt = $result["created_at"];
         $this->updatedAt = $result["updated_at"];
         $this->type = $result["type"];
+        $this->tableName = self::TABLE_NAME;
     }
 
     /**

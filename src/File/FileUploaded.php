@@ -15,6 +15,8 @@
 
 namespace App\File;
 
+use App\File\Image\Image;
+
 /**
  * Gère une Les fichier uploadés.
  * 
@@ -37,14 +39,14 @@ class FileUploaded extends File
      * @param $fileUplaoded Tableau $_FILES qui contient les informations relatives
      *                      à l'image.
      */
-    public function __construct(array $fileUplaoded)
+    public function __construct($fileUplaoded, string $nameKey = "name", string $errKey = "error", string $tmpName = "tmp_name", string $sizeKey = "size")
     {
-        $fileUploadedInfos = pathinfo($fileUplaoded['name']);
-        $this->errors = $fileUplaoded['error'];
-        $this->tmpName = $fileUplaoded['tmp_name'];
-        $this->name = $fileUploadedInfos['filename'];
-        $this->extension = $fileUploadedInfos['extension'];
-        $this->size = $fileUplaoded['size'];
+        $this->fileUploadedInfos = pathinfo($fileUplaoded[$nameKey]);
+        $this->errors            = $fileUplaoded[$errKey];
+        $this->tmpName           = $fileUplaoded[$tmpName];
+        $this->size              = $fileUplaoded[$sizeKey];
+        $this->name              = $this->fileUploadedInfos["filename"];
+        $this->extension         = $this->fileUploadedInfos["extension"];
     }
 
     /**

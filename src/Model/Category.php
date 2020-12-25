@@ -39,6 +39,7 @@ class Category extends Model
         $this->updatedAt = $result["updated_at"];
         $this->description = $result["description"];
         $this->iconClass = $result["icon_class"];
+        $this->tableName = self::TABLE_NAME;
     }
 
     /**
@@ -57,6 +58,16 @@ class Category extends Model
         }
 
         return $this->announces;
+    }
+
+    /**
+     * Retourne le nombre d'annonces appartenant à cette catégorie.
+     * 
+     * @return int
+     */
+    public function getAnnouncesNumber() : int
+    {
+        return count($this->getAnnounces());
     }
 
     /**

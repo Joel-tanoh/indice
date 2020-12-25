@@ -37,6 +37,7 @@ class SubCategory extends Category
         $this->createdAt = $result["created_at"];
         $this->updatedAt = $result["updated_at"];
         $this->description = $result["description"];
+        $this->tableName = self::TABLE_NAME;
     }
 
     /**

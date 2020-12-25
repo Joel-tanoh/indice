@@ -3,10 +3,10 @@
 namespace App\View\Model;
 
 use App\Model\Announce;
-use App\View\Card;
 use App\View\Model\User\UserView;
 use App\View\Snippet;
 use App\View\View;
+use App\View\Form;
 
 /**
  * Classe de gestion des vues des annonces.
@@ -28,9 +28,12 @@ class AnnounceView extends View
     /**
      * Vue de la création d'une annonce.
      * 
+     * @param string $message Le message retourné en fonction de l'issue de 
+     *                        l'action.
+     * 
      * @return string
      */
-    public function create()
+    public function create(string $message = null)
     {
         $userView = new UserView();
         $snippet = new Snippet();
@@ -38,6 +41,9 @@ class AnnounceView extends View
         return <<<HTML
         <!-- Enête de la page -->
         {$snippet->pageHeader("Poster mon Annonce", "Poster mon annonce")}
+
+        <!-- Message affiché en fonction de l'issue de l'action -->
+        {$message}
 
         <!-- Start Content -->
         <div id="content" class="section-padding">
@@ -330,14 +336,16 @@ HTML;
      */
     private function createPageContent()
     {
+        $form = new Form($_SERVER["REQUEST_URI"], "row page-content");
+
         return <<<HTML
         <div class="col-sm-12 col-md-8 col-lg-9">
-            <div class="row page-content">
+            {$form->open()}
                 <!-- Announce detail -->
                 {$this->enterAnnounceDetails()}
                 <!-- Contact detail -->
                 {$this->contactDetails()}
-            </div>
+            {$form->close()}
         </div>
 HTML;
     }
@@ -552,39 +560,44 @@ HTML;
                 <div class="dashboard-wrapper">
                     <div class="form-group mb-3">
                         <label class="control-label">Titre</label>
-                        <input class="form-control input-md" name="Title" placeholder="Titre" type="text">
+                        <input class="form-control input-md" name="title" placeholder="Titre" type="text" required>
                     </div>
                     <div class="form-group mb-3 tg-inputwithicon">
                         <label class="control-label">Catégories</label>
                         <div class="tg-select form-control">
-                            <select>
-                                <option value="none">Sélectionner la catégorie</option>
+                            <select name="id_category">
+                                <option value="0">Sélectionner la catégorie</option>
                                 {$categoryView->selectOptions()}
                             </select>
                         </div>
                     </div>
                     <div class="form-group mb-3">
-                        <label class="control-label">Prix</label>
-                        <input class="form-control input-md" name="price" placeholder="Ajouter le prix" type="text">
+                        <div id="enter_price_box">
+                            <label class="control-label">Prix</label>
+                            <input class="form-control input-md" name="price" placeholder="Ajouter le prix (F CFA)" type="number">
+                        </div>
                         <div class="tg-checkbox mt-3">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="tg-priceoncall">
+                                <input type="checkbox" class="custom-control-input" name="price_on_call" id="tg-priceoncall">
                                 <label class="custom-control-label" for="tg-priceoncall">Prix à l'appel</label>
                             </div>
                         </div>
                     </div>
+                    <div class="form-group mb-3">
+                        <label class="control-label">Localisation</label>
+                        <input class="form-control input-md" name="location" placeholder="Adresse, Ville, Pays" type="text">
+                    </div>
                     <div class="form-group md-3">
                         <section id="editor">
-                            <div id="summernote">
-                            </div>
+                            <textarea name="description" id="summernote" required></textarea>
                         </section>
                     </div>
                     <label class="tg-fileuploadlabel" for="tg-photogallery">
                         <span>Glissez votre fichier pour le charger</span>
                         <span>Ou</span>
-                        <span class="btn btn-common">Séléctionner un fichier</span>
+                        <span class="btn btn-common">Séléctionner 3 fichiers</span>
                         <span>Taille maximum des fichiers: 2 MB</span>
-                        <input id="tg-photogallery" class="tg-fileinput" type="file" name="file">
+                        <input id="tg-photogallery" class="tg-fileinput" type="file" name="images[]" multiple>
                     </label>
                 </div>
             </div>
@@ -608,37 +621,29 @@ HTML;
                     </div>
                     <div class="dashboard-wrapper">
                         <div class="form-group mb-3">
-                            <strong>Je suis :</strong>
+                            <strong>Qui contacter ?</strong>
                             <div class="tg-selectgroup">
                                 <span class="tg-radio">
-                                    <input id="tg-sameuser" type="radio" name="usertype" value="same user" checked="">
-                                    <label for="tg-sameuser">L'annonceur</label>
+                                    <input id="tg-sameuser" type="radio" name="usertype" value="current_user" checked>
+                                    <label for="tg-sameuser">Moi</label>
                                 </span>
                                 <span class="tg-radio">
-                                    <input id="tg-someoneelse" type="radio" name="usertype" value="someone else">
+                                    <input id="tg-someoneelse" type="radio" name="usertype" value="someone_else">
                                     <label for="tg-someoneelse">Une autre personne</label>
                                 </span>
                             </div>
                         </div>
-                        <div class="form-group mb-3">
-                            <label class="control-label">Prénoms*</label>
-                            <input class="form-control input-md" name="name" type="text">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="control-label">Nom*</label>
-                            <input class="form-control input-md" name="name" type="text">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="control-label">Téléphone*</label>
-                            <input class="form-control input-md" name="phone" type="text">
-                        </div>
-                        <div class="tg-checkbox">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="tg-agreetermsandrules">
-                                <label class="custom-control-label" for="tg-agreetermsandrules">D'accord avec les <a href="javascript:void(0);">Terms of Use &amp; Posting Rules</a></label>
+                        <div id="someone_else">
+                            <div class="form-group mb-3">
+                                <label class="control-label">Adresse email*</label>
+                                <input class="form-control input-md" name="user_email_address" type="email">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="control-label">Téléphone*</label>
+                                <input class="form-control input-md" name="phone" type="text" placeholder="+XXX XXXXXXXXXX">
                             </div>
                         </div>
-                        <button class="btn btn-common" type="button">Poster</button>
+                        <button class="btn btn-common" type="submit">Poster</button>
                     </div>
                 </div>
             </div>

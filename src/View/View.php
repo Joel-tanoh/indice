@@ -46,12 +46,17 @@ class View
 HTML;
     }
 
-    public static function page404()
+    /**
+     * La vue à afficher lorsqu'on ne trouve pas la ressource.
+     * 
+     * @return string
+     */
+    public static function page404(string $pageHeader, string $current)
     {
         $snippet = new Snippet();
 
         return <<<HTML
-        {$snippet->pageHeader("En cours de développement", "Page en cours")}
+        {$snippet->pageHeader($pageHeader, $current)}
 
         <!-- Start Content -->
         <div class="error section-padding">

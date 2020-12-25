@@ -16,17 +16,14 @@ class CategoryController extends AppController
 {
     static function read(array $url = null)
     {
-        $page = new Page("Titre de la catégorie", (new CategoryView())->read());
-        $page->show();
-
-        // if (Category::isCategorySlug($url[0])) {
-        //     $category = Model::getBySlug($url[0], Category::TABLE_NAME);
-        //     $page = new Page("Titre de la catégorie", (new CategoryView($category))->read());
-        //     $page->setDescription($category->getDescription());
-        //     $page->show();
-        // } else {
-        //     throw new PageNotFoundException("La catégorie que vous cherchez n'a pas été trouvée.");
-        // }
+        if (Category::isCategorySlug($url[0])) {
+            $category = Model::getBySlug($url[0], Category::TABLE_NAME);
+            $page = new Page("Titre de la catégorie", (new CategoryView($category))->read());
+            $page->setDescription($category->getDescription());
+            $page->show();
+        } else {
+            throw new PageNotFoundException("La catégorie que vous cherchez n'a pas été trouvée.");
+        }
     }
 
     /**
