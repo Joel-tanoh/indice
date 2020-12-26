@@ -82,6 +82,10 @@ class Image extends File
 
     const PRODUCT_INFO_DIR_PATH = self::IMG_DIR_PATH . "productinfo" . DIRECTORY_SEPARATOR;
     const PRODUCT_INFO_DIR_URL = self::IMG_DIR_URL . "/productinfo";
+    
+    const ART_IN_FOOTER_PATH = self::IMG_DIR_PATH . "art" . DIRECTORY_SEPARATOR;
+    const ART_IN_FOOTER_URL = self::IMG_DIR_URL . "/art";
+
 
     /**
      * Permet de sauvegarder l'image dans les fichiers du serveur dans le dossier des

@@ -2,6 +2,7 @@
 
 namespace App\View\Model;
 
+use App\Model\Announce;
 use App\Model\Category;
 use App\Utility\Pagination;
 use App\View\Snippet;
@@ -40,8 +41,7 @@ HTML;
     {
         $content = null;
 
-        foreach (Category::getAll(Category::TABLE_NAME) as $item) {
-            $category = new Category($item["id"]);
+        foreach (Category::getAll(Category::TABLE_NAME) as $category) {
             $content .= $this->trendingCategory(
                 $category->getSlug(), $category->getIconClass(), $category->getTitle()
             );
@@ -122,8 +122,7 @@ HTML;
     {
         $options = null;
 
-        foreach (Category::getAll(Category::TABLE_NAME) as $item) {
-            $category = new Category($item["id"]);
+        foreach (Category::getAll(Category::TABLE_NAME) as $category) {
             $options .= '<option value="'. $category->getId() . '">' . $category->getTitle() . '</option>';
         }
 
@@ -223,8 +222,7 @@ HTML;
     {
         $content = null;
 
-        foreach (Category::getAll(Category::TABLE_NAME) as $item) {
-            $category = new Category($item["id"]);
+        foreach (Category::getAll(Category::TABLE_NAME) as $category) {
             $content .= $this->categoriesListRow(
                 $category->getTitle(), $category->getSlug(), $category->getIconClass(), $category->getAnnouncesNumber()
             );
@@ -233,13 +231,6 @@ HTML;
         return <<<HTML
         <ul class="categories-list">
             {$content}
-            <!-- {$this->categoriesListRow("Titre de l'annonce", null, "lni-dinner", 5)}
-            {$this->categoriesListRow("Titre de l'annonce", null, "lni-control-panel", 8)}
-            {$this->categoriesListRow("Titre de l'annonce", null, "lni-github", 2)}
-            {$this->categoriesListRow("Titre de l'annonce", null, "lni-coffee-cup", 3)}
-            {$this->categoriesListRow("Titre de l'annonce", null, "lni-home", 4)}
-            {$this->categoriesListRow("Titre de l'annonce", null, "lni-pencil", 5)}
-            {$this->categoriesListRow("Titre de l'annonce", null, "lni-display", 9)} -->
         </ul>
 HTML;
     }
@@ -283,11 +274,14 @@ HTML;
      */
     public function announcesSection()
     {
+        // $announces = Announce::getValidated($this->category->getId());
+        $announces = Announce::getAll($this->category->getId());
+
         return <<<HTML
         <div class="adds-wrapper">
             <div class="tab-content">
-                {$this->gridView()}
-                {$this->listView()}
+                {$this->gridView($announces)}
+                {$this->listView($announces)}
             </div>
         </div>
 HTML;
@@ -298,16 +292,23 @@ HTML;
      * 
      * @return string
      */
-    private function gridView()
-    {
-        $annonceView = new AnnounceView();
+    private function gridView(array $announces)
+    { 
+        $content = null;
+
+        if (empty($announces)) {
+            $content = $this->noAnnounces();
+        } else {
+            foreach ($announces as $announce) {
+                $announceView = new AnnounceView($announce);
+                $content .= $announceView->gridFormat();
+            }
+        }
 
         return <<<HTML
         <div id="grid-view" class="tab-pane fade">
             <div class="row">
-                {$annonceView->gridFormat()}
-                {$annonceView->gridFormat()}
-                {$annonceView->gridFormat()}
+                {$content}
             </div>
         </div>
 HTML;
@@ -318,22 +319,32 @@ HTML;
      * 
      * @return string
      */
-    private function listView()
+    private function listView(array $announces)
     {
-        $annonceView = new AnnounceView();
+        $content = null;
+
+        if (empty($announces)) {
+            $content = $this->noAnnounces();
+        } else {
+            foreach ($announces as $announce) {
+                $announceView = new AnnounceView($announce);
+                $content .= $announceView->listFormat();
+            }
+        }
 
         return <<<HTML
         <div id="list-view" class="tab-pane fade active show">
             <div class="row">
-                {$annonceView->listFormat()}
-                {$annonceView->listFormat()}
-                {$annonceView->listFormat()}
+                {$content}
             </div>
         </div>
 HTML;
     }
 
     /**
+     * Permet d'afficher les informations sur le nombre d'annonce affichée
+     * appartenant à cette catégorie.
+     * 
      * @return string
      */
     private function announceFilterShortName()
@@ -381,6 +392,24 @@ HTML;
                 <a class="nav-link active" data-toggle="tab" href="#list-view"><i class="lni-list"></i></a>
             </li>
         </ul>
+HTML;
+    }
+
+    
+    /**
+     * Un bloc de code HTML qui affiche aucune annonce lorqu'il n'y a pas 
+     * d'annonce à afficher dans une partie de la page.
+     * 
+     * @return string
+     */
+    public static function noAnnounces()
+    {
+        return <<<HTML
+        <div class="col-12">
+            <section class="d-flex justify-content-center align-items-center">
+                <p class="h5 text-muted">Aucunes annonces</p>
+            </section>
+        </div>
 HTML;
     }
 

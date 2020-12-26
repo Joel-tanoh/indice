@@ -52,10 +52,10 @@ class Announce extends Model
         $this->title = $result["title"];
         $this->description = $result["description"];
         $this->slug = $result["slug"];
-        $this->category = $result["id_category"];
+        $this->category = new Category($result["id_category"]);
         $this->subCategory = $result["id_sub_category"];
         $this->price = $result["price"];
-        $this->user = $result["user_email_address"];
+        $this->userEmailAddress = $result["user_email_address"];
         $this->phoneNumber = $result["phone_number"];
         $this->location = $result["location"];
         $this->state = $result["state"];
@@ -74,6 +74,9 @@ class Announce extends Model
 
         $this->productInfoImgPath = Image::PRODUCT_INFO_DIR_PATH . $this->slug . Image::EXTENSION;
         $this->productInfoImgSrc = Image::PRODUCT_INFO_DIR_URL . "/" . $this->slug . Image::EXTENSION;
+
+        $this->artInFooterImgPath = Image::ART_IN_FOOTER_PATH . $this->slug . Image::EXTENSION;
+        $this->artInFooterImgSrc = Image::ART_IN_FOOTER_URL . "/" . $this->slug . Image::EXTENSION;
     }
 
     /**
@@ -83,7 +86,6 @@ class Announce extends Model
      */
     public function getCategory()
     {
-        $this->category = new Category($this->idCategory);
         return $this->category;
     }
 
@@ -94,7 +96,6 @@ class Announce extends Model
      */
     public function getSubCategory()
     {
-        $this->subCategory = new SubCategory($this->idSubCategory);
         return $this->subCategory;
     }
 
@@ -107,6 +108,16 @@ class Announce extends Model
     {
         $this->user = new User($this->userEmailAddress);
         return $this->user;
+    }
+
+    /**
+     * Retourne l'addresse email de celui qui a posté l'annonce.
+     * 
+     * @return string
+     */
+    public function getUserEmailAddress()
+    {
+        return $this->userEmailAddress;
     }
 
     /**
@@ -180,6 +191,52 @@ class Announce extends Model
     public function getProductInfoImgSrc()
     {
         return $this->productInfoImgSrc;
+    }
+
+    /**
+     * Retourne le lien de l'image dans le footer.
+     * 
+     * @return string
+     */
+    public function getArtInFooterImgSrc()
+    {
+        return $this->productInfoImgSrc;
+    }
+
+    /**
+     * Retourne la location de l'annonce.
+     * 
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * Retourne le lien de l'annonce.
+     * 
+     * @return string
+     */
+    public function getLink()
+    {
+        return $this->category->getSlug() . "/" . $this->getSlug();
+    }
+
+    /**
+     * Retourne le prix.
+     * 
+     * @return string
+     */
+    public function getPrice()
+    {
+        if ($this->price == 0) {
+            return "Gratuit";
+        } elseif ($this->price == "price_on_call") {
+            return "Me contacter pour le prix";
+        } else {
+            return $this->price . " XOF";
+        }
     }
 
     /**
@@ -310,20 +367,6 @@ class Announce extends Model
     }
 
     /**
-     * Retourne la source de la thumbs de l'annonce.
-     * 
-     * @return string
-     */
-    public function getThumbsSrc()
-    {
-        if (\file_exists($this->thumbsPath)) {
-            return $this->thumbsSrc;
-        } else {
-            return self::DEFAULT_THUMBS;
-        }
-    }
-        
-    /**
      * Permet de créer une nouvelle ligne d'annonce et d'enregistrer les données.
      */
     public static function create() : bool
@@ -381,6 +424,9 @@ class Announce extends Model
             // Product 640 x 420
             $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::PRODUCT_DIR_PATH, 640, 420);
 
+            // Art in Footer 240 x 200
+            $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::ART_IN_FOOTER_PATH, 240, 200);
+
             // ProductInfo 625x415
             $arrayLength = count($_FILES["images"]["tmp_name"]);
             for ($i = 0; $i < $arrayLength; $i++) {
@@ -400,9 +446,17 @@ class Announce extends Model
     {
         $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE state = 1 AND id_category = ?";
         $rep = parent::connect()->prepare($query);
-        $rep->execute($idCategory);
+        $rep->execute([$idCategory]);
 
-        return $rep->fetchAll();
+        $result = $rep->fetchAll();
+
+        $announces = [];
+
+        foreach($result as $announce) {
+            $announces[] = new self($announce["id"]);
+        }
+
+        return $announces;
     }
 
     /**
@@ -415,7 +469,15 @@ class Announce extends Model
         $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE state = 0";
         $rep = parent::connect()->query($query);
 
-        return $rep->fetchAll();
+        $result = $rep->fetchAll();
+
+        $announces = [];
+
+        foreach($result as $announce) {
+            $announces[] = new self($announce["id"]);
+        }
+
+        return $announces;
     }
 
     /**
@@ -428,7 +490,25 @@ class Announce extends Model
         $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE state = 2";
         $rep = parent::connect()->query($query);
 
-        return $rep->fetchAll();
+        $result = $rep->fetchAll();
+
+        $announces = [];
+
+        foreach($result as $announce) {
+            $announces[] = new self($announce["id"]);
+        }
+
+        return $announces;
+    }
+
+    /**
+     * Retourne les annonces vedettes.
+     * 
+     * @return array
+     */
+    public static function getFeatured(int $nbr)
+    {
+        return self::getMoreViewed($nbr);
     }
 
 }

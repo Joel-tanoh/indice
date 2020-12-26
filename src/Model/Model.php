@@ -72,9 +72,9 @@ class Model
      * 
      * @return string
      */
-    public function getDescription()
+    public function getDescription(int $nbrOfChar = null)
     {
-        return $this->description;
+        return substr($this->description, 0, $nbrOfChar) . "...";
     }
 
     /**
@@ -92,7 +92,7 @@ class Model
      * 
      * @return string
      */
-    public function getupdatedAt()
+    public function getUpdatedAt()
     {
         return Utility::formatDate($this->updatedAt);
     }
@@ -122,8 +122,13 @@ class Model
      */
     public static function getSlugs(string $tableName) : array
     {
+        $slugs = [];
         $rep = self::connect()->query("SELECT slug FROM " . $tableName);
-        return $rep->fetchAll();
+        foreach ($rep->fetchAll() as $item) {
+            $slugs[] = $item["slug"];
+        }
+
+        return $slugs;
     }
 
     /**
@@ -135,14 +140,14 @@ class Model
      * 
      * @return self
      */
-    public static function getBySlug(string $slug, string $tableName) : self
+    public static function getBySlug(string $slug, string $tableName, string $class)
     {
         $rep = self::connect()->prepare("SELECT id FROM " . $tableName . " WHERE slug = ?");
         $rep->execute([$slug]);
         $item = $rep->fetch();
 
         if ($item["id"]) {
-            return new self($item["id"]);
+            return new $class($item["id"]);
         }
     }
 

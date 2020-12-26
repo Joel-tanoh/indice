@@ -28,19 +28,19 @@ class User extends Model
     /**
      * Constructeur d'un User.
      * 
-     * @param int $id
+     * @param string $emailAddress
      */
-    public function __construct(int $id)
+    public function __construct(string $emailAddress)
     {
         $queryFormatter = new SqlQueryFormater();
 
         $query = $queryFormatter->select(
             "id, code, name, first_names, email_address, pseudo, password, phone_number, created_at,
             updated_at, type"
-            )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
+            )->from(self::TABLE_NAME)->where("email_address = ?")->returnQueryString();
 
         $rep = parent::connect()->prepare($query);
-        $rep->execute([$id]);
+        $rep->execute([$emailAddress]);
 
         $result = $rep->fetch();
 

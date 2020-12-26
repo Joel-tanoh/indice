@@ -14,7 +14,9 @@
 
 namespace App\View\Page;
 
+use App\Model\Announce;
 use App\View\Model\AnnounceView;
+use App\View\Model\CategoryView;
 use App\View\Snippet;
 
 /**
@@ -116,11 +118,22 @@ HTML;
     public function lastPostedInFooter()
     {
         $announceView = new AnnounceView();
+        $content = null;
+        $announces = Announce::getFeatured(2);
+
+        if (empty($content)) {
+            $content = CategoryView::noAnnounces();
+        } else {
+            foreach ($announces as $item) {
+                $announce = new Announce($item["id"]);
+                $announceView = new AnnounceView($announce);
+                $content .= $announceView->lastPostedCardInFooter();
+            }
+        }
         
         return <<<HTML
         <ul class="media-content-list">
-            {$announceView->lastPostedCardInFooter("Titre de l'annonce", 50, "20 Fev. 2020")}
-            {$announceView->lastPostedCardInFooter("Titre de l'annonce", 200, "31 Dec. 2020")}
+            {$content}
         </ul>
 HTML;
     }

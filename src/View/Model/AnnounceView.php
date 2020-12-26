@@ -111,17 +111,25 @@ HTML;
      */
     public function latestSection()
     {
+        $content = null;
+        $announces = Announce::getLastPosted(6);
+
+        if (empty($content)) {
+            $content = CategoryView::noAnnounces();
+        } else {
+            foreach ($announces as $item) {
+                $announce = new Announce($item["id"]);
+                $announceView = new AnnounceView($announce);
+                $content .= $announceView->latestAnnouncesSectionCard();
+            }
+        }
+
         return <<<HTML
         <section class="featured section-padding">
             <div class="container">
                 <h1 class="section-title">Postées récemment</h1>
                 <div class="row">
-                    {$this->latestAnnouncesSectionCard()}
-                    {$this->latestAnnouncesSectionCard()}
-                    {$this->latestAnnouncesSectionCard()}
-                    {$this->latestAnnouncesSectionCard()}
-                    {$this->latestAnnouncesSectionCard()}
-                    {$this->latestAnnouncesSectionCard()}
+                    {$content}
                 </div>
             </div>
         </section>
@@ -135,6 +143,19 @@ HTML;
      */
     public function featuredSection()
     {
+        $content = null;
+        $announces = Announce::getFeatured(6);
+
+        if (empty($content)) {
+            $content = CategoryView::noAnnounces();
+        } else {
+            foreach ($announces as $item) {
+                $announce = new Announce($item["id"]);
+                $announceView = new AnnounceView($announce);
+                $content .= $announceView->featuredCard();
+            }
+        }
+
         return <<<HTML
         <section class="featured-lis section-padding" >
             <div class="container">
@@ -142,14 +163,7 @@ HTML;
                     <div class="col-md-12 wow fadeIn" data-wow-delay="0.5s">
                         <h3 class="section-title">Les Annonces vedettes</h3>
                         <div id="new-products" class="owl-carousel">
-                            {$this->featuredCard()}
-                            {$this->featuredCard()}
-                            {$this->featuredCard()}
-                            {$this->featuredCard()}
-                            {$this->featuredCard()}
-                            {$this->featuredCard()}
-                            {$this->featuredCard()}
-                            {$this->featuredCard()}
+                            {$content}
                         </div>
                     </div> 
                 </div>
@@ -187,22 +201,22 @@ HTML;
         <div class="item">
             <div class="product-item">
                 <div class="carousel-thumb">
-                    <img class="img-fluid" src="assets/img/product/img1.jpg" alt=""> 
+                    <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Une image de {$this->announce->getSlug()}"> 
                     <div class="overlay">
                     </div>
                 </div>    
                 <div class="product-content">
-                    <h3 class="product-title"><a href="ads-details.html">Titre de l'annonce</a></h3>
-                    <p>Début de la description...</p>
-                    <span class="price">500 XOF</span>
+                    <h3 class="product-title"><a href="ads-details.html">{$this->announce->getTitle()}</a></h3>
+                    <p>{$this->announce->getDescription(75)}</p>
+                    <span class="price">{$this->announce->getPrice()}</span>
                     <div class="meta">
                         <span class="count-review">
-                            <span>1</span> Vue(s)
+                            <span>{$this->announce->getViews()}</span> Vue(s)
                         </span>
                     </div>
                     <div class="card-text">
                         <div class="float-left">
-                            <a href="#"><i class="lni-map-marker"></i> Ville, Pays</a>
+                            <a href="#"><i class="lni-map-marker"></i> {$this->announce->getLocation()}</a>
                         </div>
                         <div class="float-right">
                             <div class="icon">
@@ -260,24 +274,24 @@ HTML;
         return <<<HTML
         <div class="feature-content">
             <div class="product">
-                <a href="category"><i class="lni-folder"></i> Catégorie de l'annonce</a>
+                <a href="{$this->announce->getCategory()->getSlug()}"><i class="lni-folder"></i> {$this->announce->getCategory()->getTitle()}</a>
             </div>
-            <h4><a href="category/annonce">Titre de l'annonce</a></h4>
-            <span>Date de mise à jour</span>
+            <h4><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h4>
+            <span>{$this->announce->getUpdatedAt()}</span>
             <ul class="address">
                 <li>
-                    <i class="lni-map-marker"></i> Ville, Pays
+                    <i class="lni-map-marker"></i> {$this->announce->getLocation()}
                 </li>
                 <li>
-                    <i class="lni-alarm-clock"></i> Date de post
+                    <i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}
                 </li>
                 <li>
-                    <a href="users/posts"><i class="lni-user"></i> Nom du user</a>
+                    <a href="users/posts"><i class="lni-user"></i> {$this->announce->getUser()->getName()}</a>
                 </li>
             </ul>
             <div class="listing-bottom">
-                <h3 class="price float-left">Prix. XOF</h3>
-                <a href="category" class="btn-verified float-right"><i class="lni-check-box"></i> Annonce certifiée</a>
+                <h3 class="price float-left">{$this->announce->getPrice()}</h3>
+                <a href="{$this->announce->getCategory()->getSlug()}" class="btn-verified float-right"><i class="lni-check-box"></i> Annonce validée</a>
             </div>
         </div>
 HTML;
@@ -295,8 +309,8 @@ HTML;
             <div class="icon">
                 <i class="lni-heart"></i>
             </div>
-            <a href="category/annonce">
-                <img class="img-fluid" src="assets/img/featured/img1.jpg" alt="">
+            <a href="{$this->announce->getLink()}">
+                <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Photo de {$this->announce->getSlug()}">
             </a>
         </figure>
 HTML;
@@ -305,25 +319,21 @@ HTML;
     /**
      * Last posted in footer code.
      * 
-     * @param string $title
-     * @param int $price
-     * @param string $date
-     * 
      * @return string
      */
-    public function lastPostedCardInFooter(string $title, int $price = null, string $date = null)
+    public function lastPostedCardInFooter()
     {
         return <<<HTML
         <li>
             <div class="media-left">
-                <img class="img-fluid" src="assets/img/art/img2.jpg" alt="">
+                <img class="img-fluid" src="{$this->announce->getArtInFooterImgSrc()}" alt="Photo de {$this->announce->getSlug()}">
                 <div class="overlay">
-                    <span class="price">{$price} XOF</span>
+                    <span class="price">{$this->announce->getPrice()} XOF</span>
                 </div>
             </div>
             <div class="media-body">
-                <h4 class="post-title"><a href="category/annonce">{$title}</a></h4>
-                <span class="date">{$date}</span>
+                <h4 class="post-title"><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h4>
+                <span class="date">{$this->announce->getCreatedAt()}</span>
             </div>
         </li>
 HTML;
@@ -361,7 +371,7 @@ HTML;
         return <<<HTML
         <div class="product-info row">
             <!-- Images Section -->
-            {$this->images()}
+            {$this->productInfosImgSection()}
 
             <!-- Title and others informations section -->
             {$this->detailsBox()}
@@ -396,32 +406,32 @@ HTML;
      * 
      * @return string
      */
-    private function images()
+    private function productInfosImgSection()
     {
         return <<<HTML
         <div class="col-lg-7 col-md-12 col-xs-12">
             <div class="details-box ads-details-wrapper">
                 <div id="owl-demo" class="owl-carousel owl-theme">
-                    <div class="item">
-                        <div class="product-img">
-                            <img class="img-fluid" src="assets/img/productinfo/img1.jpg" alt="">
-                        </div>
-                        <span class="price">500 XOF</span>
-                    </div>
-                    <div class="item">
-                        <div class="product-img">
-                            <img class="img-fluid" src="assets/img/productinfo/img2.jpg" alt="">
-                        </div>
-                        <span class="price">500 XOF</span>
-                    </div>
-                    <div class="item">
-                        <div class="product-img">
-                            <img class="img-fluid" src="assets/img/productinfo/img3.jpg" alt="">
-                        </div>
-                        <span class="price">500 XOF</span>
-                    </div>
+                    {$this->productInfoImg("assets/img/productinfo/img1.jpg", "alt", "500 XOF")}
+                    {$this->productInfoImg("assets/img/productinfo/img2.jpg", "alt", "500 XOF")}
+                    {$this->productInfoImg("assets/img/productinfo/img3.jpg", "alt", "500 XOF")}
                 </div>
             </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * 
+     */
+    private function productInfoImg(string $imgSrc, string $altText, string $price)
+    {
+        return <<<HTML
+        <div class="item">
+            <div class="product-img">
+                <img class="img-fluid" src="{$imgSrc}" alt="{$altText}">
+            </div>
+            <span class="price">{$price}</span>
         </div>
 HTML;
     }
@@ -437,17 +447,17 @@ HTML;
         <div class="col-lg-5 col-md-12 col-xs-12">
             <div class="details-box">
                 <div class="ads-details-info">
-                    <h2>Titre de l'annonce</h2>
+                    <h2>{$this->announce->getTitle()}</h2>
                     {$this->showDescription()}
                     {$this->metadata()}
                 </div>
                 <ul class="advertisement mb-4">
                     <li>
-                        <p><strong><i class="lni-folder"></i> Catégories :</strong> <a href="category">Electronics</a></p>
+                        <p><strong><i class="lni-folder"></i> Catégories :</strong> <a href="{$this->announce->getCategory()->getSlug()}">Electronics</a></p>
                     </li>
-                    <li>
+                    <!-- <li>
                         <p><a href="users/john/posts"><i class="lni-users"></i> Plus d'annonces de <span>John</span></a></p>
-                    </li>
+                    </li> -->
                 </ul>
                 {$this->infosForJoinUser()}
                 {$this->shareMe()}
@@ -466,10 +476,7 @@ HTML;
         return <<<HTML
         <div class="description">
             <h5>Description</h5>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            </p>
+            <p>{$this->announce->getDescription()}</p>
         </div>
 HTML;
     }
@@ -483,26 +490,9 @@ HTML;
     {
         return <<<HTML
         <div class="details-meta">
-            <span><i class="lni-alarm-clock"></i> Date et heure de post</span>
-            <span><i class="lni-map-marker"></i>  Ville</span>
-            <span><i class="lni-eye"></i> 200 vue(s)</span>
-        </div>
-HTML;
-    }
-
-    /**
-     * Un bloc de code HTML qui affiche aucune annonce lorqu'il n'y a pas 
-     * d'annonce à afficher dans une partie de la page.
-     * 
-     * @return string
-     */
-    private function noAnnounces()
-    {
-        return <<<HTML
-        <div class="col-12">
-            <section class="d-flex justify-content-center align-items-center">
-                <p class="h5 text-muted">Aucunes annonces</p>
-            </section>
+            <span><i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}</span>
+            <span><i class="lni-map-marker"></i>  {$this->announce->getLocation()}</span>
+            <span><i class="lni-eye"></i> {$this->announce->getViews()} vue(s)</span>
         </div>
 HTML;
     }
@@ -516,8 +506,8 @@ HTML;
     {
         return <<<HTML
         <div class="ads-btn mb-4">
-            <a href="#" class="btn btn-common btn-reply"><i class="lni-envelope"></i> adresse@email.com</a>
-            <a href="#" class="btn btn-common"><i class="lni-phone-handset"></i> 01154256643</a>
+            <a href="#" class="btn btn-common btn-reply"><i class="lni-envelope"></i> {$this->announce->getUserEmailAddress()}</a>
+            <a href="#" class="btn btn-common"><i class="lni-phone-handset"></i> {$this->announce->getPhoneNumber()}</a>
         </div>
 HTML;
     }

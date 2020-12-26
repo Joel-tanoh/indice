@@ -67,7 +67,7 @@ class Category extends Model
      */
     public function getAnnouncesNumber() : int
     {
-        return count($this->getAnnounces());
+        return count(Announce::getValidated($this->id));
     }
 
     /**
@@ -108,9 +108,13 @@ class Category extends Model
      */
     public static function getAll(string $tableName)
     {
-        $query = "SELECT id FROM $tableName";
-        $rep = self::connect()->query($query);
-        return $rep->fetchAll();        
+        $categories = [];
+        $rep = self::connect()->query("SELECT id FROM $tableName");
+        foreach ($rep->fetchAll() as $item) {
+            $categories[] = new self($item["id"]);
+        }
+
+        return $categories;
     }
 
     /**
