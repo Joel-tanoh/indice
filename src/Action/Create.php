@@ -61,7 +61,7 @@ class Create
      */
     public static function fileIsUploaded(string $key)
     {
-        return !empty($_FILES[$key]);
+        return !empty($_FILES[$key]["name"]);
     }
 
 }

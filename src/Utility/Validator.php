@@ -287,20 +287,21 @@ class Validator
     }
     
     /**
-     * Effectue les validations sur un nom. Vérifie que le nom n'excède pas 250
-     * caractères ou qu'il ne contient pas de code HTML.
+     * Effectue les validations sur un nom. Vérifie que le nom ne contient
+     * pas de code HTML.
      * 
-     * @param string $name     Le nom qu'il faut valider.
+     * @param string $value    Le nom qu'il faut valider.
+     * @param string $message  Le test à afficher en cas d'erreur.
      * @param string $postName La valeur de l'attribut name dans le
      *                         le formulaire.
      * 
      * @return void
      */
-    public function name(string $name, string $message, string $postName = "name")
+    public function name(string $value, string $message, string $postName = "name")
     {
-        $this->toValidate[$postName] = $name;
+        $this->toValidate[$postName] = $value;
 
-        if ($this->containsHTML($name)) {
+        if ($this->containsHTML($value)) {
             $this->errors[$postName] = $message;
         }
     }

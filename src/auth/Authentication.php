@@ -3,7 +3,7 @@
 namespace App\Auth;
 
 use App\Auth\Password;
-use App\Model\User;
+use App\Model\User\User;
 use App\Utility\Validator;
 
 /**

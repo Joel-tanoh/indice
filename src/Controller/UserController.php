@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Model\Model;
-use App\Model\User;
+use App\Model\User\User;
 use App\Utility\Validator;
 use App\View\Model\User\UserView;
 use App\View\Notification;

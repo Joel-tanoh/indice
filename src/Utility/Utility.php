@@ -77,10 +77,11 @@ class Utility
      *                          le jour ou l'heure. Si l'on veut le jour, on
      *                          passe en paramètre "D", si l'on veut l'heure,
      *                          on passe en paramètre "H".
+     * @param bool   $shortLy
      * 
      * @return string
      */
-    public static function formatDate($date, string $precision = null) 
+    public static function formatDate($date, string $precision = null, bool $shortLy = true) 
     {
         if (null === $date) {
             return null;
@@ -90,11 +91,11 @@ class Utility
         list($year, $month, $day) = explode("-", $date);
         list($hour, $min, $sec) = explode(":", $time);
 
-        $month = Utility::convertMonth($month);
+        $month = Utility::convertMonth($month, $shortLy);
 
-        if ($precision === "D") {
+        if (in_array($precision, ["DAY", "Day", "day", "D", "d", "JOUR", "Jour", "jour", "J", "j"])) {
             return $day . " " . $month . " " . $year;
-        } elseif ($precision === "H") {
+        } elseif (in_array($precision, ["HOUR", "Hour", "hour", "H", "h", "HEURE", "Heure"])) {
             return $hour . ':' . $min;
         } else {
             return "$day $month $year $hour : $min";
@@ -104,14 +105,19 @@ class Utility
     /**
      * Convertit un chiffre en mois.
      * 
-     * @param int $monthNumber
+     * @param int  $monthNumber 
+     * @param bool $shortLy       Pour signifier qu'on veut le mois en format court
      * 
      * @return string
      */
-    public static function convertMonth(int $monthNumber)
+    public static function convertMonth(int $monthNumber, bool $shortLy = null)
     {
-        $monthsInFrench = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre');
-        return $monthsInFrench[$monthNumber - 1];
+        if ($shortLy) {
+            $monthToUse = array('jan.', 'fév.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.');
+        } else {
+            $monthToUse = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre');
+        }
+        return $monthToUse[$monthNumber - 1];
     }
 
 }

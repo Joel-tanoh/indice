@@ -26,7 +26,11 @@ class AnnounceController extends AppController
 
             $validate->title("title", $_POST["title"]);
             $validate->description("description", $_POST["description"]);
-            $validate->name($_POST["location"], "Veuillez vérifier que les noms de ville et de pays ne contiennent pas de code HTML.");
+
+            if (empty($_POST["location"])) {
+                $validate->addError("location", "Veuillez entrer une localisation !");
+            }
+            $validate->name($_POST["location"], "Veuillez vérifier que la localisation ne contient pas de code HTML.");
 
             if ($_POST["id_category"] == 0) {
                 $validate->addError("category", "Veuillez choisir une catégorie !");
@@ -39,8 +43,8 @@ class AnnounceController extends AppController
 
             // Si user à coché someone_else
             if (isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else") {
-                $validate->email("user_email_address", $_POST["user_email_address"]);
-                $validate->phone("phone", $_POST["phone"], "Veuillez entrer un numéro de téléphone valide !");
+                $validate->email("user_to_join", $_POST["user_to_join"]);
+                $validate->phone("phone", $_POST["phone_number"], "Veuillez entrer un numéro de téléphone valide !");
             }
 
             if (Create::fileIsUploaded("images")) {

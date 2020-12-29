@@ -2,7 +2,7 @@
 
 namespace App\View\Model\User;
 
-use App\Model\User;
+use App\Model\User\User;
 use App\View\Model\ModelView;
 use App\View\Snippet;
 use phpDocumentor\Reflection\Types\String_;
@@ -17,9 +17,9 @@ class UserView extends ModelView
     /**
      * Constructeur de la vue du user.
      * 
-     * @param \App\Model\User $user
+     * @param \App\Model\User\User $user
      */
-    public function __construct(\App\Model\User $user = null)
+    public function __construct(\App\Model\User\User $user = null)
     {
         $this->user = $user;
     }

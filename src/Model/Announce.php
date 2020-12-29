@@ -4,9 +4,9 @@ namespace App\Model;
 
 use App\Action\Create;
 use App\Action\InsertData;
-use App\backend\Session;
 use App\File\Image\Image;
 use App\Database\SqlQueryFormater;
+use App\Model\User\User;
 use App\Utility\Utility;
 
 /**
@@ -18,6 +18,7 @@ class Announce extends Model
     private $subCategory;
     private $price;
     private $user;
+    private $userToJoin;
     private $phoneNumber;
     private $location;
     private $state;
@@ -40,7 +41,7 @@ class Announce extends Model
 
         $query = $queryFormatter->select(
             "id, title, description, slug, id_category, id_sub_category, price,
-            user_email_address, phone_number, location, state, created_at, posted_at, updated_at, views, icon_class"
+            user_email_address, user_to_join, phone_number, location, state, created_at, posted_at, updated_at, views, icon_class"
         )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
         $rep = parent::connect()->prepare($query);
@@ -56,6 +57,8 @@ class Announce extends Model
         $this->subCategory = $result["id_sub_category"];
         $this->price = $result["price"];
         $this->userEmailAddress = $result["user_email_address"];
+        $this->user = new User($this->userEmailAddress);
+        $this->userToJoin = $result["user_to_join"];
         $this->phoneNumber = $result["phone_number"];
         $this->location = $result["location"];
         $this->state = $result["state"];
@@ -106,8 +109,17 @@ class Announce extends Model
      */
     public function getUser()
     {
-        $this->user = new User($this->userEmailAddress);
         return $this->user;
+    }
+
+    /**
+     * Retourne l'adresse email de l'utilisateur à joindre.
+     * 
+     * @return string|null
+     */
+    public function getUserToJoin()
+    {
+        return $this->userToJoin;
     }
 
     /**
@@ -147,7 +159,7 @@ class Announce extends Model
      */
     public function getPostedAt()
     {
-        return Utility::formatDate($this->postedAt);
+        return Utility::formatDate($this->postedAt, "day", true);
     }
 
     /**
@@ -155,9 +167,19 @@ class Announce extends Model
      * 
      * @return int
      */
-    public function getviews()
+    public function getViews()
     {
         return $this->views;
+    }
+
+    /**
+     * Retourne l'icon de l'annonce.
+     * 
+     * @return string
+     */
+    public function getIconClass()
+    {
+        return $this->iconClass;
     }
 
     /**
@@ -237,6 +259,42 @@ class Announce extends Model
         } else {
             return $this->price . " XOF";
         }
+    }
+
+    /**
+     * Permet de vérifier si c'est une annonce vedette.
+     * @return bool
+     */
+    public function isFeatured() : bool
+    {
+        return true;
+    }
+
+    /**
+     * Permet de vérifier si c'est une annonce en attente de validation.
+     * @return bool
+     */
+    public function isPending() : bool
+    {
+        return true;
+    }
+
+    /**
+     * Permet de vérifier si c'est une annonce validée.
+     * @return bool
+     */
+    public function isValidated() : bool
+    {
+        return true;
+    }
+
+    /**
+     * Permet de vérifier si c'est une annonce suspendue|bloquée.
+     * @return bool
+     */
+    public function isSuspended() : bool
+    {
+        return true;
     }
 
     /**
@@ -387,26 +445,25 @@ class Announce extends Model
             $data["price"] = htmlspecialchars($_POST["price"]);
         }
 
-        //=== Si user à choisi un autre utilisateur =================/
+        // Enregistrement de l'utilisateur qui a sa session active
+        // $data["user_email_address"] = htmlspecialchars(Session::getSessionId());
+        $data["user_email_address"] = "tanohbassapatrick@gmail.com";
+
+        //=== Si user à choisi un autre utilisateur à contacter =================/
         if (isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else") {
-            $data["user_email_address"] = $_POST["user_email_address"];
+            $data["user_to_join"] = $_POST["user_to_join"];
             $data["phone_number"] = $_POST["phone_number"];
-        } else { //=== Sinon ===/
-            // $data["user_email_address"] = htmlspecialchars(Session::getSessionId());
-            $data["user_email_address"] = "tanohbassapatrick@gmail.com";
-            //=== On récupère le numéro de téléphone de l'user ====/
-            $data["phone_number"] = "+22549324696";
         }
 
+        // Insertion des données
         $insertion = new InsertData($data, self::TABLE_NAME);
         $insertion->run();
 
         /** Récupérer l'annonce qui vient d'être enregistrée */
         $currentAnnounce = new self($insertion->getPDO()->lastInsertId());
 
-        // Enregistrement du slug
+        // Enregistrement du slug et insertion dans la db
         $slug = Utility::slugify($_POST["title"]) . "-" . $currentAnnounce->getId();
-        // Insertion du slug
         $currentAnnounce->set("slug", $slug);
 
         /** Récupérer l'annonce qui vient d'être enregistrée */
@@ -414,11 +471,11 @@ class Announce extends Model
 
         // S'il y'a des images
         if (Create::fileIsUploaded("images")) {
+
             // Formater le nom de l'image
             $imgName = $currentAnnounce->getSlug();
 
-            // Enregistrer l'image dans les différents dossiers avec les formats adéquats
-            // Format featured
+            // Format featured 600 x 400
             $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::FEATURED_DIR_PATH, 600, 400);
 
             // Product 640 x 420

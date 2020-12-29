@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\User;
 
 use App\Action\InsertData;
 use App\Auth\Password;
 use App\Database\SqlQueryFormater;
 use App\Utility\Utility;
+use App\Model\Model;
 
 /**
  * Classe de gestion des utilisateurs.

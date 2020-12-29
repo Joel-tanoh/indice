@@ -84,7 +84,7 @@ class Model
      */
     public function getCreatedAt()
     {
-        return Utility::formatDate($this->createdAt);
+        return Utility::formatDate($this->createdAt, "D", true);
     }
     
     /**
@@ -94,7 +94,7 @@ class Model
      */
     public function getUpdatedAt()
     {
-        return Utility::formatDate($this->updatedAt);
+        return Utility::formatDate($this->updatedAt, "day", true);
     }
 
     /**

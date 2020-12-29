@@ -81,30 +81,6 @@ HTML;
     }
 
     /**
-     * Détails de l'annonce.
-     * 
-     * @return string
-     */
-    private function details()
-    {
-        return <<<HTML
-        <!-- Ads Details Start -->
-        <div class="section-padding">
-            <div class="container">
-                <!-- Product Info Start -->
-                {$this->detailsInfos()}
-                <!-- Product Info End -->
-            </div>    
-        </div>
-        <!-- Ads Details End -->
-
-        <!-- Featured Listings Start -->
-        {$this->featuredSection()}
-        <!-- Featured Listings End -->
-HTML;
-    }
-
-    /**
      * Affiches les 6 dernières annonces postées.
      * 
      * @return string
@@ -137,7 +113,7 @@ HTML;
     }
 
     /**
-     * Affiches les annonces vedettes, c'est-à-dire les plus vues.
+     * Affiches les annonces vedettes.
      * 
      * @return string
      */
@@ -215,9 +191,9 @@ HTML;
                         </span>
                     </div>
                     <div class="card-text">
-                        <div class="float-left">
-                            <a href="#"><i class="lni-map-marker"></i> {$this->announce->getLocation()}</a>
-                        </div>
+                    <div class="float-left">
+                        {$this->showLocation()}
+                    </div>
                         <div class="float-right">
                             <div class="icon">
                             <i class="lni-heart"></i>
@@ -265,54 +241,26 @@ HTML;
     }
 
     /**
-     * Affiche le contenu sur les cartes vedettes.
+     * Détails de l'annonce.
      * 
      * @return string
      */
-    private function announceCardContent()
+    private function details()
     {
         return <<<HTML
-        <div class="feature-content">
-            <div class="product">
-                <a href="{$this->announce->getCategory()->getSlug()}"><i class="lni-folder"></i> {$this->announce->getCategory()->getTitle()}</a>
-            </div>
-            <h4><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h4>
-            <span>{$this->announce->getUpdatedAt()}</span>
-            <ul class="address">
-                <li>
-                    <i class="lni-map-marker"></i> {$this->announce->getLocation()}
-                </li>
-                <li>
-                    <i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}
-                </li>
-                <li>
-                    <a href="users/posts"><i class="lni-user"></i> {$this->announce->getUser()->getName()}</a>
-                </li>
-            </ul>
-            <div class="listing-bottom">
-                <h3 class="price float-left">{$this->announce->getPrice()}</h3>
-                <a href="{$this->announce->getCategory()->getSlug()}" class="btn-verified float-right"><i class="lni-check-box"></i> Annonce validée</a>
+        <!-- Ads Details Start -->
+        <div class="section-padding">
+            <div class="container">
+                <!-- Product Info Start -->
+                {$this->detailsInfos()}
+                <!-- Product Info End -->
             </div>
         </div>
-HTML;
-    }
+        <!-- Ads Details End -->
 
-    /**
-     * Permet d'afficher l'image de l'annonce sur les cartes featured (vedettes).
-     * 
-     * @return string
-     */
-    public function announceCardImg()
-    {
-        return <<<HTML
-        <figure>
-            <div class="icon">
-                <i class="lni-heart"></i>
-            </div>
-            <a href="{$this->announce->getLink()}">
-                <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Photo de {$this->announce->getSlug()}">
-            </a>
-        </figure>
+        <!-- Featured Listings Start -->
+        {$this->featuredSection()}
+        <!-- Featured Listings End -->
 HTML;
     }
 
@@ -375,6 +323,58 @@ HTML;
 
             <!-- Title and others informations section -->
             {$this->detailsBox()}
+        </div>
+HTML;
+    }
+
+    /**
+     * Permet d'afficher l'image de l'annonce sur les cartes featured (vedettes).
+     * 
+     * @return string
+     */
+    private function announceCardImg()
+    {
+        return <<<HTML
+        <figure>
+            <div class="icon">
+                <i class="lni-heart"></i>
+            </div>
+            <a href="{$this->announce->getLink()}">
+                <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Photo de {$this->announce->getSlug()}">
+            </a>
+        </figure>
+HTML;
+    }
+
+    /**
+     * Affiche le contenu sur les cartes vedettes.
+     * 
+     * @return string
+     */
+    private function announceCardContent()
+    {
+        return <<<HTML
+        <div class="feature-content">
+            <div class="product">
+                <a href="{$this->announce->getCategory()->getSlug()}"><i class="lni-folder"></i> {$this->announce->getCategory()->getTitle()}</a>
+            </div>
+            <h4><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h4>
+            <span>{$this->announce->getUpdatedAt()}</span>
+            <ul class="address">
+                <li>
+                    {$this->showLocation()}
+                </li>
+                <li>
+                    <i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}
+                </li>
+                <li>
+                    <a href="users/posts"><i class="lni-user"></i> {$this->announce->getUser()->getName()}</a>
+                </li>
+            </ul>
+            <div class="listing-bottom">
+                <h3 class="price float-left">{$this->announce->getPrice()}</h3>
+                <a href="{$this->announce->getCategory()->getSlug()}" class="btn-verified float-right"><i class="lni-check-box"></i> Annonce validée</a>
+            </div>
         </div>
 HTML;
     }
@@ -491,7 +491,7 @@ HTML;
         return <<<HTML
         <div class="details-meta">
             <span><i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}</span>
-            <span><i class="lni-map-marker"></i>  {$this->announce->getLocation()}</span>
+            <span>{$this->showLocation()}</span>
             <span><i class="lni-eye"></i> {$this->announce->getViews()} vue(s)</span>
         </div>
 HTML;
@@ -626,11 +626,11 @@ HTML;
                         <div id="someone_else">
                             <div class="form-group mb-3">
                                 <label class="control-label">Adresse email*</label>
-                                <input class="form-control input-md" name="user_email_address" type="email">
+                                <input class="form-control input-md" name="user_to_join" type="email">
                             </div>
                             <div class="form-group mb-3">
                                 <label class="control-label">Téléphone*</label>
-                                <input class="form-control input-md" name="phone" type="text" placeholder="+XXX XXXXXXXXXX">
+                                <input class="form-control input-md" name="phone_number" type="text" placeholder="+XXX XXXXXXXXXX">
                             </div>
                         </div>
                         <button class="btn btn-common" type="submit">Poster</button>
@@ -639,6 +639,15 @@ HTML;
             </div>
         </div>
 HTML;
+    }
+
+    /**
+     * Permet d'afficher le lieu de l'annonce.
+     * @return string|null
+     */
+    private function showLocation()
+    {
+        return '<a><i class="lni-map-marker"></i> '. $this->announce->getLocation() .'</a>';
     }
 
 }
