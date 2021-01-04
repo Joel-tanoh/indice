@@ -418,11 +418,13 @@ HTML;
         <select name="{$postName}">
             <option value="0">Choisir la ville</option>
             <option value="Abidjan">Abidjan</option>
-            <option value="none">California</option>
-            <option value="none">Washington</option>
-            <option value="none">Birmingham</option>
-            <option value="none">Chicago</option>
-            <option value="none">Phoenix</option>
+            <option value="San-Pedro">San-Pedro</option>
+            <option value="Bouake">Bouake</option>
+            <option value="Daloa">Daloa</option>
+            <option value="Yamoussoukro">Yamoussoukro</option>
+            <option value="Gagnoa">Gagnoa</option>
+            <option value="Korhogo">Korhogo</option>
+            
         </select>
 HTML;
     }
