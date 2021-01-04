@@ -9,13 +9,13 @@ class Avatar extends Image
      * 
      * @var string
      */
-    const AVATARS_DIR_PATH =  parent::IMG_DIR_PATH . "avatars" . DIRECTORY_SEPARATOR;
+    const AVATARS_DIR_PATH =  parent::IMG_DIR_PATH . "author" . DIRECTORY_SEPARATOR;
 
     /**
      * Url du dossier contenant les avatars des users.
      * 
      * @var string
      */
-    const AVATARS_DIR_URL = parent::IMG_DIR_URL . "/avatars";
+    const AVATARS_DIR_URL = parent::IMG_DIR_URL . "/author";
 
 }

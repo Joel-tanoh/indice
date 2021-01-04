@@ -65,13 +65,21 @@ class Form extends View
      * @param bool   $uploadFile
      * @param string $method
      */
-    public function __construct( string $action, string $class = null, bool $uploadFile = true, string $method = "post", string $id="myForm")
+    public function __construct(
+        string $action,
+        string $class = null, 
+        bool $uploadFile = true, 
+        string $method = "post", 
+        string $id="myForm",
+        string $role = null
+    )
     {
         $this->method = $method;
         $this->action = $action;
         $this->uploadFile = $uploadFile;
         $this->id = $id;
         $this->class = $class;
+        $this->role = $role;
     }
 
     /**
@@ -517,7 +525,7 @@ HTML;
     public function open()
     {
         return <<<HTML
-        <form id="{$this->id}" method="{$this->method}" enctype="multipart/form-data" action="{$this->action}" class="{$this->class}">
+        <form id="{$this->id}" method="{$this->method}" enctype="multipart/form-data" action="{$this->action}" class="{$this->class}" role="{$this->role}">
 HTML;
     }
 

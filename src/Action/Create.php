@@ -5,7 +5,7 @@ namespace App\Action;
 /**
  * Classe pour gérer toutes les actions de création de données.
  */
-class Create
+class Create extends Action
 {
     /**
      * @var array
@@ -50,18 +50,6 @@ class Create
     public function getPDO()
     {
         return $this->pdo;
-    }
-
-    /**
-     * Permet de vérifier qu'un ou plusieurs fichiers ont été uploadés.
-     * 
-     * @param string $key La clé dans le tableau.
-     * 
-     * @return bool
-     */
-    public static function fileIsUploaded(string $key)
-    {
-        return !empty($_FILES[$key]["name"]);
     }
 
 }

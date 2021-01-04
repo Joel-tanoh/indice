@@ -5,6 +5,7 @@ namespace App\View\Model;
 use App\Model\Announce;
 use App\Model\Category;
 use App\Utility\Pagination;
+use App\View\AdvertisingView;
 use App\View\Snippet;
 
 /**
@@ -138,7 +139,7 @@ HTML;
      */
     private function sidebar()
     {
-        $snippet = new Snippet();
+        $advertisingView = new AdvertisingView();
 
         return <<<HTML
         <div class="col-lg-3 col-md-12 col-xs-12 page-sidebar">
@@ -148,7 +149,7 @@ HTML;
                 <!-- Categories Widget -->
                 {$this->categoriesWidget()}
                 <!-- Advertisement Section -->
-                {$snippet->advertisementSection()}
+                {$advertisingView->advertisementSection()}
             </aside>
         </div>
 HTML;

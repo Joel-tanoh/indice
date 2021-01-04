@@ -60,9 +60,9 @@ class Password
     public function isValid()
     {
         if (empty($this->password)) {
-            $this->errors["password"] = $this->notifier->passwordIsEmpty();
+            $this->errors = $this->notifier->passwordIsEmpty();
         } elseif (!$this->hasValidLength()) {
-            $this->errors["password"] = $this->notifier->passwordLengthIsInvalid();
+            $this->errors = $this->notifier->passwordLengthIsInvalid();
         }
     }
 
@@ -77,9 +77,9 @@ class Password
     public function validateConfirmation(string $confirmPassword)
     {
         if (empty($confirmPassword)) {
-            $this->errors["password"] = $this->notifier->confirmPasswordIsEmpty();
-        } elseif (!password_verify($confirmPassword, $this->getHashed())) {
-            $this->errors["password"] = $this->notifier->passwordsNotIdentics();
+            $this->errors = $this->notifier->confirmPasswordIsEmpty();
+        } elseif ($this->password !== $confirmPassword) {
+            $this->errors = $this->notifier->passwordsNotIdentics();
         }        
     }
 

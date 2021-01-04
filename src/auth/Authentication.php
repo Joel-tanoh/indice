@@ -59,28 +59,6 @@ class Authentication
     }
 
     /**
-     * Initialise les variables de cookie.
-     * 
-     * @param mixed  $cookieKey La clé identifiant le cookie.
-     * @param mixed  $value     La valeur
-     * @param string $domain 
-     * 
-     * @return void
-     */
-    public static function setCookie($cookieKey, $value, $domain = null)
-    {
-        setcookie(
-            $cookieKey,
-            ucfirst($value),
-            time()+(30*24*3600),
-            null,
-            $domain,
-            false,
-            true
-        );
-    }
-
-    /**
      * Gère l'authentification des registereds.
      * 
      * @param string $emailAddress
@@ -96,7 +74,7 @@ class Authentication
 
             $validator = new Validator();
 
-            if ($validator->isEmailAddress($emailAddress)) {
+            if ($validator->email("email_address", $emailAddress)) {
 
                 $user = User::getByEmailAddress($emailAddress);
 

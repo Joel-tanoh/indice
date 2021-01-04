@@ -1,6 +1,6 @@
 <?php
 
-namespace App\backend;
+namespace App;
 
 use App\Auth\Authentication;
 
@@ -9,15 +9,27 @@ use App\Auth\Authentication;
  */
 class Session extends Authentication
 {
+    const KEY = "AxbjZteKoPflTdjUheXsDtvAjOp";
+
     /**
      * Initie la variable de session qui permet d'identifier l'utilisateur
      * connecté.
      * 
-     * @param string $userEmailAddress
+     * @param string $value
      */
-    public static function activate(string $userEmailAddress)
+    public static function activate(string $value)
     {
-        $_SESSION["session_id"] = $userEmailAddress;
+        $_SESSION[self::KEY] = $value;
+    }
+
+    /**
+     * Permet de vérifier si la session est active.
+     * 
+     * @return bool
+     */
+    public static function isActive()
+    {
+        return isset($_SESSION[self::KEY]) && !empty($_SESSION[self::KEY]);
     }
 
     /**
@@ -27,7 +39,7 @@ class Session extends Authentication
      */
     public static function getSessionId()
     {
-        return $_SESSION["session_id"];
+        return $_SESSION[self::KEY];
     }
 
     /**
@@ -37,7 +49,6 @@ class Session extends Authentication
      */
     public static function deactivate()
     {
-        session_start();
         session_unset();
         session_destroy();
     }

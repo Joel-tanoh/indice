@@ -401,24 +401,6 @@ HTML;
     }
 
     /**
-     * Bloc de code pour la publicité. Elle doit prendre en paramètre une
-     * image de taille 300x400.
-     * 
-     * @return string
-     */
-    public function advertisementSection()
-    {
-        return <<<HTML
-        <div class="widget">
-            <h4 class="widget-title">Publicité</h4>
-            <div class="add-box">
-                <img class="img-fluid" src="assets/img/img1.jpg" alt="">
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
      * Retourne le vue pour lire la vidéo issue de Youtube.
      * 
      * @param string $youtubeVideoLink

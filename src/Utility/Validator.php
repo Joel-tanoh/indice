@@ -329,7 +329,7 @@ class Validator
      * 
      * @return bool
      */
-    public function phone($name, $var, string $message)
+    public function phoneNumber($name, $var, string $message)
     {
         $this->toValidate[$name] = $var;
 
@@ -388,13 +388,13 @@ class Validator
      * Permet de valider la taille d'un fichier.
      * 
      * @param string $name
-     * @param string $fileSize
+     * @param        $fileSize
      * @param array  $validSize
      * @param string $message
      */
-    public function fileSize(string $name, string $fileSize, $validSize, string $message)
+    public function fileSize(string $name, $fileSize, $validSize, string $message)
     {
-        if ($fileSize > $validSize) {
+        if ((int)$fileSize > $validSize) {
             $this->errors[$name] = $message;
         }
     }

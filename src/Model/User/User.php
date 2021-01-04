@@ -2,9 +2,14 @@
 
 namespace App\Model\User;
 
+use App\Action\Create;
 use App\Action\InsertData;
+use App\Auth\Cookie;
 use App\Auth\Password;
+use App\Session;
 use App\Database\SqlQueryFormater;
+use App\File\Image\Avatar;
+use App\File\Image\Image;
 use App\Utility\Utility;
 use App\Model\Model;
 
@@ -85,7 +90,7 @@ class User extends Model
      */
     public function getFirstNames()
     {
-        return $this->firstNames;
+        return ucfirst($this->firstNames);
     }
 
     /**
@@ -105,7 +110,7 @@ class User extends Model
      */
     public function getPseudo()
     {
-        return $this->pseudo;
+        return ucfirst($this->pseudo);
     }
 
     /**
@@ -179,9 +184,39 @@ class User extends Model
      */
     public static function isConnected()
     {
-        // On vérifie que la session est activée.
-        // Si oui, on retourner true
-        // Si non, retourner false
+        return Session::isActive() || Cookie::userCookieIsset();
+    }
+
+    /**
+     * Permet d'enregistrer les données dans la base de données.
+     * 
+     * @return bool
+     */
+    public static function save()
+    {
+        // code
+        $data["code"] = Utility::generateCode();
+        // name
+        $data["name"] = htmlspecialchars($_POST["name"]);
+        // first_names
+        $data["first_names"] = htmlspecialchars($_POST["first_names"]);
+        // email_address
+        $data["email_address"] = htmlspecialchars($_POST["email_address"]);
+        // pseudo
+        $data["pseudo"] = htmlspecialchars($_POST["pseudo"]);
+        // password
+        $data["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
+        // phone_number
+        $data["phone_number"] = htmlspecialchars($_POST["phone_number"]);
+
+        $insertion = new InsertData($data, self::TABLE_NAME);
+        $insertion->run();
+        
+        if (Create::fileIsUploaded("avatar")) {
+            $imageManager = new Image();
+            $imageManager->save($_FILES["avatar"]["tmp_name"], $_POST["pseudo"], Avatar::AVATARS_DIR_PATH, 80, 80);
+        }
+
         return true;
     }
 

@@ -151,4 +151,37 @@ class Model
         }
     }
 
+    /**
+     * Retourne tous les valeurs d'une colonne dans la base de données.
+     * 
+     * @return array
+     */
+    public static function get(string $colToSelect, string $table)
+    {
+        $query = "SELECT $colToSelect FROM $table";
+        $rep = self::connect()->query($query);
+
+        $values = [];
+
+        foreach ($rep->fetchAll() as $value) {
+            $values[] = $value[$colToSelect];
+        }
+
+        return $values;
+    }
+
+    /**
+     * Permet de vérifier qu'une valeur est déjà utilisée.
+     * 
+     * @param string $valueIndex Index(nom de la colonne dans la table dans la base de
+     *                           données).
+     * @param mixed $value
+     * 
+     * @return bool
+     */
+    public static function valueIsset(string $valueIndex, $value, string $tableName)
+    {
+        return in_array($value, self::get($valueIndex, $tableName));
+    }
+
 }

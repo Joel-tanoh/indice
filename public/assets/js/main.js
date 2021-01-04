@@ -12,10 +12,12 @@
     ========================================================*/
     $(window).on('scroll', function() {
         if ($(window).scrollTop() > 100) {
-            $('.scrolling-navbar').addClass('top-nav-collapse');
+			$('.scrolling-navbar').addClass('top-nav-collapse');
+			
+			// change logo src
         } else {
             $('.scrolling-navbar').removeClass('top-nav-collapse');
-        }
+		}
     });
 
   /* slicknav mobile menu active 
@@ -265,8 +267,8 @@
         }
       });
 
-      /* Hide or show someonelse secion for posting announcement
-      =======================================================*/
+      /* Hide or show someonelse section when user is posting announcement
+      ====================================================================*/
       $('#tg-sameuser').click(function () {
         $('#someone_else').hide(500);
       });

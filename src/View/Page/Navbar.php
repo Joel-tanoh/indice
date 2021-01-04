@@ -34,7 +34,7 @@ class Navbar extends Snippet
 
     public function __construct(string $brandImgSrc = null, string $userAvatarSrc = null)
     {
-        $this->brandImgSrc = Logo::LOGOS_DIR_URL ."/logo1.png";
+        $this->brandImgSrc = Logo::LOGOS_DIR_URL ."/logo2.png";
         $this->userAvatarSrc = $userAvatarSrc;
     }
 
@@ -47,7 +47,7 @@ class Navbar extends Snippet
     {
         $appUrl = APP_URL;
         $logoAltText = Logo::ALT_TEXT;
-        $userView = new UserView(); 
+        $userView = new UserView();
 
         return <<<HTML
         <!-- Header Area wrapper Starts -->
@@ -63,7 +63,7 @@ class Navbar extends Snippet
                             <span class="lni-menu"></span>
                             <span class="lni-menu"></span>
                         </button>
-                        <a href="{$appUrl}" class="navbar-brand"><img src="{$this->brandImgSrc}" alt="{$logoAltText}"></a>
+                        <a href="{$appUrl}" class="navbar-brand"><img id="logo" src="{$this->brandImgSrc}" alt="{$logoAltText}"></a>
                     </div>
                     <div class="collapse navbar-collapse" id="main-navbar">
                         <ul class="navbar-nav mr-auto">

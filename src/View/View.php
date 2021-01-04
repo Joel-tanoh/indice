@@ -28,21 +28,33 @@ class View
         {$snippet->heroArea(true)}
         <!-- Hero Area End -->
 
-        <!-- Trending Categories Section Start -->
-        {$categoryView->trendingCategoriesSection()}
-        <!-- Trending Categories Section End -->
+        <div class="container-fluid">
+            <div class="row">
+                <aside class="d-none d-lg-block col-lg-2">
+                    Publicité
+                </aside>
+                <aside class="col-12 col-lg-8">       
+                    <!-- Trending Categories Section Start -->
+                    {$categoryView->trendingCategoriesSection()}
+                    <!-- Trending Categories Section End -->
 
-        <!-- Latest Announcements Section Start -->
-        {$annonceView->latestSection()}
-        <!-- Latest Announcements Section End -->
-        
-        <!-- Featured Listings Start -->
-        {$annonceView->featuredSection()}
-        <!-- Featured Listings End -->
+                    <!-- Featured Listings Start -->
+                    {$annonceView->featuredSection()}
+                    <!-- Featured Listings End -->
 
-        <!-- Subscribe Section Start -->
-        {$userView->suscribeSection()}
-        <!-- Subscribe Section End -->
+                    <!-- Latest Announcements Section Start -->
+                    {$annonceView->latestSection()}
+                    <!-- Latest Announcements Section End -->
+                    
+                    <!-- Subscribe Section Start -->
+                    {$userView->suscribeNewsletterSection()}
+                    <!-- Subscribe Section End -->
+                </aside>
+                <aside class="d-none d-lg-block col-lg-2">
+                    Publicité
+                </aside>
+            </div>
+        </div>
 HTML;
     }
 

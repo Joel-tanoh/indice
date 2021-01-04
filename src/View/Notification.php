@@ -12,7 +12,7 @@ namespace App\View;
  * @link     Link
  */
 class Notification
-{    
+{
     /**
      * Permet d'afficher un message d'exception.
      * 
@@ -20,7 +20,7 @@ class Notification
      * 
      * @return string
      */
-    public static function exception(string $message) : string
+    public static function exception(string $message): string
     {
         return <<<HTML
         <div class="container">
@@ -28,6 +28,20 @@ class Notification
                 {$message}
             </div>
         </div>
+HTML;
+    }
+
+    /**
+     * Affiche un message d'erreur.
+     * 
+     * @return string
+     */
+    public function error(string $message, string $class = null)
+    {
+        return <<<HTML
+        <p class="{$class}">
+            {$message}
+        </p>
 HTML;
     }
 
@@ -47,7 +61,7 @@ HTML;
             $text .= $error;
             $text .= "<br/>";
         }
-        
+
         return $this->toast($text, "danger");
     }
 
@@ -59,7 +73,7 @@ HTML;
      * 
      * @return string
      */
-    public function toast(string $message, string $type) : string
+    public function toast(string $message, string $type): string
     {
         return <<<HTML
         <div id="toast" class="alert alert-{$type} alert-dismissible fade show" style="position: fixed; top: 1rem; right: 1rem; min-width:13rem; max-width:25rem; z-index:999999;">
@@ -89,7 +103,7 @@ HTML;
      * @author Joel
      * @return string [[Description]]
      */
-    public function addSuccess() : string
+    public function addSuccess(): string
     {
         return "Ajout éffectué avec succès !";
     }
@@ -100,18 +114,18 @@ HTML;
      * @author Joel
      * @return string [[Description]]
      */
-    public function titleIsEmpty() : string
+    public function titleIsEmpty(): string
     {
         return "Veuillez insérer un titre !";
     }
-    
+
     /**
      * Retourne une chaine de 'le nom ou le titre est invalide'.
      * 
      * @author Joel
      * @return string [[Description]]
      */
-    public function titleContainsHTML() : string
+    public function titleContainsHTML(): string
     {
         return "Veuillez vérifier que le titre ne contient pas de code HTML !";
     }
@@ -125,7 +139,7 @@ HTML;
     {
         return "Veuillez insérer une description !";
     }
-   
+
     /**
      * Retourne une chaine de caractère.
      * 
@@ -142,7 +156,7 @@ HTML;
      * @author Joel
      * @return string
      */
-    public function loginIsUsed() : string
+    public function loginIsUsed(): string
     {
         return "Ce login est déjà utilisé !";
     }
@@ -186,29 +200,29 @@ HTML;
      * @author Joel
      * @return string
      */
-    public function emailIsEmpty() : string
+    public function emailIsEmpty(): string
     {
         return 'Veuillez saisir une adresse email! !';
     }
-     
+
     /**
      * Retourne que l'adresse email n'est pas valide.
      * 
      * @author Joel
      * @return string
      */
-    public function emailIsInvalid() : string
+    public function emailIsInvalid(): string
     {
         return 'Veuillez entrer une adresse email valide !';
     }
-    
+
     /**
      * Retourne que le login n'est pas valide.
      * 
      * @author Joel
      * @return string
      */
-    public function loginIsInvalid() : string
+    public function loginIsInvalid(): string
     {
         return "Veuillez vérifier que la taille du login > 4 et qu'il ne contient aucun code HTML !";
     }
@@ -219,22 +233,22 @@ HTML;
      * @author Joel
      * @return string [[Description]]
      */
-    public function inputsEmpty() : string
+    public function inputsEmpty(): string
     {
         return 'Veuillez remplir les champs !';
     }
-    
+
     /**
      * Retourne une chaîne de caractère 'Identifiants incorrects'.
      * 
      * @author Joel
      * @return string [[Description]]
      */
-    public function errorAuthentification() : string
+    public function errorAuthentification(): string
     {
         return 'Vos identifiants sont incorrects, veuillez réessayer !';
     }
-    
+
     /**
      * Retourne une chaine de caractère 'Modification effectuée avec succès'.
      * 
@@ -245,18 +259,18 @@ HTML;
     {
         return 'Modification effectuée avec succès !';
     }
-    
+
     /**
      * Retourne une chaîne de caractère 'Echec de la modification'.
      * 
      * @author Joel
      * @return string [[Description]]
      */
-    public function modificationFailed() : string
+    public function modificationFailed(): string
     {
         return "Echec de la modification !";
     }
-   
+
     /**
      * Retourne une chaîne de caractères
      * 'La description ne doit pas excéder 250 caractères'.
@@ -264,11 +278,11 @@ HTML;
      * @author Joel
      * @return string [[Description]]
      */
-    public function descriptionLengthIsInvalid() : string
+    public function descriptionLengthIsInvalid(): string
     {
         return "La description ne doit pas excéder 400 caractères !";
     }
-    
+
     /**
      * Retourne une chaine de caractère 'Fichier non chargé,
      * modification possible ultérieurement'.
@@ -276,18 +290,18 @@ HTML;
      * @author Joel
      * @return string [[Description]]
      */
-    public function fileNotUpload() : string
+    public function fileNotUpload(): string
     {
         return "Le fichier chargé n'a pas été enrégistrée, vous pouvez modifier cela ultérieurement.";
     }
-    
+
     /**
      * Retourne une chaîne de caractère 'Child inexistant'.
      * 
      * @author Joel 
      * @return string [[Description]]
      */
-    public function itemNotExist() : string
+    public function itemNotExist(): string
     {
         return "Element introuvable !";
     }
@@ -299,18 +313,18 @@ HTML;
      * @author Joel
      * @return string [[Description]]
      */
-    public function nothingSelected() : string
+    public function nothingSelected(): string
     {
         return "Veuillez selectionner au moins un élément à supprimer !";
     }
-    
+
     /**
      * Retourne qu'il n'y a pas de compte administrateurs dans la base de données.
      * 
      * @author Joel
      * @return string
      */
-    public function noAdministrateurs() : string
+    public function noAdministrateurs(): string
     {
         return "Les comptes utilisateurs et administrateurs s'afficheront ici.";
     }
@@ -324,7 +338,7 @@ HTML;
      * @author Joel
      * @return string [[Description]]
      */
-    public function noItems(string $categorie) : string
+    public function noItems(string $categorie): string
     {
         if ($categorie == "themes")  $categorie = "thèmes";
         if ($categorie == "motivation-plus") $categorie = "vidéos de motivation +";
@@ -333,14 +347,14 @@ HTML;
 
         return "Les " . $categorie . " que vous créerez seront affiché(e)s ici.";
     }
-  
+
     /**
      * Retourne 'Une formation possède déjà ce titre'.
      * 
      * @author Joel
      * @return string [[Description]]
      */
-    public function issetFormation() : string
+    public function issetFormation(): string
     {
         return "Une formation porte ce titre !";
     }
@@ -351,7 +365,7 @@ HTML;
      * @author Joel
      * @return [[Type]] [[Description]]
      */
-    public function rankIsUsed() : string
+    public function rankIsUsed(): string
     {
         return "Une étape occupe déjà le rank que vous avez donné à celle-ci ! Nous n'avons pas ajouté ce rank, vous pourrez le modifier plus tard.";
     }
@@ -362,7 +376,7 @@ HTML;
      * 
      * @return string
      */
-    public function nombrePageIsInvalid() : string
+    public function nombrePageIsInvalid(): string
     {
         return "Veuillez entrer une valeur correcte pour le nombre de page !";
     }
@@ -373,7 +387,7 @@ HTML;
      * 
      * @return string
      */
-    public function anneeParutionIsInvalid() : string
+    public function anneeParutionIsInvalid(): string
     {
         return "Veuillez saisir une date correcte pour l'annéee de parution !";
     }
@@ -385,7 +399,7 @@ HTML;
      * 
      * @return string
      */
-    public function auteurNameIsInvalid() : string
+    public function auteurNameIsInvalid(): string
     {
         return "Veuillez saisir le nom de l'auteur et verifier qu'il n'excède pas 250 caractères !";
     }
@@ -397,7 +411,7 @@ HTML;
      * 
      * @return string
      */
-    public function maisonEditionNameIsInvalid() : string
+    public function maisonEditionNameIsInvalid(): string
     {
         return "Veuillez saisir le nom de la maison d'edition et verifier qu'elle n'excède pas 250 caractères !";
     }
@@ -442,7 +456,7 @@ HTML;
     {
         return "Enregistrement effectué avec succès !";
     }
-    
+
     /**
      * Retourne une chaine de caractère 'échec de l'enregistrement avec succès'.
      * 
@@ -473,5 +487,4 @@ HTML;
     {
         return "Veuillez saisir le contenu de l'article !";
     }
-
 }

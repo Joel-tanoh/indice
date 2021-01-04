@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Action\Action;
 use App\Action\Create;
 use App\File\FileUploaded;
 use App\File\Image\Image;
@@ -19,19 +20,20 @@ class AnnounceController extends AppController
         $notification = new Notification();
         $message = null;
 
-        if (isset($_POST) && !empty($_POST)) {
+        if (Action::dataPosted()) {
         
             // On fait la validation
             $validate = new Validator();
-
             $validate->title("title", $_POST["title"]);
             $validate->description("description", $_POST["description"]);
 
+            // Validation de la localisation
             if (empty($_POST["location"])) {
                 $validate->addError("location", "Veuillez entrer une localisation !");
             }
             $validate->name($_POST["location"], "Veuillez vérifier que la localisation ne contient pas de code HTML.");
 
+            // Validation de la catégorie
             if ($_POST["id_category"] == 0) {
                 $validate->addError("category", "Veuillez choisir une catégorie !");
             }
@@ -47,7 +49,9 @@ class AnnounceController extends AppController
                 $validate->phone("phone", $_POST["phone_number"], "Veuillez entrer un numéro de téléphone valide !");
             }
 
+            // Si des images ont été postées
             if (Create::fileIsUploaded("images")) {
+                // Validation du nombre d'images uploadées
                 $validate->fileNumber("images", "equal", 3, "Veuillez charger 3 images svp !");
 
                 // Validation des extensions
@@ -62,7 +66,8 @@ class AnnounceController extends AppController
 
             }
 
-            if (!empty($validate->getErrors())) { // Si il y'a des erreurs
+            // Si il y'a des erreurs
+            if (!empty($validate->getErrors())) {
                 $message = $notification->errors($validate->getErrors(), "danger");
             } else { // Sinon On save
                 if (Announce::create()) {
