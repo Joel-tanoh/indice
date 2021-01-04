@@ -18,6 +18,7 @@ use App\Model\Announce;
 use App\View\Model\AnnounceView;
 use App\View\Model\CategoryView;
 use App\View\Snippet;
+use App\File\Image\Logo;
 
 /**
  * Gère tout ce qui concerne le pied de page
@@ -37,6 +38,7 @@ class Footer extends Snippet
      */
     public function get() : string
     {
+        $logo = Logo::LOGOS_DIR_URL ."/logo-white.png";
         return <<<HTML
         <!-- Footer Section Start -->
         <footer>
@@ -46,7 +48,7 @@ class Footer extends Snippet
                     <div class="row">
                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                             <div class="widget">
-                                <h3 class="footer-logo"><img src="assets/img/logo/logo1.png" alt=""></h3>
+                                <h3 class="footer-logo"><img src="{$logo}" alt=""></h3>
                                 <div class="textwidget">
                                     <p>Petit texte descrioptif, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque lobortis tincidunt est, et euismod purus suscipit quis. Etiam euismod ornare elementum. Sed ex est, consectetur eget facilisis sed, auctor ut purus.</p>
                                 </div>

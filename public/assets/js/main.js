@@ -13,10 +13,11 @@
     $(window).on('scroll', function() {
         if ($(window).scrollTop() > 100) {
 			$('.scrolling-navbar').addClass('top-nav-collapse');
-			
-			// change logo src
+			$('#logo').attr('src', 'assets/img/logo/logo-colored.png');
+
         } else {
-            $('.scrolling-navbar').removeClass('top-nav-collapse');
+			$('.scrolling-navbar').removeClass('top-nav-collapse');
+			$('#logo').attr('src', 'assets/img/logo/logo-white.png');
 		}
     });
 

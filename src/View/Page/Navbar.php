@@ -34,7 +34,7 @@ class Navbar extends Snippet
 
     public function __construct(string $brandImgSrc = null, string $userAvatarSrc = null)
     {
-        $this->brandImgSrc = Logo::LOGOS_DIR_URL ."/logo2.png";
+        $this->brandImgSrc = Logo::LOGOS_DIR_URL ."/logo-white.png";
         $this->userAvatarSrc = $userAvatarSrc;
     }
 
