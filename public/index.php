@@ -15,6 +15,8 @@ use App\View\View;
 try {
     
     $router = new Router();
+
+    // Route en get sans paramètre
     $router->get("/", "App\Controller\AppController@index");
     $router->get("/suscribe", "App\Controller\UserController@suscribe");
     $router->get("/connexion", "App\Controller\UserController@connexion");
@@ -23,9 +25,11 @@ try {
     $router->get("/user/dashboard", "App\Controller\UserController@dashboard");
     $router->get("/in-progress", "App\Controller\AppController@page404");
     
+    // Routes avec paramètres
     $router->get("/:category", "App\Controller\CategoryController@read");
     $router->get("/:category/:slug", "App\Controller\AnnounceController@read");
 
+    // Roiutes en post
     $router->post("/suscribe", "App\Controller\UserController@suscribe");
     $router->post("/post", "App\Controller\AnnounceController@create");
     $router->post("/connexion", "App\Controller\UserController@connexion");

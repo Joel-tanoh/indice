@@ -154,15 +154,7 @@ HTML;
                     <div class="form-group inputwithicon">
                         <i class="lni-map-marker"></i>
                         <div class="select">
-                            <select>
-                                <option value="none">Villes</option>
-                                <option value="none">New York</option>
-                                <option value="none">California</option>
-                                <option value="none">Washington</option>
-                                <option value="none">Birmingham</option>
-                                <option value="none">Chicago</option>
-                                <option value="none">Phoenix</option>
-                            </select>
+                            {$this->townList("location")}
                         </div>
                     </div>
                     <div class="form-group inputwithicon">
@@ -412,6 +404,26 @@ HTML;
         return <<<HTML
         <iframe src="https://www.youtube.com/embed/{$youtubeVideoLink}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen class="w-100 video" style="height:25rem"></iframe>
+HTML;
+    }
+
+    /**
+     * Affiche la liste des villes.
+     * 
+     * @return string
+     */
+    public function townList(string $postName)
+    {
+        return <<<HTML
+        <select name="{$postName}">
+            <option value="0">Choisir la ville</option>
+            <option value="Abidjan">Abidjan</option>
+            <option value="none">California</option>
+            <option value="none">Washington</option>
+            <option value="none">Birmingham</option>
+            <option value="none">Chicago</option>
+            <option value="none">Phoenix</option>
+        </select>
 HTML;
     }
 

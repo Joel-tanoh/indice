@@ -540,6 +540,7 @@ HTML;
     private function enterAnnounceDetails()
     {
         $categoryView = new CategoryView();
+        $snippet = new Snippet();
 
         return <<<HTML
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
@@ -549,11 +550,11 @@ HTML;
                 </div>
                 <div class="dashboard-wrapper">
                     <div class="form-group mb-3">
-                        <label class="control-label">Titre</label>
+                        <label class="control-label">Titre :</label>
                         <input class="form-control input-md" name="title" placeholder="Titre" type="text" required>
                     </div>
                     <div class="form-group mb-3 tg-inputwithicon">
-                        <label class="control-label">Catégories</label>
+                        <label class="control-label">Catégories :</label>
                         <div class="tg-select form-control">
                             <select name="id_category">
                                 <option value="0">Sélectionner la catégorie</option>
@@ -561,9 +562,15 @@ HTML;
                             </select>
                         </div>
                     </div>
+                    <div class="form-group mb-3 tg-inputwithicon">
+                        <label class="control-label">Ville :</label>
+                        <div class="tg-select form-control">
+                            {$snippet->townList("location")}
+                        </div>
+                    </div>
                     <div class="form-group mb-3">
                         <div id="enter_price_box">
-                            <label class="control-label">Prix</label>
+                            <label class="control-label">Prix :</label>
                             <input class="form-control input-md" name="price" placeholder="Ajouter le prix (F CFA)" type="number">
                         </div>
                         <div class="tg-checkbox mt-3">
@@ -572,10 +579,6 @@ HTML;
                                 <label class="custom-control-label" for="tg-priceoncall">Prix à l'appel</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label class="control-label">Localisation</label>
-                        <input class="form-control input-md" name="location" placeholder="Adresse, Ville, Pays" type="text">
                     </div>
                     <div class="form-group md-3">
                         <section id="editor">
