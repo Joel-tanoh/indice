@@ -32,7 +32,7 @@ class UserView extends ModelView
      * 
      * @return string
      */
-    public function connexion(string $error = null)
+    public function signIn(string $error = null)
     {
         $form = new Form($_SERVER["REQUEST_URI"], "login-form", false, "post", "login-form", "form");
         $snippet = new Snippet();
@@ -90,7 +90,7 @@ HTML;
      * 
      * @return string
      */
-    public static function suscribe(string $message = null)
+    public static function register(string $message = null)
     {
         $snippet = new Snippet();
         $form = new Form($_SERVER["REQUEST_URI"], "login-form", true);
@@ -178,16 +178,16 @@ HTML;
     }
 
     /**
-     * Affiche le menu des utilisateurs.
+     * Affiche le navbar des utilisateurs.
      * 
      * @return string
      */
     public function navbarMenu()
     {
         if (User::isConnected()) {
-            $content = $this->menuForConnectedUser();
+            $content = (new RegisteredView())->navbar();
         } else {
-            $content = $this->menuForUnconnectedUser();
+            $content = $this->navbarForUnconnectedUser();
         }
 
         return <<<HTML
@@ -203,27 +203,7 @@ HTML;
     }
 
     /**
-     * Affiche la sidebar de l'utilisateur afin de lui permettre de naviguer dans 
-     * sa session personnelle.
-     * 
-     * @return string
-     */
-    public function userSidebar() : string
-    {
-        $advertisingView = new AdvertisingView();
-
-        return <<<HTML
-        <div class="col-sm-12 col-md-4 col-lg-3 page-sidebar">
-            <aside>
-                {$this->userSidebarLinks()}
-                {$advertisingView->advertisementSection()}
-            </aside>
-        </div>
-HTML;
-    }
-
-    /**
-     * La section qui permet à l'utilisateur de s'abonner à la newsletter.
+     * La section qui permet au visiteur de s'abonner à la newsletter.
      * 
      * @return string
      */
@@ -298,91 +278,15 @@ HTML;
     }
 
     /**
-     * Menu qui sera affiché si l'utilsateur s'est authentifié.
-     * 
-     * @return string
-     */
-    private function menuForConnectedUser()
-    {
-        return <<<HTML
-        <a class="dropdown-item" href="user/dashboard"><i class="lni-home"></i> Tableau de bord</a>
-        <a class="dropdown-item" href="in-progress"><i class="lni-wallet"></i> Mes annonces</a>
-        <a class="dropdown-item" href="disconnexion"><i class="lni-close"></i>Se déconnecter</a>
-HTML;
-    }
-
-    /**
      * Menu qui sera affiché si l'utilisateur n'est pas encore authentifé.
      * 
      * @return string
      */
-    private function menuForUnconnectedUser()
+    private function navbarForUnconnectedUser()
     {
         return <<<HTML
-        <a class="dropdown-item" href="suscribe"><i class="lni-user"></i> S'inscire</a>
-        <a class="dropdown-item" href="connexion"><i class="lni-lock"></i> Se connecter</a>
-HTML;
-    }
-
-    /**
-     * Affiche l'avatar et les liens de la sidebar de l'utilisateur.
-     * 
-     * @return string
-     */
-    private function userSidebarLinks() : string
-    {
-        return <<<HTML
-        <div class="sidebar-box">
-            <div class="user">
-                <figure>
-                    <a href="#"><img src="assets/img/author/img1.jpg" alt=""></a>
-                </figure>
-                <div class="usercontent">
-                    <h3>Nom de l'utilisateur</h3>
-                    <h4>Type d'utilisateur</h4>
-                </div>
-            </div>
-            {$this->dashboardMenu()}
-        </div>
-HTML;
-    }
-    
-    /**
-     * Affiche le menu du dashboard de l'utilisateur.
-     * 
-     * @return string
-     */
-    private function dashboardMenu() : string
-    {
-        return <<<HTML
-        <nav class="navdashboard">
-            <ul>
-                {$this->defineSidebarLink("Tableau de bord", "in-progress", "lni-dashboard")}
-                {$this->defineSidebarLink("Mes annonces", "in-progress", "lni-layers")}
-                {$this->defineSidebarLink("Se déconnecter", "in-progress", "lni-enter")}
-            </ul>
-        </nav>
-HTML;
-    }
-
-    /**
-     * Permet de créer une ligne de lien dans la sidebar du user.
-     * 
-     * @param string $text
-     * @param string $href
-     * @param string $iconClass
-     * 
-     * @return string
-     */
-    private function defineSidebarLink(string $text, string $href, string $iconClass = null)
-    {
-        return <<<HTML
-        <li>
-            <a href="{$href}">
-                <i class="{$iconClass}"></i>
-                <span>{$text}</span>
-            </a>
-        </li>
+        <a class="dropdown-item" href="register"><i class="lni-user"></i> S'inscire</a>
+        <a class="dropdown-item" href="sign-in"><i class="lni-lock"></i> Se connecter</a>
 HTML;
     }
 
@@ -393,7 +297,7 @@ HTML;
      */
     private function forgotPassword()
     {
-        $text = '<a class="forgetpassword" href="forgot-password.html">Mot de passe oublié ?</a>';
+        return '<a class="forgetpassword" href="forgot-password">Mot de passe oublié ?</a>';
     }
 
 }

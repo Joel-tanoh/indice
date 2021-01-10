@@ -86,7 +86,7 @@ class Form extends View
      * Retourne le code pour un input pour entrer le login d'un compte qu'on veut
      * créer.
      * 
-     * @param mixed  $login Valeur par défaur à afficher dans le formulaire. 
+     * @param  $login Valeur par défaur à afficher dans le formulaire. 
      * @param string $class La classe à donner à l'input.
      * 
      * @return string
@@ -201,7 +201,7 @@ HTML;
      * Retourne un champ de type textarea pour le champ de la description
      * de l'item à ajouter.
      * 
-     * @param mixed $item 
+     * @param $item 
      * 
      * @return string Le code HTML de la description.
      */
@@ -240,7 +240,7 @@ HTML;
     /**
      * Retourne un champ dans le formulaire pour le price.
      * 
-     * @param mixed  $price 
+     * @param  $price 
      * @param string $label 
      * 
      * @return string Le code HTML pour le champ.
@@ -264,7 +264,7 @@ HTML;
     /**
      * Champ pour entrer le lien d'une vidéo.
      * 
-     * @param mixed $link 
+     * @param $link 
      * 
      * @return string
      */

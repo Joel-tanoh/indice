@@ -27,7 +27,7 @@ class Category extends Model
             "id, title, slug, created_at, updated_at, description, icon_class"
             )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
-        $rep = parent::connect()->prepare($query);
+        $rep = parent::connectToDb()->prepare($query);
         $rep->execute([$id]);
 
         $result = $rep->fetch();
@@ -45,12 +45,24 @@ class Category extends Model
     /**
      * Retourne les annonces postées qui appartiennent à cette catégorie.
      * 
+     * @param string $status
+     * 
      * @return array
      */
-    public function getAnnounces()
+    public function getAnnounces(string $status = null)
     {
-        $rep = parent::connect()->prepare("SELECT id FROM " . Announce::TABLE_NAME . " WHERE id_category = ?");
-        $rep->execute([$this->id]);
+        $query = "SELECT id FROM " . Announce::TABLE_NAME . " WHERE id_category = ?";
+
+        if ($status) {
+            $query .= " AND status = ?";
+            $rep = parent::connectToDb()->prepare($query);
+            $status = Announce::convertStatus($status);
+            $rep->execute([$this->id, $status]);
+        } else {
+            $rep = parent::connectToDb()->prepare($query);
+            $rep->execute([$this->id]);
+        }
+
         $result = $rep->fetchAll();
 
         foreach($result as $announce) {
@@ -67,7 +79,7 @@ class Category extends Model
      */
     public function getAnnouncesNumber() : int
     {
-        return count(Announce::getValidated($this->id));
+        return count(Announce::getAll($this->id));
     }
 
     /**
@@ -77,7 +89,7 @@ class Category extends Model
      */
     public function getSubCategories()
     {
-        $rep = parent::connect()->prepare("SELECT id FROM " . SubCategory::TABLE_NAME . " WHERE id_category = ?");
+        $rep = parent::connectToDb()->prepare("SELECT id FROM " . SubCategory::TABLE_NAME . " WHERE id_category = ?");
         $rep->execute([$this->id]);
         $result = $rep->fetchAll();
 
@@ -109,7 +121,7 @@ class Category extends Model
     public static function getAll(string $tableName)
     {
         $categories = [];
-        $rep = self::connect()->query("SELECT id FROM $tableName");
+        $rep = self::connectToDb()->query("SELECT id FROM $tableName");
         foreach ($rep->fetchAll() as $item) {
             $categories[] = new self($item["id"]);
         }

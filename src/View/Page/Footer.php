@@ -124,7 +124,7 @@ HTML;
         $announces = Announce::getFeatured(2);
 
         if (empty($content)) {
-            $content = CategoryView::noAnnounces();
+            $content = AnnounceView::noAnnounces();
         } else {
             foreach ($announces as $item) {
                 $announce = new Announce($item["id"]);

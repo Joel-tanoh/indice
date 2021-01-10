@@ -72,4 +72,12 @@ class Connexion extends Authentication
         return $this->error;
     }
 
+    /**
+     * Permet d'enregistrer la connexion de l'utilisateur.
+     */
+    public function save()
+    {
+        
+    }
+
 }

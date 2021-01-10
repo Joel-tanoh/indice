@@ -2,12 +2,11 @@
 
 namespace App\Model;
 
-use App\Action\InsertData;
-use App\Auth\Password;
 use App\Database\Database;
+use App\Database\SqlQueryFormaterV2;
 use App\Utility\Utility;
 
-class Model
+abstract class Model
 {
     protected $id;
     protected $title;
@@ -32,7 +31,7 @@ class Model
      * 
      * @return PDOInstance
      */
-    public static function connect()
+    public static function connectToDb()
     {
         return self::database()->getPDO();
     }
@@ -54,7 +53,7 @@ class Model
      */
     public function getTitle()
     {
-        return $this->title;
+        return ucfirst($this->title);
     }
 
     /**
@@ -74,7 +73,13 @@ class Model
      */
     public function getDescription(int $nbrOfChar = null)
     {
-        return substr($this->description, 0, $nbrOfChar) . "...";
+        $description = ucfirst(htmlspecialchars_decode($this->description));
+
+        if ($nbrOfChar) {
+            return substr($description, 0, $nbrOfChar) . "...";
+        } else {
+            return $description;
+        }
     }
 
     /**
@@ -101,14 +106,14 @@ class Model
      * C'est la requête basique pour la mise à jour d'un champ.
      * 
      * @param string $colName
-     * @param mixed  $value
+     * @param  $value
      * 
      * @return bool
      */
-    protected function set(string $colName, $value)
+    protected function set(string $colName, $value, string $selector, $selectorValue)
     {
-        $rep = self::connect()->prepare("UPDATE $this->tableName SET $colName = ? WHERE id = ?");
-        if ($rep->execute([$value, $this->id])) {
+        $rep = self::connectToDb()->prepare("UPDATE $this->tableName SET $colName = ? WHERE $selector = ?");
+        if ($rep->execute([$value, $selectorValue])) {
             return true;
         }
     }
@@ -123,7 +128,7 @@ class Model
     public static function getSlugs(string $tableName) : array
     {
         $slugs = [];
-        $rep = self::connect()->query("SELECT slug FROM " . $tableName);
+        $rep = self::connectToDb()->query("SELECT slug FROM " . $tableName);
         foreach ($rep->fetchAll() as $item) {
             $slugs[] = $item["slug"];
         }
@@ -142,7 +147,7 @@ class Model
      */
     public static function getBySlug(string $slug, string $tableName, string $class)
     {
-        $rep = self::connect()->prepare("SELECT id FROM " . $tableName . " WHERE slug = ?");
+        $rep = self::connectToDb()->prepare("SELECT id FROM $tableName WHERE slug = ?");
         $rep->execute([$slug]);
         $item = $rep->fetch();
 
@@ -154,12 +159,24 @@ class Model
     /**
      * Retourne tous les valeurs d'une colonne dans la base de données.
      * 
+     * @param string $colToSelect La colonne à récupérer.
+     * @param string $table
+     * @param array $whereCol    A passer si on veut filtrer les résultats.
+     * @param  $WhereValue  La valeur à prendre en compte pour le filtrage.
+     * 
      * @return array
      */
-    public static function get(string $colToSelect, string $table)
+    public static function get(string $colToSelect, string $table, array $whereCol = null, $WhereValue = null)
     {
         $query = "SELECT $colToSelect FROM $table";
-        $rep = self::connect()->query($query);
+
+        if (null !== $whereCol && null !== $WhereValue) {
+            $query .= " WHERE $whereCol = ?";
+            $rep = self::connectToDb()->prepare($query);
+            $rep->execute([$WhereValue]);
+        } else {
+            $rep = self::connectToDb()->query($query);
+        }
 
         $values = [];
 
@@ -175,13 +192,73 @@ class Model
      * 
      * @param string $valueIndex Index(nom de la colonne dans la table dans la base de
      *                           données).
-     * @param mixed $value
+     * @param $value
      * 
      * @return bool
      */
     public static function valueIsset(string $valueIndex, $value, string $tableName)
     {
         return in_array($value, self::get($valueIndex, $tableName));
+    }
+
+    /**
+     * Permet d'instancier un objet.
+     * 
+     * @param string $selector La colonne qui va permettre d'instancier l'objet.
+     * @param string $table    La table dans laquelle se trouve la donnée.
+     * @param string $col      La clause Where qui permet spécifier l'occurrence
+     *                         à récupérer.
+     * @param string $class    La classe de l'objet à instancier.
+     */
+    public static function instantiate(string $selector, string $table, string $col, $colValue, string $class)
+    {
+        $rep = self::connectToDb()->prepare("SELECT $selector FROM $table WHERE $col = ?");
+        $rep->execute([$colValue]);
+        $user = $rep->fetch();
+
+        return new $class($user[$selector]);
+    }
+
+    /**
+     * Permet d'obtenir un ou plusieurs objets selon 
+     * un paramètre.
+     * 
+     * @param string $col   La colonne pour filter le résultat.
+     * 
+     * @return array
+     */
+    public static function getBy(string $colForInstance, string $tableName, string $col = null, $value = null, string $className = null)
+    {
+        $queryFormater = new SqlQueryFormaterV2();
+        $query = $queryFormater->select($colForInstance)->from($tableName);
+
+        if ($col && $value) {
+            $query = $queryFormater->where("$col = ?")->returnQueryString();
+            $rep = self::connectToDb()->prepare($query);
+            $rep->execute([$value]);
+        } else {
+            $query = $queryFormater->returnQueryString();
+            $rep = self::connectToDb()->query($query);
+        }
+
+        if ($className) {
+            $return = [];    
+            foreach($rep->fetchAll() as $item) {
+                $return[] = new $className($item[$colForInstance]);
+            }
+            return $return;
+
+        } else {
+            return $rep->fetchAll();
+        }
+    }
+
+    /**
+     * Permet de compter les annonces.
+     */
+    public static function countBy(string $colForInstance, string $tableName, string $col = null, $value = null)
+    {
+        return count(self::getBy($colForInstance, $tableName, $col, $value));
     }
 
 }

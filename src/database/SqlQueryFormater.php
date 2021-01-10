@@ -74,7 +74,33 @@ class SqlQueryFormater
         $this->selected = substr($this->data, 0, $this->selectedLength - 2);
         return $this;
     }
-
+        
+    /**
+     * Permet d'insérer des données dans une table.
+     * 
+     * @param string $table La table dans laquelle on insère les données.
+     * 
+     * @return self Retourne la même instance.
+     */
+    public function insertInto(string $table)
+    {
+        $this->insertInto = $table;
+        return $this;
+    }
+    
+    /**
+     * Permet de mettre à jour les données d'une base d'une table.
+     * 
+     * @param string $table La table à mettre à jour.
+     * 
+     * @return self Retourne la même instance.
+     */
+    public function update(string $table)
+    {
+        $this->update = $table;
+        return $this;
+    }
+    
     /**
      * Permet de spécifier la table de laquelle on récupère les données.
      * 
@@ -85,6 +111,51 @@ class SqlQueryFormater
     public function from(string $table)
     {
         $this->table = $table;
+        return $this;
+    }
+
+    /**
+     * Permet de spécifier la colonne à mettre à jour
+     * 
+     * @param string $col Le nom de la colonne à mettre à jour.
+     * 
+     * @return self Retourne la même instance.
+     */
+    public function set(string $col)
+    {
+        $this->set .= $col . " AND ";
+        $this->setedLength = strlen($this->set);
+        $this->seted = substr($this->set, 0, $this->setedLength - 5);
+        return $this;
+    }
+    
+    /**
+     * Permet de spécifier le colonne dans laquelle on insère la donnée.
+     * 
+     * @param string $col La colonne dans laquelle on insère la donnée.
+     * 
+     * @return self Retourne la même instance.
+     */
+    public function cols(string $col)
+    {
+        $this->cols .= $col . ", ";
+        $this->colsLength = strlen($this->cols);
+        $this->colonnes = substr($this->cols, 0, $this->colsLength - 2);
+        return $this;
+    }
+    
+    /**
+     * Permet de donner la valeur à insérer dans la colonne.
+     * 
+     * @param string $value La valeur à insérer dans la colonne.
+     * 
+     * @return self Retourne la même instance.
+     */
+    public function values(string $value)
+    {
+        $this->vals .= "'$value', ";
+        $this->valuesLength = strlen($this->vals);
+        $this->values = substr($this->vals, 0, $this->valuesLength - 2);
         return $this;
     }
 
@@ -119,78 +190,7 @@ class SqlQueryFormater
         }
         return $this;
     }
-    
-    /**
-     * Permet d'insérer des données dans une table.
-     * 
-     * @param string $table La table dans laquelle on insère les données.
-     * 
-     * @return self Retourne la même instance.
-     */
-    public function insertInto(string $table)
-    {
-        $this->insertInto = $table;
-        return $this;
-    }
-    
-    /**
-     * Permet de spécifier le colonne dans laquelle on insère la donnée.
-     * 
-     * @param string $col La colonne dans laquelle on insère la donnée.
-     * 
-     * @return self Retourne la même instance.
-     */
-    public function cols(string $col)
-    {
-        $this->cols .= $col . ", ";
-        $this->colsLength = strlen($this->cols);
-        $this->colonnes = substr($this->cols, 0, $this->colsLength - 2);
-        return $this;
-    }
-    
-    /**
-     * Permet de donner la valeur à insérer dans la colonne.
-     * 
-     * @param string $value La valeur à insérer dans la colonne.
-     * 
-     * @return self Retourne la même instance.
-     */
-    public function values(string $value)
-    {
-        $this->vals .= "'$value', ";
-        $this->valuesLength = strlen($this->vals);
-        $this->values = substr($this->vals, 0, $this->valuesLength - 2);
-        return $this;
-    }
-    
-    /**
-     * Permet de mettre à jour les données d'une base d'une table.
-     * 
-     * @param string $table La table à mettre à jour.
-     * 
-     * @return self Retourne la même instance.
-     */
-    public function update(string $table)
-    {
-        $this->update = $table;
-        return $this;
-    }
-    
-    /**
-     * Permet de spécifier la colonne à mettre à jour
-     * 
-     * @param string $col Le nom de la colonne à mettre à jour.
-     * 
-     * @return self Retourne la même instance.
-     */
-    public function set(string $col)
-    {
-        $this->set .= $col . " AND ";
-        $this->setedLength = strlen($this->set);
-        $this->seted = substr($this->set, 0, $this->setedLength - 5);
-        return $this;
-    }
-    
+
     /**
      * Méthode non terminée.
      * 
@@ -248,7 +248,6 @@ class SqlQueryFormater
                 $this->query .= " FROM $this->table";
             }
 
-            
             if ($this->where) {
                 $this->query .= " WHERE $this->where";
             }

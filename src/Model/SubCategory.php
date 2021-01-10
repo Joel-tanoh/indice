@@ -25,7 +25,7 @@ class SubCategory extends Category
             "id, title, slug, id_category, created_at, updated_at, description"
             )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
-        $rep = parent::connect()->prepare($query);
+        $rep = parent::connectToDb()->prepare($query);
         $rep->execute([$id]);
 
         $result = $rep->fetch();
@@ -47,7 +47,7 @@ class SubCategory extends Category
      */
     public function getAnnounces()
     {
-        $rep = parent::connect()->prepare("SELECT id FROM " . Announce::TABLE_NAME . " WHERE id_sub_category = ?");
+        $rep = parent::connectToDb()->prepare("SELECT id FROM " . Announce::TABLE_NAME . " WHERE id_sub_category = ?");
         $rep->execute([$this->id]);
         $result = $rep->fetchAll();
 

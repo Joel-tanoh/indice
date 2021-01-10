@@ -1,8 +1,6 @@
 <?php
 
-namespace App;
-
-use App\Auth\Authentication;
+namespace App\Auth;
 
 /**
  * Fichier de classe gestionnaire des variables de session.
@@ -37,9 +35,11 @@ class Session extends Authentication
      * 
      * @return string
      */
-    public static function getSessionId()
+    public static function get()
     {
-        return $_SESSION[self::KEY];
+        if (self::isActive()) {
+            return $_SESSION[self::KEY];
+        }
     }
 
     /**

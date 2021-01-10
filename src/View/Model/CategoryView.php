@@ -98,14 +98,14 @@ HTML;
         {$snippet->heroArea2(false)}
         <!-- Hero Area End -->
 
-        <!-- Main container Start -->  
+        <!-- Main container Start -->
         <div class="main-container section-padding">
             <div class="container">
                 <div class="row">
                     <!-- Sidebar -->
                     {$this->sidebar()}
                     <!-- Content -->
-                    {$this->content()}
+                    {$this->content($this->category->getAnnounces())}
                 </div>
             </div>
         </div>
@@ -158,25 +158,24 @@ HTML;
     /**
      * Le contenu de la page.
      * 
+     * @param array $announces
+     * 
      * @return string
      */
-    private function content()
+    private function content(array $announces)
     {
-        $pagination = new Pagination();
+        $pagination = new Pagination(count($announces), 12);
 
         return <<<HTML
         <div class="col-lg-9 col-md-12 col-xs-12 page-content">
             <!-- Product filter Start -->
             {$this->announceFilter()}
-            <!-- Product filter End -->
 
             <!-- Adds wrapper Start -->
-            {$this->announcesSection()}
-            <!-- Adds wrapper End -->
+            {$this->announcesSection($announces)}
     
             <!-- Start Pagination -->
-            {$pagination->paginationBar()}
-            <!-- End Pagination -->
+            {$pagination->show()}
             
         </div>
 HTML;
@@ -271,13 +270,12 @@ HTML;
     /**
      * La section qui affiche les annonces de la catégorie.
      * 
+     * @param array $announces
+     * 
      * @return string
      */
-    public function announcesSection()
+    public function announcesSection(array $announces)
     {
-        // $announces = Announce::getValidated($this->category->getId());
-        $announces = Announce::getAll($this->category->getId());
-
         return <<<HTML
         <div class="adds-wrapper">
             <div class="tab-content">
@@ -298,7 +296,7 @@ HTML;
         $content = null;
 
         if (empty($announces)) {
-            $content = $this->noAnnounces();
+            $content = AnnounceView::noAnnounces();
         } else {
             foreach ($announces as $announce) {
                 $announceView = new AnnounceView($announce);
@@ -325,7 +323,7 @@ HTML;
         $content = null;
 
         if (empty($announces)) {
-            $content = $this->noAnnounces();
+            $content = AnnounceView::noAnnounces();
         } else {
             foreach ($announces as $announce) {
                 $announceView = new AnnounceView($announce);
@@ -393,24 +391,6 @@ HTML;
                 <a class="nav-link active" data-toggle="tab" href="#list-view"><i class="lni-list"></i></a>
             </li>
         </ul>
-HTML;
-    }
-
-    
-    /**
-     * Un bloc de code HTML qui affiche aucune annonce lorqu'il n'y a pas 
-     * d'annonce à afficher dans une partie de la page.
-     * 
-     * @return string
-     */
-    public static function noAnnounces()
-    {
-        return <<<HTML
-        <div class="col-12">
-            <section class="d-flex justify-content-center align-items-center">
-                <p class="h5 text-muted">Aucunes annonces</p>
-            </section>
-        </div>
 HTML;
     }
 

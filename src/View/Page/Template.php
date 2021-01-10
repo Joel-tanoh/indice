@@ -35,9 +35,9 @@ class Template extends View
     /**
      * Template avec une navbar fixe et une sidebar fixe.
      * 
-     * @param mixed $navbar
-     * @param mixed $sidebar
-     * @param mixed $content
+     * @param $navbar
+     * @param $sidebar
+     * @param $content
      * 
      * @return string
      */
@@ -73,8 +73,8 @@ HTML;
     /**
      * Une template avec une navbar fixe et le contenu.
      * 
-     * @param mixed $navbar
-     * @param mixed $content
+     * @param $navbar
+     * @param $content
      * 
      * @return string
      */
@@ -99,7 +99,7 @@ HTML;
      * le contenu de la page et le footer.
      * 
      * @param string $sidebar La barre de gauche à fixer.
-     * @param mixed  $content Le contenu à afficher à code de la sidebar.
+     * @param  $content Le contenu à afficher à code de la sidebar.
      * 
      * @return string
      */
@@ -119,7 +119,7 @@ HTML;
      * Retourne la disposition de la page principale de la partie
      * publique.
      * 
-     * @param mixed $content
+     * @param $content
      * 
      * @return string
      */

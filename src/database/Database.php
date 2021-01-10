@@ -144,7 +144,7 @@ class Database
      * @param string $colToCount    La colonne à compter.
      * @param string $tableName     Le nom de table.
      * @param string $whereColName  Une clause sur les éléments à compter.
-     * @param mixed  $whereColValue La valeur de la colonne.
+     * @param  $whereColValue La valeur de la colonne.
      * 
      * @return string
      */
@@ -170,7 +170,7 @@ class Database
      * @param string $value 
      * @param string $tableName 
      * @param string $whereColName 
-     * @param mixed  $whereColValue
+     * @param  $whereColValue
      * 
      * @return bool
      */
@@ -317,7 +317,7 @@ class Database
      * @param string $tableName     Le nom de la table de l'item à modifier.
      * @param string $whereColName  Une clause where sur cette colonne pour donner une précision sur
      *                              les résultats.
-     * @param mixed  $whereColValue Valeur identifiant l'item dont on veut incrémenter ou décrémenter la valeur.
+     * @param  $whereColValue Valeur identifiant l'item dont on veut incrémenter ou décrémenter la valeur.
      * 
      * @return bool
      */

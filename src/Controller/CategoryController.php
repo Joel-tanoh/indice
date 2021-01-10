@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Action\InsertData;
 use App\Exception\PageNotFoundException;
 use App\Model\Category;
-use App\Model\Model;
 use App\View\Model\CategoryView;
 use App\View\Page\Page;
 
@@ -15,21 +13,6 @@ use App\View\Page\Page;
 class CategoryController extends AppController
 {
     /**
-     * Controller pour le read d'une catégorie.
-     */
-    static function read(array $url = null)
-    {
-        if (Category::isCategorySlug($url[0])) {
-            $category = Category::getBySlug($url[0], Category::TABLE_NAME, "App\Model\Category");
-            $page = new Page("Titre de la catégorie", (new CategoryView($category))->read());
-            // $page->setDescription($category->getDescription());
-            $page->show();
-        } else {
-            throw new PageNotFoundException("La catégorie que vous cherchez n'a pas été trouvée.");
-        }
-    }
-
-    /**
      * Controlleur de création d'une catégorie.
      */
     static function create()
@@ -38,4 +21,36 @@ class CategoryController extends AppController
         $page->setDescription("");
         $page->show();
     }
+
+    /**
+     * Controller pour le read d'une catégorie.
+     */
+    static function read(array $url = null)
+    {
+        if (Category::isCategorySlug($url[0])) {
+            $category = Category::getBySlug($url[0], Category::TABLE_NAME, "App\Model\Category");
+            $page = new Page("L'indice - " . $category->getTitle(), (new CategoryView($category))->read());
+            $page->setDescription($category->getDescription());
+            $page->show();
+        } else {
+            throw new PageNotFoundException("La catégorie que vous cherchez n'a pas été trouvée.");
+        }
+    }
+
+    /**
+     * Controller de mise à jour d'une catégorie.
+     */
+    public function update()
+    {
+
+    }
+
+    /**
+     * Controlleur de suppression
+     */
+    public function delete()
+    {
+
+    }
+
 }

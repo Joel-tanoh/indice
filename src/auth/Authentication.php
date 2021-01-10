@@ -49,7 +49,7 @@ class Authentication
      * Initalise les variables de sessions en mettant le login de l'administrateur.
      * 
      * @param string $sessionKey   La clé de la session.
-     * @param mixed  $sessionValue La valeur de la session
+     * @param  $sessionValue La valeur de la session
      * 
      * @return void
      */

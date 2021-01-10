@@ -17,7 +17,7 @@ namespace App\Utility;
 
 use App\Auth\Password;
 use App\File\FileUploaded;
-use App\View\Notification;
+use App\Communication\Notify\NotificationText;
 
 /**
  * Permet de faire toutes les vérifications sur les données entrées dans les
@@ -69,7 +69,7 @@ class Validator
     /**
      * Le notificateur.
      * 
-     * @var Notification
+     * @var NotificationText
      */
     private $notifier;
 
@@ -80,7 +80,7 @@ class Validator
      */
     public function __construct()
     {
-        $this->notifier = new Notification();
+        $this->notifier = new NotificationText();
     }
 
     /**

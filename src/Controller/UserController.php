@@ -3,59 +3,28 @@
 namespace App\Controller;
 
 use App\Action\Action;
-use App\Action\Create;
+use App\Action\Create\Create;
 use App\Auth\Connexion;
 use App\Auth\Cookie;
 use App\File\Image\Image;
-use App\Model\Model;
 use App\Model\User\User;
-use App\Session;
+use App\Model\User\Registered;
+use App\Auth\Session;
+use App\Model\Announce;
 use App\Utility\Utility;
 use App\Utility\Validator;
 use App\View\Model\User\UserView;
-use App\View\Notification;
+use App\View\Model\User\RegisteredView;
+use App\Communication\Notify\NotifyByHTML;
 use App\View\Page\Page;
 
 class UserController extends AppController
 {
-    /**
-     * Le controller pour la connexion d'un utilisateur.
-     */
-    public static function connexion()
-    {
-        if (Session::isActive() || Cookie::userCookieIsset()) {
-            Utility::redirect("user/dashboard");
-        }
-
-        $error = null;
-
-        if (Action::dataPosted()) {
-            
-            $connexion = new Connexion("email_address", $_POST["password"], DB_NAME, DB_LOGIN, DB_PASSWORD, User::TABLE_NAME);
-            $connexion->execute();
-
-            if ($connexion->getError()) {
-                $error = (new Notification())->error($connexion->getError(), "alert alert-danger");
-            } else {
-                Session::activate($_POST["email_address"]);
-
-                if (isset($_POST["remember_me"]) && $_POST["remember_me"] === "yes") {
-                    Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
-                }
-
-                Utility::redirect("user/dashboard");
-            }
-        }
-
-        $page = new Page("Connexion", (new UserView())->connexion($error));
-        $page->setDescription("");
-        $page->show();
-    }
 
     /**
      * Controller pour la création d'un compte user.
      */
-    public static function suscribe()
+    public static function register()
     {
         $message = null;
 
@@ -119,22 +88,53 @@ class UserController extends AppController
                 $validate->fileSize("avatar", $_FILES["avatar"]["size"], Image::MAX_VALID_SIZE, "Taille maximale des images: 2 Mo !");
             }
 
-            // dump(User::get("email_address", User::TABLE_NAME));
-            // dump($validate->getErrors());
-            // die();
- 
             // Si aucune erreur
             if ($validate->noErrors()) {
                 if (User::save()) {
-                    $message = (new Notification())->toast("Enregistrement effectué avec succès", "success");
-                    Utility::redirect("user/dashboard");
+                    Session::activate($_POST["email_address"]);
+                    Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
+                    Utility::redirect("/users/me/dashboard");
                 }
             } else { // Sinon
-                $message = (new Notification())->errors($validate->getErrors());
+                $message = (new NotifyByHTML())->errors($validate->getErrors());
             }
         }
 
-        $page = new Page("Connexion", UserView::suscribe($message));
+        $page = new Page("Connexion", UserView::register($message));
+        $page->setDescription("");
+        $page->show();
+    }
+
+    /**
+     * Le controller pour la sign-in d'un utilisateur.
+     */
+    public static function signIn()
+    {
+        if (Session::isActive() || Cookie::userCookieIsset()) {
+            Utility::redirect("/users/me/dashboard");
+        }
+
+        $error = null;
+
+        if (Action::dataPosted()) {
+            
+            $connexion = new Connexion("email_address", $_POST["password"], DB_NAME, DB_LOGIN, DB_PASSWORD, User::TABLE_NAME);
+            $connexion->execute();
+
+            if ($connexion->getError()) {
+                $error = (new NotifyByHTML())->error($connexion->getError(), "alert alert-danger");
+            } else {
+                Session::activate($_POST["email_address"]);
+
+                if (isset($_POST["remember_me"]) && $_POST["remember_me"] === "yes") {
+                    Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
+                }
+
+                Utility::redirect("/users/me/dashboard");
+            }
+        }
+
+        $page = new Page("Connexion", (new UserView())->signIn($error));
         $page->setDescription("");
         $page->show();
     }
@@ -142,19 +142,78 @@ class UserController extends AppController
     /**
      * Controller pour gérer le dashboard d'un utlisateur.
      */
-    public static function dashboard()
+    public static function dashboard(array $url = null)
     {
-        dump($_SESSION);
-        dump($_COOKIE);
+        if (!Session::isActive() && !Cookie::userCookieIsset()) {
+            Utility::redirect("/sign-in");
+        }
+
+        $registered = new Registered(Session::get() ?? Cookie::get());
+        
+        if (null !== $url) {
+            if (!in_array($url[3], Announce::getStatutes())) {
+                $announces = [];
+            } else {
+                $announces = $registered->getAnnounces(Announce::convertStatus($url[3]));
+            }
+        } else {
+            $announces = $registered->getAnnounces();
+        }
+
+        $page = new Page(
+            "Tableau de bord - " . $registered->getName() . " " . $registered->getFirstNames()
+            ,(new RegisteredView($registered))->dashboard($announces)
+        );
+        $page->setDescription("");
+        $page->show();
+    }
+
+    /**
+     * Controller du profil de l'utilisateur.
+     */
+    public static function profile()
+    {
+        if (!Session::isActive() && !Cookie::userCookieIsset()) {
+            Utility::redirect("/sign-in");
+        }
+
+        $registered = new Registered(Session::get() ?? Cookie::get());
+
+        $page = new Page("Profil - " . $registered->getName() . " " . $registered->getFirstNames(), (new RegisteredView($registered))->profile());
+        $page->setDescription("");
+        $page->show();
+    }
+
+    /**
+     * Controlleur de mise à jour d'un user.
+     */
+    public static function update()
+    {
+        if (!Session::isActive() && !Cookie::userCookieIsset()) {
+            Utility::redirect("/sign-in");
+        }
+
+        $registered = new Registered(Session::get() ?? Cookie::get());
+
+    }
+
+    /**
+     * Controller de suppression d'un user.
+     */
+    public static function delete()
+    {
+        if (!Session::isActive() && !Cookie::userCookieIsset()) {
+            Utility::redirect("/sign-in");
+        }
+
+        $registered = new Registered(Session::get() ?? Cookie::get());
     }
 
     /**
      * Controller de gestion de la déconnexion.
      */
-    public static function disconnexion()
+    public static function signOut()
     {
-        Session::deactivate();
-        Cookie::destroy(Cookie::KEY);
-        Utility::redirect("/");
+        Registered::signOut();
     }
 }

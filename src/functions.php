@@ -27,7 +27,7 @@ function someoneIsConnected()
 /**
  * Permet de dumper une variable.
  * 
- * @param mixed $var 
+ * @param $var 
  * 
  * @return string
  */

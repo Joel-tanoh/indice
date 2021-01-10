@@ -50,7 +50,7 @@ class Utility
      * 
      * @return void
      */
-    static function redirect(string $url = "")
+    static function redirect(string $url = null)
     {
         header("location: " . $url);
         exit();

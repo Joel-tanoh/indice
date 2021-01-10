@@ -18,21 +18,23 @@ try {
 
     // Route en get sans paramètre
     $router->get("/", "App\Controller\AppController@index");
-    $router->get("/suscribe", "App\Controller\UserController@suscribe");
-    $router->get("/connexion", "App\Controller\UserController@connexion");
-    $router->get("/disconnexion", "App\Controller\UserController@disconnexion");
+    $router->get("/register", "App\Controller\UserController@register");
+    $router->get("/sign-in", "App\Controller\UserController@signIn");
+    $router->get("/sign-out", "App\Controller\UserController@signOut");
+    $router->get("/users/me/profile", "App\Controller\UserController@profile");
     $router->get("/post", "App\Controller\AnnounceController@create");
-    $router->get("/user/dashboard", "App\Controller\UserController@dashboard");
     $router->get("/in-progress", "App\Controller\AppController@page404");
     
     // Routes avec paramètres
     $router->get("/:category", "App\Controller\CategoryController@read");
     $router->get("/:category/:slug", "App\Controller\AnnounceController@read");
+    $router->get("/users/me/dashboard/", "App\Controller\UserController@dashboard");
+    $router->get("/users/me/dashboard/:status", "App\Controller\UserController@dashboard");
 
-    // Roiutes en post
-    $router->post("/suscribe", "App\Controller\UserController@suscribe");
+    // Routes en post
+    $router->post("/register", "App\Controller\UserController@register");
     $router->post("/post", "App\Controller\AnnounceController@create");
-    $router->post("/connexion", "App\Controller\UserController@connexion");
+    $router->post("/sign-in", "App\Controller\UserController@signIn");
 
     $router->run();
 

@@ -2,12 +2,12 @@
 
 namespace App\Auth;
 
-use App\View\Notification;
+use App\Communication\Notify\NotificationText;
 
 /**
  * Classe de gestion des notifications concernant les mots de passe.
  */
-class PasswordNotification extends Notification
+class PasswordNotification extends NotificationText
 {
     /**
      * Retourne que les mots de passes ne sont pas identiques.

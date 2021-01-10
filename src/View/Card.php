@@ -62,7 +62,7 @@ HTML;
      * Retourne une box pour les informations de types chiffres avec un
      * petit texte.
      * 
-     * @param mixed  $number  Le chiffre à afficher. Peut être une chaine de
+     * @param  $number  Le chiffre à afficher. Peut être une chaine de
      *                        caractère ou un nombre.
      * @param string $text    Le petit texte à afficher en dessous du chiffre.
      * @param string $href    Le lien vers lequel l'on est dirigé en cliquant sur

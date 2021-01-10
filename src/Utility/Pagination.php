@@ -4,12 +4,26 @@ namespace App\Utility;
 
 class Pagination extends Utility
 {
+    private $firstIndex;
+    private $lastIndex;
+    private $itemPerPage;
+    private $itemTotalNbr;
+
+    /**
+     * Constructeur d'une pagination.
+     */
+    public function __construct(int $itemTotalNbr, int $itemPerPage)
+    {
+        $this->itemTotalNbr = $itemTotalNbr;
+        $this->itemPerPage = $itemPerPage;
+    }
+
     /**
      * Barre de pagination.
      * 
      * @return string
      */
-    public function paginationBar()
+    public function show()
     {
         return <<<HTML
         <div class="pagination-bar">
@@ -23,5 +37,57 @@ class Pagination extends Utility
             </nav>
         </div>
 HTML;
+    }
+
+    /**
+     * Affiche un bouton dans la suite des boutons de la pagination.
+     * 
+     * @return string
+     */
+    private function button()
+    {
+        return <<<HTML
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+HTML;
+    }
+
+    /**
+     * Affiche le bouton suivant.
+     * 
+     * @return string
+     */
+    public function next()
+    {
+
+    }
+
+    /**
+     * Affiche le bouton précédent.
+     * 
+     * @return string
+     */
+    public function previous()
+    {
+
+    }
+
+    /**
+     * Affiche le premier bouton.
+     * 
+     * @return string
+     */
+    public function first()
+    {
+
+    }
+
+    /**
+     * Affiche le dernier bouton.
+     * 
+     * @return string
+     */
+    public function last()
+    {
+
     }
 }

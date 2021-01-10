@@ -41,8 +41,8 @@ class Email
     /**
      * Constructeur de EmailManager
      * 
-     * @param mixed  $destinataire Ceux à qui on envoit le mail.
-     * @param mixed  $subject      Le sujet du mail.
+     * @param  $destinataire Ceux à qui on envoit le mail.
+     * @param  $subject      Le sujet du mail.
      * @param string $message      Le message à envoyer.
      * @param string $from         L'email d'envoie qui apparaitra dans le mail.
      * @param bool   $joinFile  True si le mail contient des fichiers joints.

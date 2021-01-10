@@ -2,12 +2,10 @@
 
 namespace App\Model\User;
 
-use App\Action\Create;
-use App\Action\InsertData;
+use App\Action\Create\Create;
+use App\Action\Create\InsertInDb;
 use App\Auth\Cookie;
-use App\Auth\Password;
-use App\Session;
-use App\Database\SqlQueryFormater;
+use App\Auth\Session;
 use App\File\Image\Avatar;
 use App\File\Image\Image;
 use App\Utility\Utility;
@@ -19,49 +17,8 @@ use App\Model\Model;
 class User extends Model
 {
     protected $code;
-    protected $name;
-    protected $firstNames;
     protected $emailAddress;
-    protected $pseudo;
-    protected $password;
-    protected $phoneNumber;
-    protected $createdAt;
-    protected $updatedAt;
-    protected $types = ["annonceur", "administrateur"];
-    protected $type;
     const TABLE_NAME = "ind_users";
-
-    /**
-     * Constructeur d'un User.
-     * 
-     * @param string $emailAddress
-     */
-    public function __construct(string $emailAddress)
-    {
-        $queryFormatter = new SqlQueryFormater();
-
-        $query = $queryFormatter->select(
-            "id, code, name, first_names, email_address, pseudo, password, phone_number, created_at,
-            updated_at, type"
-            )->from(self::TABLE_NAME)->where("email_address = ?")->returnQueryString();
-
-        $rep = parent::connect()->prepare($query);
-        $rep->execute([$emailAddress]);
-
-        $result = $rep->fetch();
-
-        $this->code = $result["code"];
-        $this->name = $result["name"];
-        $this->firstNames = $result["first_names"];
-        $this->emailAddress = $result["email_address"];
-        $this->pseudo = $result["pseudo"];
-        $this->password = $result["password"];
-        $this->phoneNumber = $result["phone_number"];
-        $this->createdAt = $result["created_at"];
-        $this->updatedAt = $result["updated_at"];
-        $this->type = $result["type"];
-        $this->tableName = self::TABLE_NAME;
-    }
 
     /**
      * Retourne le code identifiant d'un user.
@@ -74,89 +31,12 @@ class User extends Model
     }
 
     /**
-     * Retourne le nom de l'utilisateur.
-     * 
-     * @return string
-     */
-    public function getName()
-    {
-        return ucfirst($this->name);
-    }
-
-    /**
-     * Retourne les prénoms de l'utilisateur.
-     * 
-     * @return string
-     */
-    public function getFirstNames()
-    {
-        return ucfirst($this->firstNames);
-    }
-
-    /**
-     * Retourne l'addresse email de l'utilisateur.
-     * 
+     * Retourne l'adresse email.
      * @return string
      */
     public function getEmailAddress()
     {
         return $this->emailAddress;
-    }
-
-    /**
-     * Retourne le pseudo de l'utilisateur.
-     * 
-     * @return string
-     */
-    public function getPseudo()
-    {
-        return ucfirst($this->pseudo);
-    }
-
-    /**
-     * Retourne le mot de passe de l'utilisateur.
-     * 
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-    
-    /**
-     * Retourne le numéro de téléphone enregistré lors de la création de l'annonce.
-     * 
-     * @return string
-     */
-    public function getPhoneNumber()
-    {
-        return $this->phoneNumber;
-    }
-
-    /**
-     * Permet d'instancier un objet user par son adresse email qu'on considère unique.
-     * 
-     * @param string $emailAddress
-     * 
-     * @return self
-     */
-    public static function getByEmailAddress($emailAddress)
-    {
-        $rep = parent::connect()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE email_address = ?");
-        $rep->execute([$emailAddress]);
-        
-        $user = $rep->fetch();
-        return new self($user["id"]);
-    }
-
-    /**
-     * Retourne le type d'utilisateur.
-     * 
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->types[$this->type];
     }
 
     /**
@@ -168,7 +48,7 @@ class User extends Model
      */
     public static function getByCode($code) : self
     {
-        $rep = parent::connect()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE code = ?");
+        $rep = parent::connectToDb()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE code = ?");
         $rep->execute([$code]);
         $user = $rep->fetch();
 
@@ -209,7 +89,7 @@ class User extends Model
         // phone_number
         $data["phone_number"] = htmlspecialchars($_POST["phone_number"]);
 
-        $insertion = new InsertData($data, self::TABLE_NAME);
+        $insertion = new InsertInDb($data, DB_NAME, self::TABLE_NAME, DB_LOGIN, DB_PASSWORD);
         $insertion->run();
         
         if (Create::fileIsUploaded("avatar")) {

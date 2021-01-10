@@ -3,10 +3,12 @@
 namespace App\View\Model;
 
 use App\Model\Announce;
-use App\View\Model\User\UserView;
+use App\Model\User\Registered;
 use App\View\Snippet;
 use App\View\View;
 use App\View\Form;
+use App\Auth\Session;
+use App\View\Model\User\RegisteredView;
 
 /**
  * Classe de gestion des vues des annonces.
@@ -35,7 +37,7 @@ class AnnounceView extends View
      */
     public function create(string $message = null)
     {
-        $userView = new UserView();
+        $registeredView = new RegisteredView(new Registered(Session::get()));
         $snippet = new Snippet();
 
         return <<<HTML
@@ -49,9 +51,8 @@ class AnnounceView extends View
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-
                     <!-- Sidebar de la page de post -->
-                    {$userView->userSidebar()}
+                    {$registeredView->sidebar()}
 
                     <!-- Contenu de la page -->
                     {$this->createPageContent()}
@@ -91,7 +92,7 @@ HTML;
         $announces = Announce::getLastPosted(6);
 
         if (empty($content)) {
-            $content = CategoryView::noAnnounces();
+            $content = AnnounceView::noAnnounces();
         } else {
             foreach ($announces as $item) {
                 $announce = new Announce($item["id"]);
@@ -123,7 +124,7 @@ HTML;
         $announces = Announce::getFeatured(6);
 
         if (empty($content)) {
-            $content = CategoryView::noAnnounces();
+            $content = AnnounceView::noAnnounces();
         } else {
             foreach ($announces as $item) {
                 $announce = new Announce($item["id"]);
@@ -368,7 +369,7 @@ HTML;
                     <i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}
                 </li>
                 <li>
-                    <a href="users/posts"><i class="lni-user"></i> {$this->announce->getUser()->getName()}</a>
+                    <a href="users/posts"><i class="lni-user"></i> {$this->announce->getOwner()->getName()} {$this->announce->getOwner()->getFirstNames()}</a>
                 </li>
             </ul>
             <div class="listing-bottom">
@@ -408,13 +409,16 @@ HTML;
      */
     private function productInfosImgSection()
     {
+        $imgSection = null;
+        foreach ($this->announce->getAllProductInfoImg() as $src) {
+            $imgSection .= $this->productInfoImg($src, "Photo de " . $this->announce->getSlug(), $this->announce->getPrice());
+        }
+        
         return <<<HTML
         <div class="col-lg-7 col-md-12 col-xs-12">
             <div class="details-box ads-details-wrapper">
                 <div id="owl-demo" class="owl-carousel owl-theme">
-                    {$this->productInfoImg("assets/img/productinfo/img1.jpg", "alt", "500 XOF")}
-                    {$this->productInfoImg("assets/img/productinfo/img2.jpg", "alt", "500 XOF")}
-                    {$this->productInfoImg("assets/img/productinfo/img3.jpg", "alt", "500 XOF")}
+                    {$imgSection}
                 </div>
             </div>
         </div>
@@ -422,7 +426,7 @@ HTML;
     }
 
     /**
-     * 
+     * Affiche une image sur la page de détails d'une annonce.
      */
     private function productInfoImg(string $imgSrc, string $altText, string $price)
     {
@@ -453,11 +457,11 @@ HTML;
                 </div>
                 <ul class="advertisement mb-4">
                     <li>
-                        <p><strong><i class="lni-folder"></i> Catégories :</strong> <a href="{$this->announce->getCategory()->getSlug()}">Electronics</a></p>
+                        <p><strong><i class="lni-folder"></i> Catégories :</strong> <a href="{$this->announce->getCategory()->getSlug()}">{$this->announce->getCategory()->getTitle()}</a></p>
                     </li>
-                    <!-- <li>
-                        <p><a href="users/john/posts"><i class="lni-users"></i> Plus d'annonces de <span>John</span></a></p>
-                    </li> -->
+                    <li>
+                        <p><a href="/posts/{$this->announce->getOwner()->getPseudo()}"><i class="lni-users"></i> Plus d'annonces de <span>{$this->announce->getOwner()->getName()}</span></a></p>
+                    </li>
                 </ul>
                 {$this->infosForJoinUser()}
                 {$this->shareMe()}
@@ -506,8 +510,8 @@ HTML;
     {
         return <<<HTML
         <div class="ads-btn mb-4">
-            <a href="#" class="btn btn-common btn-reply"><i class="lni-envelope"></i> {$this->announce->getUserEmailAddress()}</a>
-            <a href="#" class="btn btn-common"><i class="lni-phone-handset"></i> {$this->announce->getPhoneNumber()}</a>
+            <a class="btn btn-common text-white btn-reply"><i class="lni-envelope"></i> {$this->announce->getUserToJoin()}</a>
+            <a class="btn btn-common text-white"><i class="lni-phone-handset"></i> {$this->announce->getPhoneNumber()}</a>
         </div>
 HTML;
     }
@@ -561,6 +565,12 @@ HTML;
                                 {$categoryView->selectOptions()}
                             </select>
                         </div>
+                    </div>
+                    <div class="row border rounded my-2 pt-2 bg-white">
+                        <div class="col-6">
+                            {$this->chooseDirection()}</div>
+                        <div class="col-6">
+                            {$this->chooseType()}</div>
                     </div>
                     <div class="form-group mb-3 tg-inputwithicon">
                         <label class="control-label">Ville :</label>
@@ -652,5 +662,137 @@ HTML;
     {
         return '<a><i class="lni-map-marker"></i> '. $this->announce->getLocation() .'</a>';
     }
+
+    /**
+     * Permet de choisir le type d'annonce.
+     * @return string
+     */
+    private function chooseType()
+    {
+        return <<<HTML
+        <div class="form-group mb-3">
+            <strong>Type :</strong>
+            <div class="tg-selectgroup">
+                <span class="tg-radio">
+                    <input id="tg-particular" type="radio" name="type" value="particulier">
+                    <label for="tg-particular">Particulier</label>
+                </span>
+                <span class="tg-radio">
+                    <input id="tg-professionnal" type="radio" name="type" value="professionnel">
+                    <label for="tg-professionnal">Professionnel</label>
+                </span>
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Permet de choisir la direction de l'offre, demande ou offre.
+     * @return string
+     */
+    private function chooseDirection()
+    {
+        return <<<HTML
+        <div class="form-group mb-3">
+            <strong>Sens :</strong>
+            <div class="tg-selectgroup">
+                <span class="tg-radio">
+                    <input id="tg-offre" type="radio" name="direction" value="offre">
+                    <label for="tg-offre">Offre</label>
+                </span>
+                <span class="tg-radio">
+                    <input id="tg-demande" type="radio" name="direction" value="demande">
+                    <label for="tg-demande">Demande</label>
+                </span>
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Une ligne qui affiche une annonce et quelque détails.
+     * 
+     * @return string
+     */
+    public function registeredDashboardRow()
+    {
+        return <<<HTML
+        <tr data-category="active">
+            <td>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="adone">
+                    <label class="custom-control-label" for="done"></label>
+                </div>
+            </td>
+            <td class="photo"><img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Image de {$this->announce->getSlug()}"></td>
+            <td data-title="Title">
+                <h3>{$this->announce->getTitle()}</h3>
+                <span>ID: {$this->announce->getId()}</span>
+            </td>
+            <td data-title="Category"><span class="adcategories">{$this->announce->getCategory()->getTitle()}</span></td>
+            <td data-title="Ad Status">{$this->dashboardAnnounceStatus()}</td>
+            <td data-title="Price">
+                <h3>{$this->announce->getPrice()}</h3>
+            </td>
+            <td data-title="Action">
+                <div class="btns-actions">
+                    <a class="btn-action btn-view" href="{$this->announce->getLink()}"><i class="lni-eye"></i></a>
+                    <a class="btn-action btn-edit" href="{$this->announce->getLink()}/edit"><i class="lni-pencil"></i></a>
+                    <a class="btn-action btn-delete" href="{$this->announce->getLink()}/delete"><i class="lni-trash"></i></a>
+                </div>
+            </td>
+        </tr>
+HTML;
+    }
+    
+    /**
+     * Permet d'afficher le statut de l'annonce dans le tableau
+     * du dashboard de l'utilisateur.
+     * 
+     * @return string
+     */
+    public function dashboardAnnounceStatus()
+    {
+        if ($this->announce->getStatus() == "Pending") {
+            $statusClass = "adstatusactive bg-warning";
+            $statusText = "En attente";
+        } elseif ($this->announce->getStatus() == "Validated") {
+            $statusClass = "adstatusactive bg-success";
+            $statusText = "Validée";
+        } elseif ($this->announce->getStatus() == "Featured") {
+            $statusClass = "adstatusexpired";
+            $statusText = "Vedette";
+        } elseif ($this->announce->getStatus() == "Premium") {
+            $statusClass = "adstatussold";
+            $statusText = "Prémium";
+        } else {
+            $statusClass = "adstatusexpired";
+            $statusText = "Bloquée";
+        }
+
+        return <<<HTML
+        <span class="adstatus {$statusClass}">{$statusText}</span>
+HTML;
+    }
+        
+    /**
+     * Un bloc de code HTML qui affiche aucune annonce lorqu'il n'y a pas 
+     * d'annonce à afficher dans une partie de la page.
+     * 
+     * @return string
+     */
+    public static function noAnnounces()
+    {
+        return <<<HTML
+        <div class="row">
+            <div class="col-12">
+                <section class="d-flex justify-content-center align-items-center">
+                    <p class="h4 text-muted">Aucunes annonces</p>
+                </section>
+            </div>
+        </div>
+HTML;
+    }
+
 
 }

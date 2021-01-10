@@ -25,7 +25,7 @@ class Cookie extends Authentication
      * 
      * @return string
      */
-    public static function getUserCookie()
+    public static function get()
     {
         if (isset($_COOKIE[self::KEY])) {
             return $_COOKIE[self::KEY];
@@ -39,14 +39,14 @@ class Cookie extends Authentication
      */
     public static function userCookieIsset()
     {
-        return null !== self::getUserCookie();
+        return null !== self::get();
     }
 
     /**
      * Initialise les variables de cookie.
      * 
-     * @param mixed  $cookieKey La clé identifiant le cookie.
-     * @param mixed  $value     La valeur
+     * @param  $cookieKey La clé identifiant le cookie.
+     * @param  $value     La valeur
      * @param string $domain 
      * 
      * @return void
@@ -71,6 +71,5 @@ class Cookie extends Authentication
     {
         setcookie($cookieKey, '', 0);
     }
-
 
 }

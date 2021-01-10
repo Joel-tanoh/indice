@@ -2,11 +2,10 @@
 
 namespace App\Utilities;
 
-use App\backend\Session as BackendSession;
 use App\Database\Database;;
 use App\Model\User\Visitor;
-use App\Utilities\Utility;
-use App\Session;
+use App\Utility\Utility;
+use App\Auth\Session;
 
 /**
  * Fichier de classe gestionnaire des visites sur l'app.
@@ -130,7 +129,7 @@ class VisitManager extends Utility
      */
     public static function manage()
     {
-        if (!BackendSession::visitorSessionIsActive()) {
+        if (!Session::isActive()) {
             // Visitor::manageVisitorPresence();
         }
         self::setVisit();
