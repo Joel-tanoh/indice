@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Action\Update\UpdateDb;
 use App\Database\SqlQueryFormaterV2;
 use App\View\Page\Page;
 use App\View\View;
@@ -27,19 +28,22 @@ class AppController
     }
 
     public static function test() {
-        $sqlFormater = new SqlQueryFormaterV2();
+        $data = [
+            "slug" => "test-1"
+        ];
 
-        $toto = 1;
+        $clauses = [
+            "id"    => 15,
+        ];
 
-        $query = $sqlFormater->select("id")
-            ->from("bala")
-            ->orderBy("created_at")
-            ->where("id = $toto")
-            ->between("age", 13, 45)
-            ->between("price", 100, 120)
-            ->returnQueryString();
-
-        dump($query);
+        $update = new UpdateDb($data, DB_NAME, "ind_announces", DB_LOGIN, DB_PASSWORD, $clauses);
+        if ($update->run()) {
+            echo "Action effectuée";
+            die();
+        } else {
+            echo "Non fait !";
+            die();
+        }
     }
 
 }

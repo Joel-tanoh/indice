@@ -74,20 +74,15 @@ class User extends Model
      */
     public static function save()
     {
-        // code
-        $data["code"] = Utility::generateCode();
-        // name
-        $data["name"] = htmlspecialchars($_POST["name"]);
-        // first_names
-        $data["first_names"] = htmlspecialchars($_POST["first_names"]);
-        // email_address
-        $data["email_address"] = htmlspecialchars($_POST["email_address"]);
-        // pseudo
-        $data["pseudo"] = htmlspecialchars($_POST["pseudo"]);
-        // password
-        $data["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
-        // phone_number
-        $data["phone_number"] = htmlspecialchars($_POST["phone_number"]);
+        $data = [
+            "code" => Utility::generateCode(),
+            "name" => htmlspecialchars($_POST["name"]),
+            "first_names" => htmlspecialchars($_POST["first_names"]),
+            "email_address" => htmlspecialchars($_POST["email_address"]),
+            "pseudo" => htmlspecialchars($_POST["pseudo"]),
+            "password" => password_hash($_POST["password"], PASSWORD_DEFAULT),
+            "phone_number" => htmlspecialchars($_POST["phone_number"]),
+        ];
 
         $insertion = new InsertInDb($data, DB_NAME, self::TABLE_NAME, DB_LOGIN, DB_PASSWORD);
         $insertion->run();

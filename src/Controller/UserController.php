@@ -51,7 +51,7 @@ class UserController extends AppController
             // Validation du pseudo
             if (empty($_POST["pseudo"])) {
                 $validate->addError("pseudo", "Veuillez entrer votre pseudo !");
-            } elseif (User::valueIsset("pseudo", $_POST["pseudo"], User::TABLE_NAME)) {
+            } elseif (User::valueIssetInDB("pseudo", $_POST["pseudo"], User::TABLE_NAME)) {
                 $validate->addError("pseudo", "Ce pseudo est déjà utilisé !");
             } else {
                 $validate->name($_POST["pseudo"], "Veuillez vérifier que le pseudo ne contient pas de code HTML !" ,"pseudo");
@@ -60,7 +60,7 @@ class UserController extends AppController
             // Validation de l'adresse email
             if (empty($_POST["email_address"])) {
                 $validate->addError("email_address", "Veuillez entrer votre adresse email !");
-            } elseif (User::valueIsset("email_address", $_POST["email_address"], User::TABLE_NAME)) {
+            } elseif (User::valueIssetInDB("email_address", $_POST["email_address"], User::TABLE_NAME)) {
                 $validate->addError("email_address", "Cette adresse email est déjà utilisée !");
             } else {
                 $validate->email("email_address", $_POST["email_address"]);
@@ -93,14 +93,14 @@ class UserController extends AppController
                 if (User::save()) {
                     Session::activate($_POST["email_address"]);
                     Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
-                    Utility::redirect("/users/me/dashboard");
+                    Utility::redirect("/users/my-posts");
                 }
             } else { // Sinon
                 $message = (new NotifyByHTML())->errors($validate->getErrors());
             }
         }
 
-        $page = new Page("Connexion", UserView::register($message));
+        $page = new Page("L'indice - Créer un compte", UserView::register($message));
         $page->setDescription("");
         $page->show();
     }
@@ -111,7 +111,7 @@ class UserController extends AppController
     public static function signIn()
     {
         if (Session::isActive() || Cookie::userCookieIsset()) {
-            Utility::redirect("/users/me/dashboard");
+            Utility::redirect("/users/my-posts");
         }
 
         $error = null;
@@ -130,11 +130,11 @@ class UserController extends AppController
                     Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
                 }
 
-                Utility::redirect("/users/me/dashboard");
+                Utility::redirect("/users/my-posts");
             }
         }
 
-        $page = new Page("Connexion", (new UserView())->signIn($error));
+        $page = new Page("L'indice - Connexion", (new UserView())->signIn($error));
         $page->setDescription("");
         $page->show();
     }
@@ -148,20 +148,21 @@ class UserController extends AppController
             Utility::redirect("/sign-in");
         }
 
+        $status = $url[2];
         $registered = new Registered(Session::get() ?? Cookie::get());
         
         if (null !== $url) {
-            if (!in_array($url[3], Announce::getStatutes())) {
+            if (!in_array($status, Announce::getStatutes())) {
                 $announces = [];
             } else {
-                $announces = $registered->getAnnounces(Announce::convertStatus($url[3]));
+                $announces = $registered->getAnnounces(Announce::convertStatus($status));
             }
         } else {
             $announces = $registered->getAnnounces();
         }
 
         $page = new Page(
-            "Tableau de bord - " . $registered->getName() . " " . $registered->getFirstNames()
+            $registered->getName() . " " . $registered->getFirstNames() . " - Mes annonces"
             ,(new RegisteredView($registered))->dashboard($announces)
         );
         $page->setDescription("");

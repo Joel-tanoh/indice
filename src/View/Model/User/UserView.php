@@ -26,64 +26,6 @@ class UserView extends ModelView
     }
 
     /**
-     * Vue de la connexion.
-     * 
-     * @param string $error
-     * 
-     * @return string
-     */
-    public function signIn(string $error = null)
-    {
-        $form = new Form($_SERVER["REQUEST_URI"], "login-form", false, "post", "login-form", "form");
-        $snippet = new Snippet();
-
-        return <<<HTML
-        {$snippet->pageHeader("Se connecter", "connexion")}
-        <!-- Content section Start --> 
-        <section class="login section-padding">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-5 col-md-12 col-xs-12">
-                        {$error}
-                        <div class="login-form login-area">
-                            <h3>
-                                Connectez-vous maintenant !
-                            </h3>
-                            {$form->open()}
-                                <div class="form-group">
-                                    <div class="input-icon">
-                                        <i class="lni-user"></i>
-                                        <input type="text" id="sender-email" class="form-control" name="email_address" placeholder="Adresse email">
-                                    </div>
-                                </div> 
-                                <div class="form-group">
-                                    <div class="input-icon">
-                                        <i class="lni-lock"></i>
-                                        <input type="password" class="form-control" placeholder="Mot de passe" name="password">
-                                    </div>
-                                </div>                  
-                                <div class="form-group mb-3">
-                                    <div class="checkbox">
-                                        <input type="checkbox" name="remember_me" value="yes" id="remember_me">
-                                        <label for="remember_me">Me reconnaître</label>
-                                    </div>
-                                    {$this->forgotPassword()}
-                                </div>
-                                <div class="text-center">
-                                    <button class="btn btn-common log-btn">Se connecter</button>
-                                </div>
-                            {$form->close()}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Content section End --> 
-    
-HTML;
-    }
-
-    /**
      * Vue pour la création d'un compte.
      * 
      * @param string $message
@@ -166,6 +108,63 @@ HTML;
                                 </div>   
                                 <div class="text-center">
                                     <button class="btn btn-common log-btn">Envoyer</button>
+                                </div>
+                            {$form->close()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Content section End --> 
+HTML;
+    }
+
+    /**
+     * Vue de la connexion.
+     * 
+     * @param string $error
+     * 
+     * @return string
+     */
+    public function signIn(string $error = null)
+    {
+        $form = new Form($_SERVER["REQUEST_URI"], "login-form", false, "post", "login-form", "form");
+        $snippet = new Snippet();
+
+        return <<<HTML
+        {$snippet->pageHeader("S'identifier", "S'identifier")}
+        <!-- Content section Start --> 
+        <section class="login section-padding">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5 col-md-12 col-xs-12">
+                        {$error}
+                        <div class="login-form login-area">
+                            <h3>
+                                Connectez-vous maintenant !
+                            </h3>
+                            {$form->open()}
+                                <div class="form-group">
+                                    <div class="input-icon">
+                                        <i class="lni-user"></i>
+                                        <input type="text" id="sender-email" class="form-control" name="email_address" placeholder="Adresse email">
+                                    </div>
+                                </div> 
+                                <div class="form-group">
+                                    <div class="input-icon">
+                                        <i class="lni-lock"></i>
+                                        <input type="password" class="form-control" placeholder="Mot de passe" name="password">
+                                    </div>
+                                </div>                  
+                                <div class="form-group mb-3">
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="remember_me" value="yes" id="remember_me">
+                                        <label for="remember_me">Me reconnaître.</label>
+                                    </div>
+                                    <!-- {$this->forgotPassword()} -->
+                                </div>
+                                <div class="text-center">
+                                    <button class="btn btn-common log-btn">Se connecter</button>
                                 </div>
                             {$form->close()}
                         </div>
@@ -286,7 +285,7 @@ HTML;
     {
         return <<<HTML
         <a class="dropdown-item" href="register"><i class="lni-user"></i> S'inscire</a>
-        <a class="dropdown-item" href="sign-in"><i class="lni-lock"></i> Se connecter</a>
+        <a class="dropdown-item" href="sign-in"><i class="lni-lock"></i> S'identifier</a>
 HTML;
     }
 

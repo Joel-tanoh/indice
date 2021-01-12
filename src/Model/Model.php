@@ -196,7 +196,7 @@ abstract class Model
      * 
      * @return bool
      */
-    public static function valueIsset(string $valueIndex, $value, string $tableName)
+    public static function valueIssetInDB(string $valueIndex, $value, string $tableName)
     {
         return in_array($value, self::get($valueIndex, $tableName));
     }
@@ -259,6 +259,21 @@ abstract class Model
     public static function countBy(string $colForInstance, string $tableName, string $col = null, $value = null)
     {
         return count(self::getBy($colForInstance, $tableName, $col, $value));
+    }
+
+    /**
+     * Permet de supprimer une valeur de la table passée en 
+     * paramètre.
+     * @param string $tableName
+     * @return bool|null
+     */
+    public function delete(string $tableName)
+    {
+        $query = "DELETE FROM $tableName WHERE id = ?";
+        $rep = self::connectToDb()->prepare($query);
+        if ($rep->execute([$this->id])) {
+            return true;
+        }
     }
 
 }

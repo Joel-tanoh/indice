@@ -8,6 +8,7 @@ use App\File\Image\Image;
 use App\Model\Announce;
 use App\Auth\Session;
 use App\Communication\Notify\NotifyByHTML;
+use App\Model\Category;
 use App\Model\Model;
 use App\Utility\Utility;
 use App\Utility\Validator;
@@ -101,7 +102,7 @@ class AnnounceController extends AppController
             }
         }
 
-        $page = new Page("Poster une annonce", (new AnnounceView())->create($message));
+        $page = new Page("L'indice - Poster une annonce", (new AnnounceView())->create($message));
         $page->setDescription("");
         $page->show();
     }
@@ -117,16 +118,23 @@ class AnnounceController extends AppController
      */
     static function read(array $url = null)
     {
-        if (Announce::valueIsset("slug", $url[1], Announce::TABLE_NAME)) {
+        if (Category::valueIssetInDB("slug", $url[0], Category::TABLE_NAME)
+            && Announce::valueIssetInDB("slug", $url[1], Announce::TABLE_NAME)
+        ) {
+            $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $url[0], "App\Model\Category");
             $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $url[1], "App\Model\Announce");
-            $page = new Page("L'indice - " . $announce->getTitle(), (new AnnounceView($announce))->read());
-            $page->show();
+            if ($announce->hasParent($category)) {
+                $page = new Page("L'indice - " . $announce->getTitle(), (new AnnounceView($announce))->read());
+                $page->show();
+            } else {
+                throw new Exception("La ressource demandée n'a pas été trouvée !");
+            }
         } else {
             throw new Exception("La ressource demandée n'a pas été trouvée !");
         }
     }
 
-    public function update()
+    public static function manage()
     {
 
     }

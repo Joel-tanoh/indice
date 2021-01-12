@@ -9,16 +9,6 @@ use Exception;
  */
 class UpdateDb extends Update
 {
-    /** @var string Le nom de la base de données sur laquelle la mise à jour
-     * va être faite.
-     */
-    private $dbName;
-
-    /** @var string Le nom de la table qui sera mise à jour */
-    private $tableName;
-
-
-
     /** @var array Tableau associatif contenant l'ensemble des clauses 
      * injectées dans la reqûete de mise à jour.
      */
@@ -40,12 +30,29 @@ class UpdateDb extends Update
     /**
      * Constructeur d'une mise à jour de la base de données.
      * 
-     * @param
+     * @param array $data        Le tableau associatif contenant les valeurs
+     *                           à insérer pour la mise à jour. Les clés du tableau
+     *                           doivent respectivement être les clés dans la base
+     *                           de données.
+     * @param string $database   Le nom de la base de données.
+     * @param string $tableName  Le nom de la table à mettre à jour.
+     * @param string $dbLogin    Le login à utiliser pour se connecter à la base de
+     *                           données.
+     * @param string $dbPassword Le mot de passe à utiliser pour se connecter à la
+     *                           base de données.
+     * @param array $clauses     Un tableau associatif contenant les clauses.
      */
-    public function __construct(array $data, string $dbName, string $tableName, string $dbLogin, string $dbPassword, array $clauses = null)
+    public function __construct(
+        array $data
+        , string $database
+        , string $tableName
+        , string $dbLogin
+        , string $dbPassword
+        , array $clauses = null
+    )
     {
         $this->data = $data;
-        $this->dbName = $dbName;
+        $this->database = $database;
         $this->tableName = $tableName;
         $this->dbLogin = $dbLogin;
         $this->dbPassword = $dbPassword;
@@ -57,14 +64,16 @@ class UpdateDb extends Update
      */
     public function run()
     {
-        parent::connectToDb($this->dbLogin, $this->dbPassword);
         $this->formatQuery();
-        $rep = $this->pdo->prepare($this->query);
+        $rep = parent::connectToDb($this->dbLogin, $this->dbPassword)->prepare($this->query);
         $this->formatParams();
+
+        // dump($rep);
+        // die();
         
         // Si tout s'est bien passé, retourner true
         if ($rep->execute($this->params)) {
-            $this->data = $rep->fetchAll();
+           return true;
         } else {
             // Sinon, lancer une exception
             throw new Exception("Action Update Database failed.");
@@ -113,7 +122,7 @@ class UpdateDb extends Update
         // Rétirer les dernières virgules et espaces à la fin de la chaine de caractère
         $clauseString = rtrim($clauseString, "AND ");
 
-        $this->clauseString = " WHERE $clauseString";
+        $this->clauseString = "WHERE $clauseString";
     }
 
     /**

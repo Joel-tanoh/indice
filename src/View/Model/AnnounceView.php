@@ -52,7 +52,7 @@ class AnnounceView extends View
             <div class="container">
                 <div class="row">
                     <!-- Sidebar de la page de post -->
-                    {$registeredView->sidebar()}
+                    {$registeredView->sidebarNav()}
 
                     <!-- Contenu de la page -->
                     {$this->createPageContent()}
@@ -566,11 +566,13 @@ HTML;
                             </select>
                         </div>
                     </div>
-                    <div class="row border rounded my-2 pt-2 bg-white">
+                    <div class="row my-2 pt-2">
                         <div class="col-6">
-                            {$this->chooseDirection()}</div>
+                            {$this->chooseDirection()}
+                        </div>
                         <div class="col-6">
-                            {$this->chooseType()}</div>
+                            {$this->chooseType()}
+                        </div>
                     </div>
                     <div class="form-group mb-3 tg-inputwithicon">
                         <label class="control-label">Ville :</label>
@@ -736,9 +738,9 @@ HTML;
             </td>
             <td data-title="Action">
                 <div class="btns-actions">
-                    <a class="btn-action btn-view" href="{$this->announce->getLink()}"><i class="lni-eye"></i></a>
-                    <a class="btn-action btn-edit" href="{$this->announce->getLink()}/edit"><i class="lni-pencil"></i></a>
-                    <a class="btn-action btn-delete" href="{$this->announce->getLink()}/delete"><i class="lni-trash"></i></a>
+                    <a class="btn-action btn-view" href="{$this->announce->getManageLink()}"><i class="lni-eye"></i></a>
+                    <a class="btn-action btn-edit" href="{$this->announce->getManageLink()}/edit"><i class="lni-pencil"></i></a>
+                    <a class="btn-action btn-delete" href="{$this->announce->getManageLink()}/delete"><i class="lni-trash"></i></a>
                 </div>
             </td>
         </tr>

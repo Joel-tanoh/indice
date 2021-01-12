@@ -37,17 +37,17 @@ class RegisteredView extends UserView
         $snippet = new Snippet();
 
         return <<<HTML
-        {$snippet->pageHeader("Mon Tableau de Bord", "Tableau de bord")}
+        {$snippet->pageHeader("Mes annonces", "Mes annonces")}
         
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebar()}
+                    {$this->sidebarNav()}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         <div class="page-content">
                             <div class="inner-box">
                                 <div class="dashboard-box">
-                                    <h2 class="dashbord-title">Tableau de bord</h2>
+                                    <h2 class="dashbord-title">Mes annonces</h2>
                                 </div>
                                 {$this->dashboardContent($announces)}
                             </div>
@@ -69,12 +69,12 @@ HTML;
         $snippet = new Snippet;
 
         return <<<HTML
-        {$snippet->pageHeader("Mon Tableau de Bord", "Tableau de bord")}
+        {$snippet->pageHeader("Mon profil", "Mon profil")}
 
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebar()}
+                    {$this->sidebarNav()}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                     </div>
                 </div>
@@ -89,7 +89,7 @@ HTML;
      * 
      * @return string
      */
-    public function sidebar() : string
+    public function sidebarNav() : string
     {
         return <<<HTML
         <div class="col-sm-12 col-md-4 col-lg-3 page-sidebar">
@@ -108,8 +108,8 @@ HTML;
     public function navbar()
     {
         return <<<HTML
-        <a class="dropdown-item" href="users/me/dashboard"><i class="lni-home"></i> Tableau de bord</a>
-        <a class="dropdown-item" href="sign-out"><i class="lni-close"></i>Se déconnecter</a>
+        <a class="dropdown-item" href="/users/my-posts"><i class="lni-home"></i> Mes annonces</a>
+        <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Se déconnecter</a>
 HTML;
     }
 
@@ -124,10 +124,10 @@ HTML;
         <div class="sidebar-box">
             <div class="user">
                 <figure>
-                    <a href="users/me/profile"><img src="{$this->registered->getAvatarSrc()}" alt="Image de {$this->registered->getPseudo()}" title="Mon profil"></a>
+                    <a href="users/my-profile"><img src="{$this->registered->getAvatarSrc()}" alt="Image de {$this->registered->getPseudo()}" title="Mon profil"></a>
                 </figure>
                 <div class="usercontent">
-                    <h3>{$this->registered->getName()}</h3>
+                    <h3>{$this->registered->getName()} {$this->registered->getFirstNames()}</h3>
                     <h4>{$this->registered->getType()}</h4>
                 </div>
             </div>
@@ -146,7 +146,7 @@ HTML;
         return <<<HTML
         <nav class="navdashboard">
             <ul>
-                {$this->defineSidebarLink("Tableau de bord", "users/me/dashboard", "lni-dashboard")}
+                {$this->defineSidebarLink("Mes annonces", "/users/my-posts", "lni-dashboard")}
                 {$this->defineSidebarLink("Se déconnecter", "sign-out", "lni-enter")}
             </ul>
         </nav>
@@ -167,8 +167,7 @@ HTML;
         return <<<HTML
         <li>
             <a href="{$href}">
-                <i class="{$iconClass}"></i>
-                <span>{$text}</span>
+                <i class="{$iconClass}"></i><span>{$text}</span>
             </a>
         </li>
 HTML;
@@ -202,12 +201,12 @@ HTML;
         return <<<HTML
         <nav class="nav-table">
             <ul>
-                {$this->dashbaordNavStatus("users/me/dashboard", "Tous", $this->registered->countBy("id", Announce::TABLE_NAME))}
-                {$this->dashbaordNavStatus("users/me/dashboard/pending", "En attente", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("pending")))}
-                {$this->dashbaordNavStatus("users/me/dashboard/validated", "Validées", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("validated")))}
-                {$this->dashbaordNavStatus("users/me/dashboard/featured", "Vedette", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("featured")))}
-                {$this->dashbaordNavStatus("users/me/dashboard/premium", "Prémium", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("premium")))}
-                {$this->dashbaordNavStatus("users/me/dashboard/blocked", "Bloquées", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("blocked")))}
+                {$this->dashbaordNavStatus("/users/my-posts", "Tous", $this->registered->countBy("id", Announce::TABLE_NAME))}
+                {$this->dashbaordNavStatus("/users/my-posts/pending", "En attente", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("pending")))}
+                {$this->dashbaordNavStatus("/users/my-posts/validated", "Validées", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("validated")))}
+                {$this->dashbaordNavStatus("/users/my-posts/featured", "Vedette", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("featured")))}
+                {$this->dashbaordNavStatus("/users/my-posts/premium", "Prémium", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("premium")))}
+                {$this->dashbaordNavStatus("/users/my-posts/blocked", "Bloquées", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("blocked")))}
             </ul>
         </nav>
 HTML;

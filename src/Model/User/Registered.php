@@ -2,6 +2,7 @@
 
 namespace App\Model\User;
 
+use App\Action\Update\Update;
 use App\Database\SqlQueryFormater;
 use App\File\Image\Image;
 use App\File\Image\Avatar;
@@ -157,6 +158,16 @@ class Registered extends User
         return ucfirst(self::$statutes[$this->status]);
     }
 
+    public function getDashboardLink()
+    {
+        return "my-posts";
+    }
+
+    public function getProfileLink()
+    {
+        return "users/my-profile";
+    }
+
     /**
      * Retourne la source de l'avatar de l'utilisateur.
      * 
@@ -211,11 +222,29 @@ class Registered extends User
 
     /**
      * Permet de mettre à jour les infos d'un utilisateur.
+     * 
+     * @return bool
      */
     public function update()
     {
-        // Si l'utilisateur change son pseudo
-        // Alors on renomme l'image
+        $imageManager = new Image();
+        $data = [
+            "name" => htmlspecialchars($_POST["name"]),
+            "first_names" => htmlspecialchars($_POST["first_names"]),
+            "email_address" => htmlspecialchars($_POST["email_address"]),
+            "password" => password_hash($_POST["password"], PASSWORD_DEFAULT),
+            "phone_number" => htmlspecialchars($_POST["phone_number"]),
+        ];
+
+        /** Gestion du pseudo et des images*/
+        // Si le pseudo ne change pas mais un nouvel avatar est posté
+        if ($_POST["pseudo"] === $this->pseudo && Update::fileIsUploaded("avatar")) {
+            $imageManager->save($_FILES["avatar"]["tmp_name"], $_POST["pseudo"], Avatar::AVATARS_DIR_PATH, 80, 80);
+        }
+        // Sile pseudo change et que l'avatar ne change pas
+        elseif ($_POST["pseudo"] !== $this->pseudo && !Update::fileIsUploaded("avatar")) {
+            $imageManager->rename($this->avatarPath, Avatar::AVATARS_DIR_PATH . $_POST["pseudo"]);
+        }
     }
 
     /**
@@ -263,6 +292,15 @@ class Registered extends User
     public function countAnnouncesBy(string $col, $value, string $tableName)
     {
         return self::countBy($col, $value, self::TABLE_NAME);
+    }
+
+    /**
+     * Permet de vérifier si l'utilisateur qui a ce compte
+     * a les droits.
+     */
+    public function hasRights()
+    {
+        return $this->type === 1;
     }
 
 }

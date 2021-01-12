@@ -295,6 +295,16 @@ class Announce extends Model
     }
 
     /**
+     * Retourne le lien vers la page qui permet de modifier l'annonce.
+     * 
+     * @return string
+     */
+    public function getManageLink()
+    {
+        return "/users/my-posts/manage/" . $this->getSlug();
+    }
+
+    /**
      * Retourne le prix.
      * 
      * @return string
@@ -635,6 +645,17 @@ class Announce extends Model
             return $key[0];
         }
         return $key;
+    }
+
+    /**
+     * Permet de vérifier que l'élément passé en paramètre a
+     * est parent de cet élément.
+     * 
+     * @param Category $category
+     */
+    public function hasParent(Category $category)
+    {
+        return $this->category->getId() === $category->getId();
     }
 
 }

@@ -18,18 +18,18 @@ try {
 
     // Route en get sans paramètre
     $router->get("/", "App\Controller\AppController@index");
+    // $router->get("/test", "App\Controller\UserController@test");
     $router->get("/register", "App\Controller\UserController@register");
     $router->get("/sign-in", "App\Controller\UserController@signIn");
     $router->get("/sign-out", "App\Controller\UserController@signOut");
-    $router->get("/users/me/profile", "App\Controller\UserController@profile");
     $router->get("/post", "App\Controller\AnnounceController@create");
     $router->get("/in-progress", "App\Controller\AppController@page404");
-    
-    // Routes avec paramètres
+    $router->get("/users/my-profile", "App\Controller\UserController@profile");
+    $router->get("/users/my-posts", "App\Controller\UserController@dashboard");
     $router->get("/:category", "App\Controller\CategoryController@read");
     $router->get("/:category/:slug", "App\Controller\AnnounceController@read");
-    $router->get("/users/me/dashboard/", "App\Controller\UserController@dashboard");
-    $router->get("/users/me/dashboard/:status", "App\Controller\UserController@dashboard");
+    $router->get("/users/my-posts/:status", "App\Controller\UserController@dashboard");
+    $router->get("/users/my-posts/manage/:slug", "App\Controller\AnnounceController@manage");
 
     // Routes en post
     $router->post("/register", "App\Controller\UserController@register");

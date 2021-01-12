@@ -121,10 +121,13 @@ class Image extends File
      * Enregistre une image en prenant en paramètre le nom et le dossier de
      * sauvegarde.
      * 
-     * @param string $imageName 
-     * @param string $dirPath     Le dossier où on doit déposer l'image.
-     * @param int    $imageWidth 
-     * @param int    $imageHeight 
+     * @param string $baseFilePath Le chemin total où se trouve l'image à sauvegarder.
+     * @param string $imageName    Le nouveau nom de l"image.
+     * @param string $dirPath      Le dossier où on doit déposer l'image.
+     * @param int    $imageWidth   A préciser si on veut enregistrer l'image avec une largeur
+     *                             précise.
+     * @param int    $imageHeight A préciser si on veut enregistrer l'image avec une hauteur
+     *                             précise.
      * 
      * @return bool
      */
@@ -148,24 +151,18 @@ class Image extends File
     /**
      * Renomme l'image de couverture et l'image miniature d'un item.
      * 
-     * @param string $oldName L'ancien nom de l'image.
-     * @param string $newName Le nouveau nom de l'image.
+     * @param string $oldPath L'ancien nom de l'image.
+     * @param string $newPath Le nouveau nom de l'image.
      * 
      * @return bool
      */
-    public static function renameImages($oldName, $newName)
+    public static function rename(string $oldPath, string $newPath)
     {
-        // $oldThumbs = self::THUMBS_PATH . $oldName;
-        // $oldOriginalThumbs = self::ORIGINALS_THUMBS_PATH . $oldName;
-
-        // $newThumbs = self::THUMBS_PATH . $newName . self::EXTENSION;
-        // $newOriginalThumbs = self::ORIGINALS_THUMBS_PATH . $newName . self::EXTENSION;
-
-        // if (rename($oldThumbs, $newThumbs) && rename($oldOriginalThumbs, $newOriginalThumbs)) {
-        //     return true;
-        // } else {
-        //     throw new Exception("Echec du renommage de l'image de couverture.");
-        // }
+        if (rename($oldPath, $newPath)) {
+            return true;
+        } else {
+            throw new Exception("Echec du renommage de l'image de couverture.");
+        }
     }
 
     /**

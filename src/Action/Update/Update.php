@@ -10,12 +10,6 @@ use App\Action\Action;
 class Update extends Action
 {
     /**
-     * Tableau contenant les nouvelles valeurs.
-     * @var array
-     */
-    private $data;
-
-    /**
      * Constructeur.
      * 
      * @param array $data
