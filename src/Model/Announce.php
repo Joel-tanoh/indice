@@ -4,13 +4,12 @@ namespace App\Model;
 
 use App\Action\Create\Create;
 use App\Action\Create\InsertInDb;
-use App\Action\Get\GetFromDb;
 use App\Auth\Session;
 use App\File\Image\Image;
 use App\Database\SqlQueryFormater;
-use App\Model\User\User;
 use App\Model\User\Registered;
 use App\Utility\Utility;
+use App\Communication\Comment;
 
 /**
  * Classe de gestion d'une annonce.
@@ -30,6 +29,7 @@ class Announce extends Model
     private $postedAt;
     private $views;
     private $iconClass;
+    private $comments = [];
     const TABLE_NAME = "ind_announces";
     const IMG_DIR_PATH = Image::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "productinfo" . DIRECTORY_SEPARATOR;
     const IMG_DIR_URL = Image::IMG_DIR_URL . "/productinfo";
@@ -299,9 +299,9 @@ class Announce extends Model
      * 
      * @return string
      */
-    public function getManageLink()
+    public function getManageLink(string $action)
     {
-        return "/users/my-posts/manage/" . $this->getSlug();
+        return "/users/my-posts/$action/" . $this->getSlug();
     }
 
     /**
@@ -316,17 +316,24 @@ class Announce extends Model
         } elseif ($this->price == "price_on_call") {
             return "Prix à l'appel";
         } else {
-            return $this->price . " XOF";
+            return $this->price . " F CFA";
         }
     }
 
     /**
-     * Permet de vérifier si c'est une annonce vedette.
-     * @return bool
+     * Retourne les commentaires de cette annonce.
      */
-    public function isFeatured() : bool
+    public function getComments()
     {
-        return true;
+        $rep = parent::connectToDb()->prepare("SELECT id FROM " . Comment::TABLE_NAME . " WHERE subject_id = ?");
+        $rep->execute([$this->id]);
+        $comments = $rep->fetchAll();
+        
+        foreach ($comments as $comment) {
+            $this->comments[] = new Comment($comment["id"]);
+        }
+
+        return $this->comments;
     }
 
     /**
@@ -335,7 +342,7 @@ class Announce extends Model
      */
     public function isPending() : bool
     {
-        return true;
+        return $this->status === 0;
     }
 
     /**
@@ -344,7 +351,25 @@ class Announce extends Model
      */
     public function isValidated() : bool
     {
-        return true;
+        return $this->status === 1;
+    }
+
+    /**
+     * Permet de vérifier si c'est une annonce vedette.
+     * @return bool
+     */
+    public function isFeatured() : bool
+    {
+        return $this->status === 2;
+    }
+
+    /**
+     * Permet de vérifier si c'est une annonce prémium.
+     * @return bool
+     */
+    public function isPremium() : bool
+    {
+        return $this->status === 3;
     }
 
     /**
@@ -353,7 +378,7 @@ class Announce extends Model
      */
     public function isSuspended() : bool
     {
-        return true;
+        return $this->status === 4;
     }
 
     /**

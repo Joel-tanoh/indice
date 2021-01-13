@@ -30,6 +30,8 @@ try {
     $router->get("/:category/:slug", "App\Controller\AnnounceController@read");
     $router->get("/users/my-posts/:status", "App\Controller\UserController@dashboard");
     $router->get("/users/my-posts/manage/:slug", "App\Controller\AnnounceController@manage");
+    $router->get("/users/my-posts/update/:slug", "App\Controller\AnnounceController@manage");
+    $router->get("/users/my-posts/delete/:slug", "App\Controller\AnnounceController@manage");
 
     // Routes en post
     $router->post("/register", "App\Controller\UserController@register");

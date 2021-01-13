@@ -299,4 +299,16 @@ HTML;
         return '<a class="forgetpassword" href="forgot-password">Mot de passe oublié ?</a>';
     }
 
+    /**
+     * Affiche les commenataires laissés par cet utilisateur.
+     * 
+     * @return string
+     */
+    public function showComments()
+    {
+        return <<<HTML
+
+HTML;
+    }
+
 }

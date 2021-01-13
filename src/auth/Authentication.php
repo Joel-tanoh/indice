@@ -4,6 +4,7 @@ namespace App\Auth;
 
 use App\Auth\Password;
 use App\Model\User\User;
+use App\Utility\Utility;
 use App\Utility\Validator;
 
 /**
@@ -93,6 +94,17 @@ class Authentication
             } else {
                 return false;
             }
+        }
+    }
+
+    /**
+     * Permet de rédiriger l'utilisateur sur sa
+     * page de connexion s'il n'est pas authentifié.
+     */
+    public static function redirectUserIfNotAuthentified(string $where)
+    {
+        if (!Session::isActive() || !Cookie::userCookieIsset()) {
+            Utility::redirect($where);
         }
     }
 

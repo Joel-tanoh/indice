@@ -16,6 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `comments`
+--
+
+DROP TABLE IF EXISTS `comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_email_address` varchar(255) COLLATE utf8_bin NOT NULL,
+  `content` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `comments`
+--
+
+LOCK TABLES `comments` WRITE;
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ind_announces`
 --
 
@@ -54,7 +78,7 @@ CREATE TABLE `ind_announces` (
 
 LOCK TABLES `ind_announces` WRITE;
 /*!40000 ALTER TABLE `ind_announces` DISABLE KEYS */;
-INSERT INTO `ind_announces` VALUES (13,'Une belle voiture','&lt;p&gt;Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet voluptatem labore cupiditate molestiae porro velit inventore totam eos? Reiciendis tempore quae odio perferendis pariatur. Placeat aliquid sapiente consequuntur ullam alias vitae rem iure aperiam dolor dolorum culpa sit eius quas fugit blanditiis nisi nemo dolores repellat pariatur, maiores corrupti ipsa commodi enim.&lt;br&gt;&lt;/p&gt;','une-belle-voiture-13',2,NULL,'3500000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan',NULL,NULL,0,'2020-12-28 23:56:12',NULL,NULL,0,NULL),(14,'Une belle maison','&lt;p&gt;Une belle maison&lt;/p&gt;','une-belle-maison-14',3,NULL,'on','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',0,'2021-01-05 06:39:59',NULL,NULL,0,NULL),(15,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;',NULL,5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',0,'2021-01-09 10:23:17',NULL,NULL,0,NULL),(16,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;','vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16',5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',0,'2021-01-09 10:27:19',NULL,NULL,0,NULL),(17,'Belle villa 5 pièces','&lt;p&gt;Une belle maison 5 pièces, dans la ville de Yamoussokro.&lt;/p&gt;Bien située elle a été construite en 2018.','belle-villa-5-pieces-17',3,NULL,'on','tanohbassapatrick@gmail.com',NULL,NULL,'Yamoussoukro','offre','particulier',0,'2021-01-10 18:46:31',NULL,NULL,0,NULL),(18,'test','Une offre d\'emploi extraordinaire.&lt;br&gt;','test-18',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',0,'2021-01-10 18:54:44',NULL,NULL,0,NULL),(19,'Bloggeur à Blabla TV','&lt;p&gt;Bon job à blabla tv&lt;br&gt;&lt;/p&gt;','bloggeur-a-blabla-tv-19',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'San-Pedro','offre','particulier',0,'2021-01-10 19:33:09',NULL,NULL,0,NULL);
+INSERT INTO `ind_announces` VALUES (13,'Une belle voiture','&lt;p&gt;Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet voluptatem labore cupiditate molestiae porro velit inventore totam eos? Reiciendis tempore quae odio perferendis pariatur. Placeat aliquid sapiente consequuntur ullam alias vitae rem iure aperiam dolor dolorum culpa sit eius quas fugit blanditiis nisi nemo dolores repellat pariatur, maiores corrupti ipsa commodi enim.&lt;br&gt;&lt;/p&gt;','une-belle-voiture-13',2,NULL,'3500000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan',NULL,NULL,0,'2020-12-28 23:56:12',NULL,NULL,0,NULL),(16,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;','vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16',5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',0,'2021-01-09 10:27:19',NULL,NULL,0,NULL),(17,'Belle villa 5 pièces','&lt;p&gt;Une belle maison 5 pièces, dans la ville de Yamoussokro.&lt;/p&gt;Bien située elle a été construite en 2018.','belle-villa-5-pieces-17',3,NULL,'on','tanohbassapatrick@gmail.com',NULL,NULL,'Yamoussoukro','offre','particulier',0,'2021-01-10 18:46:31',NULL,NULL,0,NULL),(18,'test','Une offre d\'emploi extraordinaire.&lt;br&gt;','test-18',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',0,'2021-01-10 18:54:44',NULL,NULL,0,NULL),(19,'Bloggeur à Blabla TV','&lt;p&gt;Bon job à blabla tv&lt;br&gt;&lt;/p&gt;','bloggeur-a-blabla-tv-19',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'San-Pedro','offre','particulier',0,'2021-01-10 19:33:09',NULL,NULL,0,NULL);
 /*!40000 ALTER TABLE `ind_announces` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,7 +109,7 @@ CREATE TABLE `ind_categories` (
 
 LOCK TABLES `ind_categories` WRITE;
 /*!40000 ALTER TABLE `ind_categories` DISABLE KEYS */;
-INSERT INTO `ind_categories` VALUES (4,'Bonnes affaires','bonnes-affaires','2020-12-24 06:30:57',NULL,NULL,'lni-control-panel'),(2,'Véhicules','vehicules','2020-12-24 06:17:23',NULL,NULL,'lni-car'),(3,'Immobiler','immobiler','2020-12-24 06:17:23',NULL,NULL,'lni-home'),(5,'High-Tech','high-tech','2020-12-24 06:30:57',NULL,NULL,'lni-laptop'),(6,'Emploi Formations','emploi-formations','2020-12-24 06:46:14',NULL,NULL,'lni-briefcase'),(7,'Rencontre','rencontre','2020-12-24 06:46:14',NULL,NULL,'lni-heart'),(8,'Matériel professionnel','materiel-professionnel','2020-12-24 06:46:14',NULL,NULL,'lni-notepad'),(9,'Communauté','communaute','2020-12-24 06:46:14',NULL,NULL,'lni-hand'),(10,'Bien-être','bien-etre','2020-12-24 06:46:14',NULL,NULL,'lni-leaf');
+INSERT INTO `ind_categories` VALUES (4,'Bonnes affaires','bonnes-affaires','2020-12-24 06:30:57',NULL,NULL,'lni-control-panel'),(2,'Véhicules','vehicules','2020-12-24 06:17:23',NULL,NULL,'lni-car'),(3,'Immobilier','immobilier','2020-12-24 06:17:23',NULL,NULL,'lni-home'),(5,'High-Tech','high-tech','2020-12-24 06:30:57',NULL,NULL,'lni-laptop'),(6,'Emploi Formations','emploi-formations','2020-12-24 06:46:14',NULL,NULL,'lni-briefcase'),(7,'Rencontre','rencontre','2020-12-24 06:46:14',NULL,NULL,'lni-heart'),(8,'Matériel professionnel','materiel-professionnel','2020-12-24 06:46:14',NULL,NULL,'lni-notepad'),(9,'Communauté','communaute','2020-12-24 06:46:14',NULL,NULL,'lni-hand'),(10,'Bien-être','bien-etre','2020-12-24 06:46:14',NULL,NULL,'lni-leaf');
 /*!40000 ALTER TABLE `ind_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,4 +190,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-10 22:29:16
+-- Dump completed on 2021-01-13 23:49:10

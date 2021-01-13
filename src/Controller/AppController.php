@@ -36,14 +36,16 @@ class AppController
             "id"    => 15,
         ];
 
-        $update = new UpdateDb($data, DB_NAME, "ind_announces", DB_LOGIN, DB_PASSWORD, $clauses);
-        if ($update->run()) {
-            echo "Action effectuée";
-            die();
-        } else {
-            echo "Non fait !";
-            die();
-        }
+        // $update = new UpdateDb($data, DB_NAME, "ind_announces", DB_LOGIN, DB_PASSWORD, $clauses);
+        // if ($update->run()) {
+        //     echo "Action effectuée";
+        //     die();
+        // } else {
+        //     echo "Non fait !";
+        //     die();
+        // }
+
+        echo 'Test';
     }
 
 }

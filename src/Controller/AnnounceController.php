@@ -4,12 +4,15 @@ namespace App\Controller;
 
 use App\Action\Action;
 use App\Action\Create\Create;
+use App\Auth\Authentication;
+use App\Auth\Cookie;
 use App\File\Image\Image;
 use App\Model\Announce;
 use App\Auth\Session;
 use App\Communication\Notify\NotifyByHTML;
 use App\Model\Category;
 use App\Model\Model;
+use App\Model\User\Registered;
 use App\Utility\Utility;
 use App\Utility\Validator;
 use App\View\Model\AnnounceView;
@@ -134,9 +137,48 @@ class AnnounceController extends AppController
         }
     }
 
-    public static function manage()
+    /**
+     * Controller permetant l'utilisateur authentifié de
+     * de modifier une annonce.
+     */
+    public static function manage(array $url)
     {
+        Authentication::redirectUserIfNotAuthentified("/sign-in");
 
+        // Vérifier que le slug bon
+        if (Announce::valueIssetInDB("slug", $url[3], Announce::TABLE_NAME)) {
+            $registered = new Registered(Session::get() ?? Cookie::get()); 
+            $announce = Announce::getBySlug($url[3], Announce::TABLE_NAME, "App\Model\Announce");
+            $page = new Page();
+            $action = $url[2];
+
+            switch ($action) {
+                case "manage" :
+                    $view = (new AnnounceView($announce))->manage($registered);
+                    break;
+                
+                case "update" :
+                    $message = null;
+                    $view = (new AnnounceView($announce))->update($message);
+                    break;
+
+                case "delete" :
+                    if ($announce->delete(Announce::TABLE_NAME)) {
+                        Utility::redirect("/users/my-posts");
+                    }
+                    break;
+
+                default :
+                    Utility::redirect("users/my-posts");
+            }
+
+            $page->setMetaTitle("L'indice - " . $announce->getTitle());
+            $page->setView($view);
+            $page->show();
+
+        } else {
+            throw new Exception("Ressource non trouvée !");
+        }
     }
 
     public function delete()

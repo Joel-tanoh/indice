@@ -82,6 +82,49 @@ HTML;
     }
 
     /**
+     * La vue qui permet qui permet de manager l'annonce.
+     * 
+     * @return string
+     */
+    public function manage(\App\Model\User\Registered $registered)
+    {
+        $snippet = new Snippet;
+        $registeredView = new RegisteredView($registered);
+
+        return <<<HTML
+        {$snippet->pageHeader($this->announce->getTitle(), "Gestion de mon announce")}
+
+        <div id="content" class="section-padding">
+            <div class="container">
+                <div class="row">
+                    {$registeredView->sidebarNav()}
+                    <div class="col-sm-12 col-md-8 col-lg-9">
+                        <section class="row">
+                            {$this->productInfosImgSection("col-lg-8 col-md-12 col-xs-12")}
+                            <section class="col-lg-4 col-md-12 col-xs-12">
+                                {$this->metadataTable()}
+                            </section>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * La vue qui permet de modifier une announce.
+     * 
+     * @return string
+     */
+    public function update(string $message = null)
+    {
+        return <<<HTML
+
+HTML;
+    }
+
+    /**
      * Affiches les 6 dernières annonces postées.
      * 
      * @return string
@@ -277,7 +320,7 @@ HTML;
             <div class="media-left">
                 <img class="img-fluid" src="{$this->announce->getArtInFooterImgSrc()}" alt="Photo de {$this->announce->getSlug()}">
                 <div class="overlay">
-                    <span class="price">{$this->announce->getPrice()} XOF</span>
+                    <span class="price">{$this->announce->getPrice()}</span>
                 </div>
             </div>
             <div class="media-body">
@@ -405,9 +448,11 @@ HTML;
     /**
      * Show the images of this annonces.
      * 
+     * @param string $bootstrapColClass
+     * 
      * @return string
      */
-    private function productInfosImgSection()
+    private function productInfosImgSection(string $bootstrapColClass = "col-lg-7 col-md-12 col-xs-12")
     {
         $imgSection = null;
         foreach ($this->announce->getAllProductInfoImg() as $src) {
@@ -415,7 +460,7 @@ HTML;
         }
         
         return <<<HTML
-        <div class="col-lg-7 col-md-12 col-xs-12">
+        <div class="{$bootstrapColClass}">
             <div class="details-box ads-details-wrapper">
                 <div id="owl-demo" class="owl-carousel owl-theme">
                     {$imgSection}
@@ -662,7 +707,7 @@ HTML;
      */
     private function showLocation()
     {
-        return '<a><i class="lni-map-marker"></i> '. $this->announce->getLocation() .'</a>';
+        return '<a><i class="lni-map-marker"></i>'. $this->announce->getLocation() .'</a>';
     }
 
     /**
@@ -738,9 +783,9 @@ HTML;
             </td>
             <td data-title="Action">
                 <div class="btns-actions">
-                    <a class="btn-action btn-view" href="{$this->announce->getManageLink()}"><i class="lni-eye"></i></a>
-                    <a class="btn-action btn-edit" href="{$this->announce->getManageLink()}/edit"><i class="lni-pencil"></i></a>
-                    <a class="btn-action btn-delete" href="{$this->announce->getManageLink()}/delete"><i class="lni-trash"></i></a>
+                    <a class="btn-action btn-view" href='{$this->announce->getManageLink("manage")}'><i class="lni-eye"></i></a>
+                    <a class="btn-action btn-edit" href='{$this->announce->getManageLink("update")}'><i class="lni-pencil"></i></a>
+                    <a class="btn-action btn-delete" href='{$this->announce->getManageLink("delete")}'><i class="lni-trash"></i></a>
                 </div>
             </td>
         </tr>
@@ -753,7 +798,7 @@ HTML;
      * 
      * @return string
      */
-    public function dashboardAnnounceStatus()
+    private function dashboardAnnounceStatus()
     {
         if ($this->announce->getStatus() == "Pending") {
             $statusClass = "adstatusactive bg-warning";
@@ -796,5 +841,45 @@ HTML;
 HTML;
     }
 
+    /**
+     * Affiche un tableau contenant les données meta de cette
+     * announce.
+     * 
+     * @return string
+     */
+    private function metadataTable()
+    {
+        return <<<HTML
+        <h4>Infos</h4>
+        <table class="table">
+            {$this->metadataTableRow("ID", $this->announce->getId())}
+            {$this->metadataTableRow("Titre", $this->announce->getTitle())}
+            {$this->metadataTableRow("Slug", $this->announce->getSlug())}
+            {$this->metadataTableRow("Vues", $this->announce->getViews())}
+            {$this->metadataTableRow("Statut", $this->announce->getStatus())}
+        </table>
+HTML;
+    }
 
+    /**
+     * Affiche une ligne dans le tableau des données de l'annonce
+     */
+    private function metadataTableRow(string $index, string $value)
+    {
+        return <<<HTML
+        <tr><td>{$index}</td><td>{$value}</td></tr>
+HTML;
+    }
+
+    /**
+     * Affiche les commentaires de cette annonces.
+     * 
+     * @return string
+     */
+    public function showComments()
+    {
+        return <<<HTML
+
+HTML;
+    }
 }
