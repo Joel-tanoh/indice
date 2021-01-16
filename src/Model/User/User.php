@@ -48,9 +48,9 @@ class User extends Model
      */
     public static function getByCode($code) : self
     {
-        $rep = parent::connectToDb()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE code = ?");
-        $rep->execute([$code]);
-        $user = $rep->fetch();
+        $req = parent::connectToDb()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE code = ?");
+        $req->execute([$code]);
+        $user = $req->fetch();
 
         if ($user["id"]) {
             return new self($user["id"]);
@@ -62,7 +62,7 @@ class User extends Model
      * 
      * @return bool
      */
-    public static function isConnected()
+    public static function isAuthentified()
     {
         return Session::isActive() || Cookie::userCookieIsset();
     }

@@ -72,9 +72,9 @@ class VisitManager extends Utility
                 . " date_format(date, '%d') day"
                 . " FROM " . self::TABLE_NAME
                 . " WHERE date = ?";
-        $rep = $database->getPDO()->prepare($query);
-        $rep->execute([$date]);
-        $result = $rep->fetch();
+        $req = $database->getPDO()->prepare($query);
+        $req->execute([$date]);
+        $result = $req->fetch();
 
         $this->year = $result["year"];
         $this->month = $result["month"];
@@ -170,10 +170,10 @@ class VisitManager extends Utility
                 . " FROM " . self::TABLE_NAME
                 . " WHERE date = ?";
 
-        $rep = $database->getPDO()->prepare($query);
-        $rep->execute([$date]);
+        $req = $database->getPDO()->prepare($query);
+        $req->execute([$date]);
 
-        return $rep->fetch();
+        return $req->fetch();
     }
 
     /**
@@ -190,8 +190,8 @@ class VisitManager extends Utility
         $query = "INSERT INTO " . self::TABLE_NAME
                 . "(date, number) VALUES(:date, :number)";
 
-        $rep = $database->getPDO()->prepare($query);
-        $rep->execute([
+        $req = $database->getPDO()->prepare($query);
+        $req->execute([
             "date" => $date,
             "number" => $number,
         ]);

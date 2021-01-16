@@ -4,8 +4,13 @@ namespace App\Controller;
 
 use App\Action\Update\UpdateDb;
 use App\Database\SqlQueryFormaterV2;
+use App\Model\Announce;
+use App\Model\Category;
+use App\Model\Model;
+use App\Model\User\User;
 use App\View\Page\Page;
 use App\View\View;
+use Exception;
 
 class AppController
 {
@@ -28,24 +33,29 @@ class AppController
     }
 
     public static function test() {
-        $data = [
-            "slug" => "test-1"
-        ];
-
-        $clauses = [
-            "id"    => 15,
-        ];
-
-        // $update = new UpdateDb($data, DB_NAME, "ind_announces", DB_LOGIN, DB_PASSWORD, $clauses);
-        // if ($update->run()) {
-        //     echo "Action effectuée";
-        //     die();
-        // } else {
-        //     echo "Non fait !";
-        //     die();
-        // }
-
         echo 'Test';
     }
+
+    /** Permet de faire des vérifications sur les routes qui ont la même
+     * longueur mais des controllers différents. */
+
+    public static function switcher1(array $params)
+    {
+
+    }
+
+    public static function switcher2(array $params)
+    {
+        if (Category::isCategorySlug($params[1]) && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)) {
+            AnnounceController::read($params);
+        }
+        elseif ($params[1] === "users" && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
+            UserController::userProfile($params);
+        }
+        else {
+            throw new Exception("Ressource non trouvée !");
+        }
+    }
+
 
 }

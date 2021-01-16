@@ -2,6 +2,8 @@
 
 namespace App\View\Model\User;
 
+use App\Auth\Cookie;
+use App\Auth\Session;
 use App\Model\Announce;
 use App\Model\User\Registered;
 use App\View\Snippet;
@@ -64,7 +66,7 @@ HTML;
      * 
      * @return string
      */
-    public function profile()
+    public function myProfile()
     {
         $snippet = new Snippet;
 
@@ -76,10 +78,23 @@ HTML;
                 <div class="row">
                     {$this->sidebarNav()}
                     <div class="col-sm-12 col-md-8 col-lg-9">
+                        C'est mon profil.
                     </div>
                 </div>
             </div>
         </div>
+HTML;
+    }
+
+    /**
+     * Vue qui affiche le profile d'un autre utilisateur dont on veut
+     * voir le profile.
+     * @return string
+     */
+    public function userProfile()
+    {
+        return <<<HTML
+        Le profil d'un autre utilisateur.
 HTML;
     }
 
@@ -91,10 +106,11 @@ HTML;
      */
     public function sidebarNav() : string
     {
+        $registered = new Registered(Session::get() ?? Cookie::get());
         return <<<HTML
         <div class="col-sm-12 col-md-4 col-lg-3 page-sidebar">
             <aside>
-                {$this->sidebarContent()}
+                {$this->sidebarContent($registered)}
             </aside>
         </div>
 HTML;
@@ -102,51 +118,52 @@ HTML;
 
     /**
      * Menu qui sera affiché si l'utilsateur s'est authentifié.
-     * 
+     * @param App\Model\User\Registered
      * @return string
      */
-    public function navbar()
+    public function navbar($registered)
     {
         return <<<HTML
-        <a class="dropdown-item" href="/users/my-posts"><i class="lni-home"></i> Mes annonces</a>
+        <a class="dropdown-item" href="{$registered->getProfileLink()}"><i class="lni-user"></i> Mon Profil</a>
+        <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-home"></i> Mes annonces</a>
         <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Se déconnecter</a>
 HTML;
     }
 
     /**
      * Affiche l'avatar et les liens de la sidebar de l'utilisateur.
-     * 
+     * @param App\Model\User\Registered $registered 
      * @return string
      */
-    private function sidebarContent() : string
+    private function sidebarContent($registered) : string
     {
         return <<<HTML
         <div class="sidebar-box">
             <div class="user">
                 <figure>
-                    <a href="users/my-profile"><img src="{$this->registered->getAvatarSrc()}" alt="Image de {$this->registered->getPseudo()}" title="Mon profil"></a>
+                    <a href="{$registered->getProfileLink()}"><img src="{$registered->getAvatarSrc()}" alt="Image de {$registered->getPseudo()}" title="Mon profil"></a>
                 </figure>
                 <div class="usercontent">
-                    <h3>{$this->registered->getName()} {$this->registered->getFirstNames()}</h3>
-                    <h4>{$this->registered->getType()}</h4>
+                    <h3><a href="{$registered->getProfileLink()}" class="text-white">{$registered->getName()} {$registered->getFirstNames()}</a></h3>
+                    <h4>{$registered->getType()}</h4>
                 </div>
             </div>
-            {$this->sidebarLinks()}
+            {$this->sidebarLinks($registered)}
         </div>
 HTML;
     }
     
     /**
      * Affiche le menu du dashboard de l'utilisateur.
-     * 
+     * @param App\Model\User\Registered $registered 
      * @return string
      */
-    private function sidebarLinks() : string
+    private function sidebarLinks($registered) : string
     {
         return <<<HTML
         <nav class="navdashboard">
             <ul>
-                {$this->defineSidebarLink("Mes annonces", "/users/my-posts", "lni-dashboard")}
+                {$this->defineSidebarLink("Mes annonces", $registered->getProfileLink(). "/posts", "lni-dashboard")}
                 {$this->defineSidebarLink("Se déconnecter", "sign-out", "lni-enter")}
             </ul>
         </nav>
@@ -201,12 +218,12 @@ HTML;
         return <<<HTML
         <nav class="nav-table">
             <ul>
-                {$this->dashbaordNavStatus("/users/my-posts", "Tous", $this->registered->countBy("id", Announce::TABLE_NAME))}
-                {$this->dashbaordNavStatus("/users/my-posts/pending", "En attente", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("pending")))}
-                {$this->dashbaordNavStatus("/users/my-posts/validated", "Validées", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("validated")))}
-                {$this->dashbaordNavStatus("/users/my-posts/featured", "Vedette", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("featured")))}
-                {$this->dashbaordNavStatus("/users/my-posts/premium", "Prémium", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("premium")))}
-                {$this->dashbaordNavStatus("/users/my-posts/blocked", "Bloquées", $this->registered->countBy("id", Announce::TABLE_NAME, "status", Announce::convertStatus("blocked")))}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts", "Tous", $this->registered->countAnnounces())}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/pending", "En attente", $this->registered->countAnnounces(Announce::convertStatus("pending")))}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/validated", "Validées", $this->registered->countAnnounces(Announce::convertStatus("validated")))}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/featured", "Vedette", $this->registered->countAnnounces(Announce::convertStatus("featured")))}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/premium", "Prémium", $this->registered->countAnnounces(Announce::convertStatus("premium")))}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/blocked", "Bloquées", $this->registered->countAnnounces(Announce::convertStatus("blocked")))}
             </ul>
         </nav>
 HTML;

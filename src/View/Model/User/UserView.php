@@ -2,8 +2,10 @@
 
 namespace App\View\Model\User;
 
+use App\Auth\Cookie;
+use App\Auth\Session;
+use App\Model\User\Registered;
 use App\Model\User\User;
-use App\View\AdvertisingView;
 use App\View\Form;
 use App\View\Model\ModelView;
 use App\View\Snippet;
@@ -183,8 +185,9 @@ HTML;
      */
     public function navbarMenu()
     {
-        if (User::isConnected()) {
-            $content = (new RegisteredView())->navbar();
+        if (User::isAuthentified()) {
+            $registered = new Registered(Session::get() ?? Cookie::get());
+            $content = (new RegisteredView())->navbar($registered);
         } else {
             $content = $this->navbarForUnconnectedUser();
         }

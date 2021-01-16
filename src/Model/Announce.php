@@ -51,10 +51,10 @@ class Announce extends Model
             status, created_at, posted_at, updated_at, views, icon_class"
         )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
-        $rep = parent::connectToDb()->prepare($query);
-        $rep->execute([$id]);
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([$id]);
 
-        $result = $rep->fetch();
+        $result = $req->fetch();
 
         $this->id = $result["id"];
         $this->title = $result["title"];
@@ -299,9 +299,11 @@ class Announce extends Model
      * 
      * @return string
      */
-    public function getManageLink(string $action)
+    public function getManageLink(string $action = null)
     {
-        return "/users/my-posts/$action/" . $this->getSlug();
+        return null === $action
+            ? $this->owner->getProfileLink()."/posts"."/".$this->getSlug()
+            : $this->owner->getProfileLink()."/posts"."/".$this->getSlug()."/$action";
     }
 
     /**
@@ -325,9 +327,9 @@ class Announce extends Model
      */
     public function getComments()
     {
-        $rep = parent::connectToDb()->prepare("SELECT id FROM " . Comment::TABLE_NAME . " WHERE subject_id = ?");
-        $rep->execute([$this->id]);
-        $comments = $rep->fetchAll();
+        $req = parent::connectToDb()->prepare("SELECT id FROM " . Comment::TABLE_NAME . " WHERE subject_id = ?");
+        $req->execute([$this->id]);
+        $comments = $req->fetchAll();
         
         foreach ($comments as $comment) {
             $this->comments[] = new Comment($comment["id"]);
@@ -406,8 +408,8 @@ class Announce extends Model
             if (null !== $nbr) {
                 $query .= " LIMIT $begining, $nbr";
             }
-            $rep = parent::connectToDb()->prepare($query);
-            $rep->execute([$idCategory, $status]);
+            $req = parent::connectToDb()->prepare($query);
+            $req->execute([$idCategory, $status]);
 
         } elseif (null !== $idCategory && null == $status) { // Si on spécifie que la catégorie
             $query .= " WHERE id_category = ?";
@@ -415,8 +417,8 @@ class Announce extends Model
             if (null !== $nbr) {
                 $query .= " LIMIT $begining, $nbr";
             }
-            $rep = parent::connectToDb()->prepare($query);
-            $rep->execute([$idCategory]);
+            $req = parent::connectToDb()->prepare($query);
+            $req->execute([$idCategory]);
 
         } elseif (null == $idCategory && null !== $status) { // Si on spécifie que la sous-catégorie
             $query .= " WHERE status = ?";
@@ -424,18 +426,18 @@ class Announce extends Model
             if (null !== $nbr) {
                 $query .= " LIMIT $begining, $nbr";
             }
-            $rep = parent::connectToDb()->prepare($query);
-            $rep->execute([$status]);
+            $req = parent::connectToDb()->prepare($query);
+            $req->execute([$status]);
 
         } else {
             // Si on spécifie un nombre d'annonces précis
             if (null !== $nbr) {
                 $query .= " LIMIT $begining, $nbr";
             }
-            $rep = parent::connectToDb()->query($query);
+            $req = parent::connectToDb()->query($query);
         }
 
-        $result = $rep->fetchAll();
+        $result = $req->fetchAll();
 
         $announces = [];
         foreach($result as $announce) {
@@ -461,8 +463,8 @@ class Announce extends Model
             $query .= " LIMIT 0, 5";
         }
 
-        $rep = parent::connectToDb()->prepare($query);
-        $result = $rep->fetchAll();
+        $req = parent::connectToDb()->prepare($query);
+        $result = $req->fetchAll();
 
         $announces = [];
 
@@ -488,8 +490,8 @@ class Announce extends Model
             $query .= " LIMIT 0, $nbr";
         }
 
-        $rep = parent::connectToDb()->prepare($query);
-        $result = $rep->fetchAll();
+        $req = parent::connectToDb()->prepare($query);
+        $result = $req->fetchAll();
 
         $announces = [];
 
@@ -579,10 +581,10 @@ class Announce extends Model
     public static function getValidated($idCategory) : array
     {
         $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 1 AND id_category = ?";
-        $rep = parent::connectToDb()->prepare($query);
-        $rep->execute([$idCategory]);
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([$idCategory]);
 
-        $result = $rep->fetchAll();
+        $result = $req->fetchAll();
 
         $announces = [];
 
@@ -601,9 +603,9 @@ class Announce extends Model
     public static function getPending() : array
     {
         $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 0";
-        $rep = parent::connectToDb()->query($query);
+        $req = parent::connectToDb()->query($query);
 
-        $result = $rep->fetchAll();
+        $result = $req->fetchAll();
 
         $announces = [];
 
@@ -622,9 +624,9 @@ class Announce extends Model
     public static function getSuspended() : array
     {
         $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 2";
-        $rep = parent::connectToDb()->query($query);
+        $req = parent::connectToDb()->query($query);
 
-        $result = $rep->fetchAll();
+        $result = $req->fetchAll();
 
         $announces = [];
 

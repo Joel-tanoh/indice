@@ -25,10 +25,10 @@ class SubCategory extends Category
             "id, title, slug, id_category, created_at, updated_at, description"
             )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
-        $rep = parent::connectToDb()->prepare($query);
-        $rep->execute([$id]);
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([$id]);
 
-        $result = $rep->fetch();
+        $result = $req->fetch();
 
         $this->id = $result["id"];
         $this->title = $result["title"];
@@ -47,9 +47,9 @@ class SubCategory extends Category
      */
     public function getAnnounces()
     {
-        $rep = parent::connectToDb()->prepare("SELECT id FROM " . Announce::TABLE_NAME . " WHERE id_sub_category = ?");
-        $rep->execute([$this->id]);
-        $result = $rep->fetchAll();
+        $req = parent::connectToDb()->prepare("SELECT id FROM " . Announce::TABLE_NAME . " WHERE id_sub_category = ?");
+        $req->execute([$this->id]);
+        $result = $req->fetchAll();
 
         foreach($result as $announce) {
             $this->announces[] = new Announce($announce["id"]);

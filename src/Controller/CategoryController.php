@@ -25,10 +25,10 @@ class CategoryController extends AppController
     /**
      * Controller pour le read d'une catégorie.
      */
-    static function read(array $url = null)
+    static function read(array $params = null)
     {
-        if (Category::isCategorySlug($url[0])) {
-            $category = Category::getBySlug($url[0], Category::TABLE_NAME, "App\Model\Category");
+        if (Category::isCategorySlug($params["category"])) {
+            $category = Category::getBySlug($params["category"], Category::TABLE_NAME, "App\Model\Category");
             $page = new Page("L'indice - " . $category->getTitle(), (new CategoryView($category))->read());
             $page->setDescription($category->getDescription());
             $page->show();

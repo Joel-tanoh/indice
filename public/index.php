@@ -14,7 +14,7 @@ use App\View\View;
 
 try {
     
-    $router = new Router();
+    $router = new Router(trim($_SERVER["REQUEST_URI"], "/"));
 
     // Route en get sans paramètre
     $router->get("/", "App\Controller\AppController@index");
@@ -24,14 +24,10 @@ try {
     $router->get("/sign-out", "App\Controller\UserController@signOut");
     $router->get("/post", "App\Controller\AnnounceController@create");
     $router->get("/in-progress", "App\Controller\AppController@page404");
-    $router->get("/users/my-profile", "App\Controller\UserController@profile");
-    $router->get("/users/my-posts", "App\Controller\UserController@dashboard");
     $router->get("/:category", "App\Controller\CategoryController@read");
-    $router->get("/:category/:slug", "App\Controller\AnnounceController@read");
-    $router->get("/users/my-posts/:status", "App\Controller\UserController@dashboard");
-    $router->get("/users/my-posts/manage/:slug", "App\Controller\AnnounceController@manage");
-    $router->get("/users/my-posts/update/:slug", "App\Controller\AnnounceController@manage");
-    $router->get("/users/my-posts/delete/:slug", "App\Controller\AnnounceController@manage");
+    $router->get("/:1/:2", "App\Controller\AppController@switcher2");
+    $router->get("/users/:pseudo/posts", "App\Controller\UserController@dashboard");
+    $router->get("/users/:pseudo/posts/:status", "App\Controller\UserController@dashboard");
 
     // Routes en post
     $router->post("/register", "App\Controller\UserController@register");

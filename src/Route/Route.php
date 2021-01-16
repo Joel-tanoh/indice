@@ -27,7 +27,7 @@ class Route
         if (!$this->hasParams()) {
             return $this->route == $url;
         } else {
-            $this->getParams();
+            $this->paramsName();
             return $this->length() === Router::urlLength();
         }
     }
@@ -45,7 +45,7 @@ class Route
         if (!$this->params) {
             return $actionParams[0]::$method();
         } else {
-            return $actionParams[0]::$method(Router::getUrlAsArray());
+            return $actionParams[0]::$method($this->getParams());
         }
     }
 
@@ -54,7 +54,7 @@ class Route
      * 
      * @return array
      */
-    private function getParams() : array
+    private function paramsName() : array
     {
         preg_match_all("#:([\w]+)#", $this->route, $matches);
         $this->params = $matches[1];
@@ -68,7 +68,7 @@ class Route
      */
     private function hasParams()
     {
-        return count($this->getParams()) !== 0;
+        return count($this->paramsName()) !== 0;
     }
 
     /**
@@ -89,6 +89,23 @@ class Route
     private function length()
     {
         return count($this->parts());
+    }
+
+    /**
+     * Retourne un tableau dans lequel les clés sont les valeurs
+     * de la route et les valeurs sont les issues de l'url.
+     * 
+     * @return array
+     */
+    public function getParams()
+    {
+        $routesParams = [];
+        $routeSplited = explode("/", $this->route);
+        for($i = 0; $i < count($routeSplited); $i++) {
+            $routesParams[trim($routeSplited[$i], ":")] = Router::getUrlAsArray()[$i];
+        }
+
+        return $routesParams;
     }
 
 }

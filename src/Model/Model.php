@@ -112,8 +112,8 @@ abstract class Model
      */
     protected function set(string $colName, $value, string $selector, $selectorValue)
     {
-        $rep = self::connectToDb()->prepare("UPDATE $this->tableName SET $colName = ? WHERE $selector = ?");
-        if ($rep->execute([$value, $selectorValue])) {
+        $req = self::connectToDb()->prepare("UPDATE $this->tableName SET $colName = ? WHERE $selector = ?");
+        if ($req->execute([$value, $selectorValue])) {
             return true;
         }
     }
@@ -128,8 +128,8 @@ abstract class Model
     public static function getSlugs(string $tableName) : array
     {
         $slugs = [];
-        $rep = self::connectToDb()->query("SELECT slug FROM " . $tableName);
-        foreach ($rep->fetchAll() as $item) {
+        $req = self::connectToDb()->query("SELECT slug FROM " . $tableName);
+        foreach ($req->fetchAll() as $item) {
             $slugs[] = $item["slug"];
         }
 
@@ -142,14 +142,12 @@ abstract class Model
      * 
      * @param string $slug
      * @param string $tableName
-     * 
-     * @return self
      */
     public static function getBySlug(string $slug, string $tableName, string $class)
     {
-        $rep = self::connectToDb()->prepare("SELECT id FROM $tableName WHERE slug = ?");
-        $rep->execute([$slug]);
-        $item = $rep->fetch();
+        $req = self::connectToDb()->prepare("SELECT id FROM $tableName WHERE slug = ?");
+        $req->execute([$slug]);
+        $item = $req->fetch();
 
         if ($item["id"]) {
             return new $class($item["id"]);
@@ -172,15 +170,15 @@ abstract class Model
 
         if (null !== $whereCol && null !== $WhereValue) {
             $query .= " WHERE $whereCol = ?";
-            $rep = self::connectToDb()->prepare($query);
-            $rep->execute([$WhereValue]);
+            $req = self::connectToDb()->prepare($query);
+            $req->execute([$WhereValue]);
         } else {
-            $rep = self::connectToDb()->query($query);
+            $req = self::connectToDb()->query($query);
         }
 
         $values = [];
 
-        foreach ($rep->fetchAll() as $value) {
+        foreach ($req->fetchAll() as $value) {
             $values[] = $value[$colToSelect];
         }
 
@@ -212,9 +210,9 @@ abstract class Model
      */
     public static function instantiate(string $selector, string $table, string $col, $colValue, string $class)
     {
-        $rep = self::connectToDb()->prepare("SELECT $selector FROM $table WHERE $col = ?");
-        $rep->execute([$colValue]);
-        $user = $rep->fetch();
+        $req = self::connectToDb()->prepare("SELECT $selector FROM $table WHERE $col = ?");
+        $req->execute([$colValue]);
+        $user = $req->fetch();
 
         return new $class($user[$selector]);
     }
@@ -224,8 +222,6 @@ abstract class Model
      * un paramètre.
      * 
      * @param string $col   La colonne pour filter le résultat.
-     * 
-     * @return array
      */
     public static function getBy(string $colForInstance, string $tableName, string $col = null, $value = null, string $className = null)
     {
@@ -234,22 +230,21 @@ abstract class Model
 
         if ($col && $value) {
             $query = $queryFormater->where("$col = ?")->returnQueryString();
-            $rep = self::connectToDb()->prepare($query);
-            $rep->execute([$value]);
+            $req = self::connectToDb()->prepare($query);
+            $req->execute([$value]);
         } else {
             $query = $queryFormater->returnQueryString();
-            $rep = self::connectToDb()->query($query);
+            $req = self::connectToDb()->query($query);
         }
 
         if ($className) {
-            $return = [];    
-            foreach($rep->fetchAll() as $item) {
+            $return = [];
+            foreach($req->fetchAll() as $item) {
                 $return[] = new $className($item[$colForInstance]);
             }
             return $return;
-
         } else {
-            return $rep->fetchAll();
+            return $req->fetchAll();
         }
     }
 
@@ -270,8 +265,8 @@ abstract class Model
     public function delete(string $tableName)
     {
         $query = "DELETE FROM $tableName WHERE id = ?";
-        $rep = self::connectToDb()->prepare($query);
-        if ($rep->execute([$this->id])) {
+        $req = self::connectToDb()->prepare($query);
+        if ($req->execute([$this->id])) {
             return true;
         }
     }

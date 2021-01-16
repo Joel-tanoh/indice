@@ -83,11 +83,11 @@ class GetFromDb extends Get
     {
         parent::connectToDb($this->dbLogin, $this->dbPassword);
         $this->formatQuery();
-        $rep = $this->pdo->prepare($this->query);
+        $req = $this->pdo->prepare($this->query);
         
         // Si tout s'est bien passé, retourner true
-        if ($rep->execute($this->whereClauses)) {
-            $this->data = $rep->fetchAll();
+        if ($req->execute($this->whereClauses)) {
+            $this->data = $req->fetchAll();
         } else {
             // Sinon, lancer une exception
             throw new Exception("Action Get From Database failed.");

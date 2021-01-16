@@ -39,9 +39,9 @@ class Router
      * 
      * @return void
      */
-    public function __construct()
+    public function __construct(string $url = null)
     {
-        $this->url = trim($_SERVER["REQUEST_URI"], "/");
+        $this->url = (null === $url) ? trim($_SERVER["REQUEST_URI"], "/") : trim($url, "/");
     }
 
     /**
@@ -54,6 +54,16 @@ class Router
     public function setUrl(string $url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * Retourne l'url contenu dans le variable serveur $_SERVER["REQUEST_URI"].
+     * 
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**
@@ -73,16 +83,6 @@ class Router
     public function post(string $route, string $action)
     {
         $this->routes["POST"][] = new Route($route, $action);
-    }
-
-    /**
-     * Retourne l'url contenu dans le variable serveur $_SERVER["REQUEST_URI"].
-     * 
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
     }
 
     /**
@@ -110,43 +110,6 @@ class Router
         }
 
         throw new PageNotFoundException("Page non trouvée.");
-    }
-
-    /**
-     * Vérifie la concordance de l'url et la variable passée en paramètre. Deux formats
-     * d'url paramètres sont passables. Le premier format est une chaîne de caractères
-     * et le second format est un tableau de variable si l'url doit varier.
-     * 
-     * @param array|string $route
-     * 
-     * @return bool
-     */
-    public function matches($route)
-    {
-        if (is_string($route)) {
-            return self::getGETurl() === $route;
-        } elseif (is_array($route)) {
-
-            $urlOffsets = count(self::getGETUrlAsArray());
-            $routeOffsets = count($route);
-
-            if ($urlOffsets === $routeOffsets) {
-                $counter = 0;
-                for ($i = 0; $i <= $routeOffsets - 1; $i++) {
-                    if (is_string($route[$i])) {
-                        if (self::getGETUrlAsArray()[$i] === $route[$i]) $counter++;
-                    } elseif (is_array($route[$i])) {
-                        if (in_array(self::getGETUrlAsArray()[$i], $route[$i])) $counter++;
-                    }
-                }
-
-                if ($counter === $routeOffsets) return true;
-                else return false;
-
-            } else {
-                return false;
-            }
-        }
     }
 
     /**
@@ -238,7 +201,6 @@ class Router
         }
 
         $uriParts = explode($separator, $url);
-
         return $uriParts;
     }
 

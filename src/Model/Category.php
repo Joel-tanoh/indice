@@ -27,10 +27,10 @@ class Category extends Model
             "id, title, slug, created_at, updated_at, description, icon_class"
             )->from(self::TABLE_NAME)->where("id = ?")->returnQueryString();
 
-        $rep = parent::connectToDb()->prepare($query);
-        $rep->execute([$id]);
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([$id]);
 
-        $result = $rep->fetch();
+        $result = $req->fetch();
 
         $this->id = $result["id"];
         $this->title = $result["title"];
@@ -55,15 +55,15 @@ class Category extends Model
 
         if ($status) {
             $query .= " AND status = ?";
-            $rep = parent::connectToDb()->prepare($query);
+            $req = parent::connectToDb()->prepare($query);
             $status = Announce::convertStatus($status);
-            $rep->execute([$this->id, $status]);
+            $req->execute([$this->id, $status]);
         } else {
-            $rep = parent::connectToDb()->prepare($query);
-            $rep->execute([$this->id]);
+            $req = parent::connectToDb()->prepare($query);
+            $req->execute([$this->id]);
         }
 
-        $result = $rep->fetchAll();
+        $result = $req->fetchAll();
 
         foreach($result as $announce) {
             $this->announces[] = new Announce($announce["id"]);
@@ -89,9 +89,9 @@ class Category extends Model
      */
     public function getSubCategories()
     {
-        $rep = parent::connectToDb()->prepare("SELECT id FROM " . SubCategory::TABLE_NAME . " WHERE id_category = ?");
-        $rep->execute([$this->id]);
-        $result = $rep->fetchAll();
+        $req = parent::connectToDb()->prepare("SELECT id FROM " . SubCategory::TABLE_NAME . " WHERE id_category = ?");
+        $req->execute([$this->id]);
+        $result = $req->fetchAll();
 
         foreach($result as $subCategory) {
             $this->subCategories[] = new SubCategory($subCategory["id"]);
@@ -121,8 +121,8 @@ class Category extends Model
     public static function getAll(string $tableName)
     {
         $categories = [];
-        $rep = self::connectToDb()->query("SELECT id FROM $tableName");
-        foreach ($rep->fetchAll() as $item) {
+        $req = self::connectToDb()->query("SELECT id FROM $tableName");
+        foreach ($req->fetchAll() as $item) {
             $categories[] = new self($item["id"]);
         }
 

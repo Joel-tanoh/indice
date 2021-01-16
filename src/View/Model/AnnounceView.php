@@ -2,6 +2,7 @@
 
 namespace App\View\Model;
 
+use App\Auth\Cookie;
 use App\Model\Announce;
 use App\Model\User\Registered;
 use App\View\Snippet;
@@ -497,6 +498,7 @@ HTML;
             <div class="details-box">
                 <div class="ads-details-info">
                     <h2>{$this->announce->getTitle()}</h2>
+                    {$this->manageButtons()}
                     {$this->showDescription()}
                     {$this->metadata()}
                 </div>
@@ -510,6 +512,7 @@ HTML;
                 </ul>
                 {$this->infosForJoinUser()}
                 {$this->shareMe()}
+                {$this->showComments()}
             </div>
         </div>
 HTML;
@@ -783,7 +786,7 @@ HTML;
             </td>
             <td data-title="Action">
                 <div class="btns-actions">
-                    <a class="btn-action btn-view" href='{$this->announce->getManageLink("manage")}'><i class="lni-eye"></i></a>
+                    <a class="btn-action btn-view" href='{$this->announce->getLink()}'><i class="lni-eye"></i></a>
                     <a class="btn-action btn-edit" href='{$this->announce->getManageLink("update")}'><i class="lni-pencil"></i></a>
                     <a class="btn-action btn-delete" href='{$this->announce->getManageLink("delete")}'><i class="lni-trash"></i></a>
                 </div>
@@ -872,14 +875,64 @@ HTML;
     }
 
     /**
-     * Affiche les commentaires de cette annonces.
+     * Affiche le bouton pour supprimer ou modifier l'annonce.
      * 
      * @return string
      */
-    public function showComments()
+    private function manageButtons()
     {
-        return <<<HTML
-
+        if (Session::isActive() || Cookie::userCookieIsset()) {
+            $sessionId = Session::get() ?? Cookie::get();
+            $registered = new Registered($sessionId);
+            if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
+                || $registered->isAdministrator()
+            ) {
+                return <<<HTML
+                Des boutons.
 HTML;
+            }
+        }
     }
+
+    /**
+     * Permet de laisser des commentaires(suggestions) sur l'annonce.
+     * @return string
+     */
+    private function putComments()
+    {
+        if (Session::isActive() || Cookie::userCookieIsset()) {
+            $sessionId = Session::get() ?? Cookie::get();
+            $registered = new Registered($sessionId);
+            if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
+                || $registered->isAdministrator()
+            ) {
+                return <<<HTML
+                Champs pour mettre des suggestions.
+HTML;
+            }
+        }
+    }
+
+    /**
+     * Affiche les commentaires de cette annonces. Avant d'afficher
+     * les commentaires on verifie si l'utilisateur est propriétaire
+     * de l'annonce ou est un administrateur.
+     * 
+     * @return string
+     */
+    private function showComments()
+    {
+        if (Session::isActive() || Cookie::userCookieIsset()) {
+            $sessionId = Session::get() ?? Cookie::get();
+            $registered = new Registered($sessionId);
+            if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
+                || $registered->isAdministrator()
+            ) {
+                return <<<HTML
+                Cette partie affichera les suggestions laissées et les reponses.
+HTML;
+            }
+        }
+    }
+
 }

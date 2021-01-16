@@ -175,7 +175,7 @@ HTML;
             {$this->announcesSection($announces)}
     
             <!-- Start Pagination -->
-            {$pagination->show()}
+            <!-- {$pagination->show()} -->
             
         </div>
 HTML;
@@ -350,7 +350,7 @@ HTML;
     {
         return <<<HTML
         <div class="short-name">
-            <span>Annonces (1 - 12 sur 7371)</span>
+            <span>Annonces (1 - 12 sur {$this->category->getAnnouncesNumber()})</span>
         </div>
 HTML;
     }

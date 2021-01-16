@@ -51,11 +51,7 @@ class Action
      */
     public static function fileIsUploaded(string $key)
     {
-        if (!empty($_FILES[$key]["name"])) {
-            return true;
-        } else {
-            throw new Exception("Aucune image avec la clé $key trouvée !");
-        }
+        return !empty($_FILES[$key]["name"]);
     }
 
     /**

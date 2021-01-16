@@ -19,7 +19,7 @@
  * @return bool True si le cookie['admin_login'] n'est pas vide ou si la
  *              session['admin_login'] n'est pas vide.
  */
-function someoneIsConnected()
+function someoneisAuthentified()
 {
     return !empty($_COOKIE['attitude_efficace_administrator_login']) || !empty($_SESSION['attitude_efficace_administrator_login']) ? true : false;
 }

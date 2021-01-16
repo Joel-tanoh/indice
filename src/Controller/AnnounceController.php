@@ -113,19 +113,19 @@ class AnnounceController extends AppController
     /**
      * Controller pour afficher les détails d'une annonce.
      * 
-     * @param array $url C'est le tableau qui contient l'url découpée.
+     * @param array $params C'est le tableau qui contient l'params découpée.
      *                   La partie de ce tableau nous interressant est
      *                   l'index 1
      * 
      * @return void
      */
-    static function read(array $url = null)
+    static function read(array $params = null)
     {
-        if (Category::valueIssetInDB("slug", $url[0], Category::TABLE_NAME)
-            && Announce::valueIssetInDB("slug", $url[1], Announce::TABLE_NAME)
+        if (Category::valueIssetInDB("slug", $params[1], Category::TABLE_NAME)
+            && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)
         ) {
-            $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $url[0], "App\Model\Category");
-            $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $url[1], "App\Model\Announce");
+            $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $params[1], "App\Model\Category");
+            $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $params[2], "App\Model\Announce");
             if ($announce->hasParent($category)) {
                 $page = new Page("L'indice - " . $announce->getTitle(), (new AnnounceView($announce))->read());
                 $page->show();
@@ -141,18 +141,20 @@ class AnnounceController extends AppController
      * Controller permetant l'utilisateur authentifié de
      * de modifier une annonce.
      */
-    public static function manage(array $url)
+    public static function manage(array $params)
     {
         Authentication::redirectUserIfNotAuthentified("/sign-in");
 
         // Vérifier que le slug bon
-        if (Announce::valueIssetInDB("slug", $url[3], Announce::TABLE_NAME)) {
-            $registered = new Registered(Session::get() ?? Cookie::get()); 
-            $announce = Announce::getBySlug($url[3], Announce::TABLE_NAME, "App\Model\Announce");
-            $page = new Page();
-            $action = $url[2];
+        dump($params["slug"]);
+        die();
 
-            switch ($action) {
+        if (Announce::valueIssetInDB("slug", $params["slug"], Announce::TABLE_NAME)) {
+            $registered = new Registered(Session::get() ?? Cookie::get()); 
+            $announce = Announce::getBySlug($params["slug"], Announce::TABLE_NAME, "App\Model\Announce");
+            $page = new Page();
+
+            switch ($params["action"]) {
                 case "manage" :
                     $view = (new AnnounceView($announce))->manage($registered);
                     break;
@@ -164,12 +166,13 @@ class AnnounceController extends AppController
 
                 case "delete" :
                     if ($announce->delete(Announce::TABLE_NAME)) {
-                        Utility::redirect("/users/my-posts");
+                        Utility::redirect($registered->getProfileLink() . "/posts");
                     }
                     break;
 
                 default :
-                    Utility::redirect("users/my-posts");
+                    Utility::redirect($registered->getProfileLink() . "/posts");
+                    break;
             }
 
             $page->setMetaTitle("L'indice - " . $announce->getTitle());

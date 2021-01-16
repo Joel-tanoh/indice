@@ -51,4 +51,26 @@ class Comment extends Model
     {
         return $this->content;
     }
+
+    /**
+     * Permet d'ajouter un commentaire.
+     * @param string $userEmailAddress L'adresse email de l'utilisateur qui a posté cette annonce.
+     * @param string $subject          Le sujet commenté.
+     * @param string $content          Le contenu du commentaire.
+     * @param string $subjectType      Le type du sujet commenté, optionnel.
+     * @return bool
+     */
+    public static function add(string $userEmailAddress, $subject, string $content, $subjectType = null)
+    {
+        $query = "INSERT INTO " . Comment::TABLE_NAME . "(user_email_address, subject, subject_type, content)
+            VALUES(:user_email_address, :subject, :subject_type, :content)";
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([
+            "user_email_address" => $userEmailAddress,
+            "subject" => $subject,
+            "subject_type" => $subjectType,
+            "content" => $content,
+        ]);
+        return true;
+    }
 }

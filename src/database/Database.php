@@ -112,13 +112,13 @@ class Database
         }
 
         if ($whereColName) {
-            $rep = $this->pdo->prepare($query);
-            $rep->execute([$whereColValue]);
+            $req = $this->pdo->prepare($query);
+            $req->execute([$whereColValue]);
         } else {
-            $rep = $this->pdo->query($query);
+            $req = $this->pdo->query($query);
         }
 
-        return $rep->fetchAll();
+        return $req->fetchAll();
     }
 
     /**
@@ -154,13 +154,13 @@ class Database
 
         if (null !== $whereColName) {
             $query .= " WHERE $whereColName = ?";
-            $rep = $this->pdo->prepare($query);
-            $rep->execute([$whereColValue]);
+            $req = $this->pdo->prepare($query);
+            $req->execute([$whereColValue]);
         } else {
-            $rep = $this->pdo->query($query);
+            $req = $this->pdo->query($query);
         }
         
-        return $rep->fetch()["count"];
+        return $req->fetch()["count"];
     }
 
     /**
@@ -177,8 +177,8 @@ class Database
     public function update(string $col, $value, string $tableName, string $whereColName, $whereColValue)
     {
         $query = "UPDATE $tableName SET $col = ? WHERE $whereColName = ?";
-        $rep = $this->pdo->prepare($query);
-        $rep->execute(
+        $req = $this->pdo->prepare($query);
+        $req->execute(
             [$value, $whereColValue]
         );
         return true;
@@ -197,8 +197,8 @@ class Database
     public function delete(string $tableName, string $whereColName, $whereColValue)
     {
         $query = "DELETE FROM $tableName WHERE $whereColName = ?";
-        $rep = $this->pdo->prepare($query);
-        $rep->execute([$whereColValue]);
+        $req = $this->pdo->prepare($query);
+        $req->execute([$whereColValue]);
         return true;
     }
 
@@ -243,14 +243,14 @@ class Database
 
         if (null !== $whereColName) {
             $query .= " AND $whereColName = ?";
-            $rep = $pdo->prepare($query);
-            $rep->execute([$exceptedValue, $whereColValue]);
+            $req = $pdo->prepare($query);
+            $req->execute([$exceptedValue, $whereColValue]);
         } else {
-            $rep = $pdo->prepare($query);
-            $rep->execute([$exceptedValue]);
+            $req = $pdo->prepare($query);
+            $req->execute([$exceptedValue]);
         }
 
-        return $rep->fetchAll();
+        return $req->fetchAll();
     }
     
     /**
@@ -277,8 +277,8 @@ class Database
             $query .= " HAVING $havingColName = '$valueToHave'";
         }
 
-        $rep = $this->pdo->query($query);
-        return (int)$rep->fetch()[$alias];
+        $req = $this->pdo->query($query);
+        return (int)$req->fetch()[$alias];
     }
     
     /**
@@ -299,14 +299,14 @@ class Database
 
         if (null !== $whereColName) {
             $query .= " AND $whereColName = ?";
-            $rep = $this->pdo->prepare($query);
-            $rep->execute([$colToCompareValue, $whereColValue]);
+            $req = $this->pdo->prepare($query);
+            $req->execute([$colToCompareValue, $whereColValue]);
         } else {
-            $rep = $this->pdo->prepare($query);
-            $rep->execute([$colToCompareValue]);
+            $req = $this->pdo->prepare($query);
+            $req->execute([$colToCompareValue]);
         }
 
-        return $rep->fetchAll();
+        return $req->fetchAll();
     }
 
     /**
@@ -346,12 +346,12 @@ class Database
     {
         if ($paramsArray) {
             $this->paramsArray = $paramsArray;
-            $rep = $this->pdo->prepare($this->query);
-            $rep->execute($this->paramsArray);
-            return $rep->fetchAll();
+            $req = $this->pdo->prepare($this->query);
+            $req->execute($this->paramsArray);
+            return $req->fetchAll();
         } else {
-            $rep = $this->pdo->query($this->query);
-            return $rep->fetchAll();
+            $req = $this->pdo->query($this->query);
+            return $req->fetchAll();
         }
     }
 

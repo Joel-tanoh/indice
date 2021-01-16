@@ -47,9 +47,9 @@ class Connexion extends Authentication
     {
         // Vérifier que le credential passé est dans la base de données.
         $query = "SELECT COUNT(id) AS user, password FROM $this->tableName WHERE $this->credentialIndex = ?";
-        $rep = $this->pdo->prepare($query);
-        $rep->execute([$this->credential]);
-        $result = $rep->fetch();
+        $req = $this->pdo->prepare($query);
+        $req->execute([$this->credential]);
+        $result = $req->fetch();
 
         // Vérifier qu'on a au moins un résultat
         if ($result["user"] == 0) {

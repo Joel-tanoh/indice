@@ -65,14 +65,14 @@ class UpdateDb extends Update
     public function run()
     {
         $this->formatQuery();
-        $rep = parent::connectToDb($this->dbLogin, $this->dbPassword)->prepare($this->query);
+        $req = parent::connectToDb($this->dbLogin, $this->dbPassword)->prepare($this->query);
         $this->formatParams();
 
-        // dump($rep);
+        // dump($req);
         // die();
         
         // Si tout s'est bien passé, retourner true
-        if ($rep->execute($this->params)) {
+        if ($req->execute($this->params)) {
            return true;
         } else {
             // Sinon, lancer une exception

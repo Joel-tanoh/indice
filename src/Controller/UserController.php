@@ -93,7 +93,8 @@ class UserController extends AppController
                 if (User::save()) {
                     Session::activate($_POST["email_address"]);
                     Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
-                    Utility::redirect("/users/my-posts");
+                    $registered = new Registered(Session::get() ?? Cookie::get());
+                    Utility::redirect($registered->getProfileLink());
                 }
             } else { // Sinon
                 $message = (new NotifyByHTML())->errors($validate->getErrors());
@@ -111,7 +112,8 @@ class UserController extends AppController
     public static function signIn()
     {
         if (Session::isActive() || Cookie::userCookieIsset()) {
-            Utility::redirect("/users/my-posts");
+            $registered = new Registered(Session::get() ?? Cookie::get());
+            Utility::redirect($registered->getProfileLink() . "/posts");
         }
 
         $error = null;
@@ -130,7 +132,8 @@ class UserController extends AppController
                     Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
                 }
 
-                Utility::redirect("/users/my-posts");
+                $registered = new Registered($_POST["email_address"]);
+                Utility::redirect($registered->getProfileLink());
             }
         }
 
@@ -140,49 +143,64 @@ class UserController extends AppController
     }
 
     /**
-     * Controller pour gérer le dashboard d'un utlisateur.
+     * Controller du profil de l'utilisateur.
      */
-    public static function dashboard(array $url = null)
+    public static function userProfile(array $params)
     {
         if (!Session::isActive() && !Cookie::userCookieIsset()) {
             Utility::redirect("/sign-in");
         }
 
-        $status = $url[2];
         $registered = new Registered(Session::get() ?? Cookie::get());
-        
-        if (null !== $url) {
-            if (!in_array($status, Announce::getStatutes())) {
-                $announces = [];
-            } else {
-                $announces = $registered->getAnnounces(Announce::convertStatus($status));
-            }
+        $user = Registered::getByPseudo($params[2]);
+        $page = new Page("Profil - " . $user->getName() . " " . $user->getFirstNames());
+        $page->setDescription("");
+
+        if ($registered->getPseudo() === $user->getPseudo()) {
+            $view = (new RegisteredView($user))->myProfile();
         } else {
-            $announces = $registered->getAnnounces();
+            $view = (new RegisteredView($user))->userProfile();
         }
 
-        $page = new Page(
-            $registered->getName() . " " . $registered->getFirstNames() . " - Mes annonces"
-            ,(new RegisteredView($registered))->dashboard($announces)
-        );
-        $page->setDescription("");
+        $page->setView($view);
         $page->show();
     }
 
     /**
-     * Controller du profil de l'utilisateur.
+     * Controller pour gérer le dashboard d'un utlisateur.
      */
-    public static function profile()
+    public static function dashboard(array $params = null)
     {
         if (!Session::isActive() && !Cookie::userCookieIsset()) {
             Utility::redirect("/sign-in");
         }
 
         $registered = new Registered(Session::get() ?? Cookie::get());
-
-        $page = new Page("Profil - " . $registered->getName() . " " . $registered->getFirstNames(), (new RegisteredView($registered))->profile());
+        $user = Registered::getByPseudo($params["pseudo"]);
+        $page = new Page("Tableau de bord - " . $user->getName() . " " . $user->getFirstNames());
         $page->setDescription("");
-        $page->show();
+
+        if ($registered->getPseudo() === $user->getPseudo() || $registered->isAdministrator()) {
+            if (!empty($params["status"])) {
+                $status = $params["status"];
+                if (!in_array($status, Announce::getStatutes())) {
+                    $announces = [];
+                } else {
+                    $announces = $user->getAnnounces(Announce::convertStatus($status));
+                }
+            } else {
+                $announces = $user->getAnnounces();
+            }
+    
+            $page->setView((new RegisteredView($user))->dashboard($announces));
+            $page->setDescription("");
+            $page->show();
+
+        } else {
+            Utility::redirect($registered->getProfileLink());
+        }
+        
+        
     }
 
     /**

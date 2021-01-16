@@ -25,6 +25,8 @@ DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_email_address` varchar(255) COLLATE utf8_bin NOT NULL,
+  `subject` varchar(255) COLLATE utf8_bin NOT NULL,
+  `subject_type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `content` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -69,7 +71,7 @@ CREATE TABLE `ind_announces` (
   PRIMARY KEY (`id`),
   KEY `fk_id_category` (`id_category`),
   KEY `fk_id_sub_category` (`id_sub_category`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,7 +80,7 @@ CREATE TABLE `ind_announces` (
 
 LOCK TABLES `ind_announces` WRITE;
 /*!40000 ALTER TABLE `ind_announces` DISABLE KEYS */;
-INSERT INTO `ind_announces` VALUES (13,'Une belle voiture','&lt;p&gt;Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet voluptatem labore cupiditate molestiae porro velit inventore totam eos? Reiciendis tempore quae odio perferendis pariatur. Placeat aliquid sapiente consequuntur ullam alias vitae rem iure aperiam dolor dolorum culpa sit eius quas fugit blanditiis nisi nemo dolores repellat pariatur, maiores corrupti ipsa commodi enim.&lt;br&gt;&lt;/p&gt;','une-belle-voiture-13',2,NULL,'3500000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan',NULL,NULL,0,'2020-12-28 23:56:12',NULL,NULL,0,NULL),(16,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;','vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16',5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',0,'2021-01-09 10:27:19',NULL,NULL,0,NULL),(17,'Belle villa 5 pièces','&lt;p&gt;Une belle maison 5 pièces, dans la ville de Yamoussokro.&lt;/p&gt;Bien située elle a été construite en 2018.','belle-villa-5-pieces-17',3,NULL,'on','tanohbassapatrick@gmail.com',NULL,NULL,'Yamoussoukro','offre','particulier',0,'2021-01-10 18:46:31',NULL,NULL,0,NULL),(18,'test','Une offre d\'emploi extraordinaire.&lt;br&gt;','test-18',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',0,'2021-01-10 18:54:44',NULL,NULL,0,NULL),(19,'Bloggeur à Blabla TV','&lt;p&gt;Bon job à blabla tv&lt;br&gt;&lt;/p&gt;','bloggeur-a-blabla-tv-19',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'San-Pedro','offre','particulier',0,'2021-01-10 19:33:09',NULL,NULL,0,NULL);
+INSERT INTO `ind_announces` VALUES (13,'Une belle voiture','&lt;p&gt;Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet voluptatem labore cupiditate molestiae porro velit inventore totam eos? Reiciendis tempore quae odio perferendis pariatur. Placeat aliquid sapiente consequuntur ullam alias vitae rem iure aperiam dolor dolorum culpa sit eius quas fugit blanditiis nisi nemo dolores repellat pariatur, maiores corrupti ipsa commodi enim.&lt;br&gt;&lt;/p&gt;','une-belle-voiture-13',2,NULL,'3500000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan',NULL,NULL,0,'2020-12-28 23:56:12',NULL,NULL,0,NULL),(20,'mon super ordinateur','&lt;p&gt;Mon super ordinateur&lt;/p&gt;','mon-super-ordinateur-20',5,NULL,'250000','tanohbassapatrick@gmail.com',NULL,NULL,'Bouake','offre','particulier',0,'2021-01-15 20:22:40',NULL,NULL,0,NULL),(21,'Salle de répétition','&lt;p&gt;Pour toutes vos répétitions, contactez nous !&lt;/p&gt;','salle-de-repetition-21',4,NULL,'10000','joel.developpeur@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',0,'2021-01-16 00:05:02',NULL,NULL,0,NULL),(16,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;','vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16',5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',0,'2021-01-09 10:27:19',NULL,NULL,0,NULL),(17,'Belle villa 5 pièces','&lt;p&gt;Une belle maison 5 pièces, dans la ville de Yamoussokro.&lt;/p&gt;Bien située elle a été construite en 2018.','belle-villa-5-pieces-17',3,NULL,'on','tanohbassapatrick@gmail.com',NULL,NULL,'Yamoussoukro','offre','particulier',0,'2021-01-10 18:46:31',NULL,NULL,0,NULL),(18,'test','Une offre d\'emploi extraordinaire.&lt;br&gt;','test-18',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',0,'2021-01-10 18:54:44',NULL,NULL,0,NULL),(19,'Bloggeur à Blabla TV','&lt;p&gt;Bon job à blabla tv&lt;br&gt;&lt;/p&gt;','bloggeur-a-blabla-tv-19',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'San-Pedro','offre','particulier',0,'2021-01-10 19:33:09',NULL,NULL,0,NULL);
 /*!40000 ALTER TABLE `ind_announces` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,7 +170,7 @@ CREATE TABLE `ind_users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_pseudo` (`pseudo`),
   UNIQUE KEY `un_email` (`email_address`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -190,4 +192,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-13 23:49:10
+-- Dump completed on 2021-01-16  0:12:47

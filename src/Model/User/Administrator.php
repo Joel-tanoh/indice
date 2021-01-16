@@ -27,8 +27,8 @@ class Administrator extends Registered
     public function changeStatus(int $newStatus)
     {
         $query = "ALTER TABLE " . self::TABLE_NAME . " SET status = ?";
-        $rep = parent::connectToDb()->prepare($query);
-        if ($rep->execute([$newStatus])) {
+        $req = parent::connectToDb()->prepare($query);
+        if ($req->execute([$newStatus])) {
             return true;
         }
     }
@@ -42,8 +42,8 @@ class Administrator extends Registered
     public function deleteUser(int $userId)
     {
         $query = "DELETE FROM " . self::TABLE_NAME . " WHERE id = ?";
-        $rep = parent::connectToDb()->prepare($query);
-        if ($rep->execute([$userId])) {
+        $req = parent::connectToDb()->prepare($query);
+        if ($req->execute([$userId])) {
             return true;
         }
     }

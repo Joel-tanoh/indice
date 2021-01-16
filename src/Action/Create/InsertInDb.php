@@ -50,10 +50,10 @@ class InsertInDb extends Create
     {
         parent::connectToDb($this->dbLogin, $this->dbPassword);
         $this->formatQuery();
-        $rep = $this->pdo->prepare($this->query);
+        $req = $this->pdo->prepare($this->query);
         
         // Si tout s'est bien passé, retourner true
-        if ($rep->execute($this->data)) {
+        if ($req->execute($this->data)) {
             return true;
         } else { 
             // Sinon, lancer une exception

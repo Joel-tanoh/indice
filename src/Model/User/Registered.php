@@ -10,6 +10,8 @@ use App\Model\Announce;
 use App\Utility\Utility;
 use App\Auth\Session;
 use App\Auth\Cookie;
+use App\Communication\Comment;
+use Exception;
 
 /**
  * Classe de gestion d'un utilisateur inscrit.
@@ -43,10 +45,10 @@ class Registered extends User
             phone_number, registered_at, updated_at, type, status"
             )->from(self::TABLE_NAME)->where("email_address = ?")->returnQueryString();
 
-        $rep = parent::connectToDb()->prepare($query);
-        $rep->execute([$emailAddress]);
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([$emailAddress]);
 
-        $result = $rep->fetch();
+        $result = $req->fetch();
 
         $this->code = $result["code"];
         $this->name = $result["name"];
@@ -158,14 +160,13 @@ class Registered extends User
         return ucfirst(self::$statutes[$this->status]);
     }
 
-    public function getDashboardLink()
-    {
-        return "my-posts";
-    }
-
+    /**
+     * Retourne le lien vers le profil de l'utilisateur.
+     * @return string
+     */
     public function getProfileLink()
     {
-        return "users/my-profile";
+        return "/users/$this->pseudo";
     }
 
     /**
@@ -178,7 +179,7 @@ class Registered extends User
         if (\file_exists($this->avatarPath)) {
             return $this->avatarSrc;
         } else {
-            return Avatar::DEFAULT_THUMBS;
+            return Avatar::DEFAULT;
         }
     }
 
@@ -193,22 +194,32 @@ class Registered extends User
     {
         $query = "SELECT id FROM " . Announce::TABLE_NAME . " WHERE user_email_address = ?";
 
-        if ($status) {
+        if (null !== $status) {
             $query .= " AND status = ?";
-            $rep = parent::connectToDb()->prepare($query);
-            $rep->execute([$this->emailAddress, $status]);
+            $req = parent::connectToDb()->prepare($query);
+            $req->execute([$this->emailAddress, $status]);
         } else {
-            $rep = parent::connectToDb()->prepare($query);
-            $rep->execute([$this->emailAddress]);
+            $req = parent::connectToDb()->prepare($query);
+            $req->execute([$this->emailAddress]);
         }
 
-        $result = $rep->fetchAll();
+        $announces = [];
 
-        foreach($result as $announce) {
-            $this->announces[] = new Announce((int)$announce["id"]);
+        foreach($req->fetchAll() as $announce) {
+            $announces[] = new Announce((int)$announce["id"]);
         }
+        
+        return $announces;
+    }
 
-        return $this->announces;
+    /**
+     * Permet de compter les annonces postées par l'utilisateur.
+     * @param int $status
+     * @return int
+     */
+    public function countAnnounces(int $status = null)
+    {
+        return count($this->getAnnounces($status));
     }
 
     /**
@@ -285,22 +296,53 @@ class Registered extends User
     }
 
     /**
-     * Permet de compter les annonces postées par l'utilisateur.
-     * 
-     * @return int
-     */
-    public function countAnnouncesBy(string $col, $value, string $tableName)
-    {
-        return self::countBy($col, $value, self::TABLE_NAME);
-    }
-
-    /**
      * Permet de vérifier si l'utilisateur qui a ce compte
      * a les droits.
      */
     public function hasRights()
     {
         return $this->type === 1;
+    }
+
+    /**
+     * Permet de vérifier si l'utilisateur est administrateur.
+     * @return bool
+     */
+    public function isAdministrator()
+    {
+        return $this->type === 1;
+    }
+
+    /**
+     * Permet d'instancier un utilisateur enregistré par son pseudo.
+     * @return self
+     */
+    public static function getByPseudo(string $pseudo)
+    {
+        $query = "SELECT email_address FROM " . self::TABLE_NAME . " WHERE pseudo = :pseudo";
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([
+            "pseudo" => $pseudo
+        ]);
+
+        $emailAddress = $req->fetch()["email_address"];
+
+        if (null === $emailAddress) {
+            throw new Exception("Ressource Introuvable !");
+        } else {
+            return new self($emailAddress);
+        }
+    }
+
+    /**
+     * Permet à l'utilisateur connecté d'ajouter un commentaire.
+     * @param string $content Le contenu du commentaire.
+     */
+    public function addComment($subject, string $content, $subjectType = null)
+    {
+        if (Comment::add($this->emailAddress, $subject, $content, $subjectType)) {
+            return true;
+        }
     }
 
 }
