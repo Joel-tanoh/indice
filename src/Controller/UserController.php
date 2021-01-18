@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Action\Action;
 use App\Action\Create\Create;
+use App\Auth\Authentication;
 use App\Auth\Connexion;
 use App\Auth\Cookie;
 use App\File\Image\Image;
@@ -147,9 +148,7 @@ class UserController extends AppController
      */
     public static function userProfile(array $params)
     {
-        if (!Session::isActive() && !Cookie::userCookieIsset()) {
-            Utility::redirect("/sign-in");
-        }
+        Authentication::redirectUserIfNotAuthentified("sign-in");
 
         $registered = new Registered(Session::get() ?? Cookie::get());
         $user = Registered::getByPseudo($params[2]);
@@ -171,18 +170,16 @@ class UserController extends AppController
      */
     public static function dashboard(array $params = null)
     {
-        if (!Session::isActive() && !Cookie::userCookieIsset()) {
-            Utility::redirect("/sign-in");
-        }
-
+        Authentication::redirectUserIfNotAuthentified("sign-in");
+        
         $registered = new Registered(Session::get() ?? Cookie::get());
-        $user = Registered::getByPseudo($params["pseudo"]);
+        $user = Registered::getByPseudo($params[2]);
         $page = new Page("Tableau de bord - " . $user->getName() . " " . $user->getFirstNames());
         $page->setDescription("");
 
         if ($registered->getPseudo() === $user->getPseudo() || $registered->isAdministrator()) {
-            if (!empty($params["status"])) {
-                $status = $params["status"];
+            if (!empty($params[4])) {
+                $status = $params[4];
                 if (!in_array($status, Announce::getStatutes())) {
                     $announces = [];
                 } else {
@@ -199,8 +196,6 @@ class UserController extends AppController
         } else {
             Utility::redirect($registered->getProfileLink());
         }
-        
-        
     }
 
     /**

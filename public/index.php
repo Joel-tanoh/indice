@@ -25,14 +25,15 @@ try {
     $router->get("/post", "App\Controller\AnnounceController@create");
     $router->get("/in-progress", "App\Controller\AppController@page404");
     $router->get("/:category", "App\Controller\CategoryController@read");
-    $router->get("/:1/:2", "App\Controller\AppController@switcher2");
-    $router->get("/users/:pseudo/posts", "App\Controller\UserController@dashboard");
-    $router->get("/users/:pseudo/posts/:status", "App\Controller\UserController@dashboard");
+    $router->get("/:1/:2", "App\Controller\AppController@switcher");
+    $router->get("/:1/:2/:3", "App\Controller\AppController@switcher");
+    $router->get("/:1/:2/:3/:4", "App\Controller\UserController@dashboard");
 
     // Routes en post
     $router->post("/register", "App\Controller\UserController@register");
     $router->post("/post", "App\Controller\AnnounceController@create");
     $router->post("/sign-in", "App\Controller\UserController@signIn");
+    $router->post("/:1/:2/:3", "App\Controller\AppController@switcher");
 
     $router->run();
 

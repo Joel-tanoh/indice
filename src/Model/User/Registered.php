@@ -99,7 +99,7 @@ class Registered extends User
      */
     public function getPseudo()
     {
-        return ucfirst($this->pseudo);
+        return $this->pseudo;
     }
 
     /**

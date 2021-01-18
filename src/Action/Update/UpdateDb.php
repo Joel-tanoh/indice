@@ -14,9 +14,6 @@ class UpdateDb extends Update
      */
     private $clauses;
 
-    /** @var string La requête finale a envoyer à la base de données */
-    private $query;
-
     /** @var string Format texte des clauses à
      * insérer dans la requête de mise à jour.
      */
@@ -83,7 +80,7 @@ class UpdateDb extends Update
     /**
      * Constructeur de la requête sql de modification.
      */
-    private function formatQuery()
+    public function formatQuery()
     {
         // Formatage des composantes de la requête
         $arrayKeys = array_keys($this->data);

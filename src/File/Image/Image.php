@@ -45,7 +45,7 @@ class Image extends File
     const MAX_VALID_SIZE = 2097152;
 
     /**
-     * Extension des images.
+     * Extension des images précédé d'un .
      * 
      * @var string
      */
@@ -160,29 +160,21 @@ class Image extends File
     {
         if (rename($oldPath, $newPath)) {
             return true;
-        } else {
-            throw new Exception("Echec du renommage de l'image de couverture.");
         }
     }
 
     /**
      * Supprime les images de couverture et miniatures.
      * 
-     * @param string $imageName Le nom de l'image.
+     * @param string $imagePath Le nom de l'image.
      * 
      * @return bool
      */
-    public static function deleteImages($imageName)
+    public static function delete($imagePath)
     {
-        // $oldThumbsPath = self::THUMBS_PATH . $imageName;
-        // if (file_exists($oldThumbsPath)) {
-        //     unlink($oldThumbsPath);
-        // }
-        
-        // $oldOrgImgPath = self::ORIGINALS_THUMBS_PATH . $imageName;
-        // if (file_exists($oldOrgImgPath)) {
-        //     unlink($oldOrgImgPath);
-        // }
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
     }
 
 }

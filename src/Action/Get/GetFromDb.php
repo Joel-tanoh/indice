@@ -33,11 +33,6 @@ class GetFromDb extends Get
      */
     private $itemNumber;
 
-    /** @var string La requête finale pour récupérer les données
-     * de la base de données.
-     */
-    private $query;
-
     /** @var string La clause en format text */
     private $clauseAsString;
 
@@ -105,7 +100,7 @@ class GetFromDb extends Get
     /**
      * Permet de formater la requête SQL pour insérer les données dans la base de données.
      */
-    private function formatQuery()
+    public function formatQuery()
     {
         // Formatage des composantes de la requête
         $arrayKeys = array_keys($this->cols);

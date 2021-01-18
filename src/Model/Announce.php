@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Action\Create\Create;
 use App\Action\Create\InsertInDb;
+use App\Action\Update\UpdateDb;
 use App\Auth\Session;
 use App\File\Image\Image;
 use App\Database\SqlQueryFormater;
@@ -30,6 +31,14 @@ class Announce extends Model
     private $views;
     private $iconClass;
     private $comments = [];
+    private $featuredImgPath;
+    private $featuredImgSrc;
+    private $productImgPath;
+    private $productImgSrc;
+    private $productInfoImgPath;
+    private $productInfoImgSrc;
+    private $artInFooterImgPath;
+    private $artInFooterImgSrc;
     const TABLE_NAME = "ind_announces";
     const IMG_DIR_PATH = Image::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "productinfo" . DIRECTORY_SEPARATOR;
     const IMG_DIR_URL = Image::IMG_DIR_URL . "/productinfo";
@@ -302,8 +311,8 @@ class Announce extends Model
     public function getManageLink(string $action = null)
     {
         return null === $action
-            ? $this->owner->getProfileLink()."/posts"."/".$this->getSlug()
-            : $this->owner->getProfileLink()."/posts"."/".$this->getSlug()."/$action";
+            ? $this->getLink() // Si on ne passe pas d'action on affiche l'annonce
+            : $this->getLink()."/$action"; // Si on passe une annonce.
     }
 
     /**
@@ -329,13 +338,14 @@ class Announce extends Model
     {
         $req = parent::connectToDb()->prepare("SELECT id FROM " . Comment::TABLE_NAME . " WHERE subject_id = ?");
         $req->execute([$this->id]);
-        $comments = $req->fetchAll();
+        $result = $req->fetchAll();
         
-        foreach ($comments as $comment) {
-            $this->comments[] = new Comment($comment["id"]);
+        $comments = [];
+        foreach ($result as $comment) {
+            $comments[] = new Comment($comment["id"]);
         }
 
-        return $this->comments;
+        return $comments;
     }
 
     /**
@@ -525,14 +535,14 @@ class Announce extends Model
             $data["price"] = htmlspecialchars($_POST["price"]);
         }
 
-        // Enregistrement de l'utilisateur qui a sa session active
-        $data["user_email_address"] = Session::get();
-
         //=== Si user à choisi un autre utilisateur à contacter =================/
         if (isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else") {
             $data["user_to_join"] = $_POST["user_to_join"];
             $data["phone_number"] = $_POST["phone_number"];
         }
+
+        // Enregistrement de l'utilisateur qui a sa session active
+        $data["user_email_address"] = Session::get();
 
         // Insertion des données
         $insertion = new InsertInDb($data, DB_NAME, self::TABLE_NAME, DB_LOGIN, DB_PASSWORD);
@@ -550,26 +560,96 @@ class Announce extends Model
 
         // S'il y'a des images
         if (Create::fileIsUploaded("images")) {
-
             // Formater le nom de l'image
-            $imgName = $currentAnnounce->getSlug();
+            // $imgName = $currentAnnounce->getSlug();
 
-            // Format featured 600 x 400
-            $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::FEATURED_DIR_PATH, 600, 400);
+            // // Format featured 600 x 400
+            // $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::FEATURED_DIR_PATH, 600, 400);
 
-            // Product 640 x 420
-            $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::PRODUCT_DIR_PATH, 640, 420);
+            // // Product 640 x 420
+            // $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::PRODUCT_DIR_PATH, 640, 420);
 
-            // Art in Footer 240 x 200
-            $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::ART_IN_FOOTER_PATH, 240, 200);
+            // // Art in Footer 240 x 200
+            // $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::ART_IN_FOOTER_PATH, 240, 200);
 
-            // ProductInfo 625x415
-            $arrayLength = count($_FILES["images"]["tmp_name"]);
-            for ($i = 0; $i < $arrayLength; $i++) {
-                $image->save($_FILES['images']['tmp_name'][$i], $imgName."-".$i, Image::PRODUCT_INFO_DIR_PATH, 625, 415);
-            }
+            // // ProductInfo 625x415
+            // $arrayLength = count($_FILES["images"]["tmp_name"]);
+            // for ($i = 0; $i < $arrayLength; $i++) {
+            //     $image->save($_FILES['images']['tmp_name'][$i], $imgName."-".$i, Image::PRODUCT_INFO_DIR_PATH, 625, 415);
+            // }
+            $currentAnnounce->saveImages($currentAnnounce->getSlug());
         }
         
+        return true;
+    }
+
+    /**
+     * Permet de mettre à jour l'annonce.
+     * 
+     * @return bool
+     */
+    public function update()
+    {
+        $image = new Image();
+        $data["title"] = htmlspecialchars($_POST["title"]);
+        $data["description"] = htmlspecialchars($_POST["description"]);
+        $data["id_category"] = htmlspecialchars($_POST["id_category"]);
+        $data["location"] = htmlspecialchars($_POST["location"]);
+        $data["type"] = htmlspecialchars($_POST["type"]);
+        $data["direction"] = htmlspecialchars($_POST["direction"]);
+        
+        //=== Fonctionnalité rétirée pour le moment ====/
+        // $data["id_sub_category"] = htmlspecialchars($_POST["id_sub_category"]);
+
+        //=== Si l'user veut qu'on l'appelle pour le prix ======================/
+        if (empty($_POST["price"]) && isset($_POST["price_on_call"])) {
+            $data["price"] = "price_on_call";
+        } else {
+            $data["price"] = htmlspecialchars($_POST["price"]);
+        }
+
+        //=== Si user à choisi un autre utilisateur à contacter =================/
+        if (isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else") {
+            $data["user_to_join"] = $_POST["user_to_join"];
+            $data["phone_number"] = $_POST["phone_number"];
+        }
+
+        // Si le tire ne change pas
+        if ($this->title === $_POST["title"]) {
+            // nouvelles images
+            if (!empty($_FILES["images"]["name"][0])) {
+                // on enregistre les images avec les anciens noms
+                $this->saveImages($this->slug);
+            }
+        }
+        // Si le titre change
+        else {
+            // on reformate le slug = slug du tire + id
+            $slug = Utility::slugify($_POST["title"]) ."-". $this->id;
+            // on reformate le nom des images
+            $imgName = $slug . Image::EXTENSION;
+            // Si aucunes images postées
+            if (empty($_FILES["images"]["name"][0])) {
+                // on renomme les images
+                $this->renameImages($imgName);
+            } else {
+                // Si des images ont été postées
+                if (!empty($_FILES["images"]["name"][0])) {
+                    // on supprime les anciennes
+                    $this->deleteImages();
+                    // on enregistre les nouvelles avec les noms
+                    $this->saveImages($imgName);
+                }
+            }
+            $this->set("slug", $slug, "id", $this->id);
+        }
+
+        // Mise à jour des données
+        $update = new UpdateDb($data, DB_NAME, $this->tableName, DB_LOGIN, DB_PASSWORD, ["id" => $this->id]);
+        $update->run();
+        // dump($update->getQuery());
+        // dump($data);
+        // die();
         return true;
     }
 
@@ -680,9 +760,92 @@ class Announce extends Model
      * 
      * @param Category $category
      */
-    public function hasParent(Category $category)
+    public function hasCategory(Category $category)
     {
         return $this->category->getId() === $category->getId();
+    }
+
+    /**
+     * Permet de vérifier que l'utilisateur passé en paramètre est 
+     * le owner de cette annonce.
+     * 
+     * @return bool
+     */
+    public function hasOwner(\App\Model\User\Registered $registered)
+    {
+        return $this->owner->getEmailAddress() === $registered->getEmailAddress();
+    }
+
+    /**
+     * Permet de sauvegarder les images de cette l'annonce.
+     */
+    private function saveImages(string $imgName)
+    {
+        $image = new Image();
+        // Format featured 600 x 400
+        $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::FEATURED_DIR_PATH, 600, 400);
+
+        // Product 640 x 420
+        $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::PRODUCT_DIR_PATH, 640, 420);
+
+        // Art in Footer 240 x 200
+        $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::ART_IN_FOOTER_PATH, 240, 200);
+
+        // ProductInfo 625x415
+        $arrayLength = count($_FILES["images"]["tmp_name"]);
+        for ($i = 0; $i < $arrayLength; $i++) {
+            $image->save($_FILES['images']['tmp_name'][$i], $imgName ."-". $i, Image::PRODUCT_INFO_DIR_PATH, 625, 415);
+        }
+
+        return true;
+    }
+
+    /**
+     * Permet de renommer les images de cette annonce.
+     * 
+     * @param string $newImgPath Le chemin où se trouve le
+     */
+    public function renameImages(string $newImgName)
+    {
+        $image = new Image();
+        // Featured Img
+        $image->rename($this->featuredImgPath, Image::FEATURED_DIR_PATH . $newImgName . Image::EXTENSION);
+
+        // Product Img
+        $image->rename($this->productImgPath, Image::PRODUCT_DIR_PATH . $newImgName . Image::EXTENSION);
+
+        // Art in Footer Img
+        $image->rename($this->artInFooterPath, Image::ART_IN_FOOTER_PATH . $newImgName . Image::EXTENSION);
+
+        // ProductInfo Img
+        for ($i = 0; $i < 3; $i++) {
+            $image->rename(Image::PRODUCT_INFO_DIR_PATH . $this->slug ."-". $i . Image::EXTENSION , Image::PRODUCT_INFO_DIR_PATH . $newImgName ."-". $i . Image::EXTENSION);
+        }
+
+        return true;
+    }
+
+    /**
+     * Permet de supprimer les images de cette annonce.
+     */
+    public function deleteImages()
+    {
+        $image = new Image();
+        // Format featured 600 x 400
+        $image->delete($this->featuredImgPath);
+
+        // Product 640 x 420
+        $image->delete($this->productImgPath);
+
+        // Art in Footer 240 x 200
+        $image->delete($this->artInFooterImgPath);
+
+        // ProductInfo 625x415
+        for ($i = 0; $i < 3; $i++) {
+            $image->delete(Image::PRODUCT_INFO_DIR_PATH . $this->slug ."-". $i . Image::EXTENSION);
+        }
+
+        return true;
     }
 
 }

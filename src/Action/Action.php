@@ -32,6 +32,9 @@ class Action
      */
     protected $data;
 
+    /** @var string La requête finale a envoyer à la base de données */
+    protected $query;
+
     /**
      * Retourne l'instance PDO.
      * 
@@ -63,8 +66,17 @@ class Action
     {
         return isset($_POST) && !empty($_POST);
     }
+    
+    /**
+     * Retourne la requête.
+     * @return string
+     */
+    public function getQuery()
+    {
+        $this->formatQuery();
+        return $this->query;
+    }
 
-   
     /**
      * Permet de se connecter à une base de données dans le cas où
      * l'action porte sur une donnée dans cette base de données.
@@ -76,4 +88,10 @@ class Action
         $this->pdo = (new Database($this->database, $dbLogin, $dbPassword))->connect();
         return $this->pdo;
     }
+
+    /**
+     * Permet de formater la requête SQL pour insérer les données dans la base de données.
+     */
+    public function formatQuery(){}
+
 }

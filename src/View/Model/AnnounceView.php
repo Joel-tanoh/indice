@@ -44,16 +44,14 @@ class AnnounceView extends View
         return <<<HTML
         <!-- Enête de la page -->
         {$snippet->pageHeader("Poster mon Annonce", "Poster mon annonce")}
-
         <!-- Message affiché en fonction de l'issue de l'action -->
         {$message}
-
         <!-- Start Content -->
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
                     <!-- Sidebar de la page de post -->
-                    {$registeredView->sidebarNav()}
+                    {$registeredView->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
 
                     <!-- Contenu de la page -->
                     {$this->createPageContent()}
@@ -90,7 +88,7 @@ HTML;
     public function manage(\App\Model\User\Registered $registered)
     {
         $snippet = new Snippet;
-        $registeredView = new RegisteredView($registered);
+        $registeredView = new RegisteredView();
 
         return <<<HTML
         {$snippet->pageHeader($this->announce->getTitle(), "Gestion de mon announce")}
@@ -98,7 +96,7 @@ HTML;
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$registeredView->sidebarNav()}
+                    {$registeredView->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         <section class="row">
                             {$this->productInfosImgSection("col-lg-8 col-md-12 col-xs-12")}
@@ -120,8 +118,22 @@ HTML;
      */
     public function update(string $message = null)
     {
-        return <<<HTML
+        $snippet = new Snippet;
+        $registeredView = new RegisteredView();
 
+        return <<<HTML
+        {$snippet->pageHeader($this->announce->getTitle(), "Gestion de mon announce")}
+        <!-- Message affiché en fonction de l'issue de l'action -->
+        {$message}
+        <div id="content" class="section-padding">
+            <div class="container">
+                <div class="row">
+                    {$registeredView->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
+                    <!-- Contenu de la page -->
+                    {$this->createPageContent()}
+                </div>
+            </div>
+        </div>
 HTML;
     }
 
@@ -642,7 +654,7 @@ HTML;
                     </div>
                     <div class="form-group md-3">
                         <section id="editor">
-                            <textarea name="description" id="summernote" required></textarea>
+                            <textarea name="description" id="summernote"></textarea>
                         </section>
                     </div>
                     <label class="tg-fileuploadlabel" for="tg-photogallery">

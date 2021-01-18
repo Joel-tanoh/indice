@@ -103,7 +103,7 @@ class Authentication
      */
     public static function redirectUserIfNotAuthentified(string $where)
     {
-        if (!Session::isActive() || !Cookie::userCookieIsset()) {
+        if (!Session::isActive() && !Cookie::userCookieIsset()) {
             Utility::redirect($where);
         }
     }

@@ -44,7 +44,7 @@ class RegisteredView extends UserView
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebarNav()}
+                    {$this->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         <div class="page-content">
                             <div class="inner-box">
@@ -76,7 +76,7 @@ HTML;
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebarNav()}
+                    {$this->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         C'est mon profil.
                     </div>
@@ -104,9 +104,8 @@ HTML;
      * 
      * @return string
      */
-    public function sidebarNav() : string
+    public function sidebarNav($registered) : string
     {
-        $registered = new Registered(Session::get() ?? Cookie::get());
         return <<<HTML
         <div class="col-sm-12 col-md-4 col-lg-3 page-sidebar">
             <aside>

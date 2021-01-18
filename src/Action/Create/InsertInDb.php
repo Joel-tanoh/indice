@@ -9,11 +9,6 @@ use Exception;
  */
 class InsertInDb extends Create
 {
-    /** @var string La requête finale pour l'insertion
-     * des données dans la base de données.
-     */
-    private $query;
-
     /**
      * Constructeur de l'action insert.
      * 
@@ -64,7 +59,7 @@ class InsertInDb extends Create
     /**
      * Permet de formater la requête SQL pour insérer les données dans la base de données.
      */
-    private function formatQuery()
+    public function formatQuery()
     {
         // Formatage des composantes de la requête
         $arrayKeys = array_keys($this->data);

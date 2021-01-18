@@ -36,26 +36,47 @@ class AppController
         echo 'Test';
     }
 
-    /** Permet de faire des vérifications sur les routes qui ont la même
-     * longueur mais des controllers différents. */
-
-    public static function switcher1(array $params)
+    public static function switcher(array $params)
     {
-
-    }
-
-    public static function switcher2(array $params)
-    {
-        if (Category::isCategorySlug($params[1]) && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)) {
-            AnnounceController::read($params);
+        if (Category::isCategorySlug($params[1])
+            && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME))
+        {
+            if (isset($params[3]) && self::isAction($params[3])) {
+                AnnounceController::manage($params);
+            } else {
+                AnnounceController::read($params);
+            }
         }
-        elseif ($params[1] === "users" && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
-            UserController::userProfile($params);
+        elseif ($params[1] === "users"
+            && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME))
+        {
+            if (isset($params[3])
+                && $params[3] === "posts")
+            {
+                UserController::dashboard($params);
+            }
+            else {
+                UserController::userProfile($params);
+            }
+            
         }
         else {
             throw new Exception("Ressource non trouvée !");
         }
     }
 
+    /**
+     * Gère les actions qu'on veut faire dans l'application.
+     * 
+     * @return bool
+     */
+    public static function isAction(string $action)
+    {
+        $actions = [
+            "create", "read", "update", "delete", "show", "view"
+        ];
+
+        return in_array($action, $actions);
+    }
 
 }

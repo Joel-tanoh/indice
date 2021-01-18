@@ -7,7 +7,6 @@ namespace App\Action;
  */
 class Search extends Action
 {
-    private $query;
     private $result;
 
     /**
@@ -19,7 +18,7 @@ class Search extends Action
     }
 
     /**
-     * Permet de passer la requête à la recherche.
+     * Permet de passer la requête de la recherche.
      * 
      * @param $query
      */

@@ -106,7 +106,11 @@ abstract class Model
      * C'est la requête basique pour la mise à jour d'un champ.
      * 
      * @param string $colName
-     * @param  $value
+     * @param mixed  $value
+     * @param string $selector      Le nom de la colonne qui permet
+     *                              d'identifier l'élément à mettre à jour.
+     * @param mixed  $selectorValue La valeur de la colonne qui permet
+     *                              d'identifier l'élément à mettre à jour.
      * 
      * @return bool
      */

@@ -59,13 +59,13 @@ class NotificationText extends Notify
     }
 
     /**
-     * Retourne une chaîne de caractère "Veuillez insérer une description".
+     * Retourne une chaîne de caractère "Veuillez entrer une description".
      * 
      * @return string
      */
     public function descriptionIsEmpty()
     {
-        return "Veuillez insérer une description !";
+        return "Veuillez entrer une description !";
     }
 
     /**
