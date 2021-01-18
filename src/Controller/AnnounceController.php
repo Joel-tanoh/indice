@@ -197,8 +197,6 @@ class AnnounceController extends AppController
         if ($validateImages) {
             // Si des images ont été postées
             if (!$updating) {
-                die("Not Updating && file uploaded");
-
                 // Validation du nombre d'images uploadées
                 $validate->fileNumber("images", "equal", 3, "Veuillez charger 3 images svp !");
 
