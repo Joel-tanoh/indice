@@ -17,14 +17,14 @@ class Authentication
     /**
      * Retourne le tableau contenant les valeurs de session.
      * 
-     * @param string $sessionKey
+     * @param string $key
      * 
      * @return array
      */
-    public static function getSession(string $sessionKey = null)
+    public static function getSession(string $key = null)
     {
-        if (null !== $sessionKey) {
-            return $_SESSION[$sessionKey];
+        if (null !== $key) {
+            return $_SESSION[$key];
         }
 
         return $_SESSION;
@@ -33,14 +33,14 @@ class Authentication
     /**
      * Retourne le tableau des valeurs de coockie.
      * 
-     * @param string $cookieKey 
+     * @param string $key 
      * 
      * @return array
      */
-    public function getCookies(string $cookieKey = null)
+    public function getCookies(string $key = null)
     {
-        if (null !== $cookieKey) {
-            return $_SESSION[$cookieKey];
+        if (null !== $key) {
+            return $_SESSION[$key];
         }
 
         return $_COOKIE;
@@ -101,11 +101,20 @@ class Authentication
      * Permet de rédiriger l'utilisateur sur sa
      * page de connexion s'il n'est pas authentifié.
      */
-    public static function redirectUserIfNotAuthentified(string $where)
+    public static function redirectUserIfNotAuthenticated(string $where)
     {
         if (!Session::isActive() && !Cookie::userCookieIsset()) {
             Utility::redirect($where);
         }
+    }
+
+    /**
+     * Permet de vérifier qu'une session est active ou
+     * que des cookies de session existent.
+     */
+    public static function made()
+    {
+        return Cookie::userCookieIsset() && Session::isActive();
     }
 
 }

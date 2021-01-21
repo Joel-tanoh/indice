@@ -52,7 +52,7 @@ class Utility
      */
     static function redirect(string $url = null)
     {
-        header("location: " . $url);
+        header("location: /" . trim($url, "/"));
         exit();
     }
     
@@ -98,7 +98,7 @@ class Utility
         } elseif (in_array($precision, ["HOUR", "Hour", "hour", "H", "h", "HEURE", "Heure"])) {
             return $hour . ':' . $min;
         } else {
-            return "$day $month $year $hour : $min";
+            return "$day $month $year à $hour : $min";
         }
     }
 

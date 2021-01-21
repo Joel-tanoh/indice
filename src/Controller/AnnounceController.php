@@ -13,7 +13,9 @@ use App\Auth\Session;
 use App\Communication\Notify\NotifyByHTML;
 use App\Model\Category;
 use App\Model\Model;
+use App\Model\User\Administrator;
 use App\Model\User\Registered;
+use App\Model\User\User;
 use App\Utility\Utility;
 use App\Utility\Validator;
 use App\View\Model\AnnounceView;
@@ -27,7 +29,7 @@ class AnnounceController extends AppController
      */
     public static function create()
     {
-        Authentication::redirectUserIfNotAuthentified("/sign-in");
+        User::redirectIfNotAuthenticated("/sign-in");
         $htmlNotifier = new NotifyByHTML();
         $message = null;
 
@@ -42,7 +44,7 @@ class AnnounceController extends AppController
             }
         }
 
-        $page = new Page("L'indice - Poster une annonce", (new AnnounceView())->create($message));
+        $page = new Page("Poster une annonce - L'indice", (new AnnounceView())->create($message));
         $page->setDescription("");
         $page->show();
     }
@@ -64,7 +66,7 @@ class AnnounceController extends AppController
             $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $params[1], "App\Model\Category");
             $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $params[2], "App\Model\Announce");
             if ($announce->hasCategory($category)) {
-                $page = new Page("L'indice - " . $announce->getTitle(), (new AnnounceView($announce))->read());
+                $page = new Page($announce->getTitle() . " - L'indice", (new AnnounceView($announce))->read());
                 $page->show();
             } else {
                 throw new Exception("La ressource demandée n'a pas été trouvée !");
@@ -80,7 +82,7 @@ class AnnounceController extends AppController
      */
     public static function manage(array $params)
     {
-        Authentication::redirectUserIfNotAuthentified("/sign-in");
+        User::redirectIfNotAuthenticated("/sign-in");
 
         if (isset($params[1]) && !empty($params[1])
             && isset($params[2]) && !empty($params[2])
@@ -92,20 +94,23 @@ class AnnounceController extends AppController
             $registered = new Registered(Session::get() ?? Cookie::get());
             $page = new Page();
 
-            if ($announce->hasOwner($registered)) {
+            if ($announce->hasOwner($registered)
+                || $registered->isAdministrator()
+            ) {
+                $message = null;
+
                 // on switch sur l'action à exécuter
                 switch ($params[3]) {
                     case "update" :
-                        $message = null;
                         $htmlNotifier = new NotifyByHTML();
 
                         if (Update::dataPosted()) {
-                            // Si il y'a des erreurs
-                            if (!empty(self::validation(true)->getErrors())) {
+                            if (!empty(self::validation(true)->getErrors())) { // Si erreur
                                 $message = $htmlNotifier->errors(self::validation(true)->getErrors(), "danger");
                             } else { // Sinon On met à jour
                                 if ($announce->update()) {
-                                    $message = $htmlNotifier->toast("Mise à jour effectuée avec succès", "success");
+                                    $updatedAnnounce = Model::actualize("App\Model\Announce", $announce->getId());
+                                    Utility::redirect($updatedAnnounce->getLink());
                                 }
                             }
                         }
@@ -113,8 +118,17 @@ class AnnounceController extends AppController
                         $view = (new AnnounceView($announce))->update($message);
                         break;
 
+                    case "validate" :
+                        if ($registered->isAdministrator()) {
+                            (new Administrator($registered->getEmailAddress()))->changeStatus(
+                                Announce::TABLE_NAME, Announce::convertStatus("validated"), $announce->getId()
+                            );
+                        }
+                        Utility::redirect($announce->getLink());
+                        break;
+
                     case "delete" :
-                        if ($announce->delete(Announce::TABLE_NAME)) {
+                        if ($announce->delete()) {
                             Utility::redirect($user->getProfileLink()."/posts");
                         }
                         break;
@@ -124,9 +138,10 @@ class AnnounceController extends AppController
                         break;
                 }
 
-                $page->setMetaTitle("L'indice - " . $announce->getTitle());
+                $page->setMetaTitle($announce->getTitle() . " - L'indice");
                 $page->setView($view);
                 $page->show();
+
             } else {
                 Utility::redirect($registered->getProfileLink()."/posts");
             }
@@ -134,11 +149,6 @@ class AnnounceController extends AppController
         } else {
             throw new Exception("Ressource non trouvée !");
         }
-    }
-
-    public function delete()
-    {
-        
     }
 
     /**
@@ -158,26 +168,26 @@ class AnnounceController extends AppController
 
         // Validation de la catégorie
         if ($_POST["id_category"] == 0) {
-            $validate->addError("category", "Veuillez choisir une catégorie !");
+            $validate->addError("category", "Veuillez vérifier que vous avez choisi la catégorie de l'annonce.");
         }
 
         // Valider la direction
         if (empty($_POST["direction"])) {
-            $validate->addError("direction", "Veuillez choisir le sens de l'annonce !");
+            $validate->addError("direction", "Veuillez vérifier que vous avez choisi le sens de l'annonce.");
         } else {
             $validate->name($_POST["direction"], "Le sens ne doit pas comporter de code HTML !");
         }
 
         // Valider le type
         if (empty($_POST["type"])) {
-            $validate->addError("type", "Veuillez choisir le type de l'annonce !");
+            $validate->addError("type", "Veuillez vérifier que vous avez choisi le type de l'annonce.");
         } else {
-            $validate->name($_POST["type"], "Le type ne doit pas comporter de code HTML !");
+            $validate->name($_POST["type"], "Le type ne doit pas comporter de code HTML.");
         }
 
         // Validation de la localisation
         if (empty($_POST["location"])) {
-            $validate->addError("location", "Veuillez choisir la ville !");
+            $validate->addError("location", "Veuillez vérifier que vous avez choisi la ville.");
         }
         $validate->name($_POST["location"], "Veuillez vérifier que la localisation ne contient pas de code HTML.");
 
@@ -189,9 +199,11 @@ class AnnounceController extends AppController
         $validate->description("description", $_POST["description"]);
 
         // Si user à coché someone_else
-        if (isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else") {
+        if ((isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else")
+            || (!empty($_POST["user_to_join"]) && !empty($_POST["phone_number"]))
+        ) {
             $validate->email("user_to_join", $_POST["user_to_join"]);
-            $validate->phoneNumber("phone", $_POST["phone_number"], "Veuillez entrer un numéro de téléphone valide !");
+            $validate->phoneNumber("phone", $_POST["phone_number"], "Veuillez vérifier que vous avez entré un numéro de téléphone valide !");
         }
 
         if ($validateImages) {
@@ -209,20 +221,18 @@ class AnnounceController extends AppController
                 foreach ($_FILES["images"]["size"] as $size) {
                     $validate->fileSize("images", $size, Image::MAX_VALID_SIZE, "Veuillez charger des fichiers de taille inférieur à 2 Mb svp !");
                 }
-            } else {
-                if (!empty($_FILES["images"]["name"][0])) {
-                    // Validation du nombre d'images uploadées
-                    $validate->fileNumber("images", "equal", 3, "Veuillez charger 3 images svp !");
+            } elseif (!empty($_FILES["images"]["name"][0])) {
+                // Validation du nombre d'images uploadées
+                $validate->fileNumber("images", "equal", 3, "Veuillez charger 3 images svp !");
 
-                    // Validation des extensions
-                    foreach ($_FILES["images"]["type"] as $extension) {
-                        $validate->fileExtensions("images", $extension, ["image/jpeg", "image/png"], "Veuillez vérifier que vous avez chargé des images svp !");
-                    }
+                // Validation des extensions
+                foreach ($_FILES["images"]["type"] as $extension) {
+                    $validate->fileExtensions("images", $extension, ["image/jpeg", "image/png"], "Veuillez vérifier que vous avez chargé des images svp !");
+                }
 
-                    // Validation des tailles des fichiers
-                    foreach ($_FILES["images"]["size"] as $size) {
-                        $validate->fileSize("images", $size, Image::MAX_VALID_SIZE, "Veuillez charger des fichiers de taille inférieur à 2 Mb svp !");
-                    }
+                // Validation des tailles des fichiers
+                foreach ($_FILES["images"]["size"] as $size) {
+                    $validate->fileSize("images", $size, Image::MAX_VALID_SIZE, "Veuillez charger des fichiers de taille inférieur à 2 Mb svp !");
                 }
             }
         }

@@ -48,11 +48,11 @@ HTML;
      */
     public function errors(array $errors)
     {
-        $text = null;
+        $text = "<ul>";
         foreach ($errors as $error) {
-            $text .= $error;
-            $text .= "<br/>";
+            $text .= "<li>$error<li/>";
         }
+        $text .= "</ul>";
 
         return $this->toast($text, "danger");
     }
@@ -68,7 +68,7 @@ HTML;
     public function toast(string $message, string $type): string
     {
         return <<<HTML
-        <div id="toast" class="alert alert-{$type} alert-dismissible fade show" style="position: fixed; top: 1rem; right: 1rem; min-width:13rem; max-width:25rem; z-index:999999;">
+        <div id="toast" class="alert alert-{$type} alert-dismissible fade show" style="position: fixed; top: 1rem; right: 1rem; min-width:13rem; max-width:30rem; z-index:999999;">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>

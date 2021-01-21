@@ -217,12 +217,11 @@ HTML;
         return <<<HTML
         <nav class="nav-table">
             <ul>
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts", "Tous", $this->registered->countAnnounces())}
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/pending", "En attente", $this->registered->countAnnounces(Announce::convertStatus("pending")))}
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/validated", "Validées", $this->registered->countAnnounces(Announce::convertStatus("validated")))}
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/featured", "Vedette", $this->registered->countAnnounces(Announce::convertStatus("featured")))}
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/premium", "Prémium", $this->registered->countAnnounces(Announce::convertStatus("premium")))}
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/blocked", "Bloquées", $this->registered->countAnnounces(Announce::convertStatus("blocked")))}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts", "Tous", $this->registered->getAnnounceNumber())}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/pending", "En attente", $this->registered->getAnnounceNumber(Announce::convertStatus("pending")))}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/validated", "Validées", $this->registered->getAnnounceNumber(Announce::convertStatus("validated")))}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/premium", "Premium", $this->registered->getAnnounceNumber(Announce::convertStatus("premium")))}
+                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/blocked", "Bloquées", $this->registered->getAnnounceNumber(Announce::convertStatus("blocked")))}
             </ul>
         </nav>
 HTML;

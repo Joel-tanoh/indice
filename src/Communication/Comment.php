@@ -3,6 +3,8 @@
 namespace App\Communication;
 
 use App\Model\Model;
+use App\Model\User\Registered;
+use App\Utility\Utility;
 
 /**
  * Classe de gestion des commentaires.
@@ -15,10 +17,18 @@ class Comment extends Model
     private $poster;
 
     /** L'item concerné par le commentaire. */
-    private $subject;
+    private $subjectId;
+
+    /** Le type de l'item concerné par le commentaire */
+    private $subjectType;
 
     /** @var string Le contenu du commentaire. */
     private $content;
+
+    /**
+     * La date de post du commentaire.
+     * @var string
+     */
 
     /**
      * Constructeur d'un commentaire.
@@ -27,10 +37,27 @@ class Comment extends Model
      */
     public function __construct(int $id)
     {
-        
+        $query = "SELECT id, user_email_address, subject_id, subject_type, content, posted_at
+            FROM " . self::TABLE_NAME . " WHERE id = :id";
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([
+            "id" => $id
+        ]);
+
+        $result = $req->fetch();
+
+        $this->id = $result["id"];
+        $this->content = $result["content"];
+        $this->poster = new Registered($result["user_email_address"]);
+        $this->subjectType = $result["subject_type"];
+        $this->subjectId = $result["subject_id"];
+        $this->postedAt = $result["posted_at"];
+        $this->tableName = self::TABLE_NAME;
     }
 
-    /** Retourne l'utilisateur qui a posté l'annonce */
+    /** 
+     * Retourne l'utilisateur qui a posté l'annonce
+     */
     public function getPoster()
     {
         return $this->poster;
@@ -41,7 +68,7 @@ class Comment extends Model
      */
     public function getSubject()
     {
-        return $this->subject;
+        return $this->subjectId;
     }
 
     /**
@@ -49,28 +76,105 @@ class Comment extends Model
      */
     public function getContent()
     {
-        return $this->content;
+        return ucfirst(trim($this->content));
+    }
+
+    /**
+     * Retourne le type de l'item concerné par le commentaire.
+     */
+    public function getSubjectType()
+    {
+        return $this->subjectType;
     }
 
     /**
      * Permet d'ajouter un commentaire.
      * @param string $userEmailAddress L'adresse email de l'utilisateur qui a posté cette annonce.
-     * @param string $subject          Le sujet commenté.
+     * @param string $subjectId        Le sujet commenté.
      * @param string $content          Le contenu du commentaire.
      * @param string $subjectType      Le type du sujet commenté, optionnel.
      * @return bool
      */
-    public static function add(string $userEmailAddress, $subject, string $content, $subjectType = null)
+    public static function add(string $userEmailAddress, $subjectId, string $content, $subjectType = null)
     {
-        $query = "INSERT INTO " . Comment::TABLE_NAME . "(user_email_address, subject, subject_type, content)
-            VALUES(:user_email_address, :subject, :subject_type, :content)";
+        $query = "INSERT INTO " . Comment::TABLE_NAME . "(user_email_address, subject_id, subject_type, content)
+            VALUES(:user_email_address, :subject_id, :subject_type, :content)";
         $req = parent::connectToDb()->prepare($query);
         $req->execute([
             "user_email_address" => $userEmailAddress,
-            "subject" => $subject,
+            "subject_id" => $subjectId,
             "subject_type" => $subjectType,
             "content" => $content,
         ]);
         return true;
     }
+
+    /**
+     * Retourne la date à laquelle le commentaire a été posté.
+     * @return string
+     */
+    public function getPostedAt()
+    {
+        return Utility::formatDate($this->postedAt);
+    }
+
+    /**
+     * Permet de retourner tous les commentaires postés.
+     * 
+     * @return array
+     */
+    public static function getAll()
+    {
+        $req = parent::connectToDb()->query("SELECT id FROM " . self::TABLE_NAME);
+        $req->execute();
+
+        $comments = [];
+        foreach($req->fetchAll() as $comment) {
+            $comments[] = new self($comment["id"]);
+        }
+
+        return $comments;
+    }
+
+    /**
+     * Retourne les commentaires par sujet et par type de sujet sur l'appli.
+     * 
+     * @param string 
+     * @param string
+     */
+    public static function getBySubject(string $subjectType, string $subjectId)
+    {
+        $req = parent::connectToDb()->prepare("SELECT id FROM " . self::TABLE_NAME
+            . " WHERE subject_type = :subject_type AND subject_id = :subject_id"
+        );
+        $req->execute([
+            "subject_type" => $subjectType,
+            "subject_id" => $subjectId
+        ]);
+
+        $comments = [];
+        foreach($req->fetchAll() as $rep) {
+            $comments[] = new self($rep["id"]);
+        }
+        return $comments;
+    }
+
+    /**
+     * Permet de retourner les commentaires par utilisateur.
+     */
+    public static function getByUser(string $emailAddress)
+    {
+        $req = parent::connectToDb()->prepare("SELECT id FROM " . self::TABLE_NAME . " WHERE user_email_address = :user_email_address");
+        $req->execute([
+            "user_email_address" => $emailAddress
+        ]);
+
+        $comments = [];
+        foreach($req->fetchAll() as $rep) {
+            $comments[] = new self($rep["id"]);
+        }
+
+        return $comments;
+    }
+
 }

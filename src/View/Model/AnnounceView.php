@@ -9,7 +9,9 @@ use App\View\Snippet;
 use App\View\View;
 use App\View\Form;
 use App\Auth\Session;
+use App\Model\User\User;
 use App\View\Model\User\RegisteredView;
+use App\View\Communication\CommentView;
 
 /**
  * Classe de gestion des vues des annonces.
@@ -65,49 +67,19 @@ HTML;
     /**
      * Permet  d'afficher la vue des détails de l'annonce.
      * 
+     * @param string  $message Un message à afficher si besoin.
      * @return string Le code HTML de la vue.
      */
-    public function read()
+    public function read(string $message = null)
     {
         $snippet = new Snippet();
 
         return <<<HTML
         <!-- Header de la page -->
         {$snippet->pageHeader("Détails", "Détails")}
-
+        {$message}
         <!-- Contenu de la page -->
         {$this->details()}
-HTML;
-    }
-
-    /**
-     * La vue qui permet qui permet de manager l'annonce.
-     * 
-     * @return string
-     */
-    public function manage(\App\Model\User\Registered $registered)
-    {
-        $snippet = new Snippet;
-        $registeredView = new RegisteredView();
-
-        return <<<HTML
-        {$snippet->pageHeader($this->announce->getTitle(), "Gestion de mon announce")}
-
-        <div id="content" class="section-padding">
-            <div class="container">
-                <div class="row">
-                    {$registeredView->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
-                    <div class="col-sm-12 col-md-8 col-lg-9">
-                        <section class="row">
-                            {$this->productInfosImgSection("col-lg-8 col-md-12 col-xs-12")}
-                            <section class="col-lg-4 col-md-12 col-xs-12">
-                                {$this->metadataTable()}
-                            </section>
-                        </section>
-                    </div>
-                </div>
-            </div>
-        </div>
 HTML;
     }
 
@@ -125,6 +97,7 @@ HTML;
         {$snippet->pageHeader($this->announce->getTitle(), "Gestion de mon announce")}
         <!-- Message affiché en fonction de l'issue de l'action -->
         {$message}
+
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
@@ -170,14 +143,14 @@ HTML;
     }
 
     /**
-     * Affiches les annonces vedettes.
+     * Affiches les annonces premium.
      * 
      * @return string
      */
-    public function featuredSection()
+    public function premiumSection()
     {
         $content = null;
-        $announces = Announce::getFeatured(6);
+        $announces = Announce::getPremium(6);
 
         if (empty($content)) {
             $content = AnnounceView::noAnnounces();
@@ -185,7 +158,7 @@ HTML;
             foreach ($announces as $item) {
                 $announce = new Announce($item["id"]);
                 $announceView = new AnnounceView($announce);
-                $content .= $announceView->featuredCard();
+                $content .= $announceView->premiumCard();
             }
         }
 
@@ -194,7 +167,7 @@ HTML;
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 wow fadeIn" data-wow-delay="0.5s">
-                        <h3 class="section-title">Les Annonces vedettes</h3>
+                        <h3 class="section-title">Les Annonces Premium</h3>
                         <div id="new-products" class="owl-carousel">
                             {$content}
                         </div>
@@ -224,11 +197,11 @@ HTML;
     }
 
     /**
-     * La carte qui s'affiche dans la section featured.
+     * La carte qui s'affiche dans la section premium.
      * 
      * @return string
      */
-    public function featuredCard()
+    public function premiumCard()
     {
         return <<<HTML
         <div class="item">
@@ -315,9 +288,9 @@ HTML;
         </div>
         <!-- Ads Details End -->
 
-        <!-- Featured Listings Start -->
-        {$this->featuredSection()}
-        <!-- Featured Listings End -->
+        <!-- Premium Listings Start -->
+        {$this->premiumSection()}
+        <!-- Premium Listings End -->
 HTML;
     }
 
@@ -385,7 +358,7 @@ HTML;
     }
 
     /**
-     * Permet d'afficher l'image de l'annonce sur les cartes featured (vedettes).
+     * Permet d'afficher l'image de couverture de l'annonce dans les cartes premium.
      * 
      * @return string
      */
@@ -404,7 +377,7 @@ HTML;
     }
 
     /**
-     * Affiche le contenu sur les cartes vedettes.
+     * Affiche le contenu sur les cartes premium.
      * 
      * @return string
      */
@@ -444,17 +417,15 @@ HTML;
     private function specifications()
     {
         return <<<HTML
-        <h4 class="title-small mb-3">Specification:</h4>
-        <ul class="list-specification">
-            <li><i class="lni-check-mark-circle"></i> 256GB PCIe flash storage</li>
-            <li><i class="lni-check-mark-circle"></i> 2.7 GHz dual-core Intel Core i5</li>
-            <li><i class="lni-check-mark-circle"></i> Turbo Boost up to 3.1GHz</li>
-            <li><i class="lni-check-mark-circle"></i> Intel Iris Graphics 6100</li>
-            <li><i class="lni-check-mark-circle"></i> 8GB memory</li>
-            <li><i class="lni-check-mark-circle"></i> 10 hour battery life</li>
-            <li><i class="lni-check-mark-circle"></i> 13.3" Retina Display</li>
-            <li><i class="lni-check-mark-circle"></i> 1 Year international warranty</li>
-        </ul>
+        <section class="mb-4">
+            <h5 class="mb-2">Specifications :</h4>
+            <ul class="list-specification">
+                <li><i class="lni-check-mark-circle"></i> Statut : {$this->announce->getStatus("fr")}</li>
+                <li><i class="lni-check-mark-circle"></i> Sens : {$this->announce->getDirection()}</li>
+                <li><i class="lni-check-mark-circle"></i> Type : {$this->announce->getType()}</li>
+            </ul>
+        </section>
+        
 HTML;
     }
 
@@ -522,9 +493,11 @@ HTML;
                         <p><a href="/posts/{$this->announce->getOwner()->getPseudo()}"><i class="lni-users"></i> Plus d'annonces de <span>{$this->announce->getOwner()->getName()}</span></a></p>
                     </li>
                 </ul>
+                {$this->specifications()}
                 {$this->infosForJoinUser()}
                 {$this->shareMe()}
                 {$this->showComments()}
+                {$this->putComments()}
             </div>
         </div>
 HTML;
@@ -605,6 +578,11 @@ HTML;
     {
         $categoryView = new CategoryView();
         $snippet = new Snippet();
+        $title = $_POST["title"] ?? $this->announce->getTitle() ?? null;
+        $description = $_POST["description"] ?? $this->announce->getDescription() ?? null;
+        $price = $_POST["price"] ?? $this->announce->getPrice(false) ?? null;
+        $checkedPriceOnCall = (isset($_POST["price_on_call"]) || (isset($this->announce) && $this->announce->getPrice() === "Prix à l'appel"))
+            ? "checked" : null;
 
         return <<<HTML
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
@@ -614,11 +592,11 @@ HTML;
                 </div>
                 <div class="dashboard-wrapper">
                     <div class="form-group mb-3">
-                        <label class="control-label">Titre :</label>
-                        <input class="form-control input-md" name="title" placeholder="Titre" type="text" required>
+                        <label class="control-label">Titre</label>
+                        <input class="form-control input-md" name="title" placeholder="Titre" type="text" value="{$title}" required>
                     </div>
                     <div class="form-group mb-3 tg-inputwithicon">
-                        <label class="control-label">Catégories :</label>
+                        <label class="control-label">Catégories</label>
                         <div class="tg-select form-control">
                             <select name="id_category">
                                 <option value="0">Sélectionner la catégorie</option>
@@ -635,33 +613,33 @@ HTML;
                         </div>
                     </div>
                     <div class="form-group mb-3 tg-inputwithicon">
-                        <label class="control-label">Ville :</label>
+                        <label class="control-label">Ville</label>
                         <div class="tg-select form-control">
                             {$snippet->townList("location")}
                         </div>
                     </div>
                     <div class="form-group mb-3">
                         <div id="enter_price_box">
-                            <label class="control-label">Prix :</label>
-                            <input class="form-control input-md" name="price" placeholder="Ajouter le prix (F CFA)" type="number">
+                            <label class="control-label">Prix</label>
+                            <input class="form-control input-md" name="price" placeholder="Ajouter le prix (F CFA)" value="{$price}" type="number">
                         </div>
                         <div class="tg-checkbox mt-3">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" name="price_on_call" id="tg-priceoncall">
-                                <label class="custom-control-label" for="tg-priceoncall">Prix à l'appel</label>
+                                <input type="checkbox" class="custom-control-input" name="price_on_call" id="tg-priceoncall" {$checkedPriceOnCall}>
+                                <label class="custom-control-label" for="tg-priceoncall">Me contacter pour avoir le prix</label>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group md-3">
+                    <div class="form-group mb-3">
                         <section id="editor">
-                            <textarea name="description" id="summernote"></textarea>
+                            <textarea name="description" id="summernote">{$description}</textarea>
                         </section>
                     </div>
                     <label class="tg-fileuploadlabel" for="tg-photogallery">
                         <span>Glissez votre fichier pour le charger</span>
                         <span>Ou</span>
-                        <span class="btn btn-common">Séléctionner 3 fichiers</span>
-                        <span>Taille maximum des fichiers: 2 MB</span>
+                        <span class="btn btn-common">Cliquez et séléctionner 3 images</span>
+                        <span>Taille maximum d'une image : 2 MB</span>
                         <input id="tg-photogallery" class="tg-fileinput" type="file" name="images[]" multiple>
                     </label>
                 </div>
@@ -677,6 +655,9 @@ HTML;
      */
     private function contactDetails()
     {
+        $userToJoin = $_POST["user_to_join"] ?? $this->announce->getUserToJoin() ?? null;
+        $phoneNumber = $_POST["phone_number"] ?? $this->announce->getPhoneNumber() ?? null;
+
         return <<<HTML
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
             <div class="inner-box">
@@ -689,7 +670,7 @@ HTML;
                             <strong>Qui contacter ?</strong>
                             <div class="tg-selectgroup">
                                 <span class="tg-radio">
-                                    <input id="tg-sameuser" type="radio" name="usertype" value="current_user" checked>
+                                    <input id="tg-sameuser" type="radio" name="usertype" value="current_user">
                                     <label for="tg-sameuser">Moi</label>
                                 </span>
                                 <span class="tg-radio">
@@ -700,15 +681,15 @@ HTML;
                         </div>
                         <div id="someone_else">
                             <div class="form-group mb-3">
-                                <label class="control-label">Adresse email*</label>
-                                <input class="form-control input-md" name="user_to_join" type="email">
+                                <label class="control-label">Adresse email</label>
+                                <input class="form-control input-md" name="user_to_join" type="email" value={$userToJoin}>
                             </div>
                             <div class="form-group mb-3">
-                                <label class="control-label">Téléphone*</label>
-                                <input class="form-control input-md" name="phone_number" type="text" placeholder="+XXX XXXXXXXXXX">
+                                <label class="control-label">Téléphone</label>
+                                <input class="form-control input-md" name="phone_number" type="text" placeholder="+XXX XXXXXXXXXX" value="{$phoneNumber}">
                             </div>
                         </div>
-                        <button class="btn btn-common" type="submit">Poster</button>
+                        <button class="btn btn-common" type="submit">Envoyer</button>
                     </div>
                 </div>
             </div>
@@ -726,44 +707,36 @@ HTML;
     }
 
     /**
-     * Permet de choisir le type d'annonce.
-     * @return string
-     */
-    private function chooseType()
-    {
-        return <<<HTML
-        <div class="form-group mb-3">
-            <strong>Type :</strong>
-            <div class="tg-selectgroup">
-                <span class="tg-radio">
-                    <input id="tg-particular" type="radio" name="type" value="particulier">
-                    <label for="tg-particular">Particulier</label>
-                </span>
-                <span class="tg-radio">
-                    <input id="tg-professionnal" type="radio" name="type" value="professionnel">
-                    <label for="tg-professionnal">Professionnel</label>
-                </span>
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
      * Permet de choisir la direction de l'offre, demande ou offre.
      * @return string
      */
     private function chooseDirection()
     {
+        $checkOffer = null;
+        $checkAsking = null;
+
+        if (isset($_POST["direction"])
+        ) {
+            if ($_POST["direction"] == "offre") {
+                $checkOffer = "checked";
+            } elseif ($_POST["direction"] == "demande") {
+                $checkAsking = "checked";
+            }
+        } elseif ($this->announce) {
+            $checkOffer = strtolower($this->announce->getDirection()) === "offre" ? "checked" : null;
+            $checkAsking = strtolower($this->announce->getDirection()) === "demande" ? "checked" : null;
+        }
+
         return <<<HTML
         <div class="form-group mb-3">
             <strong>Sens :</strong>
             <div class="tg-selectgroup">
                 <span class="tg-radio">
-                    <input id="tg-offre" type="radio" name="direction" value="offre">
+                    <input id="tg-offre" type="radio" name="direction" value="offre" $checkOffer>
                     <label for="tg-offre">Offre</label>
                 </span>
                 <span class="tg-radio">
-                    <input id="tg-demande" type="radio" name="direction" value="demande">
+                    <input id="tg-demande" type="radio" name="direction" value="demande" $checkAsking>
                     <label for="tg-demande">Demande</label>
                 </span>
             </div>
@@ -771,6 +744,42 @@ HTML;
 HTML;
     }
 
+    /**
+     * Permet de choisir le type d'annonce.
+     * @return string
+     */
+    private function chooseType()
+    {
+        $checkParticular = null;
+        $checkPro = null;
+
+        if (isset($_POST["type"])) {
+            if ($_POST["type"] == "particulier") {
+                $checkParticular = "checked";
+            } elseif ($_POST["type"] == "professionnel") {
+                $checkPro = "checked";
+            }
+        } elseif ($this->announce) {
+            $checkParticular = strtolower($this->announce->getType()) === "particulier" ? "checked" : null;
+            $checkPro = strtolower($this->announce->getType()) === "professionnel" ? "checked" : null;
+        }
+
+        return <<<HTML
+        <div class="form-group mb-3">
+            <strong>Type :</strong>
+            <div class="tg-selectgroup">
+                <span class="tg-radio">
+                    <input id="tg-particular" type="radio" name="type" value="particulier" $checkParticular>
+                    <label for="tg-particular">Particulier</label>
+                </span>
+                <span class="tg-radio">
+                    <input id="tg-professionnal" type="radio" name="type" value="professionnel" $checkPro>
+                    <label for="tg-professionnal">Professionnel</label>
+                </span>
+            </div>
+        </div>
+HTML;
+    }
     /**
      * Une ligne qui affiche une annonce et quelque détails.
      * 
@@ -821,12 +830,10 @@ HTML;
         } elseif ($this->announce->getStatus() == "Validated") {
             $statusClass = "adstatusactive bg-success";
             $statusText = "Validée";
-        } elseif ($this->announce->getStatus() == "Featured") {
-            $statusClass = "adstatusexpired";
-            $statusText = "Vedette";
         } elseif ($this->announce->getStatus() == "Premium") {
-            $statusClass = "adstatussold";
-            $statusText = "Prémium";
+            // adstatussold
+            $statusClass = "adstatusexpired";
+            $statusText = "Premium";
         } else {
             $statusClass = "adstatusexpired";
             $statusText = "Bloquée";
@@ -893,14 +900,20 @@ HTML;
      */
     private function manageButtons()
     {
-        if (Session::isActive() || Cookie::userCookieIsset()) {
+        if (User::isAuthenticated()) {
             $sessionId = Session::get() ?? Cookie::get();
             $registered = new Registered($sessionId);
             if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
                 || $registered->isAdministrator()
             ) {
                 return <<<HTML
-                Des boutons.
+                <nav class="mb-3">
+                    {$this->editButton()}
+                    {$this->validateButton()}
+                    {$this->setPremiumButton()}
+                    {$this->suspendButton()}
+                    {$this->deleteButton()}
+                </nav>
 HTML;
             }
         }
@@ -912,14 +925,23 @@ HTML;
      */
     private function putComments()
     {
-        if (Session::isActive() || Cookie::userCookieIsset()) {
+        if (User::isAuthenticated()) {
             $sessionId = Session::get() ?? Cookie::get();
             $registered = new Registered($sessionId);
-            if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
-                || $registered->isAdministrator()
-            ) {
+            $form = new Form($_SERVER["REQUEST_URI"], "mt-3");
+
+            if ($registered->isAdministrator()) {
                 return <<<HTML
-                Champs pour mettre des suggestions.
+                {$form->open()}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-xs-12">
+                        <div class="form-group">
+                            <textarea id="comment" class="form-control" name="comment" cols="45" rows="5" placeholder="Suggestions..." required></textarea>
+                        </div>
+                        <button type="submit" id="submit" class="btn btn-common">Envoyer</button>
+                        </div>
+                    </div>
+                {$form->close()}
 HTML;
             }
         }
@@ -934,17 +956,99 @@ HTML;
      */
     private function showComments()
     {
-        if (Session::isActive() || Cookie::userCookieIsset()) {
-            $sessionId = Session::get() ?? Cookie::get();
-            $registered = new Registered($sessionId);
+        if (User::isAuthenticated()) {
+
+            $registered = new Registered(Session::get() ?? Cookie::get());
+
+            if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
+                || $registered->isAdministrator()
+            ) {
+                $comments = null;
+                foreach ($this->announce->getComments() as $comment) {
+                    $comments .= (new CommentView($comment))->show();
+                }
+
+                return $comments;
+            }
+        }
+    }
+
+    /**
+     * Affiche un bouton pour editer l'annonce.
+     * @return string
+     */
+    private function editButton()
+    {
+        if($this->announce->getOwner()->getEmailAddress() === (new Registered(Session::get() ?? Cookie::get()))->getEmailAddress())
+        return <<<HTML
+        <a href="{$this->announce->getManageLink('update')}" class="text-primary">Editer</a>
+HTML;
+    }
+
+    /**
+     * Affiche le bouton pour supprimer l'annonce sur la page qui affiche
+     * l'annonce.
+     * @return string
+     */
+    private function deleteButton()
+    {
+        if (User::isAuthenticated()) {
+            $registered = new Registered(Session::get() ?? Cookie::get());
+
             if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
                 || $registered->isAdministrator()
             ) {
                 return <<<HTML
-                Cette partie affichera les suggestions laissées et les reponses.
+                <a href="{$this->announce->getManageLink('delete')}" class="text-danger">Supprimer</a>
+HTML;
+            }
+        }
+    }
+    
+    /**
+     * Affiche le bouton pour valider l'annonce.
+     * @return string
+     */
+    private function validateButton()
+    {
+        if (User::isAuthenticated()) {
+            if ((new Registered(Session::get() ?? Cookie::get()))->isAdministrator()
+                && !$this->announce->isValidated()
+            ) {
+            return <<<HTML
+            <a href="{$this->announce->getManageLink('validate')}" class="text-success disabled">Valider</a>
 HTML;
             }
         }
     }
 
+    /**
+     * Affiche le bouton pour passer l'annonce en premium.
+     * @return string
+     */
+    private function setPremiumButton()
+    {
+        if (User::isAuthenticated()) {
+            if ((new Registered(Session::get() ?? Cookie::get()))->isAdministrator()) {
+            return <<<HTML
+            <a href="{$this->announce->getManageLink('set-premium')}" class="text-warning">Passer en Prémium</a>
+HTML;
+            }
+        }
+    }
+
+    /**
+     * Affiche le bouton qui permet de suspendre l'annonce.
+     * @return string
+     */
+    private function suspendButton()
+    {
+        if (User::isAuthenticated()) {
+            if ((new Registered(Session::get() ?? Cookie::get()))->isAdministrator()) {
+            return <<<HTML
+            <a href="{$this->announce->getManageLink('suspend')}" class="text-danger">Suspendre</a>
+HTML;
+            }
+        }
+    }
 }

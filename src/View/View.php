@@ -38,9 +38,9 @@ class View
                     {$categoryView->trendingCategoriesSection()}
                     <!-- Trending Categories Section End -->
 
-                    <!-- Featured Listings Start -->
-                    {$annonceView->featuredSection()}
-                    <!-- Featured Listings End -->
+                    <!-- Premium Listings Start -->
+                    {$annonceView->premiumSection()}
+                    <!-- Premium Listings End -->
 
                     <!-- Latest Announcements Section Start -->
                     {$annonceView->latestSection()}

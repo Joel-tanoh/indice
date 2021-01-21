@@ -77,8 +77,8 @@ class Image extends File
     const PRODUCT_DIR_PATH = self::IMG_DIR_PATH . "product" . DIRECTORY_SEPARATOR;
     const PRODUCT_DIR_URL = self::IMG_DIR_URL . "/product";
 
-    const FEATURED_DIR_PATH = self::IMG_DIR_PATH . "featured" . DIRECTORY_SEPARATOR;
-    const FEATURED_DIR_URL = self::IMG_DIR_URL . "/featured";
+    const PREMIUM_DIR_PATH = self::IMG_DIR_PATH . "premium" . DIRECTORY_SEPARATOR;
+    const PREMIUM_DIR_URL = self::IMG_DIR_URL . "/premium";
 
     const PRODUCT_INFO_DIR_PATH = self::IMG_DIR_PATH . "productinfo" . DIRECTORY_SEPARATOR;
     const PRODUCT_INFO_DIR_URL = self::IMG_DIR_URL . "/productinfo";

@@ -121,7 +121,7 @@ HTML;
     {
         $announceView = new AnnounceView();
         $content = null;
-        $announces = Announce::getFeatured(2);
+        $announces = Announce::getPremium(2);
 
         if (empty($content)) {
             $content = AnnounceView::noAnnounces();

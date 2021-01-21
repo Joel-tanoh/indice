@@ -263,16 +263,28 @@ abstract class Model
     /**
      * Permet de supprimer une valeur de la table passée en 
      * paramètre.
-     * @param string $tableName
+     * 
      * @return bool|null
      */
-    public function delete(string $tableName)
+    public function delete()
     {
-        $query = "DELETE FROM $tableName WHERE id = ?";
+        $query = "DELETE FROM $this->tableName WHERE id = ?";
         $req = self::connectToDb()->prepare($query);
         if ($req->execute([$this->id])) {
             return true;
         }
+    }
+
+    /**
+     * Permet d'actualiser un objet.
+     * 
+     * @param string $class               La classe de l'objet à instantier.
+     * @param mixed  $valueForInstantiate La valeur à utiliser pour instantier
+     *                                    l'objet.
+     */
+    public static function actualize(string $class, $valueForInstantiate)
+    {
+        return new $class($valueForInstantiate);
     }
 
 }

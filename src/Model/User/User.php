@@ -4,6 +4,7 @@ namespace App\Model\User;
 
 use App\Action\Create\Create;
 use App\Action\Create\InsertInDb;
+use App\Auth\Authentication;
 use App\Auth\Cookie;
 use App\Auth\Session;
 use App\File\Image\Avatar;
@@ -62,9 +63,9 @@ class User extends Model
      * 
      * @return bool
      */
-    public static function isAuthentified()
+    public static function isAuthenticated()
     {
-        return Session::isActive() || Cookie::userCookieIsset();
+        return Authentication::made();
     }
 
     /**
@@ -95,4 +96,15 @@ class User extends Model
         return true;
     }
 
+    /**
+     * Permet de rédiriger l'utilisateur sur sa
+     * page de connexion s'il n'est pas authentifié.
+     * 
+     * @param string $where Le lien vers lequel on redirige l'utilisateur
+     *                      s'il n'est pas authentifié.
+     */
+    public static function redirectIfNotAuthenticated(string $where)
+    {
+        Authentication::redirectUserIfNotAuthenticated($where);
+    }
 }

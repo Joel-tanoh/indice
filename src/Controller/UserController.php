@@ -102,7 +102,7 @@ class UserController extends AppController
             }
         }
 
-        $page = new Page("L'indice - Créer un compte", UserView::register($message));
+        $page = new Page("Je crée mon compte - L'indice", UserView::register($message));
         $page->setDescription("");
         $page->show();
     }
@@ -112,7 +112,7 @@ class UserController extends AppController
      */
     public static function signIn()
     {
-        if (Session::isActive() || Cookie::userCookieIsset()) {
+        if (User::isAuthenticated()) {
             $registered = new Registered(Session::get() ?? Cookie::get());
             Utility::redirect($registered->getProfileLink() . "/posts");
         }
@@ -128,17 +128,13 @@ class UserController extends AppController
                 $error = (new NotifyByHTML())->error($connexion->getError(), "alert alert-danger");
             } else {
                 Session::activate($_POST["email_address"]);
-
-                if (isset($_POST["remember_me"]) && $_POST["remember_me"] === "yes") {
-                    Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
-                }
-
+                Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
                 $registered = new Registered($_POST["email_address"]);
                 Utility::redirect($registered->getProfileLink());
             }
         }
 
-        $page = new Page("L'indice - Connexion", (new UserView())->signIn($error));
+        $page = new Page("Je m'identifie - L'indice", (new UserView())->signIn($error));
         $page->setDescription("");
         $page->show();
     }
@@ -148,7 +144,7 @@ class UserController extends AppController
      */
     public static function userProfile(array $params)
     {
-        Authentication::redirectUserIfNotAuthentified("sign-in");
+        User::redirectIfNotAuthenticated("/sign-in");
 
         $registered = new Registered(Session::get() ?? Cookie::get());
         $user = Registered::getByPseudo($params[2]);
@@ -170,7 +166,7 @@ class UserController extends AppController
      */
     public static function dashboard(array $params = null)
     {
-        Authentication::redirectUserIfNotAuthentified("sign-in");
+        User::redirectIfNotAuthenticated("/sign-in");
         
         $registered = new Registered(Session::get() ?? Cookie::get());
         $user = Registered::getByPseudo($params[2]);
@@ -203,9 +199,7 @@ class UserController extends AppController
      */
     public static function update()
     {
-        if (!Session::isActive() && !Cookie::userCookieIsset()) {
-            Utility::redirect("/sign-in");
-        }
+        User::redirectIfNotAuthenticated("sign-in");
 
         $registered = new Registered(Session::get() ?? Cookie::get());
 
@@ -216,11 +210,7 @@ class UserController extends AppController
      */
     public static function delete()
     {
-        if (!Session::isActive() && !Cookie::userCookieIsset()) {
-            Utility::redirect("/sign-in");
-        }
-
-        $registered = new Registered(Session::get() ?? Cookie::get());
+        User::redirectIfNotAuthenticated("/sign-in");
     }
 
     /**

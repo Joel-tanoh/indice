@@ -110,8 +110,6 @@ HTML;
      */
     public function pageHeader(string $title, string $current) : string
     {
-        $categoryView = new CategoryView();
-
         return <<<HTML
         <!-- Page Header Start -->
         <div class="page-header" style="background: url(assets/img/banner1.jpg);">
@@ -174,8 +172,8 @@ HTML;
     }
 
     /**
-     * Counter Area. C'est un bloc de code qui affiche des nombres auquels on a un effet
-     * d'incrémentation très rapide.
+     * Counter Area. C'est un bloc de code qui affiche les statistiques
+     * avec un effet d'incrémentation très rapide.
      * 
      * @return string
      */
@@ -191,7 +189,7 @@ HTML;
                         <div class="counter">
                             <div class="icon"><i class="lni-layers"></i></div>
                             <h2 class="counterUp">12090</h2>
-                            <p>Regular Ads</p>
+                            <p>Annonces</p>
                         </div>
                     </div>
                     <!-- Counter Item -->
@@ -199,7 +197,7 @@ HTML;
                         <div class="counter">
                             <div class="icon"><i class="lni-map"></i></div>
                             <h2 class="counterUp">350</h2>
-                            <p>Locations</p>
+                            <p>Catégories</p>
                         </div>
                     </div>
                     <!-- Counter Item -->
@@ -207,7 +205,7 @@ HTML;
                         <div class="counter">
                             <div class="icon"><i class="lni-user"></i></div>
                             <h2 class="counterUp">23453</h2>
-                            <p>Reguler Members</p>
+                            <p>Membres actifs</p>
                         </div>
                     </div>
                     <!-- Counter Item -->
@@ -215,7 +213,7 @@ HTML;
                         <div class="counter">
                             <div class="icon"><i class="lni-briefcase"></i></div>
                             <h2 class="counterUp">250</h2>
-                            <p>Premium Ads</p>
+                            <p>Annonces Prémiums</p>
                         </div>
                     </div>
                 </div>

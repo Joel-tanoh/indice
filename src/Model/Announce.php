@@ -31,8 +31,8 @@ class Announce extends Model
     private $views;
     private $iconClass;
     private $comments = [];
-    private $featuredImgPath;
-    private $featuredImgSrc;
+    private $premiumImgPath;
+    private $premiumImgSrc;
     private $productImgPath;
     private $productImgSrc;
     private $productInfoImgPath;
@@ -43,7 +43,7 @@ class Announce extends Model
     const IMG_DIR_PATH = Image::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "productinfo" . DIRECTORY_SEPARATOR;
     const IMG_DIR_URL = Image::IMG_DIR_URL . "/productinfo";
     const DEFAULT_THUMBS = Image::IMG_DIR_URL . "/defaul-thumbs" . Image::EXTENSION;
-    private static $statutes = ["pending", "validated", "featured", "premium", "blocked"];
+    private static $statutes = ["pending", "validated", "premium", "blocked"];
 
     /**
      * Constructeur de l'objet annonce.
@@ -79,16 +79,16 @@ class Announce extends Model
         $this->location = $result["location"];
         $this->direction = $result["direction"];
         $this->type = $result["type"];
-        $this->status = $result["status"];
+        $this->status = (int)$result["status"];
         $this->createdAt = $result["created_at"];
         $this->postedAt = $result["posted_at"];
         $this->updatedAt = $result["updated_at"];
-        $this->views = $result["views"];
+        $this->views = (int)$result["views"];
         $this->iconClass = $result["icon_class"];
         $this->tableName = self::TABLE_NAME;
 
-        $this->featuredImgPath = Image::FEATURED_DIR_PATH . $this->slug . Image::EXTENSION;
-        $this->featuredImgSrc = Image::FEATURED_DIR_URL . "/" . $this->slug . Image::EXTENSION;
+        $this->premiumImgPath = Image::PREMIUM_DIR_PATH . $this->slug . Image::EXTENSION;
+        $this->premiumImgSrc = Image::PREMIUM_DIR_URL . "/" . $this->slug . Image::EXTENSION;
 
         $this->productImgPath = Image::PRODUCT_DIR_PATH . $this->slug . Image::EXTENSION;
         $this->productImgSrc = Image::PRODUCT_DIR_URL . "/" . $this->slug . Image::EXTENSION;
@@ -171,11 +171,18 @@ class Announce extends Model
     /**
      * Retourne l'état de l'annonce.
      * 
+     * @param string $lang
      * @return string
      */
-    public function getStatus()
+    public function getStatus(string $lang = null)
     {
-        return ucfirst(self::$statutes[$this->status]);
+        if (in_array($lang, ["fr", "french", "français"])) {
+            $statusInFrench = ["en attente", "validée", "premium", "suspendue"];
+            return ucfirst($statusInFrench[$this->status]);
+        } else {
+            return ucfirst(self::$statutes[$this->status]);
+        }
+
     }
 
     /**
@@ -209,14 +216,14 @@ class Announce extends Model
     }
 
     /**
-     * Retourne la source de l'image dans la carte de vedette de
+     * Retourne la source de l'image dans la carte de premium de
      * format 600x400.
      * 
      * @return string
      */
-    public function getFeaturedImgSrc()
+    public function getPremiumImgSrc()
     {
-        return $this->featuredImgSrc;
+        return $this->premiumImgSrc;
     }
 
     /**
@@ -318,16 +325,17 @@ class Announce extends Model
     /**
      * Retourne le prix.
      * 
+     * @param bool $withCurrency
      * @return string
      */
-    public function getPrice()
+    public function getPrice(bool $withCurrency = true)
     {
         if ($this->price === null) {
             return "Gratuit";
         } elseif ($this->price == "price_on_call") {
             return "Prix à l'appel";
         } else {
-            return $this->price . " F CFA";
+            return $withCurrency ? $this->price . " F CFA" : (int)$this->price;
         }
     }
 
@@ -367,21 +375,12 @@ class Announce extends Model
     }
 
     /**
-     * Permet de vérifier si c'est une annonce vedette.
-     * @return bool
-     */
-    public function isFeatured() : bool
-    {
-        return $this->status === 2;
-    }
-
-    /**
-     * Permet de vérifier si c'est une annonce prémium.
+     * Permet de vérifier si c'est une annonce premium.
      * @return bool
      */
     public function isPremium() : bool
     {
-        return $this->status === 3;
+        return $this->status === 2;
     }
 
     /**
@@ -390,7 +389,7 @@ class Announce extends Model
      */
     public function isSuspended() : bool
     {
-        return $this->status === 4;
+        return $this->status === 3;
     }
 
     /**
@@ -560,23 +559,6 @@ class Announce extends Model
 
         // S'il y'a des images
         if (Create::fileIsUploaded("images")) {
-            // Formater le nom de l'image
-            // $imgName = $currentAnnounce->getSlug();
-
-            // // Format featured 600 x 400
-            // $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::FEATURED_DIR_PATH, 600, 400);
-
-            // // Product 640 x 420
-            // $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::PRODUCT_DIR_PATH, 640, 420);
-
-            // // Art in Footer 240 x 200
-            // $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::ART_IN_FOOTER_PATH, 240, 200);
-
-            // // ProductInfo 625x415
-            // $arrayLength = count($_FILES["images"]["tmp_name"]);
-            // for ($i = 0; $i < $arrayLength; $i++) {
-            //     $image->save($_FILES['images']['tmp_name'][$i], $imgName."-".$i, Image::PRODUCT_INFO_DIR_PATH, 625, 415);
-            // }
             $currentAnnounce->saveImages($currentAnnounce->getSlug());
         }
         
@@ -609,7 +591,9 @@ class Announce extends Model
         }
 
         //=== Si user à choisi un autre utilisateur à contacter =================/
-        if (isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else") {
+        if ((isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else")
+            || (!empty($_POST["user_to_join"]) && !empty($_POST["phone_number"]))
+        ) {
             $data["user_to_join"] = $_POST["user_to_join"];
             $data["phone_number"] = $_POST["phone_number"];
         }
@@ -627,7 +611,7 @@ class Announce extends Model
             // on reformate le slug = slug du tire + id
             $slug = Utility::slugify($_POST["title"]) ."-". $this->id;
             // on reformate le nom des images
-            $imgName = $slug . Image::EXTENSION;
+            $imgName = $slug;
             // Si aucunes images postées
             if (empty($_FILES["images"]["name"][0])) {
                 // on renomme les images
@@ -647,10 +631,21 @@ class Announce extends Model
         // Mise à jour des données
         $update = new UpdateDb($data, DB_NAME, $this->tableName, DB_LOGIN, DB_PASSWORD, ["id" => $this->id]);
         $update->run();
-        // dump($update->getQuery());
-        // dump($data);
-        // die();
         return true;
+    }
+
+    /**
+     * Permet de supprimer une annonce.
+     * 
+     * @return bool
+     */
+    public function delete()
+    {
+        if ($this->deleteImages()) {
+            if (parent::delete()) {
+                return true;
+            }
+        }
     }
 
     /**
@@ -658,17 +653,21 @@ class Announce extends Model
      * 
      * @return array
      */
-    public static function getValidated($idCategory) : array
+    public static function getValidated(int $idCategory = null) : array
     {
-        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 1 AND id_category = ?";
-        $req = parent::connectToDb()->prepare($query);
-        $req->execute([$idCategory]);
+        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 1 OR status = 2 ORDER BY status";
 
-        $result = $req->fetchAll();
+        if ($idCategory) {
+            $query .= " AND id_category = ?";
+            $req = parent::connectToDb()->prepare($query);
+            $req->execute([$idCategory]);    
+        } else {
+            $req = parent::connectToDb()->query($query);
+        }
 
         $announces = [];
 
-        foreach($result as $announce) {
+        foreach($req->fetchAll() as $announce) {
             $announces[] = new self($announce["id"]);
         }
 
@@ -718,11 +717,11 @@ class Announce extends Model
     }
 
     /**
-     * Retourne les annonces vedettes.
+     * Retourne les annonces premium.
      * 
      * @return array
      */
-    public static function getFeatured(int $nbr)
+    public static function getPremium(int $nbr)
     {
         return self::getMoreViewed($nbr);
     }
@@ -782,8 +781,8 @@ class Announce extends Model
     private function saveImages(string $imgName)
     {
         $image = new Image();
-        // Format featured 600 x 400
-        $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::FEATURED_DIR_PATH, 600, 400);
+        // Format premium 600 x 400
+        $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::PREMIUM_DIR_PATH, 600, 400);
 
         // Product 640 x 420
         $image->save($_FILES['images']['tmp_name'][0], $imgName, Image::PRODUCT_DIR_PATH, 640, 420);
@@ -805,17 +804,17 @@ class Announce extends Model
      * 
      * @param string $newImgPath Le chemin où se trouve le
      */
-    public function renameImages(string $newImgName)
+    private function renameImages(string $newImgName)
     {
         $image = new Image();
-        // Featured Img
-        $image->rename($this->featuredImgPath, Image::FEATURED_DIR_PATH . $newImgName . Image::EXTENSION);
+        // Premium Img
+        $image->rename($this->premiumImgPath, Image::PREMIUM_DIR_PATH . $newImgName . Image::EXTENSION);
 
         // Product Img
         $image->rename($this->productImgPath, Image::PRODUCT_DIR_PATH . $newImgName . Image::EXTENSION);
 
         // Art in Footer Img
-        $image->rename($this->artInFooterPath, Image::ART_IN_FOOTER_PATH . $newImgName . Image::EXTENSION);
+        $image->rename($this->artInFooterImgPath, Image::ART_IN_FOOTER_PATH . $newImgName . Image::EXTENSION);
 
         // ProductInfo Img
         for ($i = 0; $i < 3; $i++) {
@@ -828,11 +827,11 @@ class Announce extends Model
     /**
      * Permet de supprimer les images de cette annonce.
      */
-    public function deleteImages()
+    private function deleteImages()
     {
         $image = new Image();
-        // Format featured 600 x 400
-        $image->delete($this->featuredImgPath);
+        // Format premium 600 x 400
+        $image->delete($this->premiumImgPath);
 
         // Product 640 x 420
         $image->delete($this->productImgPath);

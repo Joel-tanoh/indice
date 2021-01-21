@@ -195,8 +195,8 @@
           height: 250,                 // set editor height
           minHeight: null,             // set minimum height of editor
           maxHeight: null,             // set maximum height of editor
-          focus: false,                  // set focus to editable area after initializing summernote
-          placeholder: 'Décrivez votre article...',
+          focus: false,                // set focus to editable area after initializing summernote
+          placeholder: 'Décrivez votre produit...',
           tabsize: 2,
           lang: 'fr-FR',
           toolbar: [
@@ -213,7 +213,7 @@
             ['view', ['codeview', 'help'] ],
           ],
         });
-        
+      
     /* Back Top Link active
     ========================================================*/
       var offset = 200;

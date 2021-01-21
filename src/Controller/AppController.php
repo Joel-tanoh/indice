@@ -32,15 +32,25 @@ class AppController
         $page->show();
     }
 
+    /**
+     * Pour gérer les tests.
+     */
     public static function test() {
         echo 'Test';
     }
 
+    /**
+     * Une couche qui permet de gérer le routage vers le bon controller
+     * lorsqu'il le faut.
+     * 
+     * @param array $params La liste des paramètres de la route.
+     * @return void
+     */
     public static function switcher(array $params)
     {
         if (Category::isCategorySlug($params[1])
-            && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME))
-        {
+            && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)
+        ) {
             if (isset($params[3]) && self::isAction($params[3])) {
                 AnnounceController::manage($params);
             } else {
@@ -48,17 +58,16 @@ class AppController
             }
         }
         elseif ($params[1] === "users"
-            && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME))
-        {
+            && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)
+        ) {
             if (isset($params[3])
-                && $params[3] === "posts")
-            {
+                && $params[3] === "posts"
+            ) {
                 UserController::dashboard($params);
             }
             else {
                 UserController::userProfile($params);
             }
-            
         }
         else {
             throw new Exception("Ressource non trouvée !");
@@ -73,7 +82,17 @@ class AppController
     public static function isAction(string $action)
     {
         $actions = [
-            "create", "read", "update", "delete", "show", "view"
+            "create"
+            , "read"
+            , "update"
+            , "delete"
+            , "show"
+            , "view"
+            , "validate"
+            , "set-premium"
+            , "suspend"
+            , "block"
+            , "comment"
         ];
 
         return in_array($action, $actions);

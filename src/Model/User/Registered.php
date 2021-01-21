@@ -28,8 +28,11 @@ class Registered extends User
     protected $type;
     protected static $types = ["annonceur", "administrateur"];
     protected $status;
-    protected static $statutes = ["activé", "prémium", "bloqué"];
+    protected static $statutes = ["activé", "prémium", "suspendu"];
     protected $announces = [];
+
+    /** Le nombre de post maximun par mois d'un annonceur simple */
+    const POST_PER_MONTH = 15;
 
     /**
      * Constructeur d'un User inscrit.
@@ -217,7 +220,7 @@ class Registered extends User
      * @param int $status
      * @return int
      */
-    public function countAnnounces(int $status = null)
+    public function getAnnounceNumber(int $status = null)
     {
         return count($this->getAnnounces($status));
     }
@@ -338,11 +341,90 @@ class Registered extends User
      * Permet à l'utilisateur connecté d'ajouter un commentaire.
      * @param string $content Le contenu du commentaire.
      */
-    public function addComment($subject, string $content, $subjectType = null)
+    public function comment($subjectId, string $content, $subjectType = null)
     {
-        if (Comment::add($this->emailAddress, $subject, $content, $subjectType)) {
+        if (Comment::add($this->emailAddress, $subjectId, $content, $subjectType)) {
             return true;
         }
+    }
+
+    /**
+     * Permet de supprimer un commentaire que l'utilisateur a posté.
+     * 
+     * @param int $commentId L'id du commentaire à supprimer.
+     * 
+     * @return bool
+     */
+    public function deleteComment(int $commentId)
+    {
+        $comment = new Comment($commentId);
+        if ($comment->getPoster()->getEmailAdress() == $this->emailAddress) {
+            if ($comment->delete()) {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * Permet de modifier le mot de passe.
+     * 
+     * @param string $newPassword
+     */
+    public function updatePassword(string $newPassword)
+    {
+        $this->set("password", password_hash($newPassword, PASSWORD_DEFAULT), "id", $this->id);
+    }
+
+    /**
+     * Retourne la liste de tous les comptes.
+     * 
+     * @return array
+     */
+    public function getAll()
+    {
+        $query = "SELECT email_address FROM " . self::TABLE_NAME;
+        $req = parent::connectToDb()->query($query);
+
+        $registered = [];
+        foreach($req->fetchAll() as $result) {
+            $registered[] = new self($result["email_address"]);
+        }
+
+        return $registered;
+    }
+
+    /**
+     * Retourne les comptes par status.
+     * 
+     * @param $status
+     * @return array
+     */
+    public function getByStatus($status)
+    {
+        $req = parent::connectToDb()->prepare("SELECT email_address FROM ". self::TABLE_NAME . " WHERE status = :status");
+
+        if (is_string($status)) {
+            $status = self::convertStatus(strtolower($status));
+        }
+
+        $req->execute([
+            "status" => $status
+        ]);
+
+        $registered = [];
+        foreach($req->fetchAll() as $result) {
+            $registered[] = new self($result["email_address"]);
+        }
+
+        return $registered;
+    }
+
+    /**
+     * Retourne les annonces postées selon une date.
+     */
+    public function getByDate()
+    {
+        
     }
 
 }

@@ -1,54 +1,52 @@
--- MySQL dump 10.13  Distrib 5.7.19, for Win64 (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: inoveinn_wp806
--- ------------------------------------------------------
--- Server version	5.7.19
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  jeu. 21 jan. 2021 à 07:14
+-- Version du serveur :  5.7.19
+-- Version de PHP :  7.1.9
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Table structure for table `comments`
+-- Base de données :  `inoveinn_wp806`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `comments`
 --
 
 DROP TABLE IF EXISTS `comments`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `comments` (
+CREATE TABLE IF NOT EXISTS `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_email_address` varchar(255) COLLATE utf8_bin NOT NULL,
-  `subject` varchar(255) COLLATE utf8_bin NOT NULL,
-  `subject_type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `subject_id` varchar(255) COLLATE utf8_bin NOT NULL,
+  `subject_type` varchar(255) COLLATE utf8_bin NOT NULL,
   `content` text COLLATE utf8_bin NOT NULL,
+  `posted_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `comments`
---
-
-LOCK TABLES `comments` WRITE;
-/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ind_announces`
+-- Structure de la table `ind_announces`
 --
 
 DROP TABLE IF EXISTS `ind_announces`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ind_announces` (
+CREATE TABLE IF NOT EXISTS `ind_announces` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
@@ -71,27 +69,28 @@ CREATE TABLE `ind_announces` (
   PRIMARY KEY (`id`),
   KEY `fk_id_category` (`id_category`),
   KEY `fk_id_sub_category` (`id_sub_category`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `ind_announces`
+-- Déchargement des données de la table `ind_announces`
 --
 
-LOCK TABLES `ind_announces` WRITE;
-/*!40000 ALTER TABLE `ind_announces` DISABLE KEYS */;
-INSERT INTO `ind_announces` VALUES (13,'Une belle voiture','&lt;p&gt;Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet voluptatem labore cupiditate molestiae porro velit inventore totam eos? Reiciendis tempore quae odio perferendis pariatur. Placeat aliquid sapiente consequuntur ullam alias vitae rem iure aperiam dolor dolorum culpa sit eius quas fugit blanditiis nisi nemo dolores repellat pariatur, maiores corrupti ipsa commodi enim.&lt;br&gt;&lt;/p&gt;','une-belle-voiture-13',2,NULL,'3500000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan',NULL,NULL,0,'2020-12-28 23:56:12',NULL,NULL,0,NULL),(20,'mon super ordinateur','&lt;p&gt;Mon super ordinateur&lt;/p&gt;','mon-super-ordinateur-20',5,NULL,'250000','tanohbassapatrick@gmail.com',NULL,NULL,'Bouake','offre','particulier',0,'2021-01-15 20:22:40',NULL,NULL,0,NULL),(21,'Salle de répétition','&lt;p&gt;Pour toutes vos répétitions, contactez nous !&lt;/p&gt;','salle-de-repetition-21',4,NULL,'10000','joel.developpeur@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',0,'2021-01-16 00:05:02',NULL,NULL,0,NULL),(16,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;','vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16',5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',0,'2021-01-09 10:27:19',NULL,NULL,0,NULL),(17,'Belle villa 5 pièces','&lt;p&gt;Une belle maison 5 pièces, dans la ville de Yamoussokro.&lt;/p&gt;Bien située elle a été construite en 2018.','belle-villa-5-pieces-17',3,NULL,'on','tanohbassapatrick@gmail.com',NULL,NULL,'Yamoussoukro','offre','particulier',0,'2021-01-10 18:46:31',NULL,NULL,0,NULL),(18,'test','Une offre d\'emploi extraordinaire.&lt;br&gt;','test-18',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',0,'2021-01-10 18:54:44',NULL,NULL,0,NULL),(19,'Bloggeur à Blabla TV','&lt;p&gt;Bon job à blabla tv&lt;br&gt;&lt;/p&gt;','bloggeur-a-blabla-tv-19',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'San-Pedro','offre','particulier',0,'2021-01-10 19:33:09',NULL,NULL,0,NULL);
-/*!40000 ALTER TABLE `ind_announces` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `ind_announces` (`id`, `title`, `description`, `slug`, `id_category`, `id_sub_category`, `price`, `user_email_address`, `user_to_join`, `phone_number`, `location`, `direction`, `type`, `status`, `created_at`, `posted_at`, `updated_at`, `views`, `icon_class`) VALUES
+(20, 'mon super ordinateur', '&lt;p&gt;Mon super ordinateur&lt;/p&gt;', 'mon-super-ordinateur-20', 5, NULL, '250000', 'tanohbassapatrick@gmail.com', NULL, NULL, 'Bouake', 'offre', 'particulier', 1, '2021-01-15 20:22:40', NULL, NULL, 0, NULL),
+(21, 'Salle de répétition', '&lt;p&gt;Pour toutes vos répétitions, contactez nous !&lt;/p&gt;', 'salle-de-repetition-21', 4, NULL, '10000', 'joel.developpeur@gmail.com', NULL, NULL, 'Abidjan', 'offre', 'professionnel', 0, '2021-01-16 00:05:02', NULL, NULL, 0, NULL),
+(16, 'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram', '&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;', 'vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16', 5, NULL, '130000', 'tanohbassapatrick@gmail.com', NULL, NULL, 'Abidjan', 'offre', 'particulier', 0, '2021-01-09 10:27:19', NULL, NULL, 0, NULL),
+(18, 'test', 'Une offre d\'emploi extraordinaire.&lt;br&gt;', 'test-18', 6, NULL, 'price_on_call', 'tanohbassapatrick@gmail.com', NULL, NULL, 'Abidjan', 'offre', 'professionnel', 1, '2021-01-10 18:54:44', NULL, NULL, 0, NULL),
+(19, 'Rédacteur à Jesus Bénit TV', '&lt;p&gt;Bon job à JésusBénit tv&lt;br&gt;&lt;/p&gt;', 'redacteur-a-jesus-benit-tv-19', 6, NULL, 'price_on_call', 'tanohbassapatrick@gmail.com', 'tanohbassapatrick@gmail.com', '+225 45996095', 'Yamoussoukro', 'offre', 'professionnel', 0, '2021-01-10 19:33:09', NULL, NULL, 0, NULL),
+(22, 'Une belle femme', '&lt;p&gt;Une belle femme !&lt;br&gt;&lt;/p&gt;', 'une-belle-femme-22', 7, NULL, 'price_on_call', 'tanohbassapatrick@gmail.com', NULL, NULL, 'Gagnoa', 'offre', 'particulier', 0, '2021-01-16 13:29:26', NULL, NULL, 0, NULL);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `ind_categories`
+-- Structure de la table `ind_categories`
 --
 
 DROP TABLE IF EXISTS `ind_categories`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ind_categories` (
+CREATE TABLE IF NOT EXISTS `ind_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `slug` varchar(255) DEFAULT NULL,
@@ -103,26 +102,30 @@ CREATE TABLE `ind_categories` (
   UNIQUE KEY `uni_title` (`title`),
   UNIQUE KEY `uni_slug` (`slug`)
 ) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ind_categories`
+-- Déchargement des données de la table `ind_categories`
 --
 
-LOCK TABLES `ind_categories` WRITE;
-/*!40000 ALTER TABLE `ind_categories` DISABLE KEYS */;
-INSERT INTO `ind_categories` VALUES (4,'Bonnes affaires','bonnes-affaires','2020-12-24 06:30:57',NULL,NULL,'lni-control-panel'),(2,'Véhicules','vehicules','2020-12-24 06:17:23',NULL,NULL,'lni-car'),(3,'Immobilier','immobilier','2020-12-24 06:17:23',NULL,NULL,'lni-home'),(5,'High-Tech','high-tech','2020-12-24 06:30:57',NULL,NULL,'lni-laptop'),(6,'Emploi Formations','emploi-formations','2020-12-24 06:46:14',NULL,NULL,'lni-briefcase'),(7,'Rencontre','rencontre','2020-12-24 06:46:14',NULL,NULL,'lni-heart'),(8,'Matériel professionnel','materiel-professionnel','2020-12-24 06:46:14',NULL,NULL,'lni-notepad'),(9,'Communauté','communaute','2020-12-24 06:46:14',NULL,NULL,'lni-hand'),(10,'Bien-être','bien-etre','2020-12-24 06:46:14',NULL,NULL,'lni-leaf');
-/*!40000 ALTER TABLE `ind_categories` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `ind_categories` (`id`, `title`, `slug`, `created_at`, `updated_at`, `description`, `icon_class`) VALUES
+(4, 'Bonnes affaires', 'bonnes-affaires', '2020-12-24 06:30:57', NULL, NULL, 'lni-control-panel'),
+(2, 'Véhicules', 'vehicules', '2020-12-24 06:17:23', NULL, NULL, 'lni-car'),
+(3, 'Immobilier', 'immobilier', '2020-12-24 06:17:23', NULL, NULL, 'lni-home'),
+(5, 'High-Tech', 'high-tech', '2020-12-24 06:30:57', NULL, NULL, 'lni-laptop'),
+(6, 'Emploi Formations', 'emploi-formations', '2020-12-24 06:46:14', NULL, NULL, 'lni-briefcase'),
+(7, 'Rencontre', 'rencontre', '2020-12-24 06:46:14', NULL, NULL, 'lni-heart'),
+(8, 'Matériel professionnel', 'materiel-professionnel', '2020-12-24 06:46:14', NULL, NULL, 'lni-notepad'),
+(9, 'Communauté', 'communaute', '2020-12-24 06:46:14', NULL, NULL, 'lni-hand'),
+(10, 'Bien-être', 'bien-etre', '2020-12-24 06:46:14', NULL, NULL, 'lni-leaf');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `ind_sub_categories`
+-- Structure de la table `ind_sub_categories`
 --
 
 DROP TABLE IF EXISTS `ind_sub_categories`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ind_sub_categories` (
+CREATE TABLE IF NOT EXISTS `ind_sub_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
@@ -135,26 +138,22 @@ CREATE TABLE `ind_sub_categories` (
   UNIQUE KEY `uni_slug` (`slug`),
   KEY `fk_id_category` (`id_category`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ind_sub_categories`
+-- Déchargement des données de la table `ind_sub_categories`
 --
 
-LOCK TABLES `ind_sub_categories` WRITE;
-/*!40000 ALTER TABLE `ind_sub_categories` DISABLE KEYS */;
-INSERT INTO `ind_sub_categories` VALUES (1,'Jeu de football','jeu-de-football',1,'2020-11-27 23:57:24',NULL,'C\'est un jeu de football');
-/*!40000 ALTER TABLE `ind_sub_categories` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `ind_sub_categories` (`id`, `title`, `slug`, `id_category`, `created_at`, `modified_at`, `description`) VALUES
+(1, 'Jeu de football', 'jeu-de-football', 1, '2020-11-27 23:57:24', NULL, 'C\'est un jeu de football');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `ind_users`
+-- Structure de la table `ind_users`
 --
 
 DROP TABLE IF EXISTS `ind_users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ind_users` (
+CREATE TABLE IF NOT EXISTS `ind_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(255) NOT NULL,
   `email_address` varchar(255) NOT NULL,
@@ -171,25 +170,19 @@ CREATE TABLE `ind_users` (
   UNIQUE KEY `uni_pseudo` (`pseudo`),
   UNIQUE KEY `un_email` (`email_address`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ind_users`
+-- Déchargement des données de la table `ind_users`
 --
 
-LOCK TABLES `ind_users` WRITE;
-/*!40000 ALTER TABLE `ind_users` DISABLE KEYS */;
-INSERT INTO `ind_users` VALUES (1,'IdUqwvLaEK4','tanohbassapatrick@gmail.com','TANOH','Joel','jojo1509','$2y$10$kRrZ5L6LsT1T3LI3iaU./eHQgdYAH53zcDJy64DNY1DGsaEv97JDq','+225 45996095','2021-01-01 23:03:25',NULL,1,0),(2,'YiETEdLCO28','joel.developpeur@gmail.com','Bassa','Patrick joel','basspat','$2y$10$RBWXcEFnYNlgKO2aXKgQu.0gttR046POmkkNkerNkmbS6fX4kiPXy','45996095','2021-01-01 23:13:57',NULL,0,0),(3,'3TSTjAY8','abc@abc.abc','Bassa','Patrick joel','patco255','$2y$10$9JkdUgfZfQQRuAQkjuYdFuDouffCraJG/qWxesBaTrmleXIaRDZmC','45996095','2021-01-01 23:24:05',NULL,0,0),(4,'9ZIE0t','lohuxyansteeven@outlook.com','Lohoux','Yan Steeven','Curtis13','$2y$10$tpjPd5UgyX60Z2M0asNro.6KXBKOUuIQcQPTgWplrgmU5TRT2.dIy','+22508260930','2021-01-04 20:20:20',NULL,0,0),(5,'znXhrQ','toto@gmail.com','Bassa','Joel','basjo1509','$2y$10$zt2uouSsHwpYu.Gyq4eN5uttB5tRN3cmjZnGLHp2rqFOaevwJTcBS','45996095','2021-01-07 19:04:03',NULL,0,0);
-/*!40000 ALTER TABLE `ind_users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+INSERT INTO `ind_users` (`id`, `code`, `email_address`, `name`, `first_names`, `pseudo`, `password`, `phone_number`, `registered_at`, `updated_at`, `type`, `status`) VALUES
+(1, 'IdUqwvLaEK4', 'tanohbassapatrick@gmail.com', 'TANOH', 'Joel', 'jojo1509', '$2y$10$kRrZ5L6LsT1T3LI3iaU./eHQgdYAH53zcDJy64DNY1DGsaEv97JDq', '+225 45996095', '2021-01-01 23:03:25', NULL, 1, 0),
+(2, 'YiETEdLCO28', 'joel.developpeur@gmail.com', 'Bassa', 'Patrick joel', 'basspat', '$2y$10$RBWXcEFnYNlgKO2aXKgQu.0gttR046POmkkNkerNkmbS6fX4kiPXy', '45996095', '2021-01-01 23:13:57', NULL, 0, 0),
+(3, '3TSTjAY8', 'abc@abc.abc', 'Bassa', 'Patrick joel', 'patco255', '$2y$10$9JkdUgfZfQQRuAQkjuYdFuDouffCraJG/qWxesBaTrmleXIaRDZmC', '45996095', '2021-01-01 23:24:05', NULL, 0, 0),
+(4, '9ZIE0t', 'lohuxyansteeven@outlook.com', 'Lohoux', 'Yan Steeven', 'Curtis13', '$2y$10$tpjPd5UgyX60Z2M0asNro.6KXBKOUuIQcQPTgWplrgmU5TRT2.dIy', '+22508260930', '2021-01-04 20:20:20', NULL, 0, 0),
+(5, 'znXhrQ', 'toto@gmail.com', 'Bassa', 'Joel', 'basjo1509', '$2y$10$zt2uouSsHwpYu.Gyq4eN5uttB5tRN3cmjZnGLHp2rqFOaevwJTcBS', '45996095', '2021-01-07 19:04:03', NULL, 0, 0);
+COMMIT;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2021-01-16  0:12:47

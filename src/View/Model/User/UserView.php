@@ -185,7 +185,7 @@ HTML;
      */
     public function navbarMenu()
     {
-        if (User::isAuthentified()) {
+        if (User::isAuthenticated()) {
             $registered = new Registered(Session::get() ?? Cookie::get());
             $content = (new RegisteredView())->navbar($registered);
         } else {
