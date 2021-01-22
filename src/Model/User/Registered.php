@@ -97,6 +97,16 @@ class Registered extends User
     }
 
     /**
+     * Retourne le nom complet de l'utlisateur.
+     * 
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->getName() . " " . $this->getFirstNames();
+    }
+
+    /**
      * Retourne le pseudo de l'utilisateur.
      * @return string
      */
@@ -189,15 +199,19 @@ class Registered extends User
     /**
      * Retourne la liste des annonces postées par l'utilisateur.
      * 
-     * @param int $status
+     * @param $status
      * 
      * @return array
      */
-    public function getAnnounces(int $status = null)
+    public function getAnnounces($status = null)
     {
         $query = "SELECT id FROM " . Announce::TABLE_NAME . " WHERE user_email_address = ?";
 
         if (null !== $status) {
+            if (in_array($status, self::$statutes)) {
+                $status = self::convertStatus($status);
+            }
+
             $query .= " AND status = ?";
             $req = parent::connectToDb()->prepare($query);
             $req->execute([$this->emailAddress, $status]);
@@ -217,11 +231,14 @@ class Registered extends User
 
     /**
      * Permet de compter les annonces postées par l'utilisateur.
-     * @param int $status
+     * @param  $status
      * @return int
      */
-    public function getAnnounceNumber(int $status = null)
+    public function getAnnounceNumber($status = null)
     {
+        if (in_array($status, self::$statutes)) {
+            $status = self::convertStatus($status);
+        }
         return count($this->getAnnounces($status));
     }
 
@@ -380,7 +397,7 @@ class Registered extends User
      * 
      * @return array
      */
-    public function getAll()
+    public static function getAll()
     {
         $query = "SELECT email_address FROM " . self::TABLE_NAME;
         $req = parent::connectToDb()->query($query);

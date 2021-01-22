@@ -22,17 +22,19 @@ class View
         $annonceView = new AnnounceView();
         $userView = new UserView();
         $snippet = new Snippet();
+        $advertising = new AdvertisingView();
 
         return <<<HTML
+
         <!-- Hero Area -->
         {$snippet->heroArea(true)}
-        <!-- Hero Area End -->
 
+        <!-- Le corps de la page -->
         <div class="container-fluid">
+            <!-- La barre de publicité en haut -->
+            {$advertising->top()}
             <div class="row">
-                <aside class="d-none d-lg-block col-lg-2">
-                    Publicité
-                </aside>
+                {$advertising->side()}
                 <aside class="col-12 col-lg-8">       
                     <!-- Trending Categories Section Start -->
                     {$categoryView->trendingCategoriesSection()}
@@ -50,9 +52,7 @@ class View
                     {$userView->suscribeNewsletterSection()}
                     <!-- Subscribe Section End -->
                 </aside>
-                <aside class="d-none d-lg-block col-lg-2">
-                    Publicité
-                </aside>
+                {$advertising->side()}
             </div>
         </div>
 HTML;
@@ -63,12 +63,13 @@ HTML;
      * 
      * @return string
      */
-    public static function page404(string $pageHeader, string $current)
+    public static function page404(string $message, string $current)
     {
         $snippet = new Snippet();
+        $home = APP_URL;
 
         return <<<HTML
-        {$snippet->pageHeader($pageHeader, $current)}
+        {$snippet->pageHeader("404", $current)}
 
         <!-- Start Content -->
         <div class="error section-padding">
@@ -78,14 +79,15 @@ HTML;
                         <div class="error-content">
                             <div class="error-message">
                                 <h2>404</h2>
-                                <h3><span>En cours!</span> Ne vous inquitez pas, c'est nous le problème...</h3>
+                                <h3>Ne vous inquitez pas, c'est nous le problème...</h3>
+                                <p>{$message}</p>
                             </div>
                             <form class="form-error-search">
                                 <input type="search" name="search" class="form-control" placeholder="Une recherche...">
                                 <button class="btn btn-common btn-search" type="button">Chercher</button>
                             </form>
                             <div class="description">
-                                <span>Ou allons à l' <a href="">Accueil</a></span>
+                                <span>Ou allons à l' <a href="$home">Accueil</a></span>
                             </div>
                         </div>
                     </div>

@@ -17,7 +17,10 @@ use App\Utility\Validator;
 use App\View\Model\User\UserView;
 use App\View\Model\User\RegisteredView;
 use App\Communication\Notify\NotifyByHTML;
+use App\Model\Model;
+use App\View\Model\User\AdministratorView;
 use App\View\Page\Page;
+use Exception;
 
 class UserController extends AppController
 {
@@ -94,7 +97,7 @@ class UserController extends AppController
                 if (User::save()) {
                     Session::activate($_POST["email_address"]);
                     Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
-                    $registered = new Registered(Session::get() ?? Cookie::get());
+                    $registered = User::getAuthenticated();
                     Utility::redirect($registered->getProfileLink());
                 }
             } else { // Sinon
@@ -113,7 +116,7 @@ class UserController extends AppController
     public static function signIn()
     {
         if (User::isAuthenticated()) {
-            $registered = new Registered(Session::get() ?? Cookie::get());
+            $registered = User::getAuthenticated();
             Utility::redirect($registered->getProfileLink() . "/posts");
         }
 
@@ -146,19 +149,43 @@ class UserController extends AppController
     {
         User::redirectIfNotAuthenticated("/sign-in");
 
-        $registered = new Registered(Session::get() ?? Cookie::get());
+        $registered = User::getAuthenticated();
         $user = Registered::getByPseudo($params[2]);
-        $page = new Page("Profil - " . $user->getName() . " " . $user->getFirstNames());
+        $page = new Page("Profil - " . $user->getFullName());
         $page->setDescription("");
 
         if ($registered->getPseudo() === $user->getPseudo()) {
             $view = (new RegisteredView($user))->myProfile();
-        } else {
+        } elseif ($registered->isAdministrator()) {
             $view = (new RegisteredView($user))->userProfile();
+        } else {
+            Utility::redirect($registered->getProfileLink());
         }
 
         $page->setView($view);
         $page->show();
+    }
+
+    /**
+     * Controller pour afficher tous les comptes.
+     */
+    public static function users()
+    {
+        if (User::isAuthenticated()) {
+            $registered = User::getAuthenticated();
+
+            if ($registered->isAdministrator()) {
+                $users = Registered::getAll();
+                $page = new Page("Liste des utilisateurs - L'indice");
+                $page->setView((new AdministratorView($registered))->users($users));
+                $page->show();
+            } else {
+                throw new Exception("Ressource non trouvée !");
+            }
+
+        } else {
+            throw new Exception("Ressource non trouvée !");
+        }
     }
 
     /**
@@ -168,9 +195,9 @@ class UserController extends AppController
     {
         User::redirectIfNotAuthenticated("/sign-in");
         
-        $registered = new Registered(Session::get() ?? Cookie::get());
+        $registered = User::getAuthenticated();
         $user = Registered::getByPseudo($params[2]);
-        $page = new Page("Tableau de bord - " . $user->getName() . " " . $user->getFirstNames());
+        $page = new Page("Tableau de bord - " . $user->getFullName());
         $page->setDescription("");
 
         if ($registered->getPseudo() === $user->getPseudo() || $registered->isAdministrator()) {
@@ -195,13 +222,50 @@ class UserController extends AppController
     }
 
     /**
+     * Controller de gestion d'un compte utilisateur.
+     * 
+     * @param array $params
+     */
+    public static function manage(array $params)
+    {
+        if (Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
+            $registered = User::getAuthenticated();
+            $user = Registered::getByPseudo($params[2]);
+
+            switch ($params[3]) { // Switch sur l'action.
+                case "update" :
+                    if ($user->getPseudo() === $params[2]) {
+                        $page = new Page($user->getFullName() . " - Mise à jour du compte");
+                    } else {
+                        Utility::redirect($registered->getProfileLink());
+                    }
+                    break;
+
+                case "delete" :
+                    if ($user->getPseudo() === $params[2] || $registered->isAdministrator()) {
+                        
+                    } else {
+                        Utility::redirect($registered->getProfileLink());
+                    }
+                    break;
+
+                default :
+                    Utility::redirect($registered->getProfileLink());
+                    break;
+            }
+        } else {
+            throw new Exception("La ressource non trouvée !");
+        }
+    }
+
+    /**
      * Controlleur de mise à jour d'un user.
      */
     public static function update()
     {
         User::redirectIfNotAuthenticated("sign-in");
 
-        $registered = new Registered(Session::get() ?? Cookie::get());
+        $registered = User::getAuthenticated();
 
     }
 

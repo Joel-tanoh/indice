@@ -65,12 +65,22 @@ class AnnounceController extends AppController
         ) {
             $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $params[1], "App\Model\Category");
             $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $params[2], "App\Model\Announce");
-            if ($announce->hasCategory($category)) {
-                $page = new Page($announce->getTitle() . " - L'indice", (new AnnounceView($announce))->read());
-                $page->show();
-            } else {
+
+            if ($announce->isPending() && User::isAuthenticated()) {
+                $registered = User::getAuthenticated();
+                if ($announce->hasOwner($registered)
+                    || $registered->isAdministrator()
+                ) {
+                    if ($announce->hasCategory($category)) {
+                        $page = new Page($announce->getTitle() . " - L'indice", (new AnnounceView($announce))->read());
+                        $page->show();
+                    } else {
+                        throw new Exception("La ressource demandée n'a pas été trouvée !");
+                    }
+                }
+            }  else {
                 throw new Exception("La ressource demandée n'a pas été trouvée !");
-            }
+            }            
         } else {
             throw new Exception("La ressource demandée n'a pas été trouvée !");
         }
@@ -91,7 +101,7 @@ class AnnounceController extends AppController
         ) {
             $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
             $user = $announce->getOwner();
-            $registered = new Registered(Session::get() ?? Cookie::get());
+            $registered = User::getAuthenticated();
             $page = new Page();
 
             if ($announce->hasOwner($registered)

@@ -30,7 +30,7 @@ class CommentView
             </figure>
             <div class="description">
                 <div class="info">
-                <h3>{$this->comment->getPoster()->getName()} {$this->comment->getPoster()->getFirstNames()}</h3>
+                <h3>{$this->comment->getPoster()->getFullName()} {$this->comment->getPoster()->getFirstNames()}</h3>
                 <p>{$this->comment->getContent()}</p>
                 </div>
                 <time class="date">{$this->comment->getPostedAt()}</time>

@@ -53,7 +53,7 @@ class AnnounceView extends View
             <div class="container">
                 <div class="row">
                     <!-- Sidebar de la page de post -->
-                    {$registeredView->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
+                    {$registeredView->sidebarNav(User::getAuthenticated())}
 
                     <!-- Contenu de la page -->
                     {$this->createPageContent()}
@@ -101,7 +101,7 @@ HTML;
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$registeredView->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
+                    {$registeredView->sidebarNav(User::getAuthenticated())}
                     <!-- Contenu de la page -->
                     {$this->createPageContent()}
                 </div>
@@ -398,7 +398,7 @@ HTML;
                     <i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}
                 </li>
                 <li>
-                    <a href="users/posts"><i class="lni-user"></i> {$this->announce->getOwner()->getName()} {$this->announce->getOwner()->getFirstNames()}</a>
+                    <a href="users/posts"><i class="lni-user"></i> {$this->announce->getOwner()->getFullName()}</a>
                 </li>
             </ul>
             <div class="listing-bottom">
@@ -578,9 +578,28 @@ HTML;
     {
         $categoryView = new CategoryView();
         $snippet = new Snippet();
-        $title = $_POST["title"] ?? $this->announce->getTitle() ?? null;
-        $description = $_POST["description"] ?? $this->announce->getDescription() ?? null;
-        $price = $_POST["price"] ?? $this->announce->getPrice(false) ?? null;
+
+        $title = null;
+        if(isset($_POST["title"]) && !empty($_POST["title"])) {
+            $title = $_POST["title"];
+        } elseif (null !== $this->announce) {
+            $title = $this->announce->getTitle();
+        }
+
+        $description = null;
+        if(isset($_POST["description"]) && !empty($_POST["description"])) {
+            $description = $_POST["description"];
+        } elseif (null !== $this->announce) {
+            $description = $this->announce->getDescription();
+        }
+
+        $price = null;
+        if(isset($_POST["price"]) && !empty($_POST["price"])) {
+            $price = $_POST["price"];
+        } elseif (null !== $this->announce) {
+            $price = $this->announce->getPrice(false);
+        }
+
         $checkedPriceOnCall = (isset($_POST["price_on_call"]) || (isset($this->announce) && $this->announce->getPrice() === "Prix à l'appel"))
             ? "checked" : null;
 
@@ -593,7 +612,7 @@ HTML;
                 <div class="dashboard-wrapper">
                     <div class="form-group mb-3">
                         <label class="control-label">Titre</label>
-                        <input class="form-control input-md" name="title" placeholder="Titre" type="text" value="{$title}" required>
+                        <input class="form-control input-md" name="title" placeholder="Entrer le titre" type="text" value="{$title}" required>
                     </div>
                     <div class="form-group mb-3 tg-inputwithicon">
                         <label class="control-label">Catégories</label>
@@ -655,8 +674,20 @@ HTML;
      */
     private function contactDetails()
     {
-        $userToJoin = $_POST["user_to_join"] ?? $this->announce->getUserToJoin() ?? null;
-        $phoneNumber = $_POST["phone_number"] ?? $this->announce->getPhoneNumber() ?? null;
+        $userToJoin = null;
+        $phoneNumber = null;
+
+        if(isset($_POST["user_to_join"]) && !empty($_POST["user_to_join"])) {
+            $userToJoin = $_POST["user_to_join"];
+        } elseif (null !== $this->announce) {
+            $userToJoin = $this->announce->getUserToJoin();
+        }
+
+        if(isset($_POST["phone_number"]) && !empty($_POST["phone_number"])) {
+            $phoneNumber = $_POST["phone_number"];
+        } elseif (null !== $this->announce) {
+            $phoneNumber = $this->announce->getPhoneNumber();
+        }
 
         return <<<HTML
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
@@ -958,7 +989,7 @@ HTML;
     {
         if (User::isAuthenticated()) {
 
-            $registered = new Registered(Session::get() ?? Cookie::get());
+            $registered = User::getAuthenticated();
 
             if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
                 || $registered->isAdministrator()
@@ -979,7 +1010,7 @@ HTML;
      */
     private function editButton()
     {
-        if($this->announce->getOwner()->getEmailAddress() === (new Registered(Session::get() ?? Cookie::get()))->getEmailAddress())
+        if($this->announce->getOwner()->getEmailAddress() === (User::getAuthenticated())->getEmailAddress())
         return <<<HTML
         <a href="{$this->announce->getManageLink('update')}" class="text-primary">Editer</a>
 HTML;
@@ -993,7 +1024,7 @@ HTML;
     private function deleteButton()
     {
         if (User::isAuthenticated()) {
-            $registered = new Registered(Session::get() ?? Cookie::get());
+            $registered = User::getAuthenticated();
 
             if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
                 || $registered->isAdministrator()
@@ -1012,7 +1043,7 @@ HTML;
     private function validateButton()
     {
         if (User::isAuthenticated()) {
-            if ((new Registered(Session::get() ?? Cookie::get()))->isAdministrator()
+            if ((User::getAuthenticated())->isAdministrator()
                 && !$this->announce->isValidated()
             ) {
             return <<<HTML
@@ -1029,7 +1060,7 @@ HTML;
     private function setPremiumButton()
     {
         if (User::isAuthenticated()) {
-            if ((new Registered(Session::get() ?? Cookie::get()))->isAdministrator()) {
+            if ((User::getAuthenticated())->isAdministrator()) {
             return <<<HTML
             <a href="{$this->announce->getManageLink('set-premium')}" class="text-warning">Passer en Prémium</a>
 HTML;
@@ -1044,7 +1075,7 @@ HTML;
     private function suspendButton()
     {
         if (User::isAuthenticated()) {
-            if ((new Registered(Session::get() ?? Cookie::get()))->isAdministrator()) {
+            if ((User::getAuthenticated())->isAdministrator()) {
             return <<<HTML
             <a href="{$this->announce->getManageLink('suspend')}" class="text-danger">Suspendre</a>
 HTML;

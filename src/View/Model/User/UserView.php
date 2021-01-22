@@ -15,18 +15,6 @@ use App\View\Snippet;
  */
 class UserView extends ModelView
 {
-    private $user;
-
-    /**
-     * Constructeur de la vue du user.
-     * 
-     * @param \App\Model\User\User $user
-     */
-    public function __construct(\App\Model\User\User $user = null)
-    {
-        $this->user = $user;
-    }
-
     /**
      * Vue pour la création d'un compte.
      * 
@@ -38,6 +26,11 @@ class UserView extends ModelView
     {
         $snippet = new Snippet();
         $form = new Form($_SERVER["REQUEST_URI"], "login-form", true);
+        $name = $_POST["name"] ?? null;
+        $firstNames = $_POST["first_names"] ?? null;
+        $pseudo = $_POST["pseudo"] ?? null;
+        $emailAddress = $_POST["email_address"] ?? null;
+        $phoneNumber = $_POST["phone_number"] ?? null;
 
         return <<<HTML
         {$snippet->pageHeader("Je m'inscris", "inscription")}
@@ -56,43 +49,43 @@ class UserView extends ModelView
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-user"></i>
-                                        <input type="text" id="name" class="form-control" name="name" placeholder="Nom">
+                                        <input type="text" id="name" class="form-control" name="name" placeholder="Entrer Votre Nom" value="$name" required>
                                     </div>
                                 </div> 
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-user"></i>
-                                        <input type="text" id="first_names" class="form-control" name="first_names" placeholder="Prénoms">
+                                        <input type="text" id="first_names" class="form-control" name="first_names" placeholder="Entrer Votre Prénom" value="$firstNames" required>
                                     </div>
                                 </div> 
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-user"></i>
-                                        <input type="text" id="pseudo" class="form-control" name="pseudo" placeholder="Pseudo">
+                                        <input type="text" id="pseudo" class="form-control" name="pseudo" placeholder="Entrer Votre Pseudo" value="$pseudo" required>
                                     </div>
                                 </div> 
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-envelope"></i>
-                                        <input type="email" id="sender-email" class="form-control" name="email_address" placeholder="Adresse email">
+                                        <input type="email" id="sender-email" class="form-control" name="email_address" placeholder="Entrer Votre Adresse email" value="$emailAddress" required>
                                     </div>
                                 </div> 
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-lock"></i>
-                                        <input type="password" class="form-control" placeholder="Entre votre mot de passe" name="password">
+                                        <input type="password" class="form-control" placeholder="Entre votre mot de passe" name="password" required>
                                     </div>
                                 </div>  
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-lock"></i>
-                                        <input type="password" class="form-control" placeholder="Confirmer le mot de passe" name="confirm_password">
+                                        <input type="password" class="form-control" placeholder="Confirmer le mot de passe" name="confirm_password" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-phone"></i>
-                                        <input type="text" id="phone_number" class="form-control" name="phone_number" placeholder="Numéro de téléphone">
+                                        <input type="text" id="phone_number" class="form-control" name="phone_number" placeholder="Entrer Votre Numéro de téléphone" value="$phoneNumber" required>
                                     </div>
                                 </div> 
                                 <div class="form-group">
@@ -143,25 +136,25 @@ HTML;
                         {$error}
                         <div class="login-form login-area">
                             <h3>
-                                Connectez-vous maintenant !
+                                Identifiez-vous maintenant !
                             </h3>
                             {$form->open()}
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-user"></i>
-                                        <input type="text" id="sender-email" class="form-control" name="email_address" placeholder="Adresse email">
+                                        <input type="text" id="sender-email" class="form-control" name="email_address" placeholder="Entrer Votre Adresse Email">
                                     </div>
                                 </div> 
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-lock"></i>
-                                        <input type="password" class="form-control" placeholder="Mot de passe" name="password">
+                                        <input type="password" class="form-control" placeholder="Entrer Votre Mot de Passe" name="password">
                                     </div>
                                 </div>                  
                                 <div class="form-group mb-3">
                                     <div class="checkbox">
                                         <input type="checkbox" name="remember_me" value="yes" id="remember_me">
-                                        <label for="remember_me">Me reconnaître.</label>
+                                        <label for="remember_me">Me reconnaître à la prochaine connexion</label>
                                     </div>
                                     <!-- {$this->forgotPassword()} -->
                                 </div>
@@ -186,7 +179,7 @@ HTML;
     public function navbarMenu()
     {
         if (User::isAuthenticated()) {
-            $registered = new Registered(Session::get() ?? Cookie::get());
+            $registered = User::getAuthenticated();
             $content = (new RegisteredView())->navbar($registered);
         } else {
             $content = $this->navbarForUnconnectedUser();
@@ -303,7 +296,7 @@ HTML;
     }
 
     /**
-     * Affiche les commenataires laissés par cet utilisateur.
+     * Affiche les commnataires laissés par cet utilisateur.
      * 
      * @return string
      */
@@ -314,4 +307,61 @@ HTML;
 HTML;
     }
 
+    /**
+     * Un tableau qui affiche la liste des utilisateurs.
+     * 
+     * @return string
+     */
+    public function usersTable(array $users)
+    {
+        $form = new Form("users/delete");
+        $usersRows = null;
+
+        foreach ($users as $user) {
+            $usersRows .= $this->usersTableRow($user);
+        }
+
+        return <<<HTML
+        <h5 class="mb-3 p-3">Liste des comptes</h5>
+        {$form->open()}
+            <table class="table table-hover rounded bg-white">
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" name="users[]" id="checkAllUsers"></th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prénom(s)</th>
+                        <th scope="col">Pseudo</th>
+                        <th scope="col">Adresse Email</th>
+                        <th scope="col">Statut</th>
+                        <th scope="col">Date d'inscription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {$usersRows}
+                </tbody>
+            </table>
+        {$form->close()}
+HTML;
+    }
+
+    /**
+     * Affiche une ligne dans le tableau qui affiche la liste
+     * des utilisateurs.
+     * 
+     * @param App\Model\User\Registered $user
+     */
+    public function usersTableRow(\App\Model\User\Registered $user)
+    {
+        return <<<HTML
+        <tr>
+            <td><input type="checkbox" name="{$user->getId()}" id="checkAllUsers"></td>
+            <td><a href="{$user->getProfileLink()}">{$user->getName()}</a></td>
+            <td>{$user->getFirstNames()}</td>
+            <td>{$user->getPseudo()}</th>
+            <td>{$user->getEmailAddress()}</td>
+            <td>{$user->getStatus()}</td>
+            <td>{$user->getRegisteredAt()}</td>
+        </tr>
+HTML;
+    }
 }

@@ -2,10 +2,8 @@
 
 namespace App\View\Model\User;
 
-use App\Auth\Cookie;
-use App\Auth\Session;
 use App\Model\Announce;
-use App\Model\User\Registered;
+use App\Model\User\User;
 use App\View\Snippet;
 use App\View\Form;
 use App\View\Model\AnnounceView;
@@ -15,16 +13,16 @@ use App\View\Model\AnnounceView;
  */
 class RegisteredView extends UserView
 {
-    private $registered;
+    protected $user;
 
     /**
      * Constructeur de la vue du registered.
      * 
-     * @param \App\Model\User\Registered $registered
+     * @param \App\Model\User\Registered $user
      */
-    public function __construct(\App\Model\User\Registered $registered = null)
+    public function __construct(\App\Model\User\Registered $user = null)
     {
-        $this->registered = $registered;
+        $this->user = $user;
     }
 
     /**
@@ -44,7 +42,7 @@ class RegisteredView extends UserView
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
+                    {$this->sidebarNav(User::getAuthenticated())}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         <div class="page-content">
                             <div class="inner-box">
@@ -76,7 +74,7 @@ HTML;
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebarNav(new Registered(Session::get() ?? Cookie::get()))}
+                    {$this->sidebarNav(User::getAuthenticated())}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         C'est mon profil.
                     </div>
@@ -93,8 +91,35 @@ HTML;
      */
     public function userProfile()
     {
+        $snippet = new Snippet;
+
         return <<<HTML
-        Le profil d'un autre utilisateur.
+        {$snippet->pageHeader($this->user->getFullName(), "Utilisateurs / ". $this->user->getFullName())}
+
+        <div id="content" class="section-padding">
+            <div class="container">
+                <div class="row">
+                    {$this->sidebarNav(User::getAuthenticated())}
+                    <div class="col-sm-12 col-md-8 col-lg-9">
+                        Profil de {$this->user->getFullName()}
+                    </div>
+                </div>
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Menu qui sera affiché si l'utilsateur s'est authentifié.
+     * @param App\Model\User\Registered
+     * @return string
+     */
+    public function navbar($registered)
+    {
+        return <<<HTML
+        <a class="dropdown-item" href="{$registered->getProfileLink()}"><i class="lni-user"></i> Mon Profil</a>
+        <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-home"></i> Mes annonces</a>
+        <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Se déconnecter</a>
 HTML;
     }
 
@@ -116,40 +141,35 @@ HTML;
     }
 
     /**
-     * Menu qui sera affiché si l'utilsateur s'est authentifié.
-     * @param App\Model\User\Registered
-     * @return string
-     */
-    public function navbar($registered)
-    {
-        return <<<HTML
-        <a class="dropdown-item" href="{$registered->getProfileLink()}"><i class="lni-user"></i> Mon Profil</a>
-        <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-home"></i> Mes annonces</a>
-        <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Se déconnecter</a>
-HTML;
-    }
-
-    /**
      * Affiche l'avatar et les liens de la sidebar de l'utilisateur.
+     * 
      * @param App\Model\User\Registered $registered 
      * @return string
      */
-    private function sidebarContent($registered) : string
+    protected function sidebarContent($registered) : string
     {
-        return <<<HTML
-        <div class="sidebar-box">
-            <div class="user">
-                <figure>
-                    <a href="{$registered->getProfileLink()}"><img src="{$registered->getAvatarSrc()}" alt="Image de {$registered->getPseudo()}" title="Mon profil"></a>
-                </figure>
-                <div class="usercontent">
-                    <h3><a href="{$registered->getProfileLink()}" class="text-white">{$registered->getName()} {$registered->getFirstNames()}</a></h3>
-                    <h4>{$registered->getType()}</h4>
+        if (User::isAuthenticated()) {
+            if ($registered->isAdministrator()) {
+                $sidebarLinks = (new AdministratorView())->sidebarLinks($registered);
+            } else {
+                $sidebarLinks = (new self())->sidebarLinks($registered);
+            }
+            
+            return <<<HTML
+            <div class="sidebar-box">
+                <div class="user">
+                    <figure>
+                        <a href="{$registered->getProfileLink()}"><img src="{$registered->getAvatarSrc()}" alt="Image de {$registered->getPseudo()}" title="Mon profil"></a>
+                    </figure>
+                    <div class="usercontent">
+                        <h3><a href="{$registered->getProfileLink()}" class="text-white">{$registered->getFullName()}</a></h3>
+                        <h4>{$registered->getType()}</h4>
+                    </div>
                 </div>
+                {$sidebarLinks}
             </div>
-            {$this->sidebarLinks($registered)}
-        </div>
 HTML;
+        }
     }
     
     /**
@@ -157,7 +177,7 @@ HTML;
      * @param App\Model\User\Registered $registered 
      * @return string
      */
-    private function sidebarLinks($registered) : string
+    public function sidebarLinks($registered) : string
     {
         return <<<HTML
         <nav class="navdashboard">
@@ -178,7 +198,7 @@ HTML;
      * 
      * @return string
      */
-    private function defineSidebarLink(string $text, string $href, string $iconClass = null)
+    protected function defineSidebarLink(string $text, string $href, string $iconClass = null)
     {
         return <<<HTML
         <li>
@@ -196,7 +216,7 @@ HTML;
      * 
      * @return string
      */
-    private function dashboardContent(array $announces)
+    protected function dashboardContent(array $announces)
     {
         return <<<HTML
         <div class="dashboard-wrapper">
@@ -212,16 +232,16 @@ HTML;
      * 
      * @return string
      */
-    private function dashboardTableNav()
+    protected function dashboardTableNav()
     {
         return <<<HTML
         <nav class="nav-table">
             <ul>
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts", "Tous", $this->registered->getAnnounceNumber())}
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/pending", "En attente", $this->registered->getAnnounceNumber(Announce::convertStatus("pending")))}
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/validated", "Validées", $this->registered->getAnnounceNumber(Announce::convertStatus("validated")))}
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/premium", "Premium", $this->registered->getAnnounceNumber(Announce::convertStatus("premium")))}
-                {$this->dashbaordNavStatus($this->registered->getProfileLink()."/posts/blocked", "Bloquées", $this->registered->getAnnounceNumber(Announce::convertStatus("blocked")))}
+                {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts", "Tous", $this->user->getAnnounceNumber())}
+                {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/pending", "En attente", $this->user->getAnnounceNumber("pending"))}
+                {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/validated", "Validées", $this->user->getAnnounceNumber("validated"))}
+                {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/premium", "Premium", $this->user->getAnnounceNumber("premium"))}
+                {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/blocked", "Bloquées", $this->user->getAnnounceNumber("blocked"))}
             </ul>
         </nav>
 HTML;
@@ -248,7 +268,7 @@ HTML;
      * 
      * @return string
      */
-    private function dashboardContentTable(array $announces)
+    protected function dashboardContentTable(array $announces)
     {
         if (!empty($announces)) {
             $form = new Form($_SERVER["REQUEST_URI"] . "/announces/delete");
@@ -272,7 +292,7 @@ HTML;
      * 
      * @return string
      */
-    private function dashboardContentTableHead()
+    protected function dashboardContentTableHead()
     {
         return <<<HTML
         <thead>
@@ -301,7 +321,7 @@ HTML;
      * 
      * @return string
      */
-    private function dashboardContentTableBody(array $announces)
+    protected function dashboardContentTableBody(array $announces)
     {
         $rows = null;
         foreach ($announces as $announce) {

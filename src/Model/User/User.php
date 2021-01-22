@@ -15,7 +15,7 @@ use App\Model\Model;
 /**
  * Classe de gestion des utilisateurs.
  */
-class User extends Model
+abstract class User extends Model
 {
     protected $code;
     protected $emailAddress;
@@ -66,6 +66,21 @@ class User extends Model
     public static function isAuthenticated()
     {
         return Authentication::made();
+    }
+
+    /**
+     * Permet de retourner l'utilisateur authentifié actuellement.
+     * 
+     * @return Registered
+     */
+    public static function getAuthenticated()
+    {
+        if (self::isAuthenticated()) {
+            $user = new Registered(Session::get() ?? Cookie::get());
+            if ($user->isAdministrator()) {
+                return new Administrator(Session::get() ?? Cookie::get());
+            }
+        }
     }
 
     /**

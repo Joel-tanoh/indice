@@ -23,6 +23,7 @@ try {
     $router->get("/sign-in", "App\Controller\UserController@signIn");
     $router->get("/sign-out", "App\Controller\UserController@signOut");
     $router->get("/post", "App\Controller\AnnounceController@create");
+    $router->get("/users", "App\Controller\UserController@users");
     $router->get("/in-progress", "App\Controller\AppController@page404");
     $router->get("/:category", "App\Controller\CategoryController@read");
     $router->get("/:1/:2", "App\Controller\AppController@switcher");
@@ -38,6 +39,6 @@ try {
     $router->run();
 
 } catch(Exception $e) {
-    $page = new Page("Le leader des petites annonces en Côte d'Ivoire", View::exception($e));
+    $page = new Page("Le leader des petites annonces en Côte d'Ivoire", View::page404($e, "404"));
     $page->show();
 }

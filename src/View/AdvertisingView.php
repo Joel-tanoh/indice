@@ -31,10 +31,12 @@ HTML;
     public function top()
     {
         return <<<HTML
-
+        <section class=" advertising top d-flex justify-content-center align-items-center d-none d-lg-block">
+            Publicité
+        </section>
 HTML;
     }
-
+    
     /**
      * Permet d'afficher une publicité les cotés de l'application.
      * 
@@ -43,7 +45,38 @@ HTML;
     public function side()
     {
         return <<<HTML
+        <div class="advertising side d-flex justify-content-center align-items-center d-none d-lg-block col-lg-2">
+            <span>Publicité</span>
+        </div>
+HTML;
+    }
 
+
+    /**
+     * Permet d'afficher une publicité le cotés gauche de l'application.
+     * 
+     * @return string
+     */
+    public function left()
+    {
+        return <<<HTML
+        <aside class="advertising left d-flex justify-content-center align-items-center d-none d-lg-block col-lg-2">
+            <span>Publicité</span>
+        </aside>
+HTML;
+    }
+
+    /**
+     * Permet d'afficher une publicité le coté droit de l'application.
+     * 
+     * @return string
+     */
+    public function right()
+    {
+        return <<<HTML
+        <aside class="advertising right d-flex justify-content-center align-items-center d-none d-lg-block col-lg-2">
+            <span>Publicité</span>
+        </aside>
 HTML;
     }
 

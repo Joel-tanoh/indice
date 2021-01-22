@@ -110,6 +110,7 @@ HTML;
      */
     public function pageHeader(string $title, string $current) : string
     {
+        $home = APP_URL;
         return <<<HTML
         <!-- Page Header Start -->
         <div class="page-header" style="background: url(assets/img/banner1.jpg);">
@@ -119,7 +120,7 @@ HTML;
                         <div class="breadcrumb-wrapper">
                             <h2 class="product-title">{$title}</h2>
                             <ol class="breadcrumb">
-                                <li><a href="#">Accueil /</a></li>
+                                <li><a href="$home">Accueil / </a></li>
                                 <li class="current">{$current}</li>
                             </ol>
                         </div>

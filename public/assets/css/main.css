@@ -5005,3 +5005,9 @@ footer .menu li a:hover {
 .error-content .description a:hover {
   color: #00BCD4;
 }
+
+/** Gestion des barres de publicités
+===================================== */
+.advertising.top {
+  height: 150px;
+}

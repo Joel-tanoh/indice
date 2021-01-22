@@ -57,13 +57,13 @@ class AppController
                 AnnounceController::read($params);
             }
         }
-        elseif ($params[1] === "users"
-            && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)
-        ) {
-            if (isset($params[3])
-                && $params[3] === "posts"
-            ) {
-                UserController::dashboard($params);
+        elseif ($params[1] === "users" && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
+            if (isset($params[3])) {
+                if ($params[3] === "posts") {
+                    UserController::dashboard($params);
+                } elseif (self::isAction($params[3])) {
+                    UserController::manage($params);
+                }
             }
             else {
                 UserController::userProfile($params);
