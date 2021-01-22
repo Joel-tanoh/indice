@@ -6,6 +6,7 @@ use App\Database\Database;
 use App\Database\SqlQueryFormaterV2;
 use App\Utility\Utility;
 
+/** Gère tout ce qui concerne les données. */
 abstract class Model
 {
     protected $id;
@@ -17,16 +18,6 @@ abstract class Model
     protected $tableName;
 
     /**
-     * Retourne une instance Database.
-     * 
-     * @return Database
-     */
-    public static function database()
-    {
-        return new Database(DB_NAME, DB_LOGIN, DB_PASSWORD, DB_ADDRESS);
-    }
-
-    /**
      * Permet de se connecter à la base de données et retourne l'instance PDO.
      * 
      * @return PDOInstance
@@ -34,6 +25,16 @@ abstract class Model
     public static function connectToDb()
     {
         return self::database()->getPDO();
+    }
+
+    /**
+     * Retourne une instance Database.
+     * 
+     * @return Database
+     */
+    public static function database()
+    {
+        return new Database(DB_NAME, DB_LOGIN, DB_PASSWORD, DB_ADDRESS);
     }
 
     /**

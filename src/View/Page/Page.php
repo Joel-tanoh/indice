@@ -302,7 +302,7 @@ HTML;
         <!-- Owl Theme -->
         {$this->cssFile(ASSETS_DIR_URL."/css/owl.theme.css")}
         <!-- Fontawesome -->
-        {$this->cssFile(ASSETS_DIR_URL."/fontawesome/css/fontawesome.min.css")}
+        {$this->cssFile(ASSETS_DIR_URL."/fontawesome/css/all.css")}
 HTML;
     }
 
@@ -341,7 +341,7 @@ HTML;
         <!-- Contact Form script -->
         {$this->jsFile(ASSETS_DIR_URL."/js/contact-form-script.min.js")}
         <!-- Fontawesome -->
-        {$this->jsFile(ASSETS_DIR_URL."/fontawesome/js/fontawesome.min.js")}
+        {$this->jsFile(ASSETS_DIR_URL."/fontawesome/js/all.js")}
 HTML;
     }
 
