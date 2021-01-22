@@ -289,7 +289,6 @@ HTML;
         {$this->cssFile(ASSETS_DIR_URL."/css/owl.carousel.css")}
         <!-- Summernote -->
         {$this->cssFile(ASSETS_DIR_URL."/css/summernote.css")}
-
         <!-- Main Style -->
         {$this->cssFile(ASSETS_DIR_URL."/css/main.css")}
         <!-- Color Switcher -->
@@ -302,6 +301,8 @@ HTML;
         {$this->cssFile(ASSETS_DIR_URL."/css/responsive.css")}
         <!-- Owl Theme -->
         {$this->cssFile(ASSETS_DIR_URL."/css/owl.theme.css")}
+        <!-- Fontawesome -->
+        {$this->cssFile(ASSETS_DIR_URL."/fontawesome/css/fontawesome.min.css")}
 HTML;
     }
 
@@ -339,6 +340,8 @@ HTML;
         {$this->jsFile(ASSETS_DIR_URL."/js/form-validator.min.js")}
         <!-- Contact Form script -->
         {$this->jsFile(ASSETS_DIR_URL."/js/contact-form-script.min.js")}
+        <!-- Fontawesome -->
+        {$this->jsFile(ASSETS_DIR_URL."/fontawesome/js/fontawesome.min.js")}
 HTML;
     }
 

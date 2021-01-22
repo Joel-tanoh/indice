@@ -31,7 +31,7 @@ HTML;
     public function top()
     {
         return <<<HTML
-        <section class=" advertising top d-flex justify-content-center align-items-center d-none d-lg-block">
+        <section class=" advertising top d-flex text-center align-items-center d-none d-lg-block">
             Publicité
         </section>
 HTML;
@@ -45,9 +45,9 @@ HTML;
     public function side()
     {
         return <<<HTML
-        <div class="advertising side d-flex justify-content-center align-items-center d-none d-lg-block col-lg-2">
+        <aside class="advertising side d-flex text-center align-items-center d-none d-lg-block col-lg-2">
             <span>Publicité</span>
-        </div>
+        </aside>
 HTML;
     }
 
@@ -60,7 +60,7 @@ HTML;
     public function left()
     {
         return <<<HTML
-        <aside class="advertising left d-flex justify-content-center align-items-center d-none d-lg-block col-lg-2">
+        <aside class="advertising left d-flex text-center align-items-center d-none d-lg-block col-lg-2">
             <span>Publicité</span>
         </aside>
 HTML;
@@ -74,7 +74,7 @@ HTML;
     public function right()
     {
         return <<<HTML
-        <aside class="advertising right d-flex justify-content-center align-items-center d-none d-lg-block col-lg-2">
+        <aside class="advertising right d-flex text-center align-items-center d-none d-lg-block col-lg-2">
             <span>Publicité</span>
         </aside>
 HTML;
