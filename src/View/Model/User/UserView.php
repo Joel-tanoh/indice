@@ -4,6 +4,7 @@ namespace App\View\Model\User;
 
 use App\Auth\Cookie;
 use App\Auth\Session;
+use App\Model\Location\Town;
 use App\Model\User\Registered;
 use App\Model\User\User;
 use App\View\Form;
@@ -304,6 +305,26 @@ HTML;
     {
         return <<<HTML
 
+HTML;
+    }
+
+    /**
+     * Affiche la liste des villes.
+     * 
+     * @return string
+     */
+    public function townsSelectList(string $postName)
+    {
+        $options = null;
+        foreach (Town::getAll() as $town) {
+            $options .= '<option value="' . $town->getName() . '">'. $town->getName() . '</option>';
+        }
+
+        return <<<HTML
+        <select name="{$postName}">
+            <option value="0">Choisir la ville</option>
+            {$options}
+        </select>
 HTML;
     }
 

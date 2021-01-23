@@ -67,6 +67,7 @@ HTML;
     {
         $snippet = new Snippet();
         $home = APP_URL;
+        $form = new Form("/search", "form-error-search");
 
         return <<<HTML
         {$snippet->pageHeader("404", $current)}
@@ -82,9 +83,9 @@ HTML;
                                 <h3>Ne vous inquitez pas, c'est nous le problème...</h3>
                                 <p>{$message}</p>
                             </div>
-                            <form class="form-error-search">
-                                <input type="search" name="search" class="form-control" placeholder="Une recherche...">
-                                <button class="btn btn-common btn-search" type="button">Chercher</button>
+                            {$form->open()}
+                                <input type="search" name="search_query" class="form-control" placeholder="Une recherche...">
+                                <button class="btn btn-common btn-search" type="submit">Chercher</button>
                             </form>
                             <div class="description">
                                 <span>Ou allons à l' <a href="$home">Accueil</a></span>

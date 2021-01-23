@@ -6,6 +6,7 @@ use App\Model\Announce;
 use App\Model\Category;
 use App\Utility\Pagination;
 use App\View\AdvertisingView;
+use App\View\Form;
 use App\View\Snippet;
 
 /**
@@ -176,7 +177,6 @@ HTML;
     
             <!-- Start Pagination -->
             <!-- {$pagination->show()} -->
-            
         </div>
 HTML;
     }
@@ -188,12 +188,15 @@ HTML;
      */
     private function searchWidget()
     {
+        $form = new Form("/search", null, false, "post", "search-form", "search");
+        $searchQuery = !empty($_POST["search_query"]) ? $_POST["search_query"] : null;
+
         return <<<HTML
         <div class="widget_search">
-            <form role="search" id="search-form">
-                <input type="search" class="form-control" autocomplete="off" name="s" placeholder="Recherche..." id="search-input" value="">
+            {$form->open()}
+                <input type="search" class="form-control" autocomplete="off" name="search_query" placeholder="Recherche..." id="search-input" value="{$searchQuery}">
                 <button type="submit" id="search-submit" class="search-btn"><i class="lni-search"></i></button>
-            </form>
+            {$form->close()}
         </div>
 HTML;
     }
@@ -261,7 +264,7 @@ HTML;
     {
         return <<<HTML
         <div class="product-filter">
-            {$this->announceFilterShortName()}
+            <!-- {$this->announceFilterShortName()} -->
             {$this->changeViewButton()}
         </div>
 HTML;

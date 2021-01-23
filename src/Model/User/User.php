@@ -76,9 +76,9 @@ abstract class User extends Model
     public static function getAuthenticated()
     {
         if (self::isAuthenticated()) {
-            $user = new Registered(Session::get() ?? Cookie::get());
+            $user = new Registered(Authentication::getId());
             if ($user->isAdministrator()) {
-                return new Administrator(Session::get() ?? Cookie::get());
+                return new Administrator(Authentication::getId());
             }
         }
     }
@@ -100,7 +100,7 @@ abstract class User extends Model
             "phone_number" => htmlspecialchars($_POST["phone_number"]),
         ];
 
-        $insertion = new InsertInDb($data, DB_NAME, self::TABLE_NAME, DB_LOGIN, DB_PASSWORD);
+        $insertion = new InsertInDb($data, self::TABLE_NAME, DB_NAME, DB_LOGIN, DB_PASSWORD);
         $insertion->run();
         
         if (Create::fileIsUploaded("avatar")) {
@@ -118,8 +118,8 @@ abstract class User extends Model
      * @param string $where Le lien vers lequel on redirige l'utilisateur
      *                      s'il n'est pas authentifié.
      */
-    public static function redirectIfNotAuthenticated(string $where)
+    public static function askToAuthenticate(string $where)
     {
-        Authentication::redirectUserIfNotAuthenticated($where);
+        Authentication::askToAuthenticate($where);
     }
 }

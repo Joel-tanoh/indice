@@ -101,7 +101,7 @@ class Authentication
      * Permet de rédiriger l'utilisateur sur sa
      * page de connexion s'il n'est pas authentifié.
      */
-    public static function redirectUserIfNotAuthenticated(string $where)
+    public static function askToAuthenticate(string $where)
     {
         if (!Session::isActive() && !Cookie::userCookieIsset()) {
             Utility::redirect($where);
@@ -114,7 +114,22 @@ class Authentication
      */
     public static function made()
     {
-        return Cookie::userCookieIsset() && Session::isActive();
+        return Cookie::userCookieIsset() || Session::isActive();
+    }
+
+    /**
+     * Retourne l'id de session ou de cookie pour reconnaitre l'utilisateur
+     * connecté.
+     * 
+     * @return string
+     */
+    public static function getId()
+    {
+        if (Session::isActive()) {
+            return Session::get();
+        } elseif (Cookie::userCookieIsset()) {
+            return Cookie::get();
+        }
     }
 
 }

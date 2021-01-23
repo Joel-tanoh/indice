@@ -113,15 +113,13 @@ class Category extends Model
     /**
      * Retourne toutes les catégories.
      * 
-     * @param string $tableName Le nom de la table dont on veut récupérer tous
-     *                          les éléments.
-     * 
      * @return array
      */
-    public static function getAll(string $tableName)
+    public static function getAll()
     {
+        $req = self::connectToDb()->query("SELECT id FROM " . self::TABLE_NAME);
+
         $categories = [];
-        $req = self::connectToDb()->query("SELECT id FROM $tableName");
         foreach ($req->fetchAll() as $item) {
             $categories[] = new self($item["id"]);
         }

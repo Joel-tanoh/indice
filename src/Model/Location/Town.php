@@ -2,6 +2,8 @@
 
 namespace App\Model\Location;
 
+use App\Action\Create\InsertInDb;
+
 /** Classe de gestion de pays. */
 class Town extends Location
 {
@@ -37,6 +39,33 @@ class Town extends Location
     public function getCountry()
     {
         return $this->country;
+    }
+
+    /**
+     * Retourne toutes les villes.
+     * 
+     * @return array
+     */
+    public static function getAll()
+    {
+        $req = parent::connectToDb()->query("SELECT id FROM " . self::TABLE_NAME);
+
+        $towns = [];
+        foreach ($req->fetchAll() as $town) {
+            $towns[] = new self($town["id"]);
+        }
+
+        return $towns;
+    }
+
+    /**
+     * Permet d'ajouter une nouvelle ville.
+     */
+    public static function create()
+    {
+        $data["name"] = htmlspecialchars($_POST["name"]);
+        $insertion = new InsertInDb($data, self::TABLE_NAME);
+        $insertion->run;
     }
 
 }

@@ -13,6 +13,7 @@ use App\Router\Router;
 use App\Model\Entity;
 use App\Model\User\Visitor;
 use App\View\Model\CategoryView;
+use App\View\Model\User\UserView;
 
 /**
  * Gère les fragments de code.
@@ -141,32 +142,34 @@ HTML;
     public function heroAreaSearchBar()
     {
         $categoryView = new CategoryView();
+        $userView = new UserView();
+        $form = new Form("/search", "search-form", false, "post", "myform", "search");
 
         return <<<HTML
         <div class="search-bar">
             <div class="search-inner">
-                <form method="" action="" class="search-form">
+                {$form->open()}
                     <div class="form-group inputwithicon">
                         <i class="lni-tag"></i>
-                        <input type="text" name="customword" class="form-control" placeholder="Entrer un mot">
+                        <input type="text" name="search_query" class="form-control" placeholder="Saisissez quelque chose">
                     </div>
                     <div class="form-group inputwithicon">
                         <i class="lni-map-marker"></i>
                         <div class="select">
-                            {$this->townList("location")}
+                            {$userView->townsSelectList("location")}
                         </div>
                     </div>
                     <div class="form-group inputwithicon">
                         <i class="lni-menu"></i>
                         <div class="select">
-                            <select>
+                            <select name="category">
                                 <option value="0">Catégories</option>
                                 {$categoryView->selectOptions()}
                             </select>
                         </div>
                     </div>
-                    <button class="btn btn-common" type="button"><i class="lni-search"></i> Chercher</button>
-                </form>
+                    <button class="btn btn-common" type="submit"><i class="lni-search"></i> Chercher</button>
+                {$form->close()}
             </div>
         </div>
 HTML;
@@ -403,28 +406,6 @@ HTML;
         return <<<HTML
         <iframe src="https://www.youtube.com/embed/{$youtubeVideoLink}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen class="w-100 video" style="height:25rem"></iframe>
-HTML;
-    }
-
-    /**
-     * Affiche la liste des villes.
-     * 
-     * @return string
-     */
-    public function townList(string $postName)
-    {
-        return <<<HTML
-        <select name="{$postName}">
-            <option value="0">Choisir la ville</option>
-            <option value="Abidjan">Abidjan</option>
-            <option value="San-Pedro">San-Pedro</option>
-            <option value="Bouake">Bouake</option>
-            <option value="Daloa">Daloa</option>
-            <option value="Yamoussoukro">Yamoussoukro</option>
-            <option value="Gagnoa">Gagnoa</option>
-            <option value="Korhogo">Korhogo</option>
-            
-        </select>
 HTML;
     }
 

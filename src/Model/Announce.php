@@ -544,7 +544,7 @@ class Announce extends Model
         $data["user_email_address"] = Session::get();
 
         // Insertion des données
-        $insertion = new InsertInDb($data, DB_NAME, self::TABLE_NAME, DB_LOGIN, DB_PASSWORD);
+        $insertion = new InsertInDb($data, self::TABLE_NAME, DB_NAME, DB_LOGIN, DB_PASSWORD);
         $insertion->run();
 
         /** Récupérer l'annonce qui vient d'être enregistrée */

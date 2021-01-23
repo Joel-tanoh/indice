@@ -22,8 +22,13 @@ class InsertInDb extends Create
      * @param string $dbPassword Le mot de passe à utiliser pour se connecter à
      *                           la base de données.
      */
-    public function __construct(array $data, string $database, string $tableName, string $dbLogin, string $dbPassword)
-    {
+    public function __construct(
+        array $data, 
+        string $tableName, 
+        string $database = DB_NAME, 
+        string $dbLogin = DB_LOGIN, 
+        string $dbPassword = DB_PASSWORD
+    ) {
         $this->data = $data;
         $this->database = $database;
         $this->tableName = $tableName;

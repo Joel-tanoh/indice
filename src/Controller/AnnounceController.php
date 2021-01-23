@@ -3,13 +3,9 @@
 namespace App\Controller;
 
 use App\Action\Action;
-use App\Action\Create\Create;
 use App\Action\Update\Update;
-use App\Auth\Authentication;
-use App\Auth\Cookie;
 use App\File\Image\Image;
 use App\Model\Announce;
-use App\Auth\Session;
 use App\Communication\Notify\NotifyByHTML;
 use App\Model\Category;
 use App\Model\Model;
@@ -29,7 +25,7 @@ class AnnounceController extends AppController
      */
     public static function create()
     {
-        User::redirectIfNotAuthenticated("/sign-in");
+        User::askToAuthenticate("/sign-in");
         $htmlNotifier = new NotifyByHTML();
         $message = null;
 
@@ -92,7 +88,7 @@ class AnnounceController extends AppController
      */
     public static function manage(array $params)
     {
-        User::redirectIfNotAuthenticated("/sign-in");
+        User::askToAuthenticate("/sign-in");
 
         if (isset($params[1]) && !empty($params[1])
             && isset($params[2]) && !empty($params[2])

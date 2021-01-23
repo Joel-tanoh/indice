@@ -10,6 +10,7 @@ use App\View\View;
 use App\View\Form;
 use App\Auth\Session;
 use App\Model\User\User;
+use App\View\Model\User\UserView;
 use App\View\Model\User\RegisteredView;
 use App\View\Communication\CommentView;
 
@@ -40,7 +41,7 @@ class AnnounceView extends View
      */
     public function create(string $message = null)
     {
-        $registeredView = new RegisteredView(new Registered(Session::get()));
+        $registeredView = new RegisteredView(User::getAuthenticated());
         $snippet = new Snippet();
 
         return <<<HTML
@@ -577,7 +578,7 @@ HTML;
     private function enterAnnounceDetails()
     {
         $categoryView = new CategoryView();
-        $snippet = new Snippet();
+        $userView = new UserView();
 
         $title = null;
         if(isset($_POST["title"]) && !empty($_POST["title"])) {
@@ -634,7 +635,7 @@ HTML;
                     <div class="form-group mb-3 tg-inputwithicon">
                         <label class="control-label">Ville</label>
                         <div class="tg-select form-control">
-                            {$snippet->townList("location")}
+                            {$userView->townsSelectList("location")}
                         </div>
                     </div>
                     <div class="form-group mb-3">
@@ -932,7 +933,7 @@ HTML;
     private function manageButtons()
     {
         if (User::isAuthenticated()) {
-            $sessionId = Session::get() ?? Cookie::get();
+            $sessionId = Authentication::getId();
             $registered = new Registered($sessionId);
             if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
                 || $registered->isAdministrator()
@@ -957,7 +958,7 @@ HTML;
     private function putComments()
     {
         if (User::isAuthenticated()) {
-            $sessionId = Session::get() ?? Cookie::get();
+            $sessionId = Authentication::getId();
             $registered = new Registered($sessionId);
             $form = new Form($_SERVER["REQUEST_URI"], "mt-3");
 

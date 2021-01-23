@@ -131,7 +131,9 @@ class UserController extends AppController
                 $error = (new NotifyByHTML())->error($connexion->getError(), "alert alert-danger");
             } else {
                 Session::activate($_POST["email_address"]);
-                Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
+                if (!empty($_POST["remember_me"])) {
+                    Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
+                }
                 $registered = new Registered($_POST["email_address"]);
                 Utility::redirect($registered->getProfileLink());
             }
@@ -147,7 +149,7 @@ class UserController extends AppController
      */
     public static function userProfile(array $params)
     {
-        User::redirectIfNotAuthenticated("/sign-in");
+        User::askToAuthenticate("/sign-in");
 
         $registered = User::getAuthenticated();
         $user = Registered::getByPseudo($params[2]);
@@ -193,7 +195,7 @@ class UserController extends AppController
      */
     public static function dashboard(array $params = null)
     {
-        User::redirectIfNotAuthenticated("/sign-in");
+        User::askToAuthenticate("/sign-in");
         
         $registered = User::getAuthenticated();
         $user = Registered::getByPseudo($params[2]);
@@ -263,7 +265,7 @@ class UserController extends AppController
      */
     public static function update()
     {
-        User::redirectIfNotAuthenticated("sign-in");
+        User::askToAuthenticate("sign-in");
 
         $registered = User::getAuthenticated();
 
@@ -274,7 +276,7 @@ class UserController extends AppController
      */
     public static function delete()
     {
-        User::redirectIfNotAuthenticated("/sign-in");
+        User::askToAuthenticate("/sign-in");
     }
 
     /**
