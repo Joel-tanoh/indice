@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  jeu. 21 jan. 2021 à 07:14
+-- Généré le :  sam. 23 jan. 2021 à 01:20
 -- Version du serveur :  5.7.19
 -- Version de PHP :  7.1.9
 
@@ -38,6 +38,28 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `posted_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `countries`
+--
+
+DROP TABLE IF EXISTS `countries`;
+CREATE TABLE IF NOT EXISTS `countries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `slug` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Déchargement des données de la table `countries`
+--
+
+INSERT INTO `countries` (`id`, `name`, `slug`) VALUES
+(1, 'Côte d\'Ivoire', 'cote-d-ivoire');
 
 -- --------------------------------------------------------
 
@@ -181,6 +203,66 @@ INSERT INTO `ind_users` (`id`, `code`, `email_address`, `name`, `first_names`, `
 (3, '3TSTjAY8', 'abc@abc.abc', 'Bassa', 'Patrick joel', 'patco255', '$2y$10$9JkdUgfZfQQRuAQkjuYdFuDouffCraJG/qWxesBaTrmleXIaRDZmC', '45996095', '2021-01-01 23:24:05', NULL, 0, 0),
 (4, '9ZIE0t', 'lohuxyansteeven@outlook.com', 'Lohoux', 'Yan Steeven', 'Curtis13', '$2y$10$tpjPd5UgyX60Z2M0asNro.6KXBKOUuIQcQPTgWplrgmU5TRT2.dIy', '+22508260930', '2021-01-04 20:20:20', NULL, 0, 0),
 (5, 'znXhrQ', 'toto@gmail.com', 'Bassa', 'Joel', 'basjo1509', '$2y$10$zt2uouSsHwpYu.Gyq4eN5uttB5tRN3cmjZnGLHp2rqFOaevwJTcBS', '45996095', '2021-01-07 19:04:03', NULL, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `towns`
+--
+
+DROP TABLE IF EXISTS `towns`;
+CREATE TABLE IF NOT EXISTS `towns` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `id_country` int(11) DEFAULT NULL,
+  `slug` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Déchargement des données de la table `towns`
+--
+
+INSERT INTO `towns` (`id`, `name`, `id_country`, `slug`) VALUES
+(1, 'Abidjan', 1, 'abidjan'),
+(2, 'Bouaké', 1, 'bouake'),
+(3, 'Daloa', 1, 'daloa'),
+(4, 'Yamoussokro', 1, 'yamoussokro'),
+(5, 'San-Pédro', 1, 'san-pedro'),
+(6, 'Divo', 1, 'divo'),
+(7, 'Korhogo', 1, 'korhogo'),
+(8, 'Abengourou', 1, 'agengourou'),
+(9, 'Man', 1, 'man'),
+(10, 'Gagnoa', 1, 'gagnoa'),
+(11, 'Soubré', 1, 'soubre'),
+(12, 'Agboville', 1, 'agboville'),
+(13, 'Dabou', 1, 'dabou'),
+(14, 'Grand-Bassam', 1, 'grand-bassam'),
+(15, 'Bouaflé', 1, 'bouaflé'),
+(16, 'Issia', 1, 'issia'),
+(17, 'Sinfra', 1, 'sinfra'),
+(18, 'Katiola', 1, 'katiola'),
+(19, 'Bingerville', 1, 'bingerville'),
+(20, 'Adzopé', 1, 'adzope'),
+(21, 'Séguéla', 1, 'seguela'),
+(22, 'Bondoukou', 1, 'bondoukou'),
+(23, 'Oumé', 1, 'oume'),
+(24, 'Ferkessedougou', 1, 'ferkessedougou'),
+(25, 'Dimbokro', 1, 'dimbokro'),
+(26, 'Odienné', 1, 'odienne'),
+(27, 'Danané', 1, 'danane'),
+(28, 'Tingréla', 1, 'tingrela'),
+(29, 'Guiglo', 1, 'guiglo'),
+(30, 'Boundiali', 1, 'boundiali'),
+(31, 'Agnibilékro', 1, 'agnibilékro'),
+(32, 'Daoukro', 1, 'daoukro'),
+(33, 'Vavoua', 1, 'vavoua'),
+(34, 'Zuénoula', 1, 'zuenoula'),
+(35, 'Tiassalé', 1, 'tiassale'),
+(36, 'Toumodi', 1, 'toumodi'),
+(37, 'Akoupé', 1, 'akoupe'),
+(38, 'Lakota', 1, 'lakota');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

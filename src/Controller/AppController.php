@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Action\Update\UpdateDb;
-use App\Database\SqlQueryFormaterV2;
 use App\Model\Announce;
 use App\Model\Category;
 use App\Model\Model;
@@ -14,9 +12,22 @@ use Exception;
 
 class AppController
 {
-    /**
-     * Index du site.
-     */
+    protected static $actions = [
+        "create"
+        , "read"
+        , "update"
+        , "delete"
+        , "show"
+        , "view"
+        , "validate"
+        , "set-premium"
+        , "suspend"
+        , "block"
+        , "comment"
+    ];
+
+
+    /** Index du site. */
     public static function index()
     {
         $page = new Page("Le leader des petites annonces de Côte d'Ivoire", View::index());
@@ -75,27 +86,22 @@ class AppController
     }
 
     /**
+     * Permet de gérer les recherches.
+     */
+    public static function search()
+    {
+        dump($_POST);
+        die();
+    }
+
+    /**
      * Gère les actions qu'on veut faire dans l'application.
      * 
      * @return bool
      */
     public static function isAction(string $action)
     {
-        $actions = [
-            "create"
-            , "read"
-            , "update"
-            , "delete"
-            , "show"
-            , "view"
-            , "validate"
-            , "set-premium"
-            , "suspend"
-            , "block"
-            , "comment"
-        ];
-
-        return in_array($action, $actions);
+        return in_array($action, self::$actions);
     }
 
 }

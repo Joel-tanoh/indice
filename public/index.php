@@ -34,6 +34,7 @@ try {
     $router->post("/register", "App\Controller\UserController@register");
     $router->post("/post", "App\Controller\AnnounceController@create");
     $router->post("/sign-in", "App\Controller\UserController@signIn");
+    $router->post("/search", "App\Controller\AppController@search");
     $router->post("/:1/:2/:3", "App\Controller\AppController@switcher");
 
     $router->run();
