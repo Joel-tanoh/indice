@@ -2,6 +2,8 @@
 
 namespace App\Route;
 
+use App\Url;
+
 /**
  * Classe de gestion d'une route.
  */
@@ -28,7 +30,7 @@ class Route
             return $this->route == $url;
         } else {
             $this->paramsName();
-            return $this->length() === Router::urlLength();
+            return $this->length() === Url::urlLength();
         }
     }
 
@@ -102,7 +104,7 @@ class Route
         $routesParams = [];
         $routeSplited = explode("/", $this->route);
         for($i = 0; $i < count($routeSplited); $i++) {
-            $routesParams[trim($routeSplited[$i], ":")] = Router::getUrlAsArray()[$i];
+            $routesParams[trim($routeSplited[$i], ":")] = Url::getUrlAsArray()[$i];
         }
 
         return $routesParams;

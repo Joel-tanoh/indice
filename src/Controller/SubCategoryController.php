@@ -10,7 +10,7 @@ class SubCategoryController extends AppController
     /**
      * Controller de lecture d'une sous-catégorie.
      */
-    static function read(array $url)
+    static function read(array $params)
     {
         
     }
