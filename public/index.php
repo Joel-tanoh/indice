@@ -18,7 +18,7 @@ try {
 
     // Route en get sans paramètre
     $router->get("/", "App\Controller\AppController@index");
-    // $router->get("/test", "App\Controller\UserController@test");
+    $router->get("/test", "App\View\AdvertisingView@show");
     $router->get("/register", "App\Controller\UserController@register");
     $router->get("/sign-in", "App\Controller\UserController@signIn");
     $router->get("/sign-out", "App\Controller\UserController@signOut");

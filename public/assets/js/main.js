@@ -278,6 +278,95 @@
         $('#someone_else').show(500);
       });
 
+      /** For Slider of Advertising
+      ================================= */
+      let index = 0;
+      topSlider();
+      rightSlider();
+      leftSlider();
+
+      /**
+       * Créer un effet de Slide pour la barre en haut.
+       */
+      function topSlider() {
+        let i;
+        // On récupère les slides
+        let slides = document.querySelectorAll(".advertising.top .slide");
+        // On parcours le tableau des slides
+        for(i = 0; i < slides.length; i++) { // On cache les images
+          slides[i].style.display = "none";
+        }
+
+        index = index + 1;
+        if (index > slides.length) {
+          index = 1;
+        }
+        slides[index-1].style.display = "block";
+        setTimeout(topSlider, 10000);
+      }
+
+      /**
+       * Créer un effet de Slide pour la barre à gauche.
+       */
+      function leftSlider() {
+        let i;
+        // On récupère les slides
+        let slides = document.querySelectorAll(".advertising.left .slide");
+        // On parcours le tableau des slides
+        for(i = 0; i < slides.length; i++) { // On cache les images
+          slides[i].style.display = "none";
+        }
+
+        index = index + 1;
+        if (index > slides.length) {
+          index = 1;
+        }
+        slides[index-1].style.display = "block";
+        setTimeout(leftSlider, 10000);
+      }
+
+      /**
+       * Crée un effet de slide pour le coté droit.
+       */
+      function rightSlider() {
+        let i;
+        // On récupère les slides
+        let slides = document.querySelectorAll(".advertising.right .slide");
+        // On parcours le tableau des slides
+        for(i = 0; i < slides.length; i++) { // On cache les images
+          slides[i].style.display = "none";
+        }
+
+        index = index + 1;
+        if (index > slides.length) {
+          index = 1;
+        }
+
+        slides[index-1].style.display = "block";
+        setTimeout(rightSlider, 10000);
+      }
+
+      /**
+       * Crée un effet de slide pour les deux cotés.
+       */
+      function bothSideSlider() {
+        let i;
+        // On récupère les slides
+        let slides = document.querySelectorAll(".advertising.side .slide");
+        // On parcours le tableau des slides
+        for(i = 0; i < slides.length; i++) { // On cache les images
+          slides[i].style.display = "none";
+        }
+
+        index = index+1;
+        if (index > slides.length) {
+          index = 1;
+        }
+        slides[index-1].style.display = "block";
+        setTimeout(bothSideSlider, 10000);
+      }
+
+
   });      
 
 }(jQuery));

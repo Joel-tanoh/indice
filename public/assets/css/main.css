@@ -5006,8 +5006,19 @@ footer .menu li a:hover {
   color: #00BCD4;
 }
 
-/** Gestion des barres de publicités
+/** Gestion des sections de publicités
 ===================================== */
-.advertising.top {
-  height: 150px;
+
+/**=== La partie horizontale ===*/
+.advertising.top.slide-container {
+  height: 19rem;
+  border: 2px solide black;
+}
+
+.slide-container {
+  position: relative;
+}
+
+.advertising.top .slide img {
+  width:100%;
 }

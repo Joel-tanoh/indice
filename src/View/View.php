@@ -34,7 +34,9 @@ class View
             <!-- La barre de publicité en haut -->
             {$advertising->top()}
             <div class="row">
-                {$advertising->side()}
+                <aside class="d-none d-lg-block col-lg-2">
+                    {$advertising->left()}
+                </aside>
                 <aside class="col-12 col-lg-8">       
                     <!-- Trending Categories Section Start -->
                     {$categoryView->trendingCategoriesSection()}
@@ -42,17 +44,16 @@ class View
 
                     <!-- Premium Listings Start -->
                     {$annonceView->premiumSection()}
-                    <!-- Premium Listings End -->
 
                     <!-- Latest Announcements Section Start -->
-                    {$annonceView->latestSection()}
-                    <!-- Latest Announcements Section End -->
+                    <!-- {$annonceView->latestSection()} -->
                     
                     <!-- Subscribe Section Start -->
                     {$userView->suscribeNewsletterSection()}
-                    <!-- Subscribe Section End -->
                 </aside>
-                {$advertising->side()}
+                <aside class="d-none d-lg-block col-lg-2">
+                    {$advertising->right()}
+                </aside>
             </div>
         </div>
 HTML;

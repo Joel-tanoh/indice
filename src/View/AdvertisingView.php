@@ -2,15 +2,25 @@
 
 namespace App\View;
 
+use App\Utility\AdvertisingEngine;
+
 class AdvertisingView extends View
 {
+    /** @var \App\Utility\AdvertisingEngine */
+    private $advertisingEngine;
+
+    public function __construct()
+    {
+        $this->advertisingEngine = new AdvertisingEngine();
+    }
+
     /**
      * Bloc de code pour la publicité. Elle doit prendre en paramètre une
      * image de taille 300x400.
      * 
      * @return string
      */
-    public function advertisementSection()
+    public function advertisementdiv()
     {
         return <<<HTML
         <div class="widget">
@@ -31,9 +41,9 @@ HTML;
     public function top()
     {
         return <<<HTML
-        <section class=" advertising top d-flex text-center align-items-center d-none d-lg-block">
-            Publicité
-        </section>
+        <div class="advertising top slide-container pt-3 d-none d-lg-block">
+            {$this->showImages($this->advertisingEngine->getImages("top"))}
+        </div>
 HTML;
     }
     
@@ -45,9 +55,9 @@ HTML;
     public function side()
     {
         return <<<HTML
-        <aside class="advertising side d-flex text-center align-items-center d-none d-lg-block col-lg-2">
-            <span>Publicité</span>
-        </aside>
+        <div class="advertising side slide-container">
+            {$this->showImages($this->advertisingEngine->getImages("side"))}
+        </div>
 HTML;
     }
 
@@ -60,9 +70,9 @@ HTML;
     public function left()
     {
         return <<<HTML
-        <aside class="advertising left d-flex text-center align-items-center d-none d-lg-block col-lg-2">
-            <span>Publicité</span>
-        </aside>
+        <div class="advertising left slide-container">
+            {$this->showImages($this->advertisingEngine->getImages("left"))}
+        </div>
 HTML;
     }
 
@@ -74,10 +84,32 @@ HTML;
     public function right()
     {
         return <<<HTML
-        <aside class="advertising right d-flex text-center align-items-center d-none d-lg-block col-lg-2">
-            <span>Publicité</span>
-        </aside>
+        <div class="advertising right slide-container">
+            {$this->showImages($this->advertisingEngine->getImages("right"))}
+        </div>
 HTML;
+    }
+
+    /**
+     * Affiche les images.
+     * 
+     * @param array $imagesSrc Un tableau contenant les sources des images.
+     */
+    private function showImages(array $imagesSrc)
+    {
+        if (empty($imagesSrc)) {
+            return "<span>ESPACE PUBLICITAIRE</span>";
+        }
+        
+        $return = null;
+        foreach($imagesSrc as $imgSrc) {
+            $return .= <<<HTML
+            <div class="effect slide">
+                <img class="img-fluid" src="{$imgSrc}" alt="publicité indice annonce vente location">
+            </div>
+HTML;
+        }
+        return $return;
     }
 
 }
