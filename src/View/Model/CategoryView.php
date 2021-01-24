@@ -182,13 +182,14 @@ HTML;
     }
 
     /**
-     * La barre de recherche dans la sidebar.
+     * La barre de recherche dans la sidebar sur la vue qui affiche les announces
+     * pafr catégories (les announces de cette catégorie).
      * 
      * @return string
      */
     private function searchWidget()
     {
-        $form = new Form("/search", null, false, "post", "search-form", "search");
+        $form = new Form($this->category->getSlug() . "/search", null, false, "post", "search-form", "search");
         $searchQuery = !empty($_POST["search_query"]) ? $_POST["search_query"] : null;
 
         return <<<HTML

@@ -25,17 +25,20 @@ try {
     $router->get("/post", "App\Controller\AnnounceController@create");
     $router->get("/users", "App\Controller\UserController@users");
     $router->get("/in-progress", "App\Controller\AppController@page404");
+    $router->get("/announces", "App\Controller\AnnounceController@announces");
+    $router->get("/announces/search", "App\Controller\AnnounceController@announces");
     $router->get("/:category", "App\Controller\CategoryController@read");
-    $router->get("/:1/:2", "App\Controller\AppController@switcher");
-    $router->get("/:1/:2/:3", "App\Controller\AppController@switcher");
+    $router->get("/:1/:2", "App\Controller\AppController@router");
+    $router->get("/:1/:2/:3", "App\Controller\AppController@router");
     $router->get("/:1/:2/:3/:4", "App\Controller\UserController@dashboard");
 
     // Routes en post
     $router->post("/register", "App\Controller\UserController@register");
     $router->post("/post", "App\Controller\AnnounceController@create");
     $router->post("/sign-in", "App\Controller\UserController@signIn");
-    $router->post("/search", "App\Controller\AppController@search");
-    $router->post("/:1/:2/:3", "App\Controller\AppController@switcher");
+    $router->post("/announces/search", "App\Controller\SearchController@searchAnnonce");
+    $router->post("/:1/:2", "App\Controller\SearchController@router");
+    $router->post("/:1/:2/:3", "App\Controller\AppController@router");
 
     $router->run();
 

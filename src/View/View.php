@@ -67,7 +67,7 @@ HTML;
     {
         $snippet = new Snippet();
         $home = APP_URL;
-        $form = new Form("/search", "form-error-search");
+        $form = new Form("/announces/search", "form-error-search");
 
         return <<<HTML
         {$snippet->pageHeader("404", $current)}

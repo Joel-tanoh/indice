@@ -3,10 +3,8 @@
 namespace App\Action;
 
 use App\Database\Database;
-use App\Model\Model;
-use Exception;
 
-class Action
+abstract class Action
 {
     /** @var PDO Instance PDO pour exécuter les requêtes sur la base de 
      * doonées.
@@ -83,7 +81,7 @@ class Action
      * 
      * @return PDO
      */
-    protected function connectToDb($dbLogin, $dbPassword)
+    protected function connectToDb(string $dbLogin, string $dbPassword)
     {
         $this->pdo = (new Database($this->database, $dbLogin, $dbPassword))->connect();
         return $this->pdo;

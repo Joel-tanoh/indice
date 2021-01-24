@@ -57,7 +57,7 @@ class AppController
      * @param array $params La liste des paramètres de la route.
      * @return void
      */
-    public static function switcher(array $params)
+    public static function router(array $params)
     {
         if (Category::isCategorySlug($params[1])
             && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)
@@ -83,15 +83,6 @@ class AppController
         else {
             throw new Exception("Ressource non trouvée !");
         }
-    }
-
-    /**
-     * Permet de gérer les recherches.
-     */
-    public static function search()
-    {
-        dump($_POST);
-        die();
     }
 
     /**

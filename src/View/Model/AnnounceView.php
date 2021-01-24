@@ -112,6 +112,20 @@ HTML;
     }
 
     /**
+     * La vue qui permet d'afficher les résultats des recherches
+     * d'annonces.
+     * 
+     * @param array $announces Les annouces à afficher.
+     * @return string
+     */
+    public static function searchingResult(array $announces)
+    {
+        return <<<HTML
+        la page qui affiche les résultats de la recherche.
+HTML;
+    }
+
+    /**
      * Affiches les 6 dernières annonces postées.
      * 
      * @return string

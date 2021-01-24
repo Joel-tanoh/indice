@@ -143,7 +143,7 @@ HTML;
     {
         $categoryView = new CategoryView();
         $userView = new UserView();
-        $form = new Form("/search", "search-form", false, "post", "myform", "search");
+        $form = new Form("/announces/search", "search-form", false, "post", "myform", "search");
 
         return <<<HTML
         <div class="search-bar">
