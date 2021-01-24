@@ -2,6 +2,7 @@
 
 namespace App\View\Model;
 
+use App\Auth\Authentication;
 use App\Auth\Cookie;
 use App\Model\Announce;
 use App\Model\User\Registered;
@@ -413,7 +414,7 @@ HTML;
                     <i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}
                 </li>
                 <li>
-                    <a href="users/posts"><i class="lni-user"></i> {$this->announce->getOwner()->getFullName()}</a>
+                    <a href="users/{$this->announce->getOwner()->getPseudo()}/posts"><i class="lni-user"></i> {$this->announce->getOwner()->getFullName()}</a>
                 </li>
             </ul>
             <div class="listing-bottom">
@@ -505,7 +506,7 @@ HTML;
                         <p><strong><i class="lni-folder"></i> Catégories :</strong> <a href="{$this->announce->getCategory()->getSlug()}">{$this->announce->getCategory()->getTitle()}</a></p>
                     </li>
                     <li>
-                        <p><a href="/posts/{$this->announce->getOwner()->getPseudo()}"><i class="lni-users"></i> Plus d'annonces de <span>{$this->announce->getOwner()->getName()}</span></a></p>
+                        <p><a href="/users/{$this->announce->getOwner()->getPseudo()}/posts"><i class="lni-users"></i> Plus d'annonces de <span>{$this->announce->getOwner()->getName()}</span></a></p>
                     </li>
                 </ul>
                 {$this->specifications()}

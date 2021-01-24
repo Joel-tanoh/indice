@@ -2124,7 +2124,7 @@ a.back-to-top:hover, a.back-to-top:focus {
   height: 60px;
   line-height: 60px;
   display: inline-block;
-  color: #999;
+  /* color: #999; */
   font-size: 48px;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
@@ -2134,7 +2134,7 @@ a.back-to-top:hover, a.back-to-top:focus {
 
 .categories-icon .icon-box h4 {
   font-size: 16px;
-  color: #484848;
+  /* color: #484848; */
   font-weight: 500;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
@@ -5021,4 +5021,42 @@ footer .menu li a:hover {
 
 .advertising.top .slide img {
   width:100%;
+}
+
+/** Des couleurs
+====================== */
+.app-blue {
+  color:#00BCD4;;
+}
+
+.red {
+  color: #ff411b
+}
+
+.green {
+  color: #3da71d
+}
+
+.yellow {
+  color: #cedb15
+}
+
+.orange {
+  color: #eea111
+}
+
+.purple {
+  color: #b6099f
+}
+
+.gray {
+  color: #c0c0c0
+}
+
+.blue {
+  color: #1648d3
+}
+
+.pink {
+  color: #e72fb9
 }

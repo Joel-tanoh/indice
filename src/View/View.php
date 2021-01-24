@@ -37,7 +37,7 @@ class View
                 <aside class="d-none d-lg-block col-lg-2">
                     {$advertising->left()}
                 </aside>
-                <aside class="col-12 col-lg-8">       
+                <aside class="col-12 col-lg-8">
                     <!-- Trending Categories Section Start -->
                     {$categoryView->trendingCategoriesSection()}
                     <!-- Trending Categories Section End -->
@@ -46,7 +46,7 @@ class View
                     {$annonceView->premiumSection()}
 
                     <!-- Latest Announcements Section Start -->
-                    <!-- {$annonceView->latestSection()} -->
+                    {$annonceView->latestSection()}
                     
                     <!-- Subscribe Section Start -->
                     {$userView->suscribeNewsletterSection()}

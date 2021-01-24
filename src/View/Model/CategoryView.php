@@ -34,6 +34,46 @@ HTML;
     }
 
     /**
+     * Permet d'afficher toutes les annonces appartenant à la catégorie concernée.
+     * 
+     * @return string
+     */
+    public function read()
+    {
+        $snippet = new Snippet();
+        $advertising = new AdvertisingView();
+
+        return <<<HTML
+        <!-- Hero Area -->
+        {$snippet->heroArea2(false)} 
+        <!-- Main container Start -->
+        <div class="main-container section-padding">
+            <div class="container-fluid">
+                <!-- La barre de publicité en haut -->
+                {$advertising->top()}
+                <div class="row">
+                    <aside class="d-none d-lg-block col-lg-2">
+                        {$advertising->left()}
+                    </aside>
+                    <aside class="col-12 col-lg-8">
+                        <section class="row">
+                            <!-- Sidebar -->
+                            {$this->sidebar()}
+                            <!-- Content -->
+                            {$this->content($this->category->getAnnounces("validated"))}
+                        </section>
+                    </aside>
+                    <aside class="d-none d-lg-block col-lg-2">
+                        {$advertising->right()}
+                    </aside>
+                </div>
+            </div>
+        </div>
+        <!-- Main container End -->  
+HTML;
+    }
+
+    /**
      * Affiche un bloc des catégories avec leurs icones.
      * Au survol, le bloc change de code.
      * 
@@ -42,20 +82,26 @@ HTML;
     public function trendingCategoriesSection()
     {
         $content = null;
+        $colors = [
+            "green", "yellow", "red", "app-blue", "purple", "gray", "orange", "blue"
+        ];
 
         foreach (Category::getAll(Category::TABLE_NAME) as $category) {
             $content .= $this->trendingCategory(
-                $category->getSlug(), $category->getIconClass(), $category->getTitle()
+                $category->getSlug(),
+                $category->getIconClass(),
+                $category->getTitle(),
+                $colors[random_int(0, count($colors) - 1)]
             );
         }
 
         return <<<HTML
         <section class="categories-icon section-padding bg-drack">
-            <div class="container">
+            <aside class="container">
                 <div class="row">
                     {$content}
                 </div>
-            </div>
+            </aside>
         </section>
 HTML;
     }
@@ -69,12 +115,12 @@ HTML;
      * 
      * @return string
      */
-    private function trendingCategory(string $href = null, string $lniClass = null, string $text = null)
+    private function trendingCategory(string $href = null, string $lniClass = null, string $text = null, string $color = "app-blue")
     {
         return <<<HTML
         <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
             <a href="{$href}">
-                <div class="icon-box">
+                <div class="icon-box {$color}">
                     <div class="icon">
                         <i class="{$lniClass}"></i>
                     </div>
@@ -82,35 +128,6 @@ HTML;
                 </div>
             </a>
         </div>
-HTML;
-    }
-
-    /**
-     * Permet d'afficher toutes les annonces appartenant à la catégorie concernée.
-     * 
-     * @return string
-     */
-    public function read()
-    {
-        $snippet = new Snippet();
-
-        return <<<HTML
-        <!-- Hero Area -->
-        {$snippet->heroArea2(false)}
-        <!-- Hero Area End -->
-
-        <!-- Main container Start -->
-        <div class="main-container section-padding">
-            <div class="container">
-                <div class="row">
-                    <!-- Sidebar -->
-                    {$this->sidebar()}
-                    <!-- Content -->
-                    {$this->content($this->category->getAnnounces())}
-                </div>
-            </div>
-        </div>
-        <!-- Main container End -->  
 HTML;
     }
 
@@ -128,9 +145,7 @@ HTML;
             $options .= '<option value="'. $category->getId() . '">' . $category->getTitle() . '</option>';
         }
 
-        return <<<HTML
-        {$options}
-HTML;
+        return $options;
     }
 
     /**
@@ -140,8 +155,6 @@ HTML;
      */
     private function sidebar()
     {
-        $advertisingView = new AdvertisingView();
-
         return <<<HTML
         <div class="col-lg-3 col-md-12 col-xs-12 page-sidebar">
             <aside>
@@ -149,8 +162,6 @@ HTML;
                 {$this->searchWidget()}
                 <!-- Categories Widget -->
                 {$this->categoriesWidget()}
-                <!-- Advertisement Section -->
-                {$advertisingView->advertisementSection()}
             </aside>
         </div>
 HTML;
@@ -165,18 +176,12 @@ HTML;
      */
     private function content(array $announces)
     {
-        $pagination = new Pagination(count($announces), 12);
-
         return <<<HTML
         <div class="col-lg-9 col-md-12 col-xs-12 page-content">
             <!-- Product filter Start -->
             {$this->announceFilter()}
-
             <!-- Adds wrapper Start -->
             {$this->announcesSection($announces)}
-    
-            <!-- Start Pagination -->
-            <!-- {$pagination->show()} -->
         </div>
 HTML;
     }
@@ -228,7 +233,7 @@ HTML;
 
         foreach (Category::getAll(Category::TABLE_NAME) as $category) {
             $content .= $this->categoriesListRow(
-                $category->getTitle(), $category->getSlug(), $category->getIconClass(), $category->getAnnouncesNumber()
+                $category->getTitle(), $category->getSlug(), $category->getIconClass(), $category->getAnnouncesNumber("validated")
             );
         }
         

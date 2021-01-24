@@ -62,21 +62,16 @@ class AnnounceController extends AppController
             $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $params[1], "App\Model\Category");
             $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $params[2], "App\Model\Announce");
 
-            if ($announce->isPending() && User::isAuthenticated()) {
-                $registered = User::getAuthenticated();
-                if ($announce->hasOwner($registered)
-                    || $registered->isAdministrator()
-                ) {
-                    if ($announce->hasCategory($category)) {
-                        $page = new Page($announce->getTitle() . " - L'indice", (new AnnounceView($announce))->read());
-                        $page->show();
-                    } else {
-                        throw new Exception("La ressource demandée n'a pas été trouvée !");
-                    }
+            if ($announce->isValidated() || ($announce->isPending() && User::isAuthenticated())) {
+                if ($announce->hasCategory($category)) {
+                    $page = new Page($announce->getTitle() . " - L'indice", (new AnnounceView($announce))->read());
+                    $page->show();
+                } else {
+                    throw new Exception("La ressource demandée n'a pas été trouvée !");
                 }
-            }  else {
+            } else {
                 throw new Exception("La ressource demandée n'a pas été trouvée !");
-            }            
+            }
         } else {
             throw new Exception("La ressource demandée n'a pas été trouvée !");
         }

@@ -51,13 +51,17 @@ class Category extends Model
      */
     public function getAnnounces(string $status = null)
     {
+        $announces = [];
         $query = "SELECT id FROM " . Announce::TABLE_NAME . " WHERE id_category = ?";
 
-        if ($status) {
+        if (null !== $status) {
             $query .= " AND status = ?";
             $req = parent::connectToDb()->prepare($query);
-            $status = Announce::convertStatus($status);
-            $req->execute([$this->id, $status]);
+            $req->execute([
+                $this->id,
+                Announce::convertStatus($status)
+            ]);
+
         } else {
             $req = parent::connectToDb()->prepare($query);
             $req->execute([$this->id]);
@@ -66,20 +70,22 @@ class Category extends Model
         $result = $req->fetchAll();
 
         foreach($result as $announce) {
-            $this->announces[] = new Announce($announce["id"]);
+            $announces[] = new Announce($announce["id"]);
         }
 
-        return $this->announces;
+        return $announces;
     }
 
     /**
      * Retourne le nombre d'annonces appartenant à cette catégorie.
      * 
+     * @param string $status Le status des announces qu'on veut compter.
+     * 
      * @return int
      */
-    public function getAnnouncesNumber() : int
+    public function getAnnouncesNumber(string $status = null) : int
     {
-        return count(Announce::getAll($this->id));
+        return count($this->getAnnounces($status));
     }
 
     /**

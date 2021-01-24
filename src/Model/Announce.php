@@ -371,7 +371,7 @@ class Announce extends Model
      */
     public function isValidated() : bool
     {
-        return $this->status === 1;
+        return $this->status === 1 || $this->status === 2;
     }
 
     /**

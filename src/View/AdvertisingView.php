@@ -20,7 +20,7 @@ class AdvertisingView extends View
      * 
      * @return string
      */
-    public function advertisementdiv()
+    public function advertisementSection()
     {
         return <<<HTML
         <div class="widget">
