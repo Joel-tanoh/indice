@@ -46,7 +46,7 @@ class View
                     {$annonceView->premiumSection()}
 
                     <!-- Latest Announcements Section Start -->
-                    <!-- {$annonceView->latestSection()} -->
+                    {$annonceView->latestSection()}
                     
                     <!-- Subscribe Section Start -->
                     {$userView->suscribeNewsletterSection()}

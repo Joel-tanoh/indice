@@ -5009,12 +5009,6 @@ footer .menu li a:hover {
 /** Gestion des sections de publicités
 ===================================== */
 
-/**=== La partie horizontale ===*/
-.advertising.top.slide-container {
-  height: 19rem;
-  border: 2px solide black;
-}
-
 .slide-container {
   position: relative;
 }

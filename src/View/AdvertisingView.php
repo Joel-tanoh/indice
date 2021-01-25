@@ -41,7 +41,7 @@ HTML;
     public function top()
     {
         return <<<HTML
-        <div class="advertising top slide-container pt-3 d-none d-lg-block">
+        <div class="advertising top slide-container py-3 d-none d-lg-block">
             {$this->showImages($this->advertisingEngine->getImages("top"))}
         </div>
 HTML;
