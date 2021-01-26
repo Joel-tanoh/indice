@@ -208,13 +208,9 @@ class Registered extends User
         $query = "SELECT id FROM " . Announce::TABLE_NAME . " WHERE user_email_address = ?";
 
         if (null !== $status) {
-            if (in_array($status, self::$statutes)) {
-                $status = self::convertStatus($status);
-            }
-
             $query .= " AND status = ?";
             $req = parent::connectToDb()->prepare($query);
-            $req->execute([$this->emailAddress, $status]);
+            $req->execute([$this->emailAddress, Announce::convertStatus($status)]);
         } else {
             $req = parent::connectToDb()->prepare($query);
             $req->execute([$this->emailAddress]);
@@ -231,14 +227,12 @@ class Registered extends User
 
     /**
      * Permet de compter les annonces postées par l'utilisateur.
-     * @param  $status
+     * @param $status Le status des annonces qu'on veut compter.
+     * 
      * @return int
      */
     public function getAnnounceNumber($status = null)
     {
-        if (in_array($status, self::$statutes)) {
-            $status = self::convertStatus($status);
-        }
         return count($this->getAnnounces($status));
     }
 
@@ -302,17 +296,22 @@ class Registered extends User
      * Convertit le statut passé en chaîne de caractère
      * en chiffre.
      * 
-     * @param string $status
+     * @param mixed $status Le statut peut être une chaîne de caractères ou un entier.
      * 
      * @return int
      */
-    public static function convertStatus(string $status)
+    public static function convertStatus($status)
     {
-        $key = array_keys(self::$statutes, strtolower($status));
-        if (count($key) === 1) {
-            return $key[0];
+        if (is_string($status)) {
+            $key = array_keys(self::$statutes, strtolower($status));
+            if (count($key) === 1) {
+                return $key[0];
+            } else {
+                return null;
+            }
+        } else {
+            return $status;
         }
-        return $key;
     }
 
     /**

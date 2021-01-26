@@ -746,11 +746,16 @@ class Announce extends Model
      */
     public static function convertStatus(string $status)
     {
-        $key = array_keys(self::$statutes, strtolower($status));
-        if (count($key) === 1) {
-            return $key[0];
+        if (is_string($status)) {
+            $key = array_keys(self::$statutes, strtolower($status));
+            if (count($key) === 1) {
+                return $key[0];
+            } else {
+                return null;
+            }
+        } else {
+            return $status;
         }
-        return $key;
     }
 
     /**

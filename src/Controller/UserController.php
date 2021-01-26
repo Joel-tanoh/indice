@@ -205,10 +205,11 @@ class UserController extends AppController
         if ($registered->getPseudo() === $user->getPseudo() || $registered->isAdministrator()) {
             if (!empty($params[4])) {
                 $status = $params[4];
+
                 if (!in_array($status, Announce::getStatutes())) {
                     $announces = [];
                 } else {
-                    $announces = $user->getAnnounces(Announce::convertStatus($status));
+                    $announces = $user->getAnnounces($status);
                 }
             } else {
                 $announces = $user->getAnnounces();
