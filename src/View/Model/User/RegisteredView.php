@@ -42,7 +42,7 @@ class RegisteredView extends UserView
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebarNav(User::getAuthenticated())}
+                    {$this->sidebarNav(User::authenticated())}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         <div class="page-content">
                             <div class="inner-box">
@@ -74,7 +74,7 @@ HTML;
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebarNav(User::getAuthenticated())}
+                    {$this->sidebarNav(User::authenticated())}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         C'est mon profil.
                     </div>
@@ -99,7 +99,7 @@ HTML;
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebarNav(User::getAuthenticated())}
+                    {$this->sidebarNav(User::authenticated())}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         Profil de {$this->user->getFullName()}
                     </div>

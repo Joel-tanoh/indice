@@ -42,7 +42,7 @@ class AnnounceView extends View
      */
     public function create(string $message = null)
     {
-        $registeredView = new RegisteredView(User::getAuthenticated());
+        $registeredView = new RegisteredView(User::authenticated());
         $snippet = new Snippet();
 
         return <<<HTML
@@ -55,7 +55,7 @@ class AnnounceView extends View
             <div class="container">
                 <div class="row">
                     <!-- Sidebar de la page de post -->
-                    {$registeredView->sidebarNav(User::getAuthenticated())}
+                    {$registeredView->sidebarNav(User::authenticated())}
 
                     <!-- Contenu de la page -->
                     {$this->createPageContent()}
@@ -103,7 +103,7 @@ HTML;
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$registeredView->sidebarNav(User::getAuthenticated())}
+                    {$registeredView->sidebarNav(User::authenticated())}
                     <!-- Contenu de la page -->
                     {$this->createPageContent()}
                 </div>
@@ -947,50 +947,17 @@ HTML;
      */
     private function manageButtons()
     {
-        if (User::isAuthenticated()) {
-            $sessionId = Authentication::getId();
-            $registered = new Registered($sessionId);
-            if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
-                || $registered->isAdministrator()
-            ) {
-                return <<<HTML
-                <nav class="mb-3">
-                    {$this->editButton()}
-                    {$this->validateButton()}
-                    {$this->setPremiumButton()}
-                    {$this->suspendButton()}
-                    {$this->deleteButton()}
-                </nav>
+        if (User::isAuthenticated() && ($this->announce->getOwner()->getEmailAddress() === User::authenticated()->getEmailAddress() || User::authenticated()->isAdministrator())) {
+            
+            return <<<HTML
+            <nav class="mb-3">
+                {$this->editButton()}
+                {$this->validateButton()}
+                {$this->setPremiumButton()}
+                {$this->suspendButton()}
+                {$this->deleteButton()}
+            </nav>
 HTML;
-            }
-        }
-    }
-
-    /**
-     * Permet de laisser des commentaires(suggestions) sur l'annonce.
-     * @return string
-     */
-    private function putComments()
-    {
-        if (User::isAuthenticated()) {
-            $sessionId = Authentication::getId();
-            $registered = new Registered($sessionId);
-            $form = new Form($_SERVER["REQUEST_URI"], "mt-3");
-
-            if ($registered->isAdministrator()) {
-                return <<<HTML
-                {$form->open()}
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-xs-12">
-                        <div class="form-group">
-                            <textarea id="comment" class="form-control" name="comment" cols="45" rows="5" placeholder="Suggestions..." required></textarea>
-                        </div>
-                        <button type="submit" id="submit" class="btn btn-common">Envoyer</button>
-                        </div>
-                    </div>
-                {$form->close()}
-HTML;
-            }
         }
     }
 
@@ -1005,10 +972,8 @@ HTML;
     {
         if (User::isAuthenticated()) {
 
-            $registered = User::getAuthenticated();
-
-            if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
-                || $registered->isAdministrator()
+            if ($this->announce->getOwner()->getEmailAddress() === User::authenticated()->getEmailAddress()
+                || User::authenticated()->isAdministrator()
             ) {
                 $comments = null;
                 foreach ($this->announce->getComments() as $comment) {
@@ -1021,51 +986,52 @@ HTML;
     }
 
     /**
+     * Permet de laisser des commentaires(suggestions) sur l'annonce.
+     * @return string
+     */
+    private function putComments()
+    {
+        if (User::isAuthenticated() && User::authenticated()->isAdministrator()) {
+            $form = new Form($_SERVER["REQUEST_URI"], "mt-3");
+
+            return <<<HTML
+            {$form->open()}
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-xs-12">
+                    <div class="form-group">
+                        <textarea id="comment" class="form-control" name="comment" cols="45" rows="5" placeholder="Suggestions..." required></textarea>
+                    </div>
+                    <button type="submit" id="submit" class="btn btn-common">Envoyer</button>
+                    </div>
+                </div>
+            {$form->close()}
+HTML;
+        }
+    }
+
+    /**
      * Affiche un bouton pour editer l'annonce.
      * @return string
      */
     private function editButton()
     {
-        if($this->announce->getOwner()->getEmailAddress() === (User::getAuthenticated())->getEmailAddress())
-        return <<<HTML
-        <a href="{$this->announce->getManageLink('update')}" class="text-primary">Editer</a>
+        if (User::isAuthenticated() && $this->announce->getOwner()->getEmailAddress() === User::authenticated()->getEmailAddress()) {
+            return <<<HTML
+            <a href="{$this->announce->getManageLink('update')}" class="btn-sm btn-primary">Editer</a>
 HTML;
-    }
-
-    /**
-     * Affiche le bouton pour supprimer l'annonce sur la page qui affiche
-     * l'annonce.
-     * @return string
-     */
-    private function deleteButton()
-    {
-        if (User::isAuthenticated()) {
-            $registered = User::getAuthenticated();
-
-            if ($this->announce->getOwner()->getEmailAddress() === $registered->getEmailAddress()
-                || $registered->isAdministrator()
-            ) {
-                return <<<HTML
-                <a href="{$this->announce->getManageLink('delete')}" class="text-danger">Supprimer</a>
-HTML;
-            }
         }
     }
-    
+  
     /**
      * Affiche le bouton pour valider l'annonce.
      * @return string
      */
     private function validateButton()
     {
-        if (User::isAuthenticated()) {
-            if ((User::getAuthenticated())->isAdministrator()
-                && !$this->announce->isValidated()
-            ) {
+        if (User::isAuthenticated() && User::authenticated()->isAdministrator() && !$this->announce->isValidated()) {
             return <<<HTML
-            <a href="{$this->announce->getManageLink('validate')}" class="text-success disabled">Valider</a>
+            <a href="{$this->announce->getManageLink('validate')}" class="btn-sm btn-success">Valider</a>
 HTML;
-            }
         }
     }
 
@@ -1075,12 +1041,10 @@ HTML;
      */
     private function setPremiumButton()
     {
-        if (User::isAuthenticated()) {
-            if ((User::getAuthenticated())->isAdministrator()) {
+        if (User::isAuthenticated() && User::authenticated()->isAdministrator()) {
             return <<<HTML
-            <a href="{$this->announce->getManageLink('set-premium')}" class="text-warning">Passer en Prémium</a>
+            <a href="{$this->announce->getManageLink('set-premium')}" class="btn-sm btn-success">Passer en Prémium</a>
 HTML;
-            }
         }
     }
 
@@ -1090,12 +1054,27 @@ HTML;
      */
     private function suspendButton()
     {
-        if (User::isAuthenticated()) {
-            if ((User::getAuthenticated())->isAdministrator()) {
+        if (User::isAuthenticated() && User::authenticated()->isAdministrator()) {
             return <<<HTML
-            <a href="{$this->announce->getManageLink('suspend')}" class="text-danger">Suspendre</a>
+            <a href="{$this->announce->getManageLink('suspend')}" class="btn-sm btn-warning">Suspendre</a>
 HTML;
-            }
         }
     }
+    
+    /**
+     * Affiche le bouton pour supprimer l'annonce sur la page qui affiche
+     * l'annonce.
+     * @return string
+     */
+    private function deleteButton()
+    {
+        if (User::isAuthenticated()
+            && ($this->announce->getOwner()->getEmailAddress() === User::authenticated()->getEmailAddress() || User::authenticated()->isAdministrator())
+        ) {
+            return <<<HTML
+            <a class="btn-sm btn-danger" href="{$this->announce->getManageLink('delete')}">Supprimer</a>
+HTML;
+        }
+    }
+
 }

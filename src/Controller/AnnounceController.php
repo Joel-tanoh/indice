@@ -92,7 +92,7 @@ class AnnounceController extends AppController
         ) {
             $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
             $user = $announce->getOwner();
-            $registered = User::getAuthenticated();
+            $registered = User::authenticated();
             $page = new Page();
 
             if ($announce->hasOwner($registered)

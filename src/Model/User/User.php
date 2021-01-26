@@ -73,7 +73,7 @@ abstract class User extends Model
      * 
      * @return Registered
      */
-    public static function getAuthenticated()
+    public static function authenticated()
     {
         if (self::isAuthenticated()) {
             $user = new Registered(Authentication::getId());

@@ -180,7 +180,7 @@ HTML;
     public function navbarMenu()
     {
         if (User::isAuthenticated()) {
-            $registered = User::getAuthenticated();
+            $registered = User::authenticated();
             $content = (new RegisteredView())->navbar($registered);
         } else {
             $content = $this->navbarForUnconnectedUser();

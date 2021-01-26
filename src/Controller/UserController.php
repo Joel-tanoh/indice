@@ -97,7 +97,7 @@ class UserController extends AppController
                 if (User::save()) {
                     Session::activate($_POST["email_address"]);
                     Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
-                    $registered = User::getAuthenticated();
+                    $registered = User::authenticated();
                     Utility::redirect($registered->getProfileLink());
                 }
             } else { // Sinon
@@ -116,7 +116,7 @@ class UserController extends AppController
     public static function signIn()
     {
         if (User::isAuthenticated()) {
-            $registered = User::getAuthenticated();
+            $registered = User::authenticated();
             Utility::redirect($registered->getProfileLink() . "/posts");
         }
 
@@ -151,7 +151,7 @@ class UserController extends AppController
     {
         User::askToAuthenticate("/sign-in");
 
-        $registered = User::getAuthenticated();
+        $registered = User::authenticated();
         $user = Registered::getByPseudo($params[2]);
         $page = new Page("Profil - " . $user->getFullName());
         $page->setDescription("");
@@ -174,7 +174,7 @@ class UserController extends AppController
     public static function users()
     {
         if (User::isAuthenticated()) {
-            $registered = User::getAuthenticated();
+            $registered = User::authenticated();
 
             if ($registered->isAdministrator()) {
                 $users = Registered::getAll();
@@ -197,7 +197,7 @@ class UserController extends AppController
     {
         User::askToAuthenticate("/sign-in");
         
-        $registered = User::getAuthenticated();
+        $registered = User::authenticated();
         $user = Registered::getByPseudo($params[2]);
         $page = new Page("Tableau de bord - " . $user->getFullName());
         $page->setDescription("");
@@ -231,7 +231,7 @@ class UserController extends AppController
     public static function manage(array $params)
     {
         if (Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
-            $registered = User::getAuthenticated();
+            $registered = User::authenticated();
             $user = Registered::getByPseudo($params[2]);
 
             switch ($params[3]) { // Switch sur l'action.
@@ -267,7 +267,7 @@ class UserController extends AppController
     {
         User::askToAuthenticate("sign-in");
 
-        $registered = User::getAuthenticated();
+        $registered = User::authenticated();
 
     }
 

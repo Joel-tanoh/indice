@@ -36,7 +36,7 @@ class AdministratorView extends RegisteredView
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
-                    {$this->sidebarNav(User::getAuthenticated())}
+                    {$this->sidebarNav(User::authenticated())}
                     <section class="col-sm-12 col-md-8 col-lg-9">
                         <div class="page-content">
                             <div class="inner-box">
