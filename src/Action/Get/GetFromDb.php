@@ -33,9 +33,6 @@ class GetFromDb extends Get
      */
     private $itemNumber;
 
-    /** @var string La clause en format text */
-    private $clauseAsString;
-
     /**
      * Constructeur de l'action insert.
      * 
@@ -123,29 +120,6 @@ class GetFromDb extends Get
             ->orderBy($this->orderBy)
             ->limit($this->itemNumber, $this->begining)
             ->returnQueryString();
-    }
-
-    /**
-     * Permet de formater la clause en format texte et l'ajouter à la requête.
-     */
-    private function formatClauses()
-    {
-        if (empty($this->clauses)) {
-            return null;
-        }
-
-        // Formatage des composantes de la clause
-        $arrayKeys = array_keys($this->clauses);
-        $clauseString = null;
-
-        foreach($arrayKeys as $key) {
-            $clauseString .= "$key = :$key AND ";
-        }
-
-        // Rétirer les dernières virgules et espaces à la fin de la chaine de caractère
-        $clauseString = rtrim($clauseString, "AND ");
-
-        $this->clauseAsString = " WHERE $clauseString";
     }
 
 }

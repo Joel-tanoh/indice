@@ -151,7 +151,16 @@ HTML;
                 {$form->open()}
                     <div class="form-group inputwithicon">
                         <i class="lni-tag"></i>
-                        <input type="text" name="search_query" class="form-control" placeholder="Saisissez quelque chose">
+                        <input type="text" name="query" class="form-control" placeholder="Saisissez quelque chose" required>
+                    </div>
+                    <div class="form-group inputwithicon">
+                        <i class="lni-menu"></i>
+                        <div class="select">
+                            <select name="id_category">
+                                <option value="0">Choisissez la catégories</option>
+                                {$categoryView->selectOptions()}
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group inputwithicon">
                         <i class="lni-map-marker"></i>
@@ -162,11 +171,26 @@ HTML;
                     <div class="form-group inputwithicon">
                         <i class="lni-menu"></i>
                         <div class="select">
-                            <select name="category">
-                                <option value="0">Catégories</option>
-                                {$categoryView->selectOptions()}
+                            <select name="type" id="type">
+                                <option value="both">Particulier et Professionnel</option>
+                                <option value="professionnel">Professionnel</option>
+                                <option value="particulier">Particulier</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="form-group inputwithicon">
+                        <i class="lni-hand"></i>
+                        <div class="select">
+                            <select name="direction" id="direction">
+                                <option value="both">Offre et Demande</option>
+                                <option value="professionnel">Offre</option>
+                                <option value="particulier">Demande</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group inputwithicon">
+                        <i class="lni-coin"></i>
+                        <input type="number" name="price" class="form-control" placeholder="Entrer un prix" scale="5">
                     </div>
                     <button class="btn btn-common" type="submit"><i class="lni-search"></i> Chercher</button>
                 {$form->close()}

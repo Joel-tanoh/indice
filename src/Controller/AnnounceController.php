@@ -168,7 +168,7 @@ class AnnounceController extends AppController
         $validate->title("title", $_POST["title"]);
 
         // Validation de la catégorie
-        if ($_POST["id_category"] == 0) {
+        if ($_POST["id_category"] == 0 || empty($_POST["id_category"])) {
             $validate->addError("category", "Veuillez vérifier que vous avez choisi la catégorie de l'annonce.");
         }
 

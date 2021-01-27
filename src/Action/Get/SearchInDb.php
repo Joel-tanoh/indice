@@ -10,7 +10,6 @@ use Exception;
  */
 class SearchInDb extends Action
 {
-
     /**
      * Constructeur d'une recherche.
      */
@@ -55,7 +54,7 @@ class SearchInDb extends Action
      * @param string $indexForInstantiate Le nom de l'index qu'on av utiliser pour instantier
      *                                    les objets.
      */
-    public function return(string $type = null, string $className = null, string $indexForInstantiate = null)
+    public function getResult(string $type = null, string $className = null, string $indexForInstantiate = null)
     {
         if ($type !== null && in_array($type, ["object", "objet", "instance", "class"])) {
 

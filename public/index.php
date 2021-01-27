@@ -26,7 +26,7 @@ try {
     $router->get("/users", "App\Controller\UserController@users");
     $router->get("/in-progress", "App\Controller\AppController@page404");
     $router->get("/announces", "App\Controller\AnnounceController@announces");
-    $router->get("/announces/search", "App\Controller\AnnounceController@announces");
+    // $router->get("/announces/search", "App\Controller\AnnounceController@announces");
     $router->get("/:category", "App\Controller\CategoryController@read");
     $router->get("/:1/:2", "App\Controller\AppController@router");
     $router->get("/:1/:2/:3", "App\Controller\AppController@router");

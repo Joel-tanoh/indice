@@ -77,9 +77,7 @@ abstract class User extends Model
     {
         if (self::isAuthenticated()) {
             $user = new Registered(Authentication::getId());
-            if ($user->isAdministrator()) {
-                return new Administrator(Authentication::getId());
-            }
+            return $user->isAdministrator() ? new Administrator(Authentication::getId()) : $user;
         }
     }
 

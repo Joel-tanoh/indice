@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Action\Action;
+use App\Engine\SearchEngine;
 use App\Model\Announce;
 use App\View\Model\AnnounceView;
 use App\View\Page\Page;
@@ -31,7 +32,11 @@ class SearchController extends AppController
     {
         $announces = [];
         if(Action::dataPosted()) {
-            dump($_POST);
+            $searchEngine = new SearchEngine($_POST);
+            $searchEngine->searchAnnounces(Announce::TABLE_NAME, $_POST);
+            $announces = $searchEngine->getResult();
+            dump($announces);
+            die();
         } else {
             $announces = Announce::getAll();
         }

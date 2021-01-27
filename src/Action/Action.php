@@ -33,6 +33,15 @@ abstract class Action
     /** @var string La requête finale a envoyer à la base de données */
     protected $query;
 
+    /** @var string Le nom de la colonne à utiliser pour instantier les résultats sous
+     *              forme d'objet.
+     */
+    protected $colForInstantiate;
+
+    /** @var string La clause en format text */
+    protected $clausesAsString;
+
+
     /**
      * Retourne l'instance PDO.
      * 
@@ -91,5 +100,43 @@ abstract class Action
      * Permet de formater la requête SQL pour insérer les données dans la base de données.
      */
     public function formatQuery(){}
+
+    /**
+     * Permet de passer la colonne à utiliser pour instancier les résultats sous
+     * forme d'objet.
+     * 
+     * @param string $colForInstantiate Le nom de la colonne qu'on va utiliser pour
+     *                                  instantier les résultats sous forme d'objet.
+     */
+    public function setColForInstantiate(string $colForInstantiate)
+    {
+        $this->setColForInstantiate = $colForInstantiate;
+    }
+
+    /**
+     * Permet de formater la clause en format texte et l'ajouter à la requête.
+     * 
+     * @param array $clauses Un tableau contenant les clauses permettant d'apporter
+     *                       des spécifications dans la requête fournie.
+     * @param string $operator Permet de dire si on veut que la requête, ce soit des "et"
+     *                         ou des "ou" entre les clauses.
+     */
+    public function formatClauses(array $clauses = null, string $operator = "AND")
+    {
+        $clauses = empty($this->clauses) ? $clauses : $this->clauses;
+
+        // Formatage des composantes de la clause
+        $arrayKeys = array_keys($clauses);
+        $clauseString = null;
+
+        foreach($arrayKeys as $key) {
+            $clauseString .= "$key = :$key $operator";
+        }
+
+        // Rétirer les dernières virgules et espaces à la fin de la chaine de caractère
+        $clauseString = rtrim($clauseString, $operator." ");
+
+        $this->clauseAsString = " WHERE $clauseString";
+    }
 
 }
