@@ -48,8 +48,12 @@ class SearchView extends Snippet
         <!-- Main container Start -->
         <div class="main-container section-padding">
             <div class="container-fluid">
+                {$advertising->top()}
                 <div class="row">
-                    <aside class="col-12 col-lg-10">
+                    <aside class="d-none d-lg-block col-lg-2">
+                        {$advertising->left()}
+                    </aside>
+                    <aside class="col-12 col-lg-8">
                         <section class="row">
                             <!-- Sidebar -->
                             {$categoryView->sidebar()}
