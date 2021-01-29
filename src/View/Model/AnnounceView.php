@@ -122,7 +122,7 @@ HTML;
     public static function searchingResult(array $announces)
     {
         return <<<HTML
-        la page qui affiche les résultats de la recherche.
+        
 HTML;
     }
 
@@ -191,6 +191,130 @@ HTML;
                 </div>
             </div>
         </section>
+HTML;
+    }
+
+    /**
+     * La vue qui affiche la liste des annonces.
+     * 
+     * @param array $announces
+     * 
+     * @return string
+     */
+    public function list(array $announces)
+    {
+        $announceView = new AnnounceView();
+
+        return <<<HTML
+        <div class="col-lg-9 col-md-12 col-xs-12 page-content">
+            {$announceView->announcesSection($announces)}
+        </div>
+HTML;
+    }
+
+    /**
+     * La section qui affiche les annonces en format de grille ou en
+     * en format de liste.
+     * 
+     * @param array $announces
+     * 
+     * @return string
+     */
+    public function announcesSection(array $announces)
+    {
+        return <<<HTML
+        {$this->announceFilter()}
+        <div class="adds-wrapper">
+            <div class="tab-content">
+                {$this->gridView($announces)}
+                {$this->listView($announces)}
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Permet de filtrer les announces.
+     * 
+     * @return string
+     * 
+     * @return string
+     */
+    private function announceFilter()
+    {
+        return <<<HTML
+        <div class="product-filter">
+            {$this->changeViewButton()}
+        </div>
+HTML;
+    }
+
+    /**
+     * Affichage sous forme de grille.
+     * 
+     * @return string
+     */
+    private function gridView(array $announces)
+    { 
+        $content = null;
+
+        if (empty($announces)) {
+            $content = self::noAnnounces();
+        } else {
+            foreach ($announces as $announce) {
+                $content .= (new self($announce))->gridFormat();
+            }
+        }
+
+        return <<<HTML
+        <div id="grid-view" class="tab-pane fade">
+            <div class="row">
+                {$content}
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Affichage sous forme de liste.
+     * 
+     * @return string
+     */
+    private function listView(array $announces)
+    {
+        $content = null;
+
+        if (empty($announces)) {
+            $content = self::noAnnounces();
+        } else {
+            foreach ($announces as $announce) {
+                $content .= (new self($announce))->listFormat();
+            }
+        }
+
+        return <<<HTML
+        <div id="list-view" class="tab-pane fade active show">
+            <div class="row">
+                {$content}
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Permet d'afficher les informations sur le nombre d'annonce affichée
+     * appartenant à cette catégorie.
+     * 
+     * @param \App\Model\Category $category
+     * 
+     * @return string
+     */
+    private function announceFilterShortName($category)
+    {
+        return <<<HTML
+        <div class="short-name">
+            <span>Annonces (1 - 12 sur {$category->getAnnouncesNumber()})</span>
+        </div>
 HTML;
     }
 
@@ -902,8 +1026,8 @@ HTML;
         return <<<HTML
         <div class="row">
             <div class="col-12">
-                <section class="d-flex justify-content-center align-items-center">
-                    <p class="h4 text-muted">Aucunes annonces</p>
+                <section>
+                    <p class="h4 text-muted text-center">Aucunes annonces</p>
                 </section>
             </div>
         </div>
@@ -1075,6 +1199,25 @@ HTML;
             <a class="btn-sm btn-danger" href="{$this->announce->getManageLink('delete')}">Supprimer</a>
 HTML;
         }
+    }
+
+    /**
+     * Bouton qui permet de changer l'affichage des annonces.
+     * 
+     * @return string
+     */
+    private function changeViewButton()
+    {
+        return <<<HTML
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#grid-view"><i class="lni-grid"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#list-view"><i class="lni-list"></i></a>
+            </li>
+        </ul>
+HTML;
     }
 
 }

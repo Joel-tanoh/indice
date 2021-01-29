@@ -30,7 +30,7 @@ class AppController
     /** Index du site. */
     public static function index()
     {
-        $page = new Page("Le leader des petites annonces de Côte d'Ivoire", View::index());
+        $page = new Page("L'indice | Le leader des petites annonces de Côte d'Ivoire", View::index());
         $page->show();
     }
 
@@ -39,7 +39,7 @@ class AppController
      */
     public static function page404()
     {
-        $page = new Page("Le leader des petites annonces de Côte d'Ivoire - En cours", View::page404("Page en cours de développement", "En cours"));
+        $page = new Page("L'indice | Le leader des petites annonces de Côte d'Ivoire", View::page404("Page en cours de développement", "En cours"));
         $page->show();
     }
 

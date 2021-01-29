@@ -68,8 +68,8 @@ HTML;
     {
         $snippet = new Snippet();
         $home = APP_URL;
-        $form = new Form("/announces/search", "form-error-search");
-
+        $searchView = new SearchView();
+    
         return <<<HTML
         {$snippet->pageHeader("404", $current)}
 
@@ -84,10 +84,7 @@ HTML;
                                 <h3>Ne vous inquitez pas, c'est nous le problème...</h3>
                                 <p>{$message}</p>
                             </div>
-                            {$form->open()}
-                                <input type="search" name="search_query" class="form-control" placeholder="Une recherche...">
-                                <button class="btn btn-common btn-search" type="submit">Chercher</button>
-                            </form>
+                            {$searchView->notFoundSearch()}
                             <div class="description">
                                 <span>Ou allons à l' <a href="$home">Accueil</a></span>
                             </div>

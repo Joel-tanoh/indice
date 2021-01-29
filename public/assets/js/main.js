@@ -280,7 +280,9 @@
 
       /** For Slider of Advertising
       ================================= */
-      let index = 0;
+      let index1 = 0;
+      let index2 = 0;
+      let index3 = 0;
       topSlider();
       rightSlider();
       leftSlider();
@@ -297,11 +299,11 @@
           slides[i].style.display = "none";
         }
 
-        index = index + 1;
-        if (index > slides.length) {
-          index = 1;
+        index1 = index1 + 1;
+        if (index1 > slides.length) {
+          index1 = 1;
         }
-        slides[index-1].style.display = "block";
+        slides[index1 - 1].style.display = "block";
         setTimeout(topSlider, 10000);
       }
 
@@ -317,11 +319,11 @@
           slides[i].style.display = "none";
         }
 
-        index = index + 1;
-        if (index > slides.length) {
-          index = 1;
+        index2 = index2 + 1;
+        if (index2 > slides.length) {
+          index2 = 1;
         }
-        slides[index-1].style.display = "block";
+        slides[index2 - 1].style.display = "block";
         setTimeout(leftSlider, 10000);
       }
 
@@ -337,12 +339,12 @@
           slides[i].style.display = "none";
         }
 
-        index = index + 1;
-        if (index > slides.length) {
-          index = 1;
+        index3 = index3 + 1;
+        if (index3 > slides.length) {
+          index3 = 1;
         }
 
-        slides[index-1].style.display = "block";
+        slides[index3 - 1].style.display = "block";
         setTimeout(rightSlider, 10000);
       }
 

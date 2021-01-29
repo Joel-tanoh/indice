@@ -40,7 +40,7 @@ class AnnounceController extends AppController
             }
         }
 
-        $page = new Page("Poster une annonce - L'indice", (new AnnounceView())->create($message));
+        $page = new Page("L'indice | Poster une annonce", (new AnnounceView())->create($message));
         $page->setDescription("");
         $page->show();
     }
@@ -64,7 +64,7 @@ class AnnounceController extends AppController
 
             if ($announce->isValidated() || ($announce->isPending() && User::isAuthenticated())) {
                 if ($announce->hasCategory($category)) {
-                    $page = new Page($announce->getTitle() . " - L'indice", (new AnnounceView($announce))->read());
+                    $page = new Page("L'indice | " . $announce->getTitle(), (new AnnounceView($announce))->read());
                     $page->show();
                 } else {
                     throw new Exception("La ressource demandée n'a pas été trouvée !");
@@ -95,9 +95,7 @@ class AnnounceController extends AppController
             $registered = User::authenticated();
             $page = new Page();
 
-            if ($announce->hasOwner($registered)
-                || $registered->isAdministrator()
-            ) {
+            if ($announce->hasOwner($registered) || $registered->isAdministrator()) {
                 $message = null;
 
                 // on switch sur l'action à exécuter
@@ -139,7 +137,7 @@ class AnnounceController extends AppController
                         break;
                 }
 
-                $page->setMetaTitle($announce->getTitle() . " - L'indice");
+                $page->setMetaTitle("L'indice | " . $announce->getTitle());
                 $page->setView($view);
                 $page->show();
 

@@ -105,7 +105,7 @@ class UserController extends AppController
             }
         }
 
-        $page = new Page("Je crée mon compte - L'indice", UserView::register($message));
+        $page = new Page("L'indice | Je crée mon compte", UserView::register($message));
         $page->setDescription("");
         $page->show();
     }
@@ -139,7 +139,7 @@ class UserController extends AppController
             }
         }
 
-        $page = new Page("Je m'identifie - L'indice", (new UserView())->signIn($error));
+        $page = new Page("L'indice | Je m'identifie", (new UserView())->signIn($error));
         $page->setDescription("");
         $page->show();
     }
@@ -153,7 +153,7 @@ class UserController extends AppController
 
         $registered = User::authenticated();
         $user = Registered::getByPseudo($params[2]);
-        $page = new Page("Profil - " . $user->getFullName());
+        $page = new Page("L'indice | Profil - " . $user->getFullName());
         $page->setDescription("");
 
         if ($registered->getPseudo() === $user->getPseudo()) {
@@ -178,7 +178,7 @@ class UserController extends AppController
 
             if ($registered->isAdministrator()) {
                 $users = Registered::getAll();
-                $page = new Page("Liste des utilisateurs - L'indice");
+                $page = new Page("L'indice | Administratrion - Liste des utilisateurs");
                 $page->setView((new AdministratorView($registered))->users($users));
                 $page->show();
             } else {
@@ -199,7 +199,7 @@ class UserController extends AppController
         
         $registered = User::authenticated();
         $user = Registered::getByPseudo($params[2]);
-        $page = new Page("Tableau de bord - " . $user->getFullName());
+        $page = new Page("L'indice | Tableau de bord - " . $user->getFullName());
         $page->setDescription("");
 
         if ($registered->getPseudo() === $user->getPseudo() || $registered->isAdministrator()) {
@@ -235,10 +235,12 @@ class UserController extends AppController
             $registered = User::authenticated();
             $user = Registered::getByPseudo($params[2]);
 
-            switch ($params[3]) { // Switch sur l'action.
+            // Switch sur l'action.
+            switch ($params[3]) {
+
                 case "update" :
                     if ($user->getPseudo() === $params[2]) {
-                        $page = new Page($user->getFullName() . " - Mise à jour du compte");
+                        $page = new Page("L'indice | " . $user->getFullName() . " - Mise à jour du compte", (new UserView($user))->update());
                     } else {
                         Utility::redirect($registered->getProfileLink());
                     }

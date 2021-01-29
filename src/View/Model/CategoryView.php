@@ -7,6 +7,7 @@ use App\Model\Category;
 use App\Utility\Pagination;
 use App\View\AdvertisingView;
 use App\View\Form;
+use App\View\SearchView;
 use App\View\Snippet;
 
 /**
@@ -26,10 +27,15 @@ class CategoryView extends ModelView
         $this->category = $category;
     }
 
+    /**
+     * Vue de création d'une catégorie.
+     */
     static function create()
     {
         return <<<HTML
-        vue de création d'une catégorie.
+        <p class="bg-secondary p-3 border rounded">
+            Cette vue vous permettra de créer des catégories.
+        </p>
 HTML;
     }
 
@@ -42,6 +48,7 @@ HTML;
     {
         $snippet = new Snippet();
         $advertising = new AdvertisingView();
+        $announceView = new AnnounceView();
 
         return <<<HTML
         <!-- Hero Area -->
@@ -60,7 +67,7 @@ HTML;
                             <!-- Sidebar -->
                             {$this->sidebar()}
                             <!-- Content -->
-                            {$this->content($this->category->getAnnounces("validated"))}
+                            {$announceView->list($this->category->getAnnounces("validated"))}
                         </section>
                     </aside>
                     <aside class="d-none d-lg-block col-lg-2">
@@ -68,8 +75,7 @@ HTML;
                     </aside>
                 </div>
             </div>
-        </div>
-        <!-- Main container End -->  
+        </div> 
 HTML;
     }
 
@@ -83,7 +89,8 @@ HTML;
     {
         $content = null;
         $colors = [
-            "green", "yellow", "red", "app-blue", "purple", "gray", "orange", "blue"
+            "green", "yellow", "red", "app-blue",
+            "purple", "gray", "orange", "blue"
         ];
 
         foreach (Category::getAll(Category::TABLE_NAME) as $category) {
@@ -153,56 +160,18 @@ HTML;
      * 
      * @return string
      */
-    private function sidebar()
+    public function sidebar()
     {
+        $searchView = new SearchView();
+
         return <<<HTML
         <div class="col-lg-3 col-md-12 col-xs-12 page-sidebar">
             <aside>
                 <!-- Search Widget -->
-                {$this->searchWidget()}
+                {$searchView->categorySearchWidget()}
                 <!-- Categories Widget -->
-                {$this->categoriesWidget()}
+                {$this->categories()}
             </aside>
-        </div>
-HTML;
-    }
-
-    /**
-     * Le contenu de la page.
-     * 
-     * @param array $announces
-     * 
-     * @return string
-     */
-    private function content(array $announces)
-    {
-        return <<<HTML
-        <div class="col-lg-9 col-md-12 col-xs-12 page-content">
-            <!-- Product filter Start -->
-            {$this->announceFilter()}
-            <!-- Adds wrapper Start -->
-            {$this->announcesSection($announces)}
-        </div>
-HTML;
-    }
-
-    /**
-     * La barre de recherche dans la sidebar sur la vue qui affiche les announces
-     * pafr catégories (les announces de cette catégorie).
-     * 
-     * @return string
-     */
-    private function searchWidget()
-    {
-        $form = new Form($this->category->getSlug() . "/search", null, false, "post", "search-form", "search");
-        $searchQuery = !empty($_POST["search_query"]) ? $_POST["search_query"] : null;
-
-        return <<<HTML
-        <div class="widget_search">
-            {$form->open()}
-                <input type="search" class="form-control" autocomplete="off" name="search_query" placeholder="Recherche..." id="search-input" value="{$searchQuery}">
-                <button type="submit" id="search-submit" class="search-btn"><i class="lni-search"></i></button>
-            {$form->close()}
         </div>
 HTML;
     }
@@ -212,11 +181,11 @@ HTML;
      * 
      * @return string
      */
-    private function categoriesWidget()
+    private function categories()
     {
         return <<<HTML
         <div class="widget categories">
-            <h4 class="widget-title">Les catégories</h4>
+            <h4 class="widget-title">Par catégories</h4>
             {$this->categoriesList()}
         </div>
 HTML;
@@ -261,109 +230,6 @@ HTML;
 HTML;
     }
 
-    /**
-     * Product filter.
-     * 
-     * @return string
-     */
-    private function announceFilter()
-    {
-        return <<<HTML
-        <div class="product-filter">
-            <!-- {$this->announceFilterShortName()} -->
-            {$this->changeViewButton()}
-        </div>
-HTML;
-    }
-
-    /**
-     * La section qui affiche les annonces de la catégorie.
-     * 
-     * @param array $announces
-     * 
-     * @return string
-     */
-    public function announcesSection(array $announces)
-    {
-        return <<<HTML
-        <div class="adds-wrapper">
-            <div class="tab-content">
-                {$this->gridView($announces)}
-                {$this->listView($announces)}
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
-     * Affichage sous forme de grille.
-     * 
-     * @return string
-     */
-    private function gridView(array $announces)
-    { 
-        $content = null;
-
-        if (empty($announces)) {
-            $content = AnnounceView::noAnnounces();
-        } else {
-            foreach ($announces as $announce) {
-                $announceView = new AnnounceView($announce);
-                $content .= $announceView->gridFormat();
-            }
-        }
-
-        return <<<HTML
-        <div id="grid-view" class="tab-pane fade">
-            <div class="row">
-                {$content}
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
-     * Affichage sous forme de liste.
-     * 
-     * @return string
-     */
-    private function listView(array $announces)
-    {
-        $content = null;
-
-        if (empty($announces)) {
-            $content = AnnounceView::noAnnounces();
-        } else {
-            foreach ($announces as $announce) {
-                $announceView = new AnnounceView($announce);
-                $content .= $announceView->listFormat();
-            }
-        }
-
-        return <<<HTML
-        <div id="list-view" class="tab-pane fade active show">
-            <div class="row">
-                {$content}
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
-     * Permet d'afficher les informations sur le nombre d'annonce affichée
-     * appartenant à cette catégorie.
-     * 
-     * @return string
-     */
-    private function announceFilterShortName()
-    {
-        return <<<HTML
-        <div class="short-name">
-            <span>Annonces (1 - 12 sur {$this->category->getAnnouncesNumber()})</span>
-        </div>
-HTML;
-    }
-
     private function woocommerceOrdering()
     {
         return <<<HTML
@@ -381,25 +247,6 @@ HTML;
                 </label>
             </form>
         </div>
-HTML;
-    }
-
-    /**
-     * Bouton qui permet de changer l'affichage des annonces.
-     * 
-     * @return string
-     */
-    private function changeViewButton()
-    {
-        return <<<HTML
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#grid-view"><i class="lni-grid"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#list-view"><i class="lni-list"></i></a>
-            </li>
-        </ul>
 HTML;
     }
 

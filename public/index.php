@@ -43,6 +43,6 @@ try {
     $router->run();
 
 } catch(Exception $e) {
-    $page = new Page("Le leader des petites annonces en Côte d'Ivoire", View::page404($e, "404"));
+    $page = new Page("L'indice | Le leader des petites annonces en Côte d'Ivoire", View::page404($e, "404"));
     $page->show();
 }

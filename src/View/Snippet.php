@@ -48,7 +48,9 @@ HTML;
      */
     public function heroArea(bool $showWelcomeText = true)
     {
+        $searchView = new SearchView();
         $welcomeText = null;
+
         if ($showWelcomeText) {
             $welcomeText = <<<HTML
             <h1 class="head-title">Bienvenue sur <span class="year">L'indice</span></h1>
@@ -65,13 +67,12 @@ HTML;
                     <div class="col-md-12 col-lg-12 col-xs-12 text-center">
                         <div class="contents">
                             {$welcomeText}
-                            {$this->heroAreaSearchBar()}
+                            {$searchView->heroAreaSearchBar()}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Hero Area End -->
 HTML;
     }
 
@@ -82,6 +83,8 @@ HTML;
      */
     public function heroArea2()
     {
+        $searchView = new SearchView();
+
         return <<<HTML
         <!-- Hero Area Start -->
         <div id="hero-area">
@@ -90,13 +93,12 @@ HTML;
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-xs-12 text-center">
                         <div class="contents-ctg">
-                            {$this->heroAreaSearchBar()}
+                            {$searchView->heroAreaSearchBar()}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Hero Area End -->
 HTML;
     }
 
@@ -130,72 +132,6 @@ HTML;
             </div>
         </div>
         <!-- Page Header End -->
-HTML;
-    }
-
-    /**
-     * La barre de recherche qui s'affiche dans le bloc au début de la page juste en
-     * dessous de la barre de navigation.
-     * 
-     * @return string
-     */
-    public function heroAreaSearchBar()
-    {
-        $categoryView = new CategoryView();
-        $userView = new UserView();
-        $form = new Form("/announces/search", "search-form", false, "post", "myform", "search");
-
-        return <<<HTML
-        <div class="search-bar">
-            <div class="search-inner">
-                {$form->open()}
-                    <div class="form-group inputwithicon">
-                        <i class="lni-tag"></i>
-                        <input type="text" name="query" class="form-control" placeholder="Saisissez quelque chose" required>
-                    </div>
-                    <div class="form-group inputwithicon">
-                        <i class="lni-menu"></i>
-                        <div class="select">
-                            <select name="id_category">
-                                <option value="0">Choisissez la catégories</option>
-                                {$categoryView->selectOptions()}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group inputwithicon">
-                        <i class="lni-map-marker"></i>
-                        <div class="select">
-                            {$userView->townsSelectList("location")}
-                        </div>
-                    </div>
-                    <div class="form-group inputwithicon">
-                        <i class="lni-menu"></i>
-                        <div class="select">
-                            <select name="type" id="type">
-                                <option value="both">Particulier et Professionnel</option>
-                                <option value="professionnel">Professionnel</option>
-                                <option value="particulier">Particulier</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group inputwithicon">
-                        <i class="lni-hand"></i>
-                        <div class="select">
-                            <select name="direction" id="direction">
-                                <option value="both">Offre et Demande</option>
-                                <option value="professionnel">Offre</option>
-                                <option value="particulier">Demande</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group inputwithicon">
-                        <i class="lni-coin"></i>
-                        <input type="number" name="price" class="form-control" placeholder="Entrer un prix" scale="5">
-                    </div>
-                    <button class="btn btn-common" type="submit"><i class="lni-search"></i> Chercher</button>
-                {$form->close()}
-            </div>
-        </div>
 HTML;
     }
 

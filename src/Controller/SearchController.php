@@ -7,6 +7,7 @@ use App\Engine\SearchEngine;
 use App\Model\Announce;
 use App\View\Model\AnnounceView;
 use App\View\Page\Page;
+use App\View\SearchView;
 
 /** Controller de gestion des recherches. */
 class SearchController extends AppController
@@ -31,17 +32,17 @@ class SearchController extends AppController
     public static function searchAnnonce(array $params = null)
     {
         $announces = [];
-        if(Action::dataPosted()) {
-            $searchEngine = new SearchEngine($_POST);
-            $searchEngine->searchAnnounces(Announce::TABLE_NAME, $_POST);
-            $announces = $searchEngine->getResult();
-            dump($announces);
-            die();
-        } else {
-            $announces = Announce::getAll();
+        $pageTitle = "L'indice | Announces";
+        $searchEngine = new SearchEngine();
+
+        if (Action::dataPosted()) {
+            $searchEngine->searchAnnounces($_POST);
+            $announces = $searchEngine->getResult("App\Model\Announce", "id");
+            $pageTitle .= " - Recherche " . $_POST["query"];
         }
-        $page = new Page();
-        $page->setView(AnnounceView::searchingResult($announces));
+
+        $page = new Page($pageTitle);
+        $page->setView((new SearchView())->announcesResult($announces));
         $page->show();
     }
 

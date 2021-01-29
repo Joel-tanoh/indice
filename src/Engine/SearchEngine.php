@@ -3,6 +3,7 @@
 namespace App\Engine;
 
 use App\Action\Action;
+use App\Model\Announce;
 
 /**
  * Moteur de recherche de l'application.
@@ -13,7 +14,7 @@ class SearchEngine extends Action
      * Constructeur d'un moteur de recherche.
      *
      */
-    public function __construct(array $data, string $colForInstantiate = null, string $database = DB_NAME, string $dbLogin = DB_LOGIN, string $dbPassword = DB_PASSWORD)
+    public function __construct(string $database = DB_NAME, string $dbLogin = DB_LOGIN, string $dbPassword = DB_PASSWORD)
     {
         $this->database = $database;
         $this->dbLogin = $dbLogin;
@@ -23,46 +24,130 @@ class SearchEngine extends Action
     /**
      * Permet de chercher les annonces.
      */
-    public function searchAnnounces(string $tableName, array $data)
+    public function searchAnnounces(array $dataSent)
     {
-        $this->formatQuery($tableName, $data);
-        $req = parent::connectToDb($this->dbLogin, $this->dbPassword)->query($this->query);
+        $this->searchAnnounceQuery($dataSent);
+        $req = parent::connectToDb($this->dbLogin, $this->dbPassword)->prepare($this->query);
+
+        $req->execute($this->dataTreated($dataSent));
         $this->data = $req->fetchAll();
+        
+        // dump($this->query);
+        // dump($dataSent);
+        // dump($this->dataTreated($dataSent));
+        // dump($this->data);
+        // die();
     }
 
     /** 
      * Retourne les résultats de la recherche.
      * 
-     * @return array
+     * @param string $className         Possible de passer le nom d'une class afin
+     *                                  de retourner un tableau d'objet.
+     * @param string $colForInstantiate L'index de la colonne à utiliser pour instantier
+     *                                  les objets.
+     * 
+     * @return array Un Tableau contenant les données prises de la base ddvonnées.
      */
-    public function getResult()
+    public function getResult(string $className = null, string $colForInstantiate = null)
     {
-        return $this->data;
+        $result = [];
+
+        if (null !== $className) {
+            foreach($this->data as $item) {
+                $result[] = new $className($item[$colForInstantiate]);
+            }
+
+            return $result;
+        } else {
+            return $this->data;
+        }
+    }
+
+    /**
+     * Retourne le nombre de résultat.
+     * 
+     * @return int
+     */
+    public function resultNumber()
+    {
+        return count($this->data);
     }
 
     /**
      * Permet de formater la requête.
      */
-    public function formatQuery(string $tableName  = null, array $data = null)
+    private function searchAnnounceQuery(array $dataSent = null)
     {
-        $query = htmlspecialchars($_POST["query"]);
-        $idCategory = htmlspecialchars($_POST["id_category"]);
-        $location = htmlspecialchars($_POST["location"]);
-        $type = htmlspecialchars($_POST["type"]);
-        $direction = htmlspecialchars($_POST["direction"]);
-        
-        $this->query = "SELECT id FROM $tableName
-            WHERE title LIKE '%$query%' OR description LIKE '%$query%'
-            OR id_category = $idCategory
-            OR location = '$location'
-            OR type = '$type'
-            OR direction = '$direction'
-        ";
+        $this->query = "SELECT id FROM " . Announce::TABLE_NAME . " WHERE (title LIKE :query OR description LIKE :query)";
 
-        if (!empty($_POST["price"])) {
-            $price = htmlspecialchars($_POST["price"]);
-            $this->query .= " OR price = $price";
+        if (!empty($dataSent["id_category"])) {
+            $this->query .= " AND id_category = :id_category";
         }
+
+        if (!empty($dataSent["location"])) {
+            $this->query .= " AND location = :location";
+        }
+
+        if (!empty($dataSent["type"])) {
+            $this->query .= " AND type = :type";
+        }
+
+        if (!empty($dataSent["direction"])) {
+            $this->query .= " AND direction = :direction";
+        }
+
+        if (!empty($dataSent["price"])) {
+            $this->query .= " AND price = :price";
+        }
+
+        $this->query .= " AND status IN (1, 2)";
+    }
+
+    /**
+     * Formate la requête pour faire des recherches sur les utilisateurs.
+     */
+    public function searchUsers()
+    {
+
+    }
+
+    /**
+     * Permet de traiter les données envoyées par l'utilisateur
+     * pour la recherche.
+     * 
+     * @param array $data Un tableau contenant les données saisies par l'utilisateur.
+     * @return array Tableau contenant les données traitées.
+     */
+    private function dataTreated(array $dataSent)
+    {
+        $data = [];
+
+        if (!empty($dataSent["query"])) {
+            $data["query"] = "%" . htmlspecialchars(trim($dataSent["query"])) . "%";
+        }
+
+        if (!empty($dataSent["id_category"])) {
+            $data["id_category"] = (int)htmlspecialchars(trim($dataSent["id_category"]));
+        }
+
+        if (!empty($dataSent["location"])) {
+            $data["location"] = htmlspecialchars(trim($dataSent["location"]));
+        }
+
+        if (!empty($dataSent["type"])) {
+            $data["type"] = htmlspecialchars(trim($dataSent["type"]));
+        }
+
+        if (!empty($dataSent["direction"])) {
+            $data["direction"] = htmlspecialchars(trim($dataSent["direction"]));
+        }
+
+        if (!empty($dataSent["price"])) {
+            $data["price"] = htmlspecialchars(trim($dataSent["price"]));
+        }
+
+        return $data;
     }
 
 }
