@@ -2,14 +2,10 @@
 
 namespace App\View\Model;
 
-use App\Auth\Authentication;
-use App\Auth\Cookie;
 use App\Model\Announce;
-use App\Model\User\Registered;
 use App\View\Snippet;
 use App\View\View;
 use App\View\Form;
-use App\Auth\Session;
 use App\Model\User\User;
 use App\View\Model\User\UserView;
 use App\View\Model\User\RegisteredView;

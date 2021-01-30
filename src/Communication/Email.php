@@ -72,12 +72,12 @@ class Email
     public function send()
     {
         if (!empty($this->destinataires)) {
-            $send_mail_counter = 0;
+            $sendMailcounter = 0;
             foreach ($this->destinataires as $destinataire) {
                 mail($destinataire, $this->subject, $this->message, $this->headers());
-                $send_mail_counter++;
+                $sendMailcounter++;
             }
-            if ($send_mail_counter) return true;
+            if ($sendMailcounter) return true;
         }
     }
 

@@ -540,7 +540,7 @@ class Announce extends Model
         }
 
         // Enregistrement de l'utilisateur qui a sa session active
-        $data["user_email_address"] = Session::get();
+        $data["user_email_address"] = Session::getRegistered();
 
         // Insertion des données
         $insertion = new InsertInDb($data, self::TABLE_NAME, DB_NAME, DB_LOGIN, DB_PASSWORD);

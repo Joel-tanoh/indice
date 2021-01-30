@@ -16,7 +16,7 @@ use Exception;
 /**
  * Classe de gestion d'un utilisateur inscrit.
  */
-class Registered extends User
+class Registered extends Visitor
 {
     protected $name;
     protected $firstNames;
@@ -30,6 +30,7 @@ class Registered extends User
     protected $status;
     protected static $statutes = ["activé", "prémium", "suspendu"];
     protected $announces = [];
+    const TABLE_NAME = "ind_users";
 
     /** Le nombre de post maximun par mois d'un annonceur simple */
     const POST_PER_MONTH = 15;
@@ -237,13 +238,27 @@ class Registered extends User
     }
 
     /**
-     * Permet de vérifier si l'utilisateur est prémium.
-     * @return bool
+     * Retourne l'id de session.
+     * 
+     * @return string
      */
-    public function isPremium()
+    public function getSessionValue()
     {
-        return $this->status === 2;
+        $req = parent::connectToDb()->prepare("SELECT session_value " . Visitor::TABLE_NAME . " WHERE id = :id ");
+        $req->execute([
+            "id" => $this->sessionId
+        ]);
+        return $req->fetch()["session_value"];
     }
+
+    // /**
+    //  * Permet de vérifier si l'utilisateur est prémium.
+    //  * @return bool
+    //  */
+    // public function isPremium()
+    // {
+    //     return $this->status === 3;
+    // }
 
     /**
      * Permet de mettre à jour les infos d'un utilisateur.
@@ -277,8 +292,8 @@ class Registered extends User
      */
     public static function signOut()
     {
-        Session::deactivate();
-        Cookie::destroy(Cookie::KEY);
+        Session::disconnect();
+        Cookie::destroy();
         Utility::redirect("/");
     }
 

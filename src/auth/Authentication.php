@@ -33,14 +33,14 @@ class Authentication
     /**
      * Retourne le tableau des valeurs de coockie.
      * 
-     * @param string $key 
+     * @param string $key
      * 
      * @return array
      */
     public function getCookies(string $key = null)
     {
         if (null !== $key) {
-            return $_SESSION[$key];
+            return $_COOKIE[$key];
         }
 
         return $_COOKIE;
@@ -49,14 +49,14 @@ class Authentication
     /**
      * Initalise les variables de sessions en mettant le login de l'administrateur.
      * 
-     * @param string $sessionKey   La clé de la session.
-     * @param  $sessionValue La valeur de la session
+     * @param string $sessionKey La clé de la session.
+     * @param mixed  $value      La valeur de la session
      * 
      * @return void
      */
-    public static function setSession($sessionKey, $sessionValue)
+    public static function setSession($key, $value)
     {
-        $_SESSION[$sessionKey] = ucfirst($sessionValue);
+        $_SESSION[$key] = $value;
     }
 
     /**
@@ -77,19 +77,19 @@ class Authentication
 
             if ($validator->email("email_address", $emailAddress)) {
 
-                $user = User::getByEmailAddress($emailAddress);
+                // $user = User::getByEmailAddress($emailAddress);
 
-                if ($user) {
+                // if ($user) {
 
-                    if (Password::verifyHash($password, $user->getPassword())) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                //     if (Password::verifyHash($password, $user->getPassword())) {
+                //         return true;
+                //     } else {
+                //         return false;
+                //     }
 
-                } else {
-                    return false;
-                }
+                // } else {
+                //     return false;
+                // }
 
             } else {
                 return false;
@@ -103,7 +103,7 @@ class Authentication
      */
     public static function askToAuthenticate(string $where)
     {
-        if (!Session::isActive() && !Cookie::userCookieIsset()) {
+        if (!Session::registeredActivated() && !Cookie::registeredSetted()) {
             Utility::redirect($where);
         }
     }
@@ -114,7 +114,7 @@ class Authentication
      */
     public static function made()
     {
-        return Cookie::userCookieIsset() || Session::isActive();
+        return Cookie::registeredSetted() || Session::registeredActivated();
     }
 
     /**
@@ -125,10 +125,10 @@ class Authentication
      */
     public static function getId()
     {
-        if (Session::isActive()) {
-            return Session::get();
-        } elseif (Cookie::userCookieIsset()) {
-            return Cookie::get();
+        if (Session::registeredActivated()) {
+            return Session::getRegistered();
+        } elseif (Cookie::registeredSetted()) {
+            return Cookie::getRegistered();
         }
     }
 

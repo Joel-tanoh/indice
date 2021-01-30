@@ -7,7 +7,9 @@ namespace App\Auth;
  */
 class Session extends Authentication
 {
-    const KEY = "AxbjZteKoPflTdjUheXsDtvAjOp";
+    const VISITOR_KEY = "V_AxbjZteKoPflTdjUheXsDtvAjOp";
+    const REGISTERED_KEY = "R_IjnOkpsQuGjnSheOrpSbfZmbgsx";
+    const ADMINISTRATOR_KEY = "A_SasCdHuQuGjceAdeOrpSaSCVuGE";
 
     /**
      * Initie la variable de session qui permet d'identifier l'utilisateur
@@ -15,9 +17,19 @@ class Session extends Authentication
      * 
      * @param string $value
      */
-    public static function activate(string $value)
+    public static function activateVisitor(string $value)
     {
-        $_SESSION[self::KEY] = $value;
+        $_SESSION[self::VISITOR_KEY] = $value;
+    }
+
+    /**
+     * Permet de mettre à jour le contenu de la session.
+     * 
+     * @param mixed $value
+     */
+    public static function activateRegistered($value)
+    {
+        $_SESSION[self::REGISTERED_KEY] = $value;
     }
 
     /**
@@ -25,9 +37,19 @@ class Session extends Authentication
      * 
      * @return bool
      */
-    public static function isActive()
+    public static function visitorActivated()
     {
-        return isset($_SESSION[self::KEY]) && !empty($_SESSION[self::KEY]);
+        return isset($_SESSION[self::VISITOR_KEY]) && !empty($_SESSION[self::VISITOR_KEY]);
+    }
+
+    /**
+     * Permet de vérifier si la session de l'utilisateur connecté est active.
+     * 
+     * @return bool
+     */
+    public static function registeredActivated()
+    {
+        return !empty($_SESSION[self::REGISTERED_KEY]);
     }
 
     /**
@@ -35,10 +57,22 @@ class Session extends Authentication
      * 
      * @return string
      */
-    public static function get()
+    public static function getVisitor()
     {
-        if (self::isActive()) {
-            return $_SESSION[self::KEY];
+        if (self::visitorActivated()) {
+            return $_SESSION[self::VISITOR_KEY];
+        }
+    }
+
+    /**
+     * Retourne l'identifiant de la session de l'utilisateur connecté.
+     * 
+     * @return string
+     */
+    public static function getRegistered()
+    {
+        if (self::registeredActivated()) {
+            return $_SESSION[self::REGISTERED_KEY];
         }
     }
 
@@ -47,9 +81,8 @@ class Session extends Authentication
      * 
      * @return void
      */
-    public static function deactivate()
+    public static function disconnect()
     {
-        session_unset();
-        session_destroy();
+        $_SESSION[self::REGISTERED_KEY] = null;
     }
 }

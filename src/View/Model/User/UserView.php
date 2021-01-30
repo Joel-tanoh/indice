@@ -2,10 +2,7 @@
 
 namespace App\View\Model\User;
 
-use App\Auth\Cookie;
-use App\Auth\Session;
 use App\Model\Location\Town;
-use App\Model\User\Registered;
 use App\Model\User\User;
 use App\View\Form;
 use App\View\Model\ModelView;

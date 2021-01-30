@@ -5,8 +5,6 @@ namespace App\Model\User;
 use App\Action\Create\Create;
 use App\Action\Create\InsertInDb;
 use App\Auth\Authentication;
-use App\Auth\Cookie;
-use App\Auth\Session;
 use App\File\Image\Avatar;
 use App\File\Image\Image;
 use App\Utility\Utility;

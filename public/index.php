@@ -9,11 +9,18 @@ session_start();
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.php";
 
 use App\Route\Router;
+use App\Model\User\Visitor;
 use App\View\Page\Page;
 use App\View\View;
 
 try {
     
+    Visitor::manage();
+
+    // dump($_SESSION);
+    // dump($_COOKIE);
+    // die();
+
     $router = new Router(trim($_SERVER["REQUEST_URI"], "/"));
 
     // Route en get sans paramètre
@@ -26,7 +33,6 @@ try {
     $router->get("/users", "App\Controller\UserController@users");
     $router->get("/in-progress", "App\Controller\AppController@page404");
     $router->get("/announces", "App\Controller\AnnounceController@announces");
-    // $router->get("/announces/search", "App\Controller\AnnounceController@announces");
     $router->get("/:category", "App\Controller\CategoryController@read");
     $router->get("/:1/:2", "App\Controller\AppController@router");
     $router->get("/:1/:2/:3", "App\Controller\AppController@router");
