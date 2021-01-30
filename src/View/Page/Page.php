@@ -210,7 +210,7 @@ HTML;
         <meta name="description" content="{$this->description}">
         <base href="{$base}">
         <title>{$this->metaTitle}</title>
-        {$this->appIcon()}
+        {$this->favicon()}
 HTML;
     }
     
@@ -219,11 +219,11 @@ HTML;
      * 
      * @return string
      */
-    private function appIcon(string $logosDir = Logo::LOGOS_DIR_URL)
+    private function favicon(string $logosDir = Logo::LOGOS_DIR_URL)
     {
         return <<<HTML
-        <link rel="icon" href="{$logosDir}/favicon.png" type="image/png">
-        <link rel="shortcut icon" href="{$logosDir}/favicon.png" type="image/png">
+        <link rel="icon" href="{$logosDir}/faviconx2.png" type="image/png">
+        <link rel="shortcut icon" href="{$logosDir}/faviconx2.png" type="image/png">
 HTML;
     }
 

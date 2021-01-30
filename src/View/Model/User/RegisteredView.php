@@ -111,6 +111,7 @@ HTML;
 
     /**
      * Menu qui sera affiché si l'utilsateur s'est authentifié.
+     * 
      * @param App\Model\User\Registered
      * @return string
      */
@@ -119,7 +120,28 @@ HTML;
         return <<<HTML
         <a class="dropdown-item" href="{$registered->getProfileLink()}"><i class="lni-user"></i> Mon Profil</a>
         <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-home"></i> Mes annonces</a>
-        <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Se déconnecter</a>
+        <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Déconnexion</a>
+HTML;
+    }
+
+    /**
+     * Affiche le menu dans la version mobile pour un utilisateur connecté.
+     * 
+     * @param App\Model\User\Registered
+     * @return string
+     */
+    public function mobileNavbarForConnectedUser($registered)
+    {
+        return <<<HTML
+        <li><a class="active" href="/">Accueil</a></li>
+        <li>
+            <a>Mon compte</a>
+            <ul class="dropdown">
+                <li><a href="{$registered->getProfileLink()}"><i class="lni-home"></i> Mon profil</a></li>
+                <li><a href="{$registered->getProfileLink()}/posts"><i class="lni-wallet"></i> Mes annouces</a></li>
+                <li><a href="sign-out"><i class="lni-close"></i> Déconnexion</a></li>
+            </ul>
+        </li>
 HTML;
     }
 
@@ -183,7 +205,7 @@ HTML;
         <nav class="navdashboard">
             <ul>
                 {$this->defineSidebarLink("Mes annonces", $registered->getProfileLink(). "/posts", "lni-dashboard")}
-                {$this->defineSidebarLink("Se déconnecter", "sign-out", "lni-enter")}
+                {$this->defineSidebarLink("Déconnexion", "sign-out", "lni-enter")}
             </ul>
         </nav>
 HTML;

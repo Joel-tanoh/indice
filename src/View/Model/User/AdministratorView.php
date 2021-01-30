@@ -62,9 +62,9 @@ HTML;
         <nav class="navdashboard">
             <ul>
                 {$this->defineSidebarLink("Mes annonces", $administrator->getProfileLink(). "/posts", "lni-dashboard")}
-                {$this->defineSidebarLink("Créer une catégorie", "/category/add", "lni-plus")}
+                <!-- {$this->defineSidebarLink("Créer une catégorie", "/category/add", "lni-plus")} -->
                 {$this->defineSidebarLink("Gérer les comptes", "/users", "lni-users")}
-                {$this->defineSidebarLink("Se déconnecter", "sign-out", "lni-enter")}
+                {$this->defineSidebarLink("Déconnexion", "sign-out", "lni-enter")}
             </ul>
         </nav>
 HTML;

@@ -94,29 +94,11 @@ HTML;
      */
     private function mobileMenu()
     {
+        $userView = new UserView();
+
         return <<<HTML
         <ul class="mobile-menu">
-            <li>
-                <a class="active" href="#">
-                Accueil
-                </a>
-            </li>
-            <li>
-                <a href="contact.html">Contact Us</a>
-            </li>
-            <li>
-                <a>My Account</a>
-                <ul class="dropdown">
-                    <li><a href="account-profile-setting.html"><i class="lni-home"></i> Account Home</a></li>
-                    <li><a href="account-myads.html"><i class="lni-wallet"></i> My Ads</a></li>
-                    <li><a href="account-favourite-ads.html"><i class="lni-heart"></i> Favourite ads</a></li>
-                    <li><a href="account-archived-ads.html"><i class="lni-folder"></i> Archived</a></li>
-                    <li><a href="login.html"><i class="lni-lock"></i> Log In</a></li>
-                    <li><a href="signup.html"><i class="lni-user"></i> Signup</a></li>
-                    <li><a href="forgot-password.html"><i class="lni-reload"></i> Forgot Password</a></li>
-                    <li><a href="account-close.html"><i class="lni-close"></i>Account close</a></li>
-                </ul>
-            </li>
+            {$userView->mobileNavbar()}
         </ul>
 HTML;
     }

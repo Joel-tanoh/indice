@@ -2,11 +2,8 @@
 
 namespace App\View\Model;
 
-use App\Model\Announce;
 use App\Model\Category;
-use App\Utility\Pagination;
 use App\View\AdvertisingView;
-use App\View\Form;
 use App\View\SearchView;
 use App\View\Snippet;
 
@@ -103,7 +100,7 @@ HTML;
         }
 
         return <<<HTML
-        <div id="categories-icon-slider" class="owl-carousel owl-theme">
+        <div id="categories-icon-slider" class="owl-carousel owl-theme pt-5">
             {$content}
         </div>
 HTML;

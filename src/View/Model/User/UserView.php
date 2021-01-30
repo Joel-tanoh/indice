@@ -180,8 +180,7 @@ HTML;
     public function navbarMenu()
     {
         if (User::isAuthenticated()) {
-            $registered = User::authenticated();
-            $content = (new RegisteredView())->navbar($registered);
+            $content = (new RegisteredView())->navbar(User::authenticated());
         } else {
             $content = $this->navbarForUnconnectedUser();
         }
@@ -196,6 +195,20 @@ HTML;
             </li>
         </ul>
 HTML;
+    }
+
+    /**
+     * Affiche la navbar dans le menu version mobile.
+     * 
+     * @return string
+     */
+    public function mobileNavbar()
+    {
+        if (User::isAuthenticated()) {
+            return (new RegisteredView())->mobileNavbarForConnectedUser(User::authenticated());
+        } else {
+            return $this->mobileNavbarForUnconnectedUser();
+        }
     }
 
     /**
@@ -281,13 +294,30 @@ HTML;
     private function navbarForUnconnectedUser()
     {
         return <<<HTML
-        <a class="dropdown-item" href="register"><i class="lni-user"></i> S'inscire</a>
-        <a class="dropdown-item" href="sign-in"><i class="lni-lock"></i> S'identifier</a>
+        <a class="dropdown-item" href="register"><i class="lni-user"></i> Créer un compte</a>
+        <a class="dropdown-item" href="sign-in"><i class="lni-lock"></i> Connexion</a>
 HTML;
     }
 
     /**
-     * Affiche un lien pour aider ceux qui ont oublié leur mot de passe.
+     * Affiche le menu dans la version mobile pour un visitor non connecté.
+     * 
+     * @return string
+     */
+    private function mobileNavbarForUnconnectedUser()
+    {
+        return <<<HTML
+        <li><a href="/"><i class="lni-home"></i>Accueil</a></li>
+        <li><a href="register"> <i class="lni-user"></i>Créer un compte</a></li>
+        <li><a href="sign-in"> <i class="lni-lock"></i>Connexion</a></li>
+        <!-- <li>
+            <a href="contact.html">Contact Us</a>
+        </li> -->
+HTML;
+    }
+
+    /**
+     * Affiche un lien pour changer le mot de passe.
      * 
      * @return string
      */
