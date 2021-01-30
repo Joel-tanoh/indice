@@ -15,6 +15,7 @@
 namespace App\View\Page;
 
 use App\File\Image\Logo;
+use App\View\Model\CategoryView;
 use App\View\Model\User\UserView;
 use App\View\Snippet;
 
@@ -48,6 +49,7 @@ class Navbar extends Snippet
         $appUrl = APP_URL;
         $logoAltText = Logo::ALT_TEXT;
         $userView = new UserView();
+        $categoryView = new CategoryView();
 
         return <<<HTML
         <!-- Header Area wrapper Starts -->
@@ -66,12 +68,15 @@ class Navbar extends Snippet
                         <a href="{$appUrl}" class="navbar-brand"><img id="logo" src="{$this->brandImgSrc}" alt="{$logoAltText}"></a>
                     </div>
                     <div class="collapse navbar-collapse" id="main-navbar">
+                        <!-- Partie pour afficher les liens dans la Navabr -->
                         <ul class="navbar-nav mr-auto">
+                            {$categoryView->navbarList()}
+                            <li>
+                                <a class="nav-link" href="announces">Annonces</a>
+                            </li>
                         </ul>
                         {$userView->navbarMenu()}
-                        <a class="tg-btn" href="post">
-                            <i class="lni-pencil-alt"></i> Poster une annonce
-                        </a>
+                        <a class="tg-btn" href="post"><i class="lni-pencil-alt"></i> Poster une annonce</a>
                     </div>
                 </div>
 

@@ -151,6 +151,29 @@ HTML;
     }
 
     /**
+     * Affiche la liste des annouces dans la navbar.
+     * 
+     * @return string
+     */
+    public function navbarList()
+    {
+        $list = null;
+
+        foreach (Category::getAll() as $category) {
+            $list .= '<a class="dropdown-item" href="'. $category->getSlug() .'"><i class="'. $category->getIconClass() .'"></i> '. $category->getTitle() .'</a>';
+        }
+
+        return <<<HTML
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégories</a>
+            <div class="dropdown-menu">
+                {$list}
+            </div>
+        </li>
+HTML;
+    }
+
+    /**
      * La sidebar de la page qui liste les annonces d'une catégorie.
      * 
      * @return string
