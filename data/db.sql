@@ -236,6 +236,32 @@ LOCK TABLES `towns` WRITE;
 INSERT INTO `towns` VALUES (1,'Abidjan',1,'abidjan'),(2,'Bouaké',1,'bouake'),(3,'Daloa',1,'daloa'),(4,'Yamoussokro',1,'yamoussokro'),(5,'San-Pédro',1,'san-pedro'),(6,'Divo',1,'divo'),(7,'Korhogo',1,'korhogo'),(8,'Abengourou',1,'agengourou'),(9,'Man',1,'man'),(10,'Gagnoa',1,'gagnoa'),(11,'Soubré',1,'soubre'),(12,'Agboville',1,'agboville'),(13,'Dabou',1,'dabou'),(14,'Grand-Bassam',1,'grand-bassam'),(15,'Bouaflé',1,'bouaflé'),(16,'Issia',1,'issia'),(17,'Sinfra',1,'sinfra'),(18,'Katiola',1,'katiola'),(19,'Bingerville',1,'bingerville'),(20,'Adzopé',1,'adzope'),(21,'Séguéla',1,'seguela'),(22,'Bondoukou',1,'bondoukou'),(23,'Oumé',1,'oume'),(24,'Ferkessedougou',1,'ferkessedougou'),(25,'Dimbokro',1,'dimbokro'),(26,'Odienné',1,'odienne'),(27,'Danané',1,'danane'),(28,'Tingréla',1,'tingrela'),(29,'Guiglo',1,'guiglo'),(30,'Boundiali',1,'boundiali'),(31,'Agnibilékro',1,'agnibilékro'),(32,'Daoukro',1,'daoukro'),(33,'Vavoua',1,'vavoua'),(34,'Zuénoula',1,'zuenoula'),(35,'Tiassalé',1,'tiassale'),(36,'Toumodi',1,'toumodi'),(37,'Akoupé',1,'akoupe'),(38,'Lakota',1,'lakota');
 /*!40000 ALTER TABLE `towns` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `visitors`
+--
+
+DROP TABLE IF EXISTS `visitors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `visitors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `session_value` varchar(255) COLLATE utf8_bin NOT NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_action_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `visitors`
+--
+
+LOCK TABLES `visitors` WRITE;
+/*!40000 ALTER TABLE `visitors` DISABLE KEYS */;
+INSERT INTO `visitors` VALUES (11,'tanohbassapatrick@gmail.com','2021-01-30 22:15:57','2021-01-30 22:16:48'),(12,'4ETIYcbq','2021-01-30 22:17:38','2021-01-30 22:44:26');
+/*!40000 ALTER TABLE `visitors` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -246,4 +272,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-30  2:59:22
+-- Dump completed on 2021-01-30 23:00:24
