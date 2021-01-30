@@ -1211,7 +1211,7 @@ a.back-to-top:hover, a.back-to-top:focus {
 .category-icon-item .icon-box {
   text-align: center;
   padding: 15px 10px;
-  background: rgba(128,128,128,.5);
+  /* background: rgba(128,128,128,.5); */
   border-radius: 4px;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
@@ -1224,7 +1224,7 @@ a.back-to-top:hover, a.back-to-top:focus {
 }
 
 .category-icon-item .icon-box .icon i {
-  color: #fff;
+  /* color: #fff; */
   font-size: 42px;
   line-height: normal;
   width: auto;
@@ -1233,7 +1233,7 @@ a.back-to-top:hover, a.back-to-top:focus {
 
 .category-icon-item .icon-box h4 {
   font-size: 14px;
-  color: #ffffff;
+  /* color: #ffffff; */
   line-height: 15px;
   font-weight: 500;
   overflow: hidden;
@@ -1245,7 +1245,8 @@ a.back-to-top:hover, a.back-to-top:focus {
 }
 
 .category-icon-item .icon-box:hover {
-  background: #00BCD4;
+  /* background: #00BCD4; */
+  background: #e2e2e2;
 }
 
 .classiser-search-bar {

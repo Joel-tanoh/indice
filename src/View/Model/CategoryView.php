@@ -98,18 +98,14 @@ HTML;
                 $category->getSlug(),
                 $category->getIconClass(),
                 $category->getTitle(),
-                $colors[random_int(0, count($colors) - 1)]
+                $colors[random_int(0, count($colors) - 1)] // Génère un nombre aléatoire entre 0 et la longueur du tableau.
             );
         }
 
         return <<<HTML
-        <section class="categories-icon section-padding bg-drack">
-            <aside class="container">
-                <div class="row">
-                    {$content}
-                </div>
-            </aside>
-        </section>
+        <div id="categories-icon-slider" class="owl-carousel owl-theme">
+            {$content}
+        </div>
 HTML;
     }
 
@@ -125,15 +121,17 @@ HTML;
     private function trendingCategory(string $href = null, string $lniClass = null, string $text = null, string $color = "app-blue")
     {
         return <<<HTML
-        <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
-            <a href="{$href}">
-                <div class="icon-box {$color}">
-                    <div class="icon">
-                        <i class="{$lniClass}"></i>
+        <div class="item">
+            <div class="category-icon-item">
+                <a href="{$href}" class="{$color}">
+                    <div class="icon-box">
+                        <div class="icon">
+                            <i class="{$lniClass}"></i>
+                        </div>
+                        <h4>{$text}</h4>
                     </div>
-                    <h4>{$text}</h4>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
 HTML;
     }
@@ -205,7 +203,7 @@ HTML;
                 $category->getTitle(), $category->getSlug(), $category->getIconClass(), $category->getAnnouncesNumber("validated")
             );
         }
-        
+
         return <<<HTML
         <ul class="categories-list">
             {$content}
