@@ -2,7 +2,7 @@
 
 namespace App\Route;
 
-use App\Url;
+use App\Request\Url;
 
 /**
  * Classe de gestion d'une route.

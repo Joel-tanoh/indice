@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Request;
 
 /** Classe de gestion de l'url et tout ce qui
  * tourne autour.

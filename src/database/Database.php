@@ -38,7 +38,7 @@ class Database
      * @param string $dbCharset  L'encodage des caractères.
      * 
      */
-    public function __construct(string $dbName = null, string $dbLogin = null , string $dbPassword = null , string $dbAddress = "localhost", string $sgbd = "mysql", string $dbCharset = "utf8") {
+    public function __construct(string $dbName = DB_NAME, string $dbLogin = DB_LOGIN , string $dbPassword = DB_PASSWORD , string $dbAddress = "localhost", string $sgbd = "mysql", string $dbCharset = "utf8") {
         $this->dbName       = $dbName;
         $this->dbLogin      = $dbLogin;
         $this->dbPassword   = $dbPassword;

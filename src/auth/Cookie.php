@@ -7,17 +7,18 @@ namespace App\Auth;
  */
 class Cookie extends Authentication
 {
-    /** Clé de la cookie */
-    const KEY = "XsAdkJbeFgHDkjEklOpQbxZtv";
+    const VISITOR_KEY = "V_AxbjZteKoPflTdjUheXsDtvAjOp";
+    const REGISTERED_KEY = "R_IjnOkpsQuGjnSheOrpSbfZmbgsx";
+    const ADMINISTRATOR_KEY = "A_SasCdHuQuGjceAdeOrpSaSCVuGE";
 
     /**
      * Retourne la variable cookie pour la partie administration.
      * 
      * @return string
      */
-    public static function getAdministratorCookieVar()
+    public static function getAdministrator()
     {
-        return $_COOKIE[self::KEY];
+        return $_COOKIE[self::ADMINISTRATOR_KEY];
     }
 
     /**
@@ -25,10 +26,22 @@ class Cookie extends Authentication
      * 
      * @return string
      */
-    public static function get()
+    public static function getVisitor()
     {
-        if (isset($_COOKIE[self::KEY])) {
-            return $_COOKIE[self::KEY];
+        if (!empty($_COOKIE[self::VISITOR_KEY])) {
+            return $_COOKIE[self::VISITOR_KEY];
+        }
+    }
+
+    /**
+     * Retourne le contenu de la variable cookie de l'utilisateur authentifié.
+     * 
+     * @return string
+     */
+    public static function getRegistered()
+    {
+        if (!empty($_COOKIE[self::REGISTERED_KEY])) {
+            return $_COOKIE[self::REGISTERED_KEY];
         }
     }
 
@@ -37,24 +50,48 @@ class Cookie extends Authentication
      * 
      * @return bool
      */
-    public static function userCookieIsset()
+    public static function visitorSetted()
     {
-        return null !== self::get();
+        return null !== self::getVisitor();
     }
 
     /**
-     * Initialise les variables de cookie.
+     * Vérifie si le cookie de l'utulisateur authentifié existe.
      * 
-     * @param  $cookieKey La clé identifiant le cookie.
-     * @param  $value     La valeur
-     * @param string $domain 
-     * 
-     * @return void
+     * @return bool
      */
-    public static function setCookie($cookieKey, $value, $domain = null)
+    public static function registeredSetted()
+    {
+        return null !== self::getRegistered();
+    }
+
+    /**
+     * Permet de mettre à jour le contenu de la cookie.
+     * 
+     * @param mixed $value
+     */
+    public static function setVisitor($value, $domain = null)
     {
         setcookie(
-            $cookieKey,
+            Cookie::VISITOR_KEY,
+            $value,
+            time()+(30*24*3600),
+            null,
+            $domain,
+            false,
+            true
+        );
+    }
+
+    /**
+     * Permet d'activer les cookie pour l'utilisateur connecté.
+     * 
+     * @param mixed $value
+     */
+    public static function setRegistered($value, $domain = null)
+    {
+        setcookie(
+            Cookie::REGISTERED_KEY,
             $value,
             time()+(30*24*3600),
             null,
@@ -67,9 +104,9 @@ class Cookie extends Authentication
     /**
      * Permet de détruire la session.
      */
-    public static function destroy($cookieKey, $domain = null)
+    public static function destroy()
     {
-        setcookie($cookieKey, '', 0);
+        setcookie(Cookie::REGISTERED_KEY, '', 0);
     }
 
 }

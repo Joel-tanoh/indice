@@ -18,6 +18,7 @@ use App\View\Model\User\UserView;
 use App\View\Model\User\RegisteredView;
 use App\Communication\Notify\NotifyByHTML;
 use App\Model\Model;
+use App\Model\User\Visitor;
 use App\View\Model\User\AdministratorView;
 use App\View\Page\Page;
 use Exception;
@@ -95,10 +96,10 @@ class UserController extends AppController
             // Si aucune erreur
             if ($validate->noErrors()) {
                 if (User::save()) {
-                    Session::activate($_POST["email_address"]);
-                    Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
-                    $registered = User::authenticated();
-                    Utility::redirect($registered->getProfileLink());
+                    (new Visitor(Session::getVisitor()))->identify($_POST["email_address"]);
+                    Session::activateRegistered($_POST["email_address"]);
+                    Cookie::setRegistered($_POST["email_address"]);
+                    Utility::redirect(User::authenticated()->getProfileLink());
                 }
             } else { // Sinon
                 $message = (new NotifyByHTML())->errors($validate->getErrors());
@@ -130,9 +131,10 @@ class UserController extends AppController
             if ($connexion->getError()) {
                 $error = (new NotifyByHTML())->error($connexion->getError(), "alert alert-danger");
             } else {
-                Session::activate($_POST["email_address"]);
+                (new Visitor(Session::getVisitor()))->identify($_POST["email_address"]);
+                Session::activateRegistered($_POST["email_address"]);
                 if (!empty($_POST["remember_me"])) {
-                    Cookie::setCookie(Cookie::KEY, $_POST["email_address"]);
+                    Cookie::setRegistered($_POST["email_address"]);
                 }
                 $registered = new Registered($_POST["email_address"]);
                 Utility::redirect($registered->getProfileLink());
