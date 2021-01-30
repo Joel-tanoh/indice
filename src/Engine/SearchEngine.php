@@ -101,7 +101,7 @@ class SearchEngine extends Action
             $this->query .= " AND price = :price";
         }
 
-        $this->query .= " AND status IN (1, 2)";
+        $this->query .= " AND status IN (2, 3)";
     }
 
     /**

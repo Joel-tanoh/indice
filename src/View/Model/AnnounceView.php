@@ -136,13 +136,11 @@ HTML;
         $content = null;
         $announces = Announce::getLastPosted(6);
 
-        if (empty($content)) {
-            $content = AnnounceView::noAnnounces();
+        if (empty($announces)) {
+            $content = self::noAnnounces();
         } else {
-            foreach ($announces as $item) {
-                $announce = new Announce($item["id"]);
-                $announceView = new AnnounceView($announce);
-                $content .= $announceView->latestAnnouncesSectionCard();
+            foreach ($announces as $announce) {
+                $content .= (new self($announce))->latestAnnouncesSectionCard();
             }
         }
 
@@ -165,33 +163,33 @@ HTML;
      */
     public function premiumSection()
     {
-        $content = null;
-        $announces = Announce::getPremium(6);
+//         $content = null;
+//         $announces = Announce::getPremium(6);
 
-        if (empty($content)) {
-            $content = AnnounceView::noAnnounces();
-        } else {
-            foreach ($announces as $item) {
-                $announce = new Announce($item["id"]);
-                $announceView = new AnnounceView($announce);
-                $content .= $announceView->premiumCard();
-            }
-        }
+//         if (empty($content)) {
+//             $content = AnnounceView::noAnnounces();
+//         } else {
+//             foreach ($announces as $item) {
+//                 $announce = new Announce($item["id"]);
+//                 $announceView = new AnnounceView($announce);
+//                 $content .= $announceView->premiumCard();
+//             }
+//         }
 
-        return <<<HTML
-        <section class="featured-lis section-padding" >
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 wow fadeIn" data-wow-delay="0.5s">
-                        <h3 class="section-title">Les Annonces Premium</h3>
-                        <div id="new-products" class="owl-carousel">
-                            {$content}
-                        </div>
-                    </div> 
-                </div>
-            </div>
-        </section>
-HTML;
+//         return <<<HTML
+//         <section class="featured-lis section-padding" >
+//             <div class="container">
+//                 <div class="row">
+//                     <div class="col-md-12 wow fadeIn" data-wow-delay="0.5s">
+//                         <h3 class="section-title">Les Annonces Premium</h3>
+//                         <div id="new-products" class="owl-carousel">
+//                             {$content}
+//                         </div>
+//                     </div> 
+//                 </div>
+//             </div>
+//         </section>
+// HTML;
     }
 
     /**
@@ -429,7 +427,7 @@ HTML;
         <!-- Ads Details End -->
 
         <!-- Premium Listings Start -->
-        {$this->premiumSection()}
+        <!-- {$this->premiumSection()} -->
         <!-- Premium Listings End -->
 HTML;
     }
@@ -444,7 +442,7 @@ HTML;
         return <<<HTML
         <li>
             <div class="media-left">
-                <img class="img-fluid" src="{$this->announce->getArtInFooterImgSrc()}" alt="Photo de {$this->announce->getSlug()}">
+                <img class="img-fluid" src="{$this->announce->getArtInFooterImgSrc()}" alt="Photo de {$this->announce->getTitle()}">
                 <div class="overlay">
                     <span class="price">{$this->announce->getPrice()}</span>
                 </div>
@@ -498,7 +496,7 @@ HTML;
     }
 
     /**
-     * Permet d'afficher l'image de couverture de l'annonce dans les cartes premium.
+     * Permet d'afficher l'image de couverture de l'annonce dans les cartes.
      * 
      * @return string
      */
@@ -627,7 +625,7 @@ HTML;
                 </div>
                 <ul class="advertisement mb-4">
                     <li>
-                        <p><strong><i class="lni-folder"></i> Catégories :</strong> <a href="{$this->announce->getCategory()->getSlug()}">{$this->announce->getCategory()->getTitle()}</a></p>
+                        <p><strong><i class="lni-folder"></i></strong> <a href="{$this->announce->getCategory()->getSlug()}">{$this->announce->getCategory()->getTitle()}</a></p>
                     </li>
                     <li>
                         <p><a href="/users/{$this->announce->getOwner()->getPseudo()}/posts"><i class="lni-users"></i> Plus d'annonces de <span>{$this->announce->getOwner()->getName()}</span></a></p>
@@ -1001,11 +999,14 @@ HTML;
         } elseif ($this->announce->getStatus() == "Validated") {
             $statusClass = "adstatusactive bg-success";
             $statusText = "Validée";
-        } elseif ($this->announce->getStatus() == "Premium") {
-            // adstatussold
-            $statusClass = "adstatusexpired";
-            $statusText = "Premium";
-        } else {
+        }
+        
+        // elseif ($this->announce->getStatus() == "Premium") {
+        //     $statusClass = "adstatusexpired";
+        //     $statusText = "Premium";
+        // }
+        
+        else {
             $statusClass = "adstatusexpired";
             $statusText = "Bloquée";
         }
@@ -1026,8 +1027,8 @@ HTML;
         return <<<HTML
         <div class="row">
             <div class="col-12">
-                <section>
-                    <p class="h4 text-muted text-center">Aucunes annonces</p>
+                <section class="d-flex justify-content-center">
+                    <p class="h3 text-muted text-center">Aucunes annonces</p>
                 </section>
             </div>
         </div>
@@ -1077,7 +1078,7 @@ HTML;
             <nav class="mb-3">
                 {$this->editButton()}
                 {$this->validateButton()}
-                {$this->setPremiumButton()}
+                <!-- {$this->setPremiumButton()} -->
                 {$this->suspendButton()}
                 {$this->deleteButton()}
             </nav>
@@ -1145,7 +1146,7 @@ HTML;
 HTML;
         }
     }
-  
+
     /**
      * Affiche le bouton pour valider l'annonce.
      * @return string
@@ -1165,11 +1166,11 @@ HTML;
      */
     private function setPremiumButton()
     {
-        if (User::isAuthenticated() && User::authenticated()->isAdministrator()) {
-            return <<<HTML
-            <a href="{$this->announce->getManageLink('set-premium')}" class="btn-sm btn-success">Passer en Prémium</a>
-HTML;
-        }
+//         if (User::isAuthenticated() && User::authenticated()->isAdministrator()) {
+//             return <<<HTML
+//             <a href="{$this->announce->getManageLink('set-premium')}" class="btn-sm btn-success">Passer en Prémium</a>
+// HTML;
+//         }
     }
 
     /**

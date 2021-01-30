@@ -222,8 +222,8 @@ HTML;
     private function appIcon(string $logosDir = Logo::LOGOS_DIR_URL)
     {
         return <<<HTML
-        <link rel="icon" href="{$logosDir}/favicon.png" type="image/x-icon">
-        <link rel="shortcut icon" href="{$logosDir}/favicon.png" type="image/x-icon">
+        <link rel="icon" href="{$logosDir}/favicon.png" type="image/png">
+        <link rel="shortcut icon" href="{$logosDir}/favicon.png" type="image/png">
 HTML;
     }
 

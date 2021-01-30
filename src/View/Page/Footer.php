@@ -39,10 +39,10 @@ class Footer extends Snippet
     public function get() : string
     {
         $logo = Logo::LOGOS_DIR_URL ."/logo-white.png";
+
         return <<<HTML
         <!-- Footer Section Start -->
         <footer>
-            <!-- Footer Area Start -->
             <section class="footer-Content">
                 <div class="container">
                     <div class="row">
@@ -58,6 +58,17 @@ class Footer extends Snippet
                             <div class="widget">
                                 <h3 class="block-title">Dernières posté(e)s</h3>
                                 {$this->lastPostedInFooter("Titre de l'annonce", "28 Fev. 2020", "500")}
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
+                            <div class="widget">
+                                <h3 class="block-title">Liens rapides</h3>
+                                <ul class="menu">
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">Purchase Protection</a></li>
+                                    <li><a href="#">Support</a></li>
+                                    <li><a href="#">Contact us</a></li>
+                                </ul>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
@@ -119,17 +130,14 @@ HTML;
      */
     public function lastPostedInFooter()
     {
-        $announceView = new AnnounceView();
+        $announces = Announce::getLastPosted(2);
         $content = null;
-        $announces = Announce::getPremium(2);
 
-        if (empty($content)) {
+        if (empty($announces)) {
             $content = AnnounceView::noAnnounces();
         } else {
-            foreach ($announces as $item) {
-                $announce = new Announce($item["id"]);
-                $announceView = new AnnounceView($announce);
-                $content .= $announceView->lastPostedCardInFooter();
+            foreach ($announces as $announce) {
+                $content .= (new AnnounceView($announce))->lastPostedCardInFooter();
             }
         }
         

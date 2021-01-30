@@ -184,8 +184,8 @@ HTML;
     private function categories()
     {
         return <<<HTML
-        <div class="widget categories">
-            <h4 class="widget-title">Par catégories</h4>
+        <div class="categories-list-ad">
+            <h4 class="widget-title">Par catégorie</h4>
             {$this->categoriesList()}
         </div>
 HTML;

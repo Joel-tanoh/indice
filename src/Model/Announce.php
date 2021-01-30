@@ -43,7 +43,7 @@ class Announce extends Model
     const IMG_DIR_PATH = Image::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "productinfo" . DIRECTORY_SEPARATOR;
     const IMG_DIR_URL = Image::IMG_DIR_URL . "/productinfo";
     const DEFAULT_THUMBS = Image::IMG_DIR_URL . "/defaul-thumbs" . Image::EXTENSION;
-    private static $statutes = ["pending", "validated", "premium", "blocked"];
+    private static $statutes = ["blocked", "pending", "validated", "premium"];
 
     /**
      * Constructeur de l'objet annonce.
@@ -177,12 +177,11 @@ class Announce extends Model
     public function getStatus(string $lang = null)
     {
         if (in_array($lang, ["fr", "french", "français"])) {
-            $statusInFrench = ["en attente", "validée", "premium", "suspendue"];
+            $statusInFrench = ["suspendue", "en attente", "validée", "premium"];
             return ucfirst($statusInFrench[$this->status]);
         } else {
             return ucfirst(self::$statutes[$this->status]);
         }
-
     }
 
     /**
@@ -269,7 +268,7 @@ class Announce extends Model
      */
     public function getArtInFooterImgSrc()
     {
-        return $this->productInfoImgSrc;
+        return $this->artInFooterImgSrc;
     }
 
     /**
@@ -357,12 +356,21 @@ class Announce extends Model
     }
 
     /**
+     * Permet de vérifier si c'est une annonce suspendue|bloquée.
+     * @return bool
+     */
+    public function isSuspended() : bool
+    {
+        return $this->status === 0;
+    }
+
+    /**
      * Permet de vérifier si c'est une annonce en attente de validation.
      * @return bool
      */
     public function isPending() : bool
     {
-        return $this->status === 0;
+        return $this->status === 1;
     }
 
     /**
@@ -371,7 +379,7 @@ class Announce extends Model
      */
     public function isValidated() : bool
     {
-        return $this->status === 1 || $this->status === 2;
+        return $this->status === 2 || $this->status === 3;
     }
 
     /**
@@ -379,15 +387,6 @@ class Announce extends Model
      * @return bool
      */
     public function isPremium() : bool
-    {
-        return $this->status === 2;
-    }
-
-    /**
-     * Permet de vérifier si c'est une annonce suspendue|bloquée.
-     * @return bool
-     */
-    public function isSuspended() : bool
     {
         return $this->status === 3;
     }
@@ -466,13 +465,13 @@ class Announce extends Model
      */
     public static function getLastPosted(int $nbr = null) : array
     {
-        $query = "SELECT id FROM " . self::TABLE_NAME . " ORDER BY created_at DESC";
+        $query = "SELECT id FROM " . self::TABLE_NAME . " WHERE status IN (2, 3) ORDER BY status DESC, created_at DESC";
 
         if (null !== $nbr) {
-            $query .= " LIMIT 0, 5";
+            $query .= " LIMIT 0, $nbr";
         }
 
-        $req = parent::connectToDb()->prepare($query);
+        $req = parent::connectToDb()->query($query);
         $result = $req->fetchAll();
 
         $announces = [];
@@ -649,37 +648,11 @@ class Announce extends Model
     }
 
     /**
-     * Retourne les annonces validées.
+     * Retourne les annonces suspendue.
      * 
      * @return array
      */
-    public static function getValidated(int $idCategory = null) : array
-    {
-        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 1 OR status = 2 ORDER BY status";
-
-        if ($idCategory) {
-            $query .= " AND id_category = ?";
-            $req = parent::connectToDb()->prepare($query);
-            $req->execute([$idCategory]);    
-        } else {
-            $req = parent::connectToDb()->query($query);
-        }
-
-        $announces = [];
-
-        foreach($req->fetchAll() as $announce) {
-            $announces[] = new self($announce["id"]);
-        }
-
-        return $announces;
-    }
-
-    /**
-     * Retourne les annonces en pending.
-     * 
-     * @return array
-     */
-    public static function getPending() : array
+    public static function getSuspended() : array
     {
         $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 0";
         $req = parent::connectToDb()->query($query);
@@ -696,13 +669,13 @@ class Announce extends Model
     }
 
     /**
-     * Retourne les annonces suspendue.
+     * Retourne les annonces en pending.
      * 
      * @return array
      */
-    public static function getSuspended() : array
+    public static function getPending() : array
     {
-        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 2";
+        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 1";
         $req = parent::connectToDb()->query($query);
 
         $result = $req->fetchAll();
@@ -717,13 +690,50 @@ class Announce extends Model
     }
 
     /**
+     * Retourne les annonces validées.
+     * 
+     * @return array
+     */
+    public static function getValidated(int $idCategory = null) : array
+    {
+        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status IN (2, 3) ORDER BY status";
+
+        if ($idCategory) {
+            $query .= " AND id_category = ?";
+            $req = parent::connectToDb()->prepare($query);
+            $req->execute([$idCategory]);
+        } else {
+            $req = parent::connectToDb()->query($query);
+        }
+
+        $announces = [];
+
+        foreach($req->fetchAll() as $announce) {
+            $announces[] = new self($announce["id"]);
+        }
+
+        return $announces;
+    }
+
+    /**
      * Retourne les annonces premium.
      * 
      * @return array
      */
     public static function getPremium(int $nbr)
     {
-        return self::getMoreViewed($nbr);
+        $query = "SELECT id FROM ". self::TABLE_NAME . " WHERE status = 3";
+        $req = parent::connectToDb()->query($query);
+
+        $result = $req->fetchAll();
+
+        $announces = [];
+
+        foreach($result as $announce) {
+            $announces[] = new self($announce["id"]);
+        }
+
+        return $announces;
     }
 
     /**
@@ -835,6 +845,7 @@ class Announce extends Model
     private function deleteImages()
     {
         $image = new Image();
+        
         // Format premium 600 x 400
         $image->delete($this->premiumImgPath);
 

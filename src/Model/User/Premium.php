@@ -6,7 +6,7 @@ namespace App\Model\User;
 /**
  * Classe de gestion des utilisateurs prémium.
  */
-class Premium extends Registered
+Interface Premiumable
 {
     /** @var array La liste des privilèges des utilisateurs prémiums */
     const PRIVILEGES = [

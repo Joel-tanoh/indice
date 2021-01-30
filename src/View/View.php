@@ -43,7 +43,7 @@ class View
                     <!-- Trending Categories Section End -->
 
                     <!-- Premium Listings Start -->
-                    {$annonceView->premiumSection()}
+                    <!-- {$annonceView->premiumSection()} -->
 
                     <!-- Latest Announcements Section Start -->
                     {$annonceView->latestSection()}
