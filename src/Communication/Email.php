@@ -30,7 +30,7 @@ namespace App\Communication;
 class Email
 {
     /** Le ou les destinataires du mail */
-    private $destinataires;
+    private $to;
 
     /** @var string Le sujet du mail */
     private $subject;
@@ -40,6 +40,9 @@ class Email
 
     /** @var string Le destinateur du mail */
     private $from;
+
+    /** @var string Entête de l'email */
+    private $headers;
 
     /** @var bool Permet de signifier qu'on veut ajouter des fichiers */
     private $joinFile;
@@ -58,9 +61,9 @@ class Email
      * 
      * @return void
      */
-    public function __construct($destinataires, string $subject, string $message, string $from = null, string $separator = "\r\n", bool $joinFile = null)
+    public function __construct($to, string $subject, string $message, string $from = null, string $separator = "\r\n", bool $joinFile = null)
     {
-        $this->destinataires = $destinataires;
+        $this->to = $to;
         $this->subject = $subject;
         $this->message = $message;
         $this->separator = $separator;
@@ -75,14 +78,10 @@ class Email
      */
     public function send()
     {
-        $this->treatTo();
-        if (!empty($this->destinataires)) {
-            $sendMailcounter = 0;
-            foreach ($this->destinataires as $destinataire) {
-                mail($destinataire, $this->subject, $this->message, $this->headers());
-                $sendMailcounter++;
-            }
-            if ($sendMailcounter) return true;
+        if (!empty($this->to)) {
+            $this->treatTo();
+            $this->headers();
+            return mail($this->to, $this->subject, $this->message, $this->headers);
         }
     }
 
@@ -93,23 +92,28 @@ class Email
      */
     private function headers()
     {
-        $headers = "MIME-Version: 1.0" . $this->separator;
-        $headers .= "Content-type:text/html;charset=UTF-8" . $this->separator;
-        $headers .= "From: " . $this->from . $this->separator;
+        $this->headers = "MIME-Version: 1.0" . $this->separator;
+        $this->headers .= "Content-type:text/html;charset=UTF-8" . $this->separator;
+        $this->headers .= "From: " . $this->from . $this->separator;
+
         if ($this->joinFile) {}
-        return $headers;
+
+        return $this->headers;
     }
 
     /**
-     * Permet de traiter les destinataires.
+     * Permet de traiter les destinataires, si $destinataires est un tableau,
+     * les valeurs sont collées en les séparant par ", ".
+     * 
+     * @return string
      */
     private function treatTo()
     {
-        if (is_array($this->destinataires)) {
-            return implode(", ", $this->destinataires);
+        if (is_array($this->to)) {
+            return implode(", ", $this->to);
         }
 
-        return $this->destinataires;
+        return $this->to;
     }
 
 }
