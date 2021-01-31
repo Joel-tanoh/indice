@@ -59,9 +59,7 @@ class Newsletter
      */
     private static function save(string $emailAddress)
     {
-        $req = Model::connectToDb()->pepare(
-            "INSERT INTO " . self::TABLE_NAME . "(email_address) VALUES(:email_address)"
-        );
+        $req = Model::connectToDb()->prepare("INSERT INTO " . self::TABLE_NAME . "(email_address) VALUES(:email_address)");
 
         $req->execute([
             "email_address" => $emailAddress

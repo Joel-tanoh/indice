@@ -116,4 +116,19 @@ HTML;
 HTML;
     }
 
+    /**
+     * Affiche la page de succès.
+     * 
+     * @return string
+     */
+    public function success(string $title, string $content)
+    {
+        $snippet = new Snippet();
+
+        return <<<HTML
+        {$snippet->pageHeader("Félicitation !", "#")}
+        {$snippet->success($title, $content)}
+HTML;
+    }
+
 }

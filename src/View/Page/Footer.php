@@ -19,6 +19,7 @@ use App\View\Model\AnnounceView;
 use App\View\Model\CategoryView;
 use App\View\Snippet;
 use App\File\Image\Logo;
+use App\View\NewsletterView;
 
 /**
  * Gère tout ce qui concerne le pied de page
@@ -39,6 +40,7 @@ class Footer extends Snippet
     public function get() : string
     {
         $logo = Logo::LOGOS_DIR_URL ."/logo-white.png";
+        $newsletterView = new NewsletterView();
 
         return <<<HTML
         <!-- Footer Section Start -->
@@ -73,15 +75,7 @@ class Footer extends Snippet
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                             <div class="widget">
-                                <h3 class="block-title">Inscrivez-vous</h3>
-                                <p class="text-sub">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptate illo ipsa quod.</p>
-                                <form method="post" id="subscribe-form" name="subscribe-form" class="validate">
-                                    <div class="form-group is-empty">
-                                        <input type="email" value="" name="Email" class="form-control" id="EMAIL" placeholder="Adresse" required="">
-                                        <button type="submit" name="subscribe" id="subscribes" class="btn btn-common sub-btn"><i class="lni-check-box"></i></button>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </form>
+                                {$newsletterView->inFooter()}
                                 <ul class="footer-social">
                                     <li><a class="facebook" href="#"><i class="lni-facebook-filled"></i></a></li>
                                     <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>

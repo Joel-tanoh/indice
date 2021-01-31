@@ -26,35 +26,25 @@ namespace App\View;
  */
 class Form extends View
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $method;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $action;
 
-    /**
-     * @var bool
-     */
-    private $uploadFile;
-
-    /**
-     * Id du formulaire afin d'y accéder via Js.
-     * @var string
-     */
+    /** @var string Id du formulaire afin d'y accéder via Js. */
     private $id;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $class;
 
-    /**
-     * Le contenu du formulaire.
-     */
+    /** @var string Attribut role */
+    private $role;
+
+    /** @var string Attribut name du formulaire */
+    private $name;
+
+    /** @var string Le contenu du formulaire. */
     private $content;
 
     /**
@@ -62,24 +52,25 @@ class Form extends View
      * 
      * @param string $action
      * @param string $class
-     * @param bool   $uploadFile
      * @param string $method
+     * @param string $id
+     * @param string $role
+     * @param string $name
      */
     public function __construct(
         string $action,
         string $class = null, 
-        bool $uploadFile = true, 
         string $method = "post", 
         string $id="myForm",
-        string $role = null
-    )
-    {
+        string $role = null,
+        string $name = null
+    ) {
         $this->method = $method;
         $this->action = $action;
-        $this->uploadFile = $uploadFile;
         $this->id = $id;
         $this->class = $class;
         $this->role = $role;
+        $this->name = $name;
     }
 
     /**
@@ -525,7 +516,7 @@ HTML;
     public function open()
     {
         return <<<HTML
-        <form id="{$this->id}" method="{$this->method}" enctype="multipart/form-data" action="{$this->action}" class="{$this->class}" role="{$this->role}">
+        <form id="{$this->id}" method="{$this->method}" enctype="multipart/form-data" action="{$this->action}" class="{$this->class}" role="{$this->role}" name="{$this->name}">
 HTML;
     }
 

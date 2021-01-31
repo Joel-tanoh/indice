@@ -25,7 +25,6 @@ try {
 
     // Route en get sans paramètre
     $router->get("/", "App\Controller\AppController@index");
-    $router->get("/test", "App\Controller\NewsletterController@test");
     $router->get("/register", "App\Controller\UserController@register");
     $router->get("/sign-in", "App\Controller\UserController@signIn");
     $router->get("/sign-out", "App\Controller\UserController@signOut");
@@ -33,6 +32,8 @@ try {
     $router->get("/users", "App\Controller\UserController@users");
     $router->get("/in-progress", "App\Controller\AppController@page404");
     $router->get("/announces", "App\Controller\AnnounceController@announces");
+
+    // Route en get avec paramètre
     $router->get("/:category", "App\Controller\CategoryController@read");
     $router->get("/:1/:2", "App\Controller\AppController@router");
     $router->get("/:1/:2/:3", "App\Controller\AppController@router");
@@ -43,6 +44,7 @@ try {
     $router->post("/post", "App\Controller\AnnounceController@create");
     $router->post("/sign-in", "App\Controller\UserController@signIn");
     $router->post("/announces/search", "App\Controller\SearchController@searchAnnonce");
+    $router->post("/newsletters/register", "App\Controller\NewsletterController@register");
     $router->post("/:1/:2", "App\Controller\SearchController@router");
     $router->post("/:1/:2/:3", "App\Controller\AppController@router");
 

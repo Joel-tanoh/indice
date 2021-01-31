@@ -114,6 +114,7 @@ HTML;
     public function pageHeader(string $title, string $current) : string
     {
         $home = APP_URL;
+
         return <<<HTML
         <!-- Page Header Start -->
         <div class="page-header" style="background: url(assets/img/banner1.jpg);">
@@ -123,7 +124,7 @@ HTML;
                         <div class="breadcrumb-wrapper">
                             <h2 class="product-title">{$title}</h2>
                             <ol class="breadcrumb">
-                                <li><a href="$home">Accueil / </a></li>
+                                <li><a href="$home">Accueil </a>/</li>
                                 <li class="current">{$current}</li>
                             </ol>
                         </div>
@@ -366,6 +367,38 @@ HTML;
         return <<<HTML
         <iframe src="https://www.youtube.com/embed/{$youtubeVideoLink}" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen class="w-100 video" style="height:25rem"></iframe>
+HTML;
+    }
+
+    /**
+     * Retourne un code HTML pour dire que tout s'est bien passé.
+     * 
+     * @param string $title   Cette partie s'affichera en grand.
+     * @param string $content Le texte à afficher.
+     * 
+     * @return string 
+     */
+    public function success(string $title, string $content)
+    {
+        $home = APP_URL;
+
+        return <<<HTML
+        <!-- Content section Start --> 
+        <section id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="inner-box posting">
+                            <div class="alert alert-success alert-lg" role="alert">
+                                <h2 class="postin-title">✔ {$title}</h2>
+                                <p>{$content}</p>
+                                <p>Retour vers l'<a href="$home">accueil</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 HTML;
     }
 
