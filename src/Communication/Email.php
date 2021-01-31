@@ -44,22 +44,26 @@ class Email
     /** @var bool Permet de signifier qu'on veut ajouter des fichiers */
     private $joinFile;
 
+    /** @var string Le séparateur */
+    private $separator;
+
     /**
      * Constructeur de EmailManager
      * 
-     * @param  $destinataire Ceux à qui on envoit le mail.
-     * @param  $subject      Le sujet du mail.
-     * @param string $message      Le message à envoyer.
-     * @param string $from         L'email d'envoie qui apparaitra dans le mail.
-     * @param bool   $joinFile  True si le mail contient des fichiers joints.
+     * @param string|array $destinataire Ceux à qui on envoit le mail.
+     * @param string       $subject      Le sujet du mail.
+     * @param string       $message      Le message à envoyer.
+     * @param string       $from         L'email d'envoie qui apparaitra dans le mail.
+     * @param bool         $joinFile     True si le mail contient des fichiers joints.
      * 
      * @return void
      */
-    public function __construct($destinataires, string $subject, string $message, string $from = null, bool $joinFile = null)
+    public function __construct($destinataires, string $subject, string $message, string $from = null, string $separator = "\r\n", bool $joinFile = null)
     {
         $this->destinataires = $destinataires;
         $this->subject = $subject;
         $this->message = $message;
+        $this->separator = $separator;
         $this->from = $from;
         $this->joinFile = $joinFile;
     }
@@ -71,6 +75,7 @@ class Email
      */
     public function send()
     {
+        $this->treatTo();
         if (!empty($this->destinataires)) {
             $sendMailcounter = 0;
             foreach ($this->destinataires as $destinataire) {
@@ -88,12 +93,23 @@ class Email
      */
     private function headers()
     {
-        $separator = "\r\n";
-        $headers = "MIME-Version: 1.0" . $separator;
-        $headers .= "Content-type:text/html;charset=UTF-8" . $separator;
-        $headers .= "From: " . $this->from . $separator;
+        $headers = "MIME-Version: 1.0" . $this->separator;
+        $headers .= "Content-type:text/html;charset=UTF-8" . $this->separator;
+        $headers .= "From: " . $this->from . $this->separator;
         if ($this->joinFile) {}
         return $headers;
+    }
+
+    /**
+     * Permet de traiter les destinataires.
+     */
+    private function treatTo()
+    {
+        if (is_array($this->destinataires)) {
+            return implode(", ", $this->destinataires);
+        }
+
+        return $this->destinataires;
     }
 
 }
