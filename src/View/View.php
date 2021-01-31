@@ -5,6 +5,7 @@ namespace App\View;
 use App\View\Model\AnnounceView;
 use App\View\Model\CategoryView;
 use App\View\Model\User\UserView;
+use Faker\Guesser\Name;
 
 /**
  * Classe View. Regroupe toutes les vues de l'application.
@@ -20,7 +21,7 @@ class View
     {
         $categoryView = new CategoryView();
         $annonceView = new AnnounceView();
-        $userView = new UserView();
+        $newsletterView = new NewsletterView();
         $snippet = new Snippet();
         $advertising = new AdvertisingView();
 
@@ -49,7 +50,7 @@ class View
                     {$annonceView->latestSection()}
                     
                     <!-- Subscribe Section Start -->
-                    {$userView->suscribeNewsletterSection()}
+                    {$newsletterView->suscribeNewsletterSection()}
                 </aside>
                 <aside class="d-none d-lg-block col-lg-2">
                     {$advertising->right()}

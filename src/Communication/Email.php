@@ -15,6 +15,8 @@
 
 namespace App\Communication;
 
+use Exception;
+
 /**
  * Gère les envois d'email.
  * 
@@ -30,7 +32,7 @@ namespace App\Communication;
 class Email
 {
     /** Le ou les destinataires du mail */
-    private $to;
+    private $to = [];
 
     /** @var string Le sujet du mail */
     private $subject;
@@ -69,6 +71,18 @@ class Email
         $this->separator = $separator;
         $this->from = $from;
         $this->joinFile = $joinFile;
+        $this->treatTo();
+        $this->headers();
+    }
+
+    /**
+     * Retourne les adresses email des destinataires.
+     * 
+     * @return string[]
+     */
+    public function getTo()
+    {
+        return $this->treatTo();
     }
 
     /**
@@ -79,9 +93,7 @@ class Email
     public function send()
     {
         if (!empty($this->to)) {
-            $this->treatTo();
-            $this->headers();
-            return mail($this->to, $this->subject, $this->message, $this->headers);
+            return mail($this->treatTo(), $this->subject, $this->message, $this->headers);
         }
     }
 
@@ -94,7 +106,10 @@ class Email
     {
         $this->headers = "MIME-Version: 1.0" . $this->separator;
         $this->headers .= "Content-type:text/html;charset=UTF-8" . $this->separator;
-        $this->headers .= "From: " . $this->from . $this->separator;
+
+        if ($this->from !== null) {
+            $this->headers .= "From: " . $this->from . $this->separator;
+        }
 
         if ($this->joinFile) {}
 
@@ -105,15 +120,17 @@ class Email
      * Permet de traiter les destinataires, si $destinataires est un tableau,
      * les valeurs sont collées en les séparant par ", ".
      * 
-     * @return string
+     * @return string[]
      */
     private function treatTo()
     {
-        if (is_array($this->to)) {
+        if (is_string($this->to)) {
+            return $this->to;
+        }elseif (is_array($this->to)) {
             return implode(", ", $this->to);
+        } elseif (is_int($this->to)) {
+            throw new Exception("Une erreur s'est produite lors de l'envoi de mail.");
         }
-
-        return $this->to;
     }
 
 }

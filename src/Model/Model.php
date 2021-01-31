@@ -287,5 +287,22 @@ abstract class Model
     {
         return new $class($valueForInstantiate);
     }
+    
+    /**
+     * Retourne toutes les valeurs d'une colonne dans une table.
+     * 
+     * @return array
+     */
+    public static function all(string $col, string $tableName)
+    {
+        $req = self::connectToDb()->query("SELECT $col FROM $tableName");
+        
+        $data = [];
+        foreach ($req->fetchAll() as $value) {
+            $data[] = $value[$col];
+        }
+
+        return $data;
+    }
 
 }
