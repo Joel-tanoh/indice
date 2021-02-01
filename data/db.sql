@@ -107,7 +107,7 @@ CREATE TABLE `ind_announces` (
 
 LOCK TABLES `ind_announces` WRITE;
 /*!40000 ALTER TABLE `ind_announces` DISABLE KEYS */;
-INSERT INTO `ind_announces` VALUES (20,'mon super ordinateur','&lt;p&gt;Mon super ordinateur&lt;/p&gt;','mon-super-ordinateur-20',5,NULL,'250000','tanohbassapatrick@gmail.com',NULL,NULL,'Bouake','offre','particulier',2,'2021-01-15 20:22:40',NULL,NULL,0,NULL),(21,'Salle de répétition','&lt;p&gt;Pour toutes vos répétitions, contactez nous !&lt;/p&gt;','salle-de-repetition-21',4,NULL,'10000','joel.developpeur@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',1,'2021-01-16 00:05:02',NULL,NULL,0,NULL),(16,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;','vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16',5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',2,'2021-01-09 10:27:19',NULL,NULL,0,NULL),(18,'test','Une offre d\'emploi extraordinaire.&lt;br&gt;','test-18',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',2,'2021-01-10 18:54:44',NULL,NULL,0,NULL),(19,'Rédacteur à Jesus Bénit TV','&lt;p&gt;Bon job à JésusBénit tv&lt;br&gt;&lt;/p&gt;','redacteur-a-jesus-benit-tv-19',6,NULL,'price_on_call','tanohbassapatrick@gmail.com','tanohbassapatrick@gmail.com','+225 45996095','Yamoussoukro','offre','professionnel',1,'2021-01-10 19:33:09',NULL,NULL,0,NULL),(22,'Une belle femme','&lt;p&gt;Une belle femme !&lt;br&gt;&lt;/p&gt;','une-belle-femme-22',7,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Gagnoa','offre','particulier',1,'2021-01-16 13:29:26',NULL,NULL,0,NULL);
+INSERT INTO `ind_announces` VALUES (20,'mon super ordinateur','&lt;p&gt;Mon super ordinateur&lt;/p&gt;','mon-super-ordinateur-20',5,NULL,'250000','tanohbassapatrick@gmail.com',NULL,NULL,'Bouake','offre','particulier',2,'2021-01-15 20:22:40',NULL,NULL,0,NULL),(16,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;','vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16',5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',2,'2021-01-09 10:27:19',NULL,NULL,0,NULL),(18,'test','Une offre d\'emploi extraordinaire.&lt;br&gt;','test-18',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',2,'2021-01-10 18:54:44',NULL,NULL,0,NULL),(19,'Rédacteur à Jesus Bénit TV','&lt;p&gt;Bon job à JésusBénit tv&lt;br&gt;&lt;/p&gt;','redacteur-a-jesus-benit-tv-19',6,NULL,'price_on_call','tanohbassapatrick@gmail.com','tanohbassapatrick@gmail.com','+225 45996095','Yamoussoukro','offre','professionnel',1,'2021-01-10 19:33:09',NULL,NULL,0,NULL),(22,'Une belle femme','&lt;p&gt;Une belle femme !&lt;br&gt;&lt;/p&gt;','une-belle-femme-22',7,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Gagnoa','offre','particulier',1,'2021-01-16 13:29:26',NULL,NULL,0,NULL);
 /*!40000 ALTER TABLE `ind_announces` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,39 +175,28 @@ INSERT INTO `ind_sub_categories` VALUES (1,'Jeu de football','jeu-de-football',1
 UNLOCK TABLES;
 
 --
--- Table structure for table `ind_users`
+-- Table structure for table `newsletters`
 --
 
-DROP TABLE IF EXISTS `ind_users`;
+DROP TABLE IF EXISTS `newsletters`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ind_users` (
+CREATE TABLE `newsletters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) NOT NULL,
-  `email_address` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `first_names` varchar(255) NOT NULL,
-  `pseudo` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `phone_number` varchar(255) NOT NULL,
-  `registered_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  `type` int(11) DEFAULT '0',
-  `status` int(11) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uni_pseudo` (`pseudo`),
-  UNIQUE KEY `un_email` (`email_address`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+  `email_address` varchar(255) COLLATE utf8_bin NOT NULL,
+  `suscribed_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ind_users`
+-- Dumping data for table `newsletters`
 --
 
-LOCK TABLES `ind_users` WRITE;
-/*!40000 ALTER TABLE `ind_users` DISABLE KEYS */;
-INSERT INTO `ind_users` VALUES (1,'IdUqwvLaEK4','tanohbassapatrick@gmail.com','TANOH','Joel','jojo1509','$2y$10$kRrZ5L6LsT1T3LI3iaU./eHQgdYAH53zcDJy64DNY1DGsaEv97JDq','+225 45996095','2021-01-01 23:03:25',NULL,1,0),(2,'YiETEdLCO28','joel.developpeur@gmail.com','Bassa','Patrick joel','basspat','$2y$10$RBWXcEFnYNlgKO2aXKgQu.0gttR046POmkkNkerNkmbS6fX4kiPXy','45996095','2021-01-01 23:13:57',NULL,0,0),(3,'3TSTjAY8','abc@abc.abc','Bassa','Patrick joel','patco255','$2y$10$9JkdUgfZfQQRuAQkjuYdFuDouffCraJG/qWxesBaTrmleXIaRDZmC','45996095','2021-01-01 23:24:05',NULL,0,0),(4,'9ZIE0t','lohuxyansteeven@outlook.com','Lohoux','Yan Steeven','Curtis13','$2y$10$tpjPd5UgyX60Z2M0asNro.6KXBKOUuIQcQPTgWplrgmU5TRT2.dIy','+22508260930','2021-01-04 20:20:20',NULL,0,0),(5,'znXhrQ','toto@gmail.com','Bassa','Joel','basjo1509','$2y$10$zt2uouSsHwpYu.Gyq4eN5uttB5tRN3cmjZnGLHp2rqFOaevwJTcBS','45996095','2021-01-07 19:04:03',NULL,0,0);
-/*!40000 ALTER TABLE `ind_users` ENABLE KEYS */;
+LOCK TABLES `newsletters` WRITE;
+/*!40000 ALTER TABLE `newsletters` DISABLE KEYS */;
+INSERT INTO `newsletters` VALUES (2,'tanohbassapatrick@gmail.com','2021-01-31 22:37:09'),(3,'joel.developpeur@gmail.com','2021-01-31 23:13:21');
+/*!40000 ALTER TABLE `newsletters` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -238,6 +227,42 @@ INSERT INTO `towns` VALUES (1,'Abidjan',1,'abidjan'),(2,'Bouaké',1,'bouake'),(3
 UNLOCK TABLES;
 
 --
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) NOT NULL,
+  `email_address` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `first_names` varchar(255) NOT NULL,
+  `pseudo` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `phone_number` varchar(255) NOT NULL,
+  `registered_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
+  `type` int(11) DEFAULT '0',
+  `status` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uni_pseudo` (`pseudo`),
+  UNIQUE KEY `un_email` (`email_address`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'IdUqwvLaEK4','tanohbassapatrick@gmail.com','TANOH','Joel','jojo1509','$2y$10$kRrZ5L6LsT1T3LI3iaU./eHQgdYAH53zcDJy64DNY1DGsaEv97JDq','+225 45996095','2021-01-01 23:03:25',NULL,1,0),(8,'fbPP60','joel.developpeur@gmail.com','Bassa','Patrick','dieudesannounces','$2y$10$rEabaRX.C1iVB2DKMU9e3OIFoBYS/l7oFPbWK61ZK6HQteHuTiZE6','0749324696','2021-02-01 19:07:15',NULL,0,0);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `visitors`
 --
 
@@ -250,7 +275,7 @@ CREATE TABLE `visitors` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_action_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -259,7 +284,7 @@ CREATE TABLE `visitors` (
 
 LOCK TABLES `visitors` WRITE;
 /*!40000 ALTER TABLE `visitors` DISABLE KEYS */;
-INSERT INTO `visitors` VALUES (11,'tanohbassapatrick@gmail.com','2021-01-30 22:15:57','2021-01-30 22:16:48'),(12,'4ETIYcbq','2021-01-30 22:17:38','2021-01-30 22:44:26');
+INSERT INTO `visitors` VALUES (11,'tanohbassapatrick@gmail.com','2021-01-30 22:15:57','2021-01-30 22:16:48'),(12,'4ETIYcbq','2021-01-30 22:17:38','2021-01-30 22:44:26'),(13,'tLfReJDDqw','2021-01-31 10:34:23','2021-02-01 01:02:34'),(14,'joel.developpeur@gmail.com','2021-02-01 07:13:57','2021-02-01 07:17:50'),(15,'tanohbassapatrick@gmail.com','2021-02-01 18:59:04','2021-02-01 19:02:15');
 /*!40000 ALTER TABLE `visitors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -272,4 +297,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-30 23:00:24
+-- Dump completed on 2021-02-01 19:34:21
