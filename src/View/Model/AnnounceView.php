@@ -7,6 +7,7 @@ use App\View\Snippet;
 use App\View\View;
 use App\View\Form;
 use App\Model\User\User;
+use App\View\AdvertisingView;
 use App\View\Model\User\UserView;
 use App\View\Model\User\RegisteredView;
 use App\View\Communication\CommentView;
@@ -29,6 +30,46 @@ class AnnounceView extends View
     }
 
     /**
+     * Affiche toutes les announces.
+     * 
+     * @param array $announces
+     * @return string
+     */
+    public function announces(array $announces)
+    {
+        $snippet = new Snippet;
+        $advertising = new AdvertisingView;
+        $categoryView = new CategoryView();
+
+        return <<<HTML
+        <!-- Hero Area -->
+        {$snippet->pageHeader("Toutes les Annonces", "Annonces")}
+        <!-- Main container Start -->
+        <div class="main-container pb-3">
+            <div class="container-fluid">
+                {$advertising->top()}
+                <div class="row">
+                    <aside class="d-none d-lg-block col-lg-2">
+                        {$advertising->left()}
+                    </aside>
+                    <aside class="col-12 col-lg-8">
+                        <section class="row">
+                            <!-- Sidebar -->
+                            {$categoryView->sidebar()}
+                            <!-- Content -->
+                            {$this->list($announces)}
+                        </section>
+                    </aside>
+                    <aside class="d-none d-lg-block col-lg-2">
+                        {$advertising->right()}
+                    </aside>
+                </div>
+            </div>
+        </div> 
+HTML;
+    }
+
+    /**
      * Vue de la création d'une annonce.
      * 
      * @param string $message Le message retourné en fonction de l'issue de 
@@ -42,11 +83,8 @@ class AnnounceView extends View
         $snippet = new Snippet();
 
         return <<<HTML
-        <!-- Enête de la page -->
         {$snippet->pageHeader("Poster mon Annonce", "Poster mon annonce")}
-        <!-- Message affiché en fonction de l'issue de l'action -->
         {$message}
-        <!-- Start Content -->
         <div id="content" class="section-padding">
             <div class="container">
                 <div class="row">
@@ -58,24 +96,20 @@ class AnnounceView extends View
                 </div>
             </div>      
         </div>
-        <!-- End Content -->
 HTML;
     }
 
     /**
      * Permet  d'afficher la vue des détails de l'annonce.
-     * 
-     * @param string  $message Un message à afficher si besoin.
      * @return string Le code HTML de la vue.
      */
-    public function read(string $message = null)
+    public function read()
     {
         $snippet = new Snippet();
 
         return <<<HTML
         <!-- Header de la page -->
-        {$snippet->pageHeader("Détails", "Détails")}
-        {$message}
+        {$snippet->pageHeader($this->announce->getTitle(), $this->announce->getTitle())}
         <!-- Contenu de la page -->
         {$this->details()}
 HTML;
@@ -105,20 +139,6 @@ HTML;
                 </div>
             </div>
         </div>
-HTML;
-    }
-
-    /**
-     * La vue qui permet d'afficher les résultats des recherches
-     * d'annonces.
-     * 
-     * @param array $announces Les annouces à afficher.
-     * @return string
-     */
-    public static function searchingResult(array $announces)
-    {
-        return <<<HTML
-        
 HTML;
     }
 
@@ -163,11 +183,11 @@ HTML;
 //         $announces = Announce::getPremium(6);
 
 //         if (empty($content)) {
-//             $content = AnnounceView::noAnnounces();
+//             $content = self::noAnnounces();
 //         } else {
 //             foreach ($announces as $item) {
 //                 $announce = new Announce($item["id"]);
-//                 $announceView = new AnnounceView($announce);
+//                 $announceView = new self($announce);
 //                 $content .= $announceView->premiumCard();
 //             }
 //         }
@@ -197,11 +217,9 @@ HTML;
      */
     public function list(array $announces)
     {
-        $announceView = new AnnounceView();
-
         return <<<HTML
         <div class="col-lg-9 col-md-12 col-xs-12 page-content">
-            {$announceView->announcesSection($announces)}
+            {$this->announcesSection($announces)}
         </div>
 HTML;
     }
@@ -417,14 +435,8 @@ HTML;
             <div class="container">
                 <!-- Product Info Start -->
                 {$this->detailsInfos()}
-                <!-- Product Info End -->
             </div>
         </div>
-        <!-- Ads Details End -->
-
-        <!-- Premium Listings Start -->
-        <!-- {$this->premiumSection()} -->
-        <!-- Premium Listings End -->
 HTML;
     }
 
@@ -481,10 +493,9 @@ HTML;
     private function detailsInfos()
     {
         return <<<HTML
-        <div class="product-info row">
+        <div class="product-info row pb-4">
             <!-- Images Section -->
             {$this->productInfosImgSection()}
-
             <!-- Title and others informations section -->
             {$this->detailsBox()}
         </div>

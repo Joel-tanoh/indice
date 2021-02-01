@@ -124,7 +124,7 @@ HTML;
                         <div class="breadcrumb-wrapper">
                             <h2 class="product-title">{$title}</h2>
                             <ol class="breadcrumb">
-                                <li><a href="$home">Accueil </a>/</li>
+                                <li><a href="$home">Accueil /</a></li>
                                 <li class="current">{$current}</li>
                             </ol>
                         </div>

@@ -21,6 +21,16 @@ use Exception;
 class AnnounceController extends AppController
 {
     /**
+     * Affiche toutes les announces.
+     */
+    public static function announces()
+    {
+        $page = new Page("L'indice | Toutes les announces", (new AnnounceView())->announces(Announce::getAll(null, "validated")));
+        $page->setDescription("Toutes les announces, Vente, Offre et demande, Toutes vos recherches, vos besoins.");
+        $page->show();
+    }
+
+    /**
      * Controlleur de création d'une nouvelle annonce.
      */
     public static function create()

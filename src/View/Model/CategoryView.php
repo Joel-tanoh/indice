@@ -49,9 +49,9 @@ HTML;
 
         return <<<HTML
         <!-- Hero Area -->
-        {$snippet->heroArea2(false)} 
+        {$snippet->pageHeader($this->category->getTitle(), $this->category->getTitle())} 
         <!-- Main container Start -->
-        <div class="main-container section-padding">
+        <div class="main-container pb-3">
             <div class="container-fluid">
                 <!-- La barre de publicité en haut -->
                 {$advertising->top()}
