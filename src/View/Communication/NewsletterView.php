@@ -1,8 +1,11 @@
 <?php
 
-namespace App\View;
+namespace App\View\Communication;
 
-class NewsletterView extends View
+use App\View\Form;
+use App\View\Snippet;
+
+class NewsletterView extends Snippet
 {
     /**
      * La section qui permet au visiteur de s'abonner à la newsletter.
@@ -12,6 +15,7 @@ class NewsletterView extends View
     public function suscribeNewsletterSection()
     {
         $form = new Form("newsletters/register");
+
         return <<<HTML
         <section class="subscribes section-padding">
             <div class="container">
@@ -60,15 +64,15 @@ HTML;
      * 
      * @return string
      */
-    public static function welcomeMessage()
+    public function welcomeMessage()
     {
-        $appUrl = APP_URL;
-
         return <<<HTML
         <div style="text-align:center; width:100%">
-            <h2>Bienvenue sur L'indice.com</h2>
-            <p>Nous sommes ravis de vous compter parmi nos abonnés <br>Nous vous tiendrons informé régulièrement des nouveautés.</p>
-            Vers <a href="{$appUrl}">Indice.com</a>
+            {$this->appEmailHeader()}
+            <section>
+                <p>Nous sommes ravis de vous compter parmi nos abonnés <br>Nous vous tiendrons informé régulièrement des nouveautés.</p>
+            </section>
+            {$this->appEmailFooter()}
         </div>
 HTML;
     }

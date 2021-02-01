@@ -6,7 +6,7 @@ use App\Communication\Email;
 use App\Communication\Newsletter;
 use App\Utility\Utility;
 use App\Utility\Validator;
-use App\View\NewsletterView;
+use App\View\Communication\NewsletterView;
 use App\View\Page\Page;
 use App\View\View;
 

@@ -77,7 +77,7 @@ HTML;
      */
     public function heroAreaSearchBar()
     {
-        $form = new Form("/announces/search", "search-form", false, "post", "myform", "search");
+        $form = new Form("/announces/search", "search-form", "post", "heroSearchForm", "search");
 
         return <<<HTML
         <div class="search-bar">

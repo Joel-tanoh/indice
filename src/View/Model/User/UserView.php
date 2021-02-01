@@ -23,7 +23,7 @@ class UserView extends ModelView
     public static function register(string $message = null)
     {
         $snippet = new Snippet();
-        $form = new Form($_SERVER["REQUEST_URI"], "login-form", true);
+        $form = new Form($_SERVER["REQUEST_URI"], "login-form");
         $name = $_POST["name"] ?? null;
         $firstNames = $_POST["first_names"] ?? null;
         $pseudo = $_POST["pseudo"] ?? null;
@@ -121,7 +121,7 @@ HTML;
      */
     public function signIn(string $error = null)
     {
-        $form = new Form($_SERVER["REQUEST_URI"], "login-form", false, "post", "login-form", "form");
+        $form = new Form($_SERVER["REQUEST_URI"], "login-form", "post", "login-form", "form");
         $snippet = new Snippet();
 
         return <<<HTML
@@ -148,13 +148,16 @@ HTML;
                                         <i class="lni-lock"></i>
                                         <input type="password" class="form-control" placeholder="Entrer Votre Mot de Passe" name="password">
                                     </div>
-                                </div>                  
-                                <div class="form-group mb-3">
+                                </div>
+                                <p class="form-group">
+                                    Pas de compte ? <a href="register">Créer votre compte.</a>
+                                </p>                
+                                <div class="form-group">
                                     <div class="checkbox">
                                         <input type="checkbox" name="remember_me" value="yes" id="remember_me">
-                                        <label for="remember_me">Me reconnaître à la prochaine connexion</label>
+                                        <label for="remember_me">Se rappeler de moi.</label>
                                     </div>
-                                    <!-- {$this->forgotPassword()} -->
+                                    {$this->forgotPassword()}
                                 </div>
                                 <div class="text-center">
                                     <button class="btn btn-common log-btn">Se connecter</button>

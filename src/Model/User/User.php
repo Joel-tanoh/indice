@@ -17,7 +17,7 @@ abstract class User extends Model
 {
     protected $code;
     protected $emailAddress;
-    const TABLE_NAME = "ind_users";
+    const TABLE_NAME = "users";
 
     /**
      * Retourne le code identifiant d'un user.

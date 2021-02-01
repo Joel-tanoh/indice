@@ -402,4 +402,53 @@ HTML;
 HTML;
     }
 
+    /**
+     * Dans l'email qu'on envoit aux users, cette partie représente
+     * l'entente non variable du mail avec le logo, et d' autres infos.
+     * 
+     * @return string
+     */
+    public function appEmailHeader()
+    {
+        return <<<HTML
+        <section> 
+            <h2>Bienvenue sur L'indice.com</h2>
+        </section>
+HTML;
+    }
+    
+    /**
+     * Dans l'email qu'on envoit aux users, cette partie représente
+     * le pied non variable du mail avec certaines infos.
+     * 
+     * @return string
+     */
+    public function appEmailFooter()
+    {
+        $appUrl = APP_URL;
+
+        return <<<HTML
+        <section>
+            Vers <a href="{$appUrl}">Indice.com</a>
+        </section>
+HTML;
+    }
+
+    /**
+     * Retourne les icônes des réseaux sociaux dans le pied de page.
+     * 
+     * @return string
+     */
+    public function socialNetworksInfooter()
+    {
+        return <<<HTML
+        <ul class="footer-social">
+            <li><a class="facebook" href="#"><i class="lni-facebook-filled"></i></a></li>
+            <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>
+            <li><a class="linkedin" href="#"><i class="lni-linkedin-fill"></i></a></li>
+            <li><a class="google-plus" href="#"><i class="lni-google-plus"></i></a></li>
+        </ul>
+HTML;
+    }
+
 }

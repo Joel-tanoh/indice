@@ -160,6 +160,20 @@ abstract class Model
     }
 
     /**
+     * Permet de vérifier qu'une valeur est déjà utilisée.
+     * 
+     * @param string $valueIndex Index(nom de la colonne dans la table dans la base de
+     *                           données).
+     * @param $value
+     * 
+     * @return bool
+     */
+    public static function valueIssetInDB(string $valueIndex, $value, string $tableName)
+    {
+        return in_array($value, self::get($valueIndex, $tableName));
+    }
+
+    /**
      * Retourne tous les valeurs d'une colonne dans la base de données.
      * 
      * @param string $colToSelect La colonne à récupérer.
@@ -188,20 +202,6 @@ abstract class Model
         }
 
         return $values;
-    }
-
-    /**
-     * Permet de vérifier qu'une valeur est déjà utilisée.
-     * 
-     * @param string $valueIndex Index(nom de la colonne dans la table dans la base de
-     *                           données).
-     * @param $value
-     * 
-     * @return bool
-     */
-    public static function valueIssetInDB(string $valueIndex, $value, string $tableName)
-    {
-        return in_array($value, self::get($valueIndex, $tableName));
     }
 
     /**

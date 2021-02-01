@@ -11,6 +11,8 @@ use App\File\Image\Image;
 use App\Model\User\User;
 use App\Model\User\Registered;
 use App\Auth\Session;
+use App\Communication\Email;
+use App\Communication\Newsletter;
 use App\Model\Announce;
 use App\Utility\Utility;
 use App\Utility\Validator;
@@ -99,6 +101,15 @@ class UserController extends AppController
                     (new Visitor(Session::getVisitor()))->identify($_POST["email_address"]);
                     Session::activateRegistered($_POST["email_address"]);
                     Cookie::setRegistered($_POST["email_address"]);
+
+                    Newsletter::register($_POST["email_address"]);
+                    $email = new Email(
+                        $_POST["email_address"],
+                        "Bienvenue sur L'indice.com",
+                        (new RegisteredView(User::authenticated()))->welcomeMessage()
+                    );
+                    $email->send();
+
                     Utility::redirect(User::authenticated()->getProfileLink());
                 }
             } else { // Sinon
