@@ -5045,7 +5045,7 @@ footer .menu li a:hover {
 }
 
 .gray {
-  color: #c0c0c0
+  color: #9b9b9b
 }
 
 .blue {
@@ -5054,4 +5054,23 @@ footer .menu li a:hover {
 
 .pink {
   color: #e72fb9
+}
+
+.app-alert-danger,
+.app-alert-info,
+.app-alert-success {
+	background-color: white;
+	padding: .8rem;
+	box-shadow: .1rem .1rem .15rem rgba(202, 202, 202, .5);
+  border-left: 4px solid;
+  border-radius: 0.5rem;
+}
+.app-alert-danger {
+	border-left-color: rgb(219, 51, 21);
+}
+.app-alert-info {
+	border-left-color: rgba(11, 162, 233, 0.678);
+}
+.app-alert-success {
+	border-left-color: rgba(8, 241, 105, 0.678);
 }

@@ -67,12 +67,26 @@ HTML;
      */
     public function toast(string $message, string $type): string
     {
+        if ($type === "success") {
+            $icon = "check-circle";
+        } elseif ($type === "warning") {
+            $icon = "exclamation-triangle";
+        } elseif ($type === "danger") {
+            $icon = "exclamation-circle";
+        }
+
         return <<<HTML
-        <div id="toast" class="alert alert-{$type} alert-dismissible fade show" style="position: fixed; top: 1rem; right: 1rem; min-width:13rem; max-width:30rem; z-index:999999;">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <div id="toast" class="app-alert-{$type}" style="position: fixed; top: 1rem; right: 1rem; min-width:13rem; max-width:30rem; z-index:999999;">
+            <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="text-{$type}">{$message}</div>
+                alert-dismissible fade show
+            </button> -->
+            <div class="d-flex align-items-center">
+                <div class="text-{$type} mr-3">
+                    <i class="fas fa-$icon fa-2x"></i>
+                </div>
+                <div class="text-{$type}">{$message}</div>
+            </div>
         </div>
 HTML;
     }
