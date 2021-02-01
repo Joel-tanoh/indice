@@ -98,7 +98,7 @@ CREATE TABLE `ind_announces` (
   PRIMARY KEY (`id`),
   KEY `fk_id_category` (`id_category`),
   KEY `fk_id_sub_category` (`id_sub_category`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +107,7 @@ CREATE TABLE `ind_announces` (
 
 LOCK TABLES `ind_announces` WRITE;
 /*!40000 ALTER TABLE `ind_announces` DISABLE KEYS */;
-INSERT INTO `ind_announces` VALUES (20,'mon super ordinateur','&lt;p&gt;Mon super ordinateur&lt;/p&gt;','mon-super-ordinateur-20',5,NULL,'250000','tanohbassapatrick@gmail.com',NULL,NULL,'Bouake','offre','particulier',2,'2021-01-15 20:22:40',NULL,NULL,0,NULL),(16,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;','vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16',5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',2,'2021-01-09 10:27:19',NULL,NULL,0,NULL),(18,'test','Une offre d\'emploi extraordinaire.&lt;br&gt;','test-18',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',2,'2021-01-10 18:54:44',NULL,NULL,0,NULL),(19,'Rédacteur à Jesus Bénit TV','&lt;p&gt;Bon job à JésusBénit tv&lt;br&gt;&lt;/p&gt;','redacteur-a-jesus-benit-tv-19',6,NULL,'price_on_call','tanohbassapatrick@gmail.com','tanohbassapatrick@gmail.com','+225 45996095','Yamoussoukro','offre','professionnel',1,'2021-01-10 19:33:09',NULL,NULL,0,NULL),(22,'Une belle femme','&lt;p&gt;Une belle femme !&lt;br&gt;&lt;/p&gt;','une-belle-femme-22',7,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Gagnoa','offre','particulier',1,'2021-01-16 13:29:26',NULL,NULL,0,NULL);
+INSERT INTO `ind_announces` VALUES (20,'mon super ordinateur','&lt;p&gt;Mon super ordinateur&lt;/p&gt;','mon-super-ordinateur-20',5,NULL,'250000','tanohbassapatrick@gmail.com',NULL,NULL,'Bouake','offre','particulier',2,'2021-01-15 20:22:40',NULL,NULL,0,NULL),(16,'Vente d\'ordinateur ASUS Core i5 7ème génération 6 G Ram','&lt;p&gt;Un bel ordinateur Asus Core i5 avec 6 G de ram.&lt;br&gt;&lt;/p&gt;','vente-d-ordinateur-asus-core-i5-7eme-generation-6-g-ram-16',5,NULL,'130000','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','particulier',2,'2021-01-09 10:27:19',NULL,NULL,0,NULL),(18,'test','Une offre d\'emploi extraordinaire.&lt;br&gt;','test-18',6,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Abidjan','offre','professionnel',2,'2021-01-10 18:54:44',NULL,NULL,0,NULL),(19,'Rédacteur à Jesus Bénit TV','&lt;p&gt;Bon job à JésusBénit tv&lt;br&gt;&lt;/p&gt;','redacteur-a-jesus-benit-tv-19',6,NULL,'price_on_call','tanohbassapatrick@gmail.com','tanohbassapatrick@gmail.com','+225 45996095','Yamoussoukro','offre','professionnel',1,'2021-01-10 19:33:09',NULL,NULL,0,NULL),(24,'test','&lt;p&gt;Petite description.&lt;br&gt;&lt;/p&gt;','test-24',7,NULL,'price_on_call','joel.developpeur@gmail.com',NULL,NULL,'Daloa','offre','professionnel',1,'2021-02-01 20:43:43',NULL,NULL,0,NULL),(22,'Une belle femme','&lt;p&gt;Une belle femme !&lt;br&gt;&lt;/p&gt;','une-belle-femme-22',7,NULL,'price_on_call','tanohbassapatrick@gmail.com',NULL,NULL,'Gagnoa','offre','particulier',1,'2021-01-16 13:29:26',NULL,NULL,0,NULL);
 /*!40000 ALTER TABLE `ind_announces` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -297,4 +297,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-01 19:34:21
+-- Dump completed on 2021-02-01 22:06:48
