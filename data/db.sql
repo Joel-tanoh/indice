@@ -275,7 +275,7 @@ CREATE TABLE `visitors` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_action_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -284,7 +284,7 @@ CREATE TABLE `visitors` (
 
 LOCK TABLES `visitors` WRITE;
 /*!40000 ALTER TABLE `visitors` DISABLE KEYS */;
-INSERT INTO `visitors` VALUES (11,'tanohbassapatrick@gmail.com','2021-01-30 22:15:57','2021-01-30 22:16:48'),(12,'4ETIYcbq','2021-01-30 22:17:38','2021-01-30 22:44:26'),(13,'tLfReJDDqw','2021-01-31 10:34:23','2021-02-01 01:02:34'),(14,'joel.developpeur@gmail.com','2021-02-01 07:13:57','2021-02-01 07:17:50'),(15,'tanohbassapatrick@gmail.com','2021-02-01 18:59:04','2021-02-01 19:02:15');
+INSERT INTO `visitors` VALUES (11,'tanohbassapatrick@gmail.com','2021-01-30 22:15:57','2021-01-30 22:16:48'),(12,'4ETIYcbq','2021-01-30 22:17:38','2021-01-30 22:44:26'),(13,'tLfReJDDqw','2021-01-31 10:34:23','2021-02-01 01:02:34'),(14,'joel.developpeur@gmail.com','2021-02-01 07:13:57','2021-02-01 07:17:50'),(15,'tanohbassapatrick@gmail.com','2021-02-01 18:59:04','2021-02-01 19:02:15'),(16,'oXXgs2KT0F','2021-02-01 23:53:55','2021-02-01 23:57:36'),(17,'tanohbassapatrick@gmail.com','2021-02-02 18:57:16','2021-02-02 19:01:16'),(18,'tanohbassapatrick@gmail.com','2021-02-02 19:50:46','2021-02-02 19:58:36'),(19,'joel.developpeur@gmail.com','2021-02-02 19:59:02','2021-02-02 19:59:28');
 /*!40000 ALTER TABLE `visitors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -297,4 +297,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-01 22:06:48
+-- Dump completed on 2021-02-02 20:07:56
