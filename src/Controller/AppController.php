@@ -12,6 +12,7 @@ use Exception;
 
 class AppController
 {
+    /** @var array Les actions possibles au sein de l'application. */
     protected static $actions = [
         "create"
         , "read"
@@ -59,9 +60,7 @@ class AppController
      */
     public static function router(array $params)
     {
-        if (Category::isCategorySlug($params[1])
-            && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)
-        ) {
+        if (Category::isCategorySlug($params[1]) && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)) {
             if (isset($params[3]) && self::isAction($params[3])) {
                 AnnounceController::manage($params);
             } else {

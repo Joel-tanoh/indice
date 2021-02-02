@@ -31,9 +31,12 @@ HTML;
     public function error(string $message, string $class = null)
     {
         return <<<HTML
-        <p class="{$class}">
-            {$message}
-        </p>
+        <div class="app-alert-danger d-flex align-items-center mb-3">
+            <div class="text-danger mr-3">
+                <i class="fas fa-exclamation-circle fa-2x"></i>
+            </div>
+            <div class="text-danger">{$message}</div>
+        </div>
 HTML;
     }
 
@@ -79,7 +82,7 @@ HTML;
         <div id="toast" class="app-alert-{$type}" style="position: fixed; top: 1rem; right: 1rem; min-width:13rem; max-width:30rem; z-index:999999;">
             <div class="d-flex align-items-center">
                 <div class="text-{$type} mr-3">
-                    <i class="fas fa-$icon fa-2x"></i>
+                    <i class="fas fa-{$icon} fa-2x"></i>
                 </div>
                 <div class="text-{$type}">{$message}</div>
             </div>

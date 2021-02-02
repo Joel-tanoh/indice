@@ -137,7 +137,7 @@ class Page extends View
     }
 
     /**
-     * Affiche le code pour l'index de la partie publique
+     * Affiche la page.
      * 
      * @return string
      **/

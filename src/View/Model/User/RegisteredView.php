@@ -118,8 +118,7 @@ HTML;
     public function navbar($registered)
     {
         return <<<HTML
-        <a class="dropdown-item" href="{$registered->getProfileLink()}"><i class="lni-user"></i> Mon Profil</a>
-        <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-home"></i> Mes annonces</a>
+        <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-dashboard"></i> Mes annonces</a>
         <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Déconnexion</a>
 HTML;
     }
