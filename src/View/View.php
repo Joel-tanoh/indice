@@ -4,8 +4,7 @@ namespace App\View;
 
 use App\View\Model\AnnounceView;
 use App\View\Model\CategoryView;
-use App\View\Model\User\UserView;
-use Faker\Guesser\Name;
+use App\View\Communication\NewsletterView;
 
 /**
  * Classe View. Regroupe toutes les vues de l'application.

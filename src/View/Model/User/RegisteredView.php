@@ -262,7 +262,6 @@ HTML;
                 {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts", "Tous", $this->user->getAnnounceNumber())}
                 {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/pending", "En attente", $this->user->getAnnounceNumber("pending"))}
                 {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/validated", "Validées", $this->user->getAnnounceNumber("validated"))}
-                <!-- {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/premium", "Premium", $this->user->getAnnounceNumber("premium"))} -->
                 {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/blocked", "Bloquées", $this->user->getAnnounceNumber("blocked"))}
             </ul>
         </nav>
@@ -384,6 +383,18 @@ HTML;
             </section>
             {$snippet->appEmailFooter()}
         </div>
+HTML;
+    }
+
+    /**
+     * Affiche l'avatar de l'utilisateur.
+     * 
+     * @return string
+     */
+    public function avatar()
+    {
+        return <<<HTML
+        <img src="{$this->user->getAvatarSrc()}" alt="" class="img-fluid"/>
 HTML;
     }
 
