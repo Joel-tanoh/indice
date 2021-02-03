@@ -2,6 +2,7 @@
 
 namespace App\View\Model;
 
+use App\Communication\SocialNetwork\SocialNetwork;
 use App\Model\Announce;
 use App\View\Snippet;
 use App\View\View;
@@ -701,17 +702,7 @@ HTML;
      */
     private function shareMe()
     {
-        return <<<HTML
-        <div class="share">
-            <span>Partager: </span>
-            <div class="social-link">  
-                <a class="facebook" href="#"><i class="lni-facebook-filled"></i></a>
-                <a class="twitter" href="#"><i class="lni-twitter-filled"></i></a>
-                <a class="linkedin" href="#"><i class="lni-linkedin-fill"></i></a>
-                <a class="google" href="#"><i class="lni-google-plus"></i></a>
-            </div>
-        </div>
-HTML;
+        return SocialNetwork::shareThis();
     }
 
     /**
