@@ -9,11 +9,6 @@ use Exception;
  */
 class UpdateDb extends Update
 {
-    /** @var array Tableau associatif contenant l'ensemble des clauses 
-     * injectées dans la reqûete de mise à jour.
-     */
-    private $clauses;
-
     /** @var string Format texte des clauses à
      * insérer dans la requête de mise à jour.
      */
@@ -66,6 +61,7 @@ class UpdateDb extends Update
         $this->formatParams();
 
         // dump($req);
+        // dump($this->params);
         // die();
         
         // Si tout s'est bien passé, retourner true
@@ -93,33 +89,8 @@ class UpdateDb extends Update
         // Rétirer les dernières virgules et espaces à la fin de la chaine de caractère
         $colAndValue = rtrim($colAndValue, ", ");
 
-        $this->formatClauses();
-
         $this->query = "UPDATE $this->tableName SET $colAndValue $this->clauseString";
-    }
-
-    /**
-     * Permet de formater les clauses pour les insérer dans la requête
-     * de mise à jour.
-     */
-    private function formatClauses()
-    {
-        if (empty($this->clauses)) {
-            return null;
-        }
-
-        // Formatage des composantes de la clause
-        $arrayKeys = array_keys($this->clauses);
-        $clauseString = null;
-
-        foreach($arrayKeys as $key) {
-            $clauseString .= "$key = :$key AND ";
-        }
-
-        // Rétirer les dernières virgules et espaces à la fin de la chaine de caractère
-        $clauseString = rtrim($clauseString, "AND ");
-
-        $this->clauseString = "WHERE $clauseString";
+        $this->formatClauses();
     }
 
     /**

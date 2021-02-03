@@ -38,6 +38,11 @@ abstract class Action
      */
     protected $colForInstantiate;
 
+    /** @var array Tableau associatif contenant l'ensemble des clauses 
+     * injectées dans la reqûete de mise à jour.
+     */
+    protected $clauses;
+
     /** @var string La clause en format text */
     protected $clausesAsString;
 
@@ -116,14 +121,14 @@ abstract class Action
     /**
      * Permet de formater la clause en format texte et l'ajouter à la requête.
      * 
-     * @param array $clauses Un tableau contenant les clauses permettant d'apporter
-     *                       des spécifications dans la requête fournie.
+     * @param array $clauses   Un tableau contenant les clauses permettant d'apporter
+     *                         des spécifications dans la requête fournie.
      * @param string $operator Permet de dire si on veut que la requête, ce soit des "et"
      *                         ou des "ou" entre les clauses.
      */
     public function formatClauses(array $clauses = null, string $operator = "AND")
     {
-        $clauses = empty($this->clauses) ? $clauses : $this->clauses;
+        $clauses = empty($this->clauses) && !empty($clauses) ? $clauses : $this->clauses;
 
         // Formatage des composantes de la clause
         $arrayKeys = array_keys($clauses);
@@ -134,9 +139,10 @@ abstract class Action
         }
 
         // Rétirer les dernières virgules et espaces à la fin de la chaine de caractère
-        $clauseString = rtrim($clauseString, $operator." ");
+        $clauseString = rtrim($clauseString, $operator . " ");
 
-        $this->clauseAsString = " WHERE $clauseString";
+        // $this->clauseAsString = " WHERE $clauseString";
+        $this->query .= " WHERE $clauseString";
     }
 
 }

@@ -1026,7 +1026,7 @@ HTML;
         <div class="row">
             <div class="col-12">
                 <section class="d-flex justify-content-center">
-                    <p class="h3 text-muted text-center">Aucunes annonces</p>
+                    <p class="h5 text-muted text-center">Aucunes annonces</p>
                 </section>
             </div>
         </div>
@@ -1115,14 +1115,14 @@ HTML;
     private function putComments()
     {
         if (User::isAuthenticated() && User::authenticated()->isAdministrator()) {
-            $form = new Form($_SERVER["REQUEST_URI"], "mt-3");
+            $form = new Form($_SERVER["REQUEST_URI"] . "/comment", "mt-3");
 
             return <<<HTML
             {$form->open()}
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-xs-12">
                     <div class="form-group">
-                        <textarea id="comment" class="form-control" name="comment" cols="45" rows="5" placeholder="Suggestions..." required></textarea>
+                        <textarea id="comment" class="form-control" name="comment" cols="45" rows="5" placeholder="Laisser une suggestion..." required></textarea>
                     </div>
                     <button type="submit" id="submit" class="btn btn-common">Envoyer</button>
                     </div>
