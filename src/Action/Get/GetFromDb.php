@@ -55,8 +55,7 @@ class GetFromDb extends Get
         , string $orderBy = null
         , int $begining = null
         , int $itemNumber = null
-    )
-    {
+    ) {
         $this->cols = $cols;
         $this->database = $database;
         $this->tableName = $tableName;
