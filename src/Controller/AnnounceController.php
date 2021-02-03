@@ -75,6 +75,7 @@ class AnnounceController extends AppController
             if ($announce->isValidated() || ($announce->isPending() && User::isAuthenticated())) {
                 if ($announce->hasCategory($category)) {
                     $page = new Page("L'indice | " . $announce->getTitle(), (new AnnounceView($announce))->read());
+                    $page->addJs("https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons", "async");
                     $page->show();
                 } else {
                     throw new Exception("La ressource demandée n'a pas été trouvée !");
