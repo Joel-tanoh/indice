@@ -15,26 +15,6 @@ use App\View\View;
  */
 class NewsletterController extends AppController
 {
-    public static function test()
-    {
-        echo "Nous allons tester l'envoi de mail";
-
-        $to = [
-            "tanohbassapatrick@gmail.com",
-            "joel.developpeur@gmail.com",
-            "tata@hh"
-        ];
-
-        $email = new Email($to, "Test de mail", "Le mail est bien reçu !");
-        // $email = new Email("tanohbassapatrick@gmail.com, joel.developpeur@gmail.com", "Test de mail", "Le mail est bien reçu !");
-
-        if ($email->send()) {
-            echo "<br>Mail envoyé !";
-        } else {
-            echo "<br>Mail non envoyé !";
-        }
-    }
-
     /**
      * Pour enregister un visiteur qui veut s'inscrire à la newsletter.
      */
@@ -47,11 +27,11 @@ class NewsletterController extends AppController
         if (!$validator->getErrors()) {
             if (Newsletter::register($_POST["email_address"])) {
                 $email = new Email(
-                    $_POST["email_address"], "Bienvenue sur L'indice.com", NewsletterView::welcomeMessage()
+                    $_POST["email_address"], "Bienvenue sur L'indice.com", (new NewsletterView)->welcomeMessage()
                 );
                 if ($email->send()) {
                     $page->setMetaTitle("L'indice | Abonnement à la Newsletter Réussie");
-                    $page->setView((new View)->success("Félicitations !", "Vous êtes bien enregistré dans la newsletter !"));
+                    $page->setView(View::success("Félicitations !", "Vous êtes bien enregistré dans la newsletter ! Vous recevrez un email de confirmation."));
                     $page->show();
                 } else {
                     Utility::redirect("/");

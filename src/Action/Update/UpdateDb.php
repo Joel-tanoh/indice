@@ -41,8 +41,7 @@ class UpdateDb extends Update
         , string $dbLogin
         , string $dbPassword
         , array $clauses = null
-    )
-    {
+    ) {
         $this->data = $data;
         $this->database = $database;
         $this->tableName = $tableName;
@@ -60,10 +59,6 @@ class UpdateDb extends Update
         $req = parent::connectToDb($this->dbLogin, $this->dbPassword)->prepare($this->query);
         $this->formatParams();
 
-        // dump($req);
-        // dump($this->params);
-        // die();
-        
         // Si tout s'est bien passé, retourner true
         if ($req->execute($this->params)) {
            return true;

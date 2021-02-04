@@ -108,8 +108,8 @@ HTML;
         <div class="container">
             <div class="bg-white rounded my-3 p-3">
                 <h1 class="text-primary">Exception capturée.</h1>
-                <div class="h3 text-secondary">{$e->getMessage()}</div>
-                <div>Excéption jetée dans {$e->getFile()} à la ligne {$e->getLine()}.</div>
+                <p class="h3 text-secondary">{$e->getMessage()}</p>
+                <p>Excéption jetée dans {$e->getFile()} à la ligne {$e->getLine()}.</p>
             </div>
         </div>
 HTML;
@@ -120,13 +120,13 @@ HTML;
      * 
      * @return string
      */
-    public function success(string $title, string $content)
+    public static function success(string $title, string $content, string $link = null)
     {
-        $snippet = new Snippet();
+        $snippet = new Snippet;
 
         return <<<HTML
-        {$snippet->pageHeader("Félicitation !", "#")}
-        {$snippet->success($title, $content)}
+        {$snippet->pageHeader("Félicitation !", "")}
+        {$snippet->success($title, $content, $link)}
 HTML;
     }
 

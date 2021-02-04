@@ -38,7 +38,7 @@ abstract class Model
     }
 
     /**
-     * Retourne l'Id d'un model(donnée).
+     * Retourne l'Id d'un objet.
      * 
      * @return int
      */
@@ -262,8 +262,7 @@ abstract class Model
     }
 
     /**
-     * Permet de supprimer une valeur de la table passée en 
-     * paramètre.
+     * Permet de supprimer un item
      * 
      * @return bool|null
      */

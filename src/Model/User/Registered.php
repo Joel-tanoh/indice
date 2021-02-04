@@ -370,11 +370,15 @@ class Registered extends Visitor
 
     /**
      * Permet à l'utilisateur connecté d'ajouter un commentaire.
-     * @param string $content Le contenu du commentaire.
+     * 
+     * @param mixed  $subjectId   La valeur identifiant l'élément qui a été commenté.
+     * @param string $content     Le contenu du commentaire.
+     * @param string $subjectType Le type (le nom de la table dans certains cas) de l'élément
+     *                            commenté.
      */
     public function comment($subjectId, string $content, $subjectType = null)
     {
-        if (Comment::add($this->emailAddress, $subjectId, $content, $subjectType)) {
+        if (Comment::add($this->emailAddress, $subjectId, htmlspecialchars($content), $subjectType)) {
             return true;
         }
     }

@@ -378,12 +378,15 @@ HTML;
      * 
      * @return string 
      */
-    public function success(string $title, string $content)
+    public static function success(string $title, string $content, string $link = null)
     {
-        $home = APP_URL;
+        if (null !== $link) {
+            $link = '<a class="btn btn-success" href="'. $link . '">Voir</a>';
+        } else {
+            $link = '<a class="btn btn-primary" href="'. APP_URL . '">Accueil</a>';
+        }
 
         return <<<HTML
-        <!-- Content section Start --> 
         <section id="content">
             <div class="container">
                 <div class="row">
@@ -392,44 +395,12 @@ HTML;
                             <div class="alert alert-success alert-lg" role="alert">
                                 <h2 class="postin-title">✔ {$title}</h2>
                                 <p>{$content}</p>
-                                <p>Retour vers l'<a href="$home">accueil</a>.</p>
+                                <p class="mt-3">{$link}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-HTML;
-    }
-
-    /**
-     * Dans l'email qu'on envoit aux users, cette partie représente
-     * l'entente non variable du mail avec le logo, et d' autres infos.
-     * 
-     * @return string
-     */
-    public function appEmailHeader()
-    {
-        return <<<HTML
-        <section> 
-            <h2>Bienvenue sur L'indice.com</h2>
-        </section>
-HTML;
-    }
-    
-    /**
-     * Dans l'email qu'on envoit aux users, cette partie représente
-     * le pied non variable du mail avec certaines infos.
-     * 
-     * @return string
-     */
-    public function appEmailFooter()
-    {
-        $appUrl = APP_URL;
-
-        return <<<HTML
-        <section>
-            Vers <a href="{$appUrl}">Indice.com</a>
         </section>
 HTML;
     }
