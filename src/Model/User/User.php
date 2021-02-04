@@ -118,4 +118,23 @@ abstract class User extends Model
     {
         Authentication::askToAuthenticate($where);
     }
+
+    /**
+     * Permet de supprimer les éléments postés par cet utilisateur.
+     * 
+     * @param string $tableName
+     * @param string $identifyingCol La colonne clé étrangère dans la table des éléments
+     *                               à supprimer.
+     * @param mixed $value           La valeur de cette colonne clé étrangère.
+     * @return bool Retourne true si la requête s'est exécutée avec succès.
+     */
+    public function deleteOwned(string $tableName, string $identifyingCol, $value)
+    {
+        $req = self::connectToDb()->prepare("DELETE FROM $tableName WHERE $identifyingCol = ?");
+        $req->execute([
+            $value
+        ]);
+        return true;
+    }
+
 }

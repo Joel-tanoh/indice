@@ -4,18 +4,20 @@ namespace App\Controller;
 
 use App\Action\Action;
 use App\Action\Update\Update;
+use App\Communication\Comment;
+use App\Communication\Email;
 use App\File\Image\Image;
 use App\Model\Announce;
 use App\Communication\Notify\NotifyByHTML;
 use App\Model\Category;
 use App\Model\Model;
 use App\Model\User\Administrator;
-use App\Model\User\Registered;
 use App\Model\User\User;
 use App\Utility\Utility;
 use App\Utility\Validator;
 use App\View\Model\AnnounceView;
 use App\View\Page\Page;
+use App\View\View;
 use Exception;
 
 class AnnounceController extends AppController
@@ -98,19 +100,20 @@ class AnnounceController extends AppController
 
         if (isset($params[1]) && !empty($params[1])
             && isset($params[2]) && !empty($params[2])
-            && Registered::valueIssetInDB("slug", $params[1], Category::TABLE_NAME)
+            && Category::valueIssetInDB("slug", $params[1], Category::TABLE_NAME)
             && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)
         ) {
+
             $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
             $user = $announce->getOwner();
-            $registered = User::authenticated();
             $page = new Page();
 
-            if ($announce->hasOwner($registered) || $registered->isAdministrator()) {
+            if ($announce->hasOwner(User::authenticated()) || User::authenticated()->isAdministrator()) {
                 $message = null;
 
                 // on switch sur l'action à exécuter
                 switch ($params[3]) {
+
                     case "update" :
                         $htmlNotifier = new NotifyByHTML();
 
@@ -129,12 +132,35 @@ class AnnounceController extends AppController
                         break;
 
                     case "validate" :
-                        if ($registered->isAdministrator()) {
-                            (new Administrator($registered->getEmailAddress()))->changeStatus(
-                                Announce::TABLE_NAME, Announce::convertStatus("validated"), $announce->getId()
+                        if (User::authenticated()->isAdministrator()) {
+                            (new Administrator(User::authenticated()->getEmailAddress()))->changeStatus(
+                                $announce->getId(), Announce::convertStatus("validated"), Announce::TABLE_NAME
                             );
                         }
                         Utility::redirect($announce->getLink());
+                        break;
+
+                    case "comment" :
+
+                        if (User::authenticated()->isAdministrator() && Action::dataPosted()) {
+                            if(User::authenticated()->comment($announce->getId(), htmlspecialchars(trim($_POST["comment"])), Announce::TABLE_NAME)) {
+                                (new Email(
+                                    $announce->getOwner()->getEmailAddress(),
+                                    "L'indice, une nouvelle suggestion sur votre annonce",
+                                    Comment::content()
+                                ))->send();
+                                $page->setMetatitle("L'indice | Commentaire envoyé avec succès");
+                                $page->setView(
+                                    View::success(
+                                        "Commentaire envoyé avec succès",
+                                        "Le commentaire a été posté avec succès, l'utilisateur sera informé. Merci !",
+                                        $announce->getLink()
+                                    )
+                                );
+                                $page->show();
+                            }
+                        }
+
                         break;
 
                     case "delete" :
@@ -153,7 +179,7 @@ class AnnounceController extends AppController
                 $page->show();
 
             } else {
-                Utility::redirect($registered->getProfileLink()."/posts");
+                Utility::redirect(User::authenticated()->getProfileLink()."/posts");
             }
 
         } else {

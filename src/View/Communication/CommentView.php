@@ -16,6 +16,31 @@ class CommentView
     }
 
     /**
+     * Permet d'afficher tous les commentaires.
+     * 
+     * @return string
+     */
+    public static function showAll(array $comments)
+    {
+        $commentsList = null;
+
+        foreach ($comments as $comment) {
+            $commentsList .= (new self($comment))->show();
+        }
+
+        return <<<HTML
+        <div id="comments">
+            <div class="comment-box">
+                <h3>Suggestions</h3>
+                <ol class="comments-list">
+                    {$commentsList}
+                </ol>
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
      * Affiche un commentaire avec la photo de profile
      * de l'utilisateur qui l'a postée.
      * 
@@ -24,18 +49,20 @@ class CommentView
     public function show()
     {
         return <<<HTML
-        <div class="offerermessage">
-            <figure>
-                <img src="{$this->comment->getPoster()->getAvatarSrc()}" alt="Photo de profil de {$this->comment->getPoster()->getName()}">
-            </figure>
-            <div class="description">
-                <div class="info">
-                <h3>{$this->comment->getPoster()->getFullName()} {$this->comment->getPoster()->getFirstNames()}</h3>
-                <p>{$this->comment->getContent()}</p>
+        <li>
+            <div class="media">
+                <div class="thumb-left">
+                    <img class="img-fluid" src="{$this->comment->getPoster()->getAvatarSrc()}" alt="Photo de profil de {$this->comment->getPoster()->getFullName()}">
                 </div>
-                <time class="date">{$this->comment->getPostedAt()}</time>
+                <div class="info-body">
+                    <div class="media-heading">
+                        <h4 class="name">{$this->comment->getPoster()->getFullName()}</h4> 
+                        <span class="comment-date"><i class="lni-alarm-clock"></i> {$this->comment->getPostedAt()}</span>
+                    </div>  
+                    <p>{$this->comment->getContent()}</p>                     
+                </div>
             </div>
-        </div>
+        </li>
 HTML;
     }
 }

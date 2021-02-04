@@ -2,6 +2,7 @@
 
 namespace App\View\Model\User;
 
+use App\Communication\Email;
 use App\Model\Announce;
 use App\Model\User\User;
 use App\View\Snippet;
@@ -363,26 +364,21 @@ HTML;
      */
     public function welcomeMessage()
     {
-        $snippet = new Snippet;
-
-        return <<<HTML
-        <div>
-            {$snippet->appEmailHeader()}
-            <section>
-                <p>Salut {$this->user->getName()}</p>
-                <p>
-                    Nous sommes heureux de vous compter parmi nos abonnés. Nous ferons le nécessaire pour vous
-                    accompagner et vous fournir dans la mésure du possible ce que vous cherchez par du contenu
-                    de qualités, des annonces pertinentes en relation avec vos besoins.
-                </p>
-                <p>
-                    Vous recevrez régulièrement les nouvelles informations, les tendances, les annonces les plus
-                    recherchées tout en espérant vous fournir du contenu en relation avec ce que vous recherchez.
-                </p>
-            </section>
-            {$snippet->appEmailFooter()}
-        </div>
+        $content = <<<HTML
+        <section>
+            <p>Salut {$this->user->getName()}</p>
+            <p>
+                Nous sommes heureux de vous compter parmi nos abonnés. Nous ferons le nécessaire pour vous
+                accompagner et vous fournir dans la mésure du possible ce que vous cherchez par du contenu
+                de qualités, des annonces pertinentes en relation avec vos besoins.
+            </p>
+            <p>
+                Vous recevrez régulièrement les nouvelles informations, les tendances, les annonces les plus
+                recherchées tout en espérant vous fournir du contenu en relation avec ce que vous recherchez.
+            </p>
+        </section>
 HTML;
+        return Email::content($content);
     }
 
     /**

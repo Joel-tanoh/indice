@@ -1098,12 +1098,7 @@ HTML;
             if ($this->announce->getOwner()->getEmailAddress() === User::authenticated()->getEmailAddress()
                 || User::authenticated()->isAdministrator()
             ) {
-                $comments = null;
-                foreach ($this->announce->getComments() as $comment) {
-                    $comments .= (new CommentView($comment))->show();
-                }
-
-                return $comments;
+                return CommentView::showAll($this->announce->getComments());
             }
         }
     }

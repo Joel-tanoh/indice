@@ -23,36 +23,24 @@ class Administrator extends Registered
     /**
      * Permet à l'administrateur de changer le status d'un compte.
      * 
-     * @param mixed $newStatus
+     * @param int   $itemId     L'id de l'item dont on veut changer le status
+     * @param mixed $newStatus  La valeur du nouveau status, peut être une chaîne
+     *                          de caractère ou un entier.
+     * @param string $tableName Le nom de la table où se trouve l'item.
      * @return bool|null
      */
-    public function changeUserStatus($newStatus)
+    public function changeStatus(int $itemId, $newStatus, string $tableName)
     {
         if (\is_string($newStatus)) {
             $newStatus = parent::convertStatus($newStatus);
         }
 
-        $req = parent::connectToDb()->prepare("UPDATE TABLE " . self::TABLE_NAME . " SET status = ?");
-        if ($req->execute([$newStatus])) {
-            return true;
-        }
-    }
-
-    /**
-     * Permet de valider une annonce.
-     * 
-     * @param string $tableName Le nom de la table.
-     * @param int    $status    Le nouveau status à mettre sous forme numérique.
-     * @param int    $id        L'id de l'élément dont on veut changer le statut.
-     * @return bool
-     */
-    public function changeStatus(string $tableName, int $status, int $id)
-    {
-        $req = parent::connectToDb()->prepare("UPDATE $tableName SET status = :status WHERE id = :id");
+        $req = parent::connectToDb()->prepare("UPDATE TABLE $tableName SET status = :status WHERE id = :id");
         $req->execute([
-            "status" => $status,
-            "id" => $id
+            "status" => $newStatus,
+            "id" => $itemId
         ]);
+
         return true;
     }
 
@@ -87,6 +75,7 @@ class Administrator extends Registered
         foreach ($req->fetchAll() as $comment) {
             $comments[] = new Comment($comment["id"]);
         }
+        
         return $comments;
     }
 

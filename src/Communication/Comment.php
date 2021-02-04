@@ -5,6 +5,7 @@ namespace App\Communication;
 use App\Model\Model;
 use App\Model\User\Registered;
 use App\Utility\Utility;
+use App\View\Snippet;
 
 /**
  * Classe de gestion des commentaires.
@@ -97,15 +98,17 @@ class Comment extends Model
      */
     public static function add(string $userEmailAddress, $subjectId, string $content, $subjectType = null)
     {
-        $query = "INSERT INTO " . Comment::TABLE_NAME . "(user_email_address, subject_id, subject_type, content)
-            VALUES(:user_email_address, :subject_id, :subject_type, :content)";
+        $query = "INSERT INTO " . Comment::TABLE_NAME . "(user_email_address, subject_id, subject_type, content) VALUES(:user_email_address, :subject_id, :subject_type, :content)";
+
         $req = parent::connectToDb()->prepare($query);
+
         $req->execute([
             "user_email_address" => $userEmailAddress,
             "subject_id" => $subjectId,
             "subject_type" => $subjectType,
-            "content" => $content,
+            "content" => htmlspecialchars($content),
         ]);
+
         return true;
     }
 
@@ -175,6 +178,22 @@ class Comment extends Model
         }
 
         return $comments;
+    }
+
+    /**
+     * Contenu d'un commentaire.
+     * 
+     * @return string
+     */
+    public static function content()
+    {
+        $snippet = new Snippet;
+
+        return <<<HTML
+        <section>
+            
+        </section>
+HTML;
     }
 
 }

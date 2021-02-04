@@ -41,24 +41,6 @@ class SubCategory extends Category
     }
 
     /**
-     * Retourne les annonces postées qui appartiennent à cette catégorie.
-     * 
-     * @return array
-     */
-    public function getAnnounces()
-    {
-        $req = parent::connectToDb()->prepare("SELECT id FROM " . Announce::TABLE_NAME . " WHERE id_sub_category = ?");
-        $req->execute([$this->id]);
-        $result = $req->fetchAll();
-
-        foreach($result as $announce) {
-            $this->announces[] = new Announce($announce["id"]);
-        }
-
-        return $this->announces;
-    }
-
-    /**
      * Retourne la catégorie à laquelle appartient cette sous-catégorie.
      * 
      * @return \App\Model\Category

@@ -44,18 +44,20 @@ class UserView extends ModelView
                                 Inscription
                             </h3>
                             {$form->open()}
-                                <div class="form-group">
-                                    <div class="input-icon">
-                                        <i class="lni-user"></i>
-                                        <input type="text" id="name" class="form-control" name="name" placeholder="Entrer Votre Nom" value="$name" required>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <div class="input-icon">
+                                            <i class="lni-user"></i>
+                                            <input type="text" id="name" class="form-control" name="name" placeholder="Entrer Votre Nom" value="$name" required>
+                                        </div>
                                     </div>
-                                </div> 
-                                <div class="form-group">
-                                    <div class="input-icon">
-                                        <i class="lni-user"></i>
-                                        <input type="text" id="first_names" class="form-control" name="first_names" placeholder="Entrer Votre Prénom" value="$firstNames" required>
+                                    <div class="form-group col-md-6">
+                                        <div class="input-icon">
+                                            <i class="lni-user"></i>
+                                            <input type="text" id="first_names" class="form-control" name="first_names" placeholder="Entrer Votre Prénom" value="$firstNames" required>
+                                        </div>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-user"></i>

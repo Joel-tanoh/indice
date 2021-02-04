@@ -2,6 +2,7 @@
 
 namespace App\View\Communication;
 
+use App\Communication\Email;
 use App\View\Form;
 use App\View\Snippet;
 
@@ -66,15 +67,12 @@ HTML;
      */
     public function welcomeMessage()
     {
-        return <<<HTML
-        <div style="text-align:center; width:100%">
-            {$this->appEmailHeader()}
-            <section>
-                <p>Nous sommes ravis de vous compter parmi nos abonnés <br>Nous vous tiendrons informé régulièrement des nouveautés.</p>
-            </section>
-            {$this->appEmailFooter()}
-        </div>
+        $content = <<<HTML
+        <section>
+            <p>Nous sommes ravis de vous compter parmi nos abonnés <br>Nous vous tiendrons informé régulièrement des nouveautés.</p>
+        </section>
 HTML;
+        return Email::content($content);
     }
 
 }

@@ -401,7 +401,7 @@ class Announce extends Model
      *                        une sous-catégorie précise.
      * @param int $nbr        Pour spécifier qu'on veut un nombre d'annonces précis.
      */
-    public static function getAll($idCategory = null, string $status = null, int $begining = null, int $nbr = null)
+    public static function getAll(int $idCategory = null, string $status = null, int $begining = null, int $nbr = null)
     {
         // Format de la requête à la base.
         $query = "SELECT id FROM " . self::TABLE_NAME;

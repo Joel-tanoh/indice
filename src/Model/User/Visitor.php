@@ -119,8 +119,8 @@ class Visitor extends User
         $result = $req->fetcAll();
 
         $visitors = [];
-        foreach ($result as $v) {
-            $visitors[] = new self($v["session_value"]);
+        foreach ($result as $visitor) {
+            $visitors[] = new self($visitor["session_value"]);
         }
 
         return $visitors;
@@ -246,4 +246,5 @@ class Visitor extends User
 
         return (int)$req->fetch()["counter"] !== 0;
     }
+
 }
