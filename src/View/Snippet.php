@@ -22,22 +22,6 @@ use App\View\Model\User\UserView;
  */
 class Snippet extends View
 {
-    /**
-     * Affiche l'avatar d'un utilisateur.
-     * 
-     * @param string $avatarImgSrc
-     * @param string $altText
-     * 
-     * @return string
-     */
-    public function showAvatar(string $avatarImgSrc, string $altText = null)
-    {
-        return <<<HTML
-        <div>
-            <img src="{$avatarImgSrc}" alt="{$altText}" class="user-avatar img-fluid"/>
-        </div>
-HTML;
-    }
 
     /**
      * Hero Area
@@ -77,7 +61,7 @@ HTML;
     }
 
     /**
-     * Hero Area
+     * 2eme format de bannière avec un formulaire de recherche.
      * 
      * @return string
      */
@@ -419,6 +403,50 @@ HTML;
             <li><a class="linkedin" href="#"><i class="lni-linkedin-fill"></i></a></li>
             <li><a class="google-plus" href="#"><i class="lni-google-plus"></i></a></li>
         </ul>
+HTML;
+    }
+
+    /**
+     * 
+     */
+    public static function list(string $title, string $content)
+    {
+        return <<<HTML
+        <section class="featured section-padding">
+            <div class="container">
+                <h1 class="section-title">{$title}</h1>
+                <div class="row">
+                    {$content}
+                </div>
+            </div>
+        </section>
+HTML;
+    }
+
+    /**
+     * Retourne une section avec un effet de scrolling horizontal avec 
+     * des boutons pour faire défiler les éléments.
+     * 
+     * @param string $sectionTitle Le titre de la section.
+     * @param string $items        La liste des items en format string à afficher.
+     * 
+     * @return string
+     */
+    public static function hScrolling(string $sectionTitle, string $items)
+    {
+        return <<<HTML
+        <section class="featured-lis section-padding my-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 wow fadeIn" data-wow-delay="0.5s">
+                        <h3 class="section-title">{$sectionTitle}</h3>
+                        <div id="new-products" class="owl-carousel">
+                            {$items}
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </section>
 HTML;
     }
 

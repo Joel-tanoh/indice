@@ -251,15 +251,6 @@ class Registered extends Visitor
         return $req->fetch()["session_value"];
     }
 
-    // /**
-    //  * Permet de vérifier si l'utilisateur est prémium.
-    //  * @return bool
-    //  */
-    // public function isPremium()
-    // {
-    //     return $this->status === 3;
-    // }
-
     /**
      * Permet de mettre à jour les infos d'un utilisateur.
      * 
@@ -460,6 +451,56 @@ class Registered extends Visitor
     public function getByDate()
     {
         
+    }
+
+    /**
+     * Retourne la liste des adresse email des administrators.
+     * 
+     * @return array
+     */
+    public static function emailAddresses()
+    {
+        return parent::get("email_address", Administrator::TABLE_NAME);
+    }
+
+    /**
+     * Contenu du mail qui est envoyé lorsque le compte de l'utilisateur
+     * a changé de status.
+     */
+    public function changingStatusMail()
+    {
+        return <<<HTML
+
+HTML;
+    }
+
+    /**
+     * Retourne le lien de l'utilisateur.
+     * 
+     * @param string $type Permet de dire si on veut le lien relatif au site
+     *                     ou le lien total contenant le domaine.
+     * 
+     * @return string
+     */
+    public function getLink(string $type = null)
+    {
+        if (in_array($type, ["all", "total", "domain", "with domain", "with_domain"])) {
+            return APP_URL . "/users" . "/" . $this->pseudo;
+        } else {
+            return "/users" . "/" . $this->pseudo;
+        }
+    }
+
+    /**
+     * Retourne le lien vers la page qui permet de modifier l'annonce.
+     * 
+     * @return string
+     */
+    public function getManageLink(string $action = null)
+    {
+        return null === $action
+            ? $this->getLink() // Si on ne passe pas d'action on affiche l'annonce
+            : $this->getLink()."/$action"; // Si on passe une annonce.
     }
 
 }

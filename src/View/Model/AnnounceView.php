@@ -144,72 +144,6 @@ HTML;
     }
 
     /**
-     * Affiches les 6 dernières annonces postées.
-     * 
-     * @return string
-     */
-    public function latestSection()
-    {
-        $content = null;
-        $announces = Announce::getLastPosted(6);
-
-        if (empty($announces)) {
-            $content = self::noAnnounces();
-        } else {
-            foreach ($announces as $announce) {
-                $content .= (new self($announce))->latestAnnouncesSectionCard();
-            }
-        }
-
-        return <<<HTML
-        <section class="featured section-padding">
-            <div class="container">
-                <h1 class="section-title">Postées récemment</h1>
-                <div class="row">
-                    {$content}
-                </div>
-            </div>
-        </section>
-HTML;
-    }
-
-    /**
-     * Affiches les annonces premium.
-     * 
-     * @return string
-     */
-    public function premiumSection()
-    {
-//         $content = null;
-//         $announces = Announce::getPremium(6);
-
-//         if (empty($content)) {
-//             $content = self::noAnnounces();
-//         } else {
-//             foreach ($announces as $item) {
-//                 $announce = new Announce($item["id"]);
-//                 $announceView = new self($announce);
-//                 $content .= $announceView->premiumCard();
-//             }
-//         }
-
-//         return <<<HTML
-//         <section class="featured-lis section-padding" >
-//             <div class="container">
-//                 <div class="row">
-//                     <div class="col-md-12 wow fadeIn" data-wow-delay="0.5s">
-//                         <h3 class="section-title">Les Annonces Premium</h3>
-//                         <div id="new-products" class="owl-carousel">
-//                             {$content}
-//                         </div>
-//                     </div> 
-//                 </div>
-//             </div>
-//         </section>
-// HTML;
-    }
-
-    /**
      * La vue qui affiche la liste des annonces.
      * 
      * @param array $announces
@@ -220,30 +154,58 @@ HTML;
     {
         return <<<HTML
         <div class="col-lg-9 col-md-12 col-xs-12 page-content">
-            {$this->announcesSection($announces)}
+            {$this->announceFilter()}
+            <div class="adds-wrapper">
+                <div class="tab-content">
+                    {$this->gridView($announces)}
+                    {$this->listView($announces)}
+                </div>
+            </div>
         </div>
 HTML;
     }
 
     /**
-     * La section qui affiche les annonces en format de grille ou en
-     * en format de liste.
-     * 
-     * @param array $announces
+     * Affiche les annonces les plus vues.
      * 
      * @return string
      */
-    public function announcesSection(array $announces)
+    public static function moreViewed()
     {
-        return <<<HTML
-        {$this->announceFilter()}
-        <div class="adds-wrapper">
-            <div class="tab-content">
-                {$this->gridView($announces)}
-                {$this->listView($announces)}
-            </div>
-        </div>
-HTML;
+        $content = null;
+        $announces = Announce::getMoreViewed(10);
+
+        if (empty($announces)) {
+            $content = self::noAnnounces();
+        } else {
+            $content = null;
+            foreach ($announces as $announce) {
+                $content .= (new self($announce))->scrollingCard();
+            }
+        }
+
+        return Snippet::hScrolling("Les plues vues", $content);
+    }
+
+    /**
+     * Affiches les 6 dernières annonces postées.
+     * 
+     * @return string
+     */
+    public function latest()
+    {
+        $content = null;
+        $announces = Announce::getLastPosted(6);
+
+        if (empty($announces)) {
+            $content = self::noAnnounces();
+        } else {
+            foreach ($announces as $announce) {
+                $content .= (new self($announce))->card("col-xs-6 col-sm-6 col-md-4 col-lg-4");
+            }
+        }
+
+        return Snippet::list("Postés récemment", $content);
     }
 
     /**
@@ -275,7 +237,7 @@ HTML;
             $content = self::noAnnounces();
         } else {
             foreach ($announces as $announce) {
-                $content .= (new self($announce))->gridFormat();
+                $content .= (new self($announce))->card("col-xs-12 col-sm-12 col-md-6 col-lg-6");
             }
         }
 
@@ -301,7 +263,7 @@ HTML;
             $content = self::noAnnounces();
         } else {
             foreach ($announces as $announce) {
-                $content .= (new self($announce))->listFormat();
+                $content .= (new self($announce))->card("col-xs-12 col-sm-12 col-md-12 col-lg-12");
             }
         }
 
@@ -332,98 +294,6 @@ HTML;
     }
 
     /**
-     * Une carte pour l'annonce. La carte qui s'affiche dans la section :
-     * posté(e)s dernièrement.
-     * 
-     * @return string
-     */
-    public function latestAnnouncesSectionCard()
-    {
-        return <<<HTML
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4">
-            <div class="featured-box">
-                {$this->announceCardImg()}
-                {$this->announceCardContent()}
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
-     * La carte qui s'affiche dans la section premium.
-     * 
-     * @return string
-     */
-    public function premiumCard()
-    {
-        return <<<HTML
-        <div class="item">
-            <div class="product-item">
-                <div class="carousel-thumb">
-                    <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Une image de {$this->announce->getSlug()}"> 
-                    <div class="overlay">
-                    </div>
-                </div>    
-                <div class="product-content">
-                    <h3 class="product-title"><a href="ads-details.html">{$this->announce->getTitle()}</a></h3>
-                    <p>{$this->announce->getDescription(75)}</p>
-                    <span class="price">{$this->announce->getPrice()}</span>
-                    <div class="meta">
-                        <span class="count-review">
-                            <span>{$this->announce->getViews()}</span> Vue(s)
-                        </span>
-                    </div>
-                    <div class="card-text">
-                    <div class="float-left">
-                        {$this->showLocation()}
-                    </div>
-                        <div class="float-right">
-                            <div class="icon">
-                            <i class="lni-heart"></i>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
-     * Carte de l'annonce sous forme horizontale.
-     * 
-     * @return string
-     */
-    public function listFormat()
-    {
-        return <<<HTML
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="featured-box">
-                {$this->announceCardImg()}
-                {$this->announceCardContent()}
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
-     * Carte d'une annonce en format de grille. Elle s'affiche en format vertical.
-     * 
-     * @return string
-     */
-    public function gridFormat()
-    {
-        return <<<HTML
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <div class="featured-box">
-                {$this->announceCardImg()}
-                {$this->announceCardContent()}
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
      * Détails de l'annonce.
      * 
      * @return string
@@ -431,10 +301,8 @@ HTML;
     private function details()
     {
         return <<<HTML
-        <!-- Ads Details Start -->
         <div class="section-padding">
             <div class="container">
-                <!-- Product Info Start -->
                 {$this->detailsInfos()}
             </div>
         </div>
@@ -502,59 +370,6 @@ HTML;
         </div>
 HTML;
     }
-
-    /**
-     * Permet d'afficher l'image de couverture de l'annonce dans les cartes.
-     * 
-     * @return string
-     */
-    private function announceCardImg()
-    {
-        return <<<HTML
-        <figure>
-            <div class="icon">
-                <i class="lni-heart"></i>
-            </div>
-            <a href="{$this->announce->getLink()}">
-                <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Photo de {$this->announce->getSlug()}">
-            </a>
-        </figure>
-HTML;
-    }
-
-    /**
-     * Affiche le contenu sur les cartes premium.
-     * 
-     * @return string
-     */
-    private function announceCardContent()
-    {
-        return <<<HTML
-        <div class="feature-content">
-            <div class="product">
-                <a href="{$this->announce->getCategory()->getSlug()}"><i class="lni-folder"></i> {$this->announce->getCategory()->getTitle()}</a>
-            </div>
-            <h4><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h4>
-            <span>{$this->announce->getUpdatedAt()}</span>
-            <ul class="address">
-                <li>
-                    {$this->showLocation()}
-                </li>
-                <li>
-                    <i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}
-                </li>
-                <li>
-                    <a href="users/{$this->announce->getOwner()->getPseudo()}/posts"><i class="lni-user"></i> {$this->announce->getOwner()->getFullName()}</a>
-                </li>
-            </ul>
-            <div class="listing-bottom">
-                <h3 class="price float-left">{$this->announce->getPrice()}</h3>
-                <a href="{$this->announce->getCategory()->getSlug()}" class="btn-verified float-right"><i class="lni-check-box"></i> Annonce validée</a>
-            </div>
-        </div>
-HTML;
-    }
-
     /**
      * Bloc des spécifications de l'annonce.
      * 
@@ -576,7 +391,7 @@ HTML;
     }
 
     /**
-     * Show the images of this annonces.
+     * Affiche les images descriptives de l'annonce sur la page détails.
      * 
      * @param string $bootstrapColClass
      * 
@@ -743,7 +558,7 @@ HTML;
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
             <div class="inner-box">
                 <div class="dashboard-box">
-                    <h2 class="dashbord-title">Détails de l'annonce</h2>
+                    <h1 class="dashbord-title">Détails de l'annonce</h1>
                 </div>
                 <div class="dashboard-wrapper">
                     <div class="form-group mb-3">
@@ -862,15 +677,6 @@ HTML;
             </div>
         </div>
 HTML;
-    }
-
-    /**
-     * Permet d'afficher le lieu de l'annonce.
-     * @return string|null
-     */
-    private function showLocation()
-    {
-        return '<a><i class="lni-map-marker"></i>'. $this->announce->getLocation() .'</a>';
     }
 
     /**
@@ -997,14 +803,7 @@ HTML;
         } elseif ($this->announce->getStatus() == "Validated") {
             $statusClass = "adstatusactive bg-success";
             $statusText = "Validée";
-        }
-        
-        // elseif ($this->announce->getStatus() == "Premium") {
-        //     $statusClass = "adstatusexpired";
-        //     $statusText = "Premium";
-        // }
-        
-        else {
+        } else {
             $statusClass = "adstatusexpired";
             $statusText = "Bloquée";
         }
@@ -1064,6 +863,172 @@ HTML;
     }
 
     /**
+     * Affiche une carte.
+     * 
+     * @param string $responsiveDesignClass La classe bootstrap pour gérer la disposition
+     *                                      de la carte sur les différents types d'écran.
+     * @return string
+     */
+    public function card(string $responsiveDesignClass = null)
+    {
+        return <<<HTML
+        <div class="{$responsiveDesignClass}">
+            <div class="featured-box">
+                {$this->announceCardImg()}
+                {$this->announceCardContent()}
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Affiche la carte adéquate dans la section de défilement
+     * horizontal.
+     */
+    private function scrollingCard()
+    {
+        return <<<HTML
+        <div class="item">
+            <div class="product-item">
+                <div class="carousel-thumb">
+                    <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Image annonce {$this->announce->getTitle()}">
+                    <div class="overlay">
+                    </div>
+                </div>
+                <div class="product-content pb-3">
+                    <h3 class="product-title"><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h3>
+                </div>
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Permet d'afficher l'image de couverture de l'annonce dans les cartes.
+     * 
+     * @return string
+     */
+    private function announceCardImg()
+    {
+        return <<<HTML
+        <figure>
+            <div class="icon">
+                <i class="lni-heart"></i>
+            </div>
+            <a href="{$this->announce->getLink()}">
+                <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Photo de {$this->announce->getSlug()}">
+            </a>
+        </figure>
+HTML;
+    }
+
+    /**
+     * Affiche le contenu sur les cartes premium.
+     * 
+     * @return string
+     */
+    private function announceCardContent()
+    {
+        return <<<HTML
+        <div class="feature-content">
+            <div class="product">
+                <a href="{$this->announce->getCategory()->getSlug()}"><i class="lni-folder"></i> {$this->announce->getCategory()->getTitle()}</a>
+            </div>
+            <h4><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h4>
+            <span>{$this->announce->getUpdatedAt()}</span>
+            <ul class="address">
+                <li>
+                    {$this->showLocation()}
+                </li>
+                <li>
+                    <i class="lni-alarm-clock"></i> {$this->announce->getCreatedAt()}
+                </li>
+                <li>
+                    <a href="users/{$this->announce->getOwner()->getPseudo()}/posts"><i class="lni-user"></i> {$this->announce->getOwner()->getFullName()}</a>
+                </li>
+            </ul>
+            <div class="listing-bottom">
+                <h3 class="price float-left">{$this->announce->getPrice()}</h3>
+                <a href="{$this->announce->getCategory()->getSlug()}" class="btn-verified float-right"><i class="lni-check-box"></i> Annonce validée</a>
+            </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Permet d'afficher le lieu de l'annonce.
+     * @return string|null
+     */
+    private function showLocation()
+    {
+        return '<a><i class="lni-map-marker"></i>'. $this->announce->getLocation() .'</a>';
+    }
+
+    /**
+     * Affiche le tag nouveau si cette annonce est nouvelle.
+     * 
+     * @return string
+     */
+    private function newTag()
+    {
+        if ($this->announce->isNew()) {
+            return <<<HTML
+            <div class="btn-product bg-yellow">
+                <a href="announces">Nouveau</a>
+            </div>
+HTML;
+        }
+    }
+
+    /**
+     * Retourne le tag discout si cette annonce est en promotion.
+     * 
+     * @return string
+     */
+    private function discountTag()
+    {
+        if ($this->announce->isDiscounted()) {
+            return <<<HTML
+            <div class="btn-product bg-red">
+                <a href="#">En promotion 50%</a>
+            </div>
+HTML;
+        }
+    }
+
+    /**
+     * Permet d'afficher des étoiles pour un système de notation.
+     * 
+     * @return string
+     */
+    private function stars()
+    {
+//         return <<<HTML
+//         <span class="icon-wrap">
+//             <i class="lni-star-filled"></i>
+//             <i class="lni-star-filled"></i>
+//             <i class="lni-star-filled"></i>
+//             <i class="lni-star"></i>
+//             <i class="lni-star"></i>
+//         </span>
+// HTML;
+    }
+
+    /**
+     * Affiche le nombre de vues.
+     * 
+     * @return string
+     */
+    private function views()
+    {
+        return <<<HTML
+        <span class="count-review">
+            <span>{$this->announce->getViews()}</span> Vue(s)
+        </span>
+HTML;
+    }
+
+    /**
      * Affiche le bouton pour supprimer ou modifier l'annonce.
      * 
      * @return string
@@ -1076,7 +1041,6 @@ HTML;
             <nav class="mb-3">
                 {$this->editButton()}
                 {$this->validateButton()}
-                <!-- {$this->setPremiumButton()} -->
                 {$this->suspendButton()}
                 {$this->deleteButton()}
             </nav>
@@ -1098,7 +1062,7 @@ HTML;
             if ($this->announce->getOwner()->getEmailAddress() === User::authenticated()->getEmailAddress()
                 || User::authenticated()->isAdministrator()
             ) {
-                return CommentView::showAll($this->announce->getComments());
+                return (new CommentView($this->announce->getLastComment()))->last();
             }
         }
     }
@@ -1110,23 +1074,26 @@ HTML;
     private function putComments()
     {
         if (User::isAuthenticated() && User::authenticated()->isAdministrator()) {
-            $form = new Form($_SERVER["REQUEST_URI"] . "/comment", "mt-3");
-
-            return <<<HTML
-            {$form->open()}
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-xs-12">
-                    <div class="form-group">
-                        <textarea id="comment" class="form-control" name="comment" cols="45" rows="5" placeholder="Laisser une suggestion..." required></textarea>
-                    </div>
-                    <button type="submit" id="submit" class="btn btn-common">Envoyer</button>
-                    </div>
-                </div>
-            {$form->close()}
-HTML;
+            return CommentView::put();
         }
     }
 
+    /**
+     * Affiche le tag validée si cetta annonce est validée.
+     * 
+     * @return string
+     */
+    private function validatedTag()
+    {
+        return <<<HTML
+        <div class="float-right">
+            <div class="icon">
+                <i class="lni-heart"></i>
+            </div>
+        </div>
+HTML;
+    }
+    
     /**
      * Affiche un bouton pour editer l'annonce.
      * @return string
@@ -1154,16 +1121,22 @@ HTML;
     }
 
     /**
-     * Affiche le bouton pour passer l'annonce en premium.
+     * Bouton qui permet de changer l'affichage des annonces.
+     * 
      * @return string
      */
-    private function setPremiumButton()
+    private function changeViewButton()
     {
-//         if (User::isAuthenticated() && User::authenticated()->isAdministrator()) {
-//             return <<<HTML
-//             <a href="{$this->announce->getManageLink('set-premium')}" class="btn-sm btn-success">Passer en Prémium</a>
-// HTML;
-//         }
+        return <<<HTML
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#grid-view"><i class="lni-grid"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#list-view"><i class="lni-list"></i></a>
+            </li>
+        </ul>
+HTML;
     }
 
     /**
@@ -1193,25 +1166,6 @@ HTML;
             <a class="btn-sm btn-danger" href="{$this->announce->getManageLink('delete')}">Supprimer</a>
 HTML;
         }
-    }
-
-    /**
-     * Bouton qui permet de changer l'affichage des annonces.
-     * 
-     * @return string
-     */
-    private function changeViewButton()
-    {
-        return <<<HTML
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#grid-view"><i class="lni-grid"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#list-view"><i class="lni-list"></i></a>
-            </li>
-        </ul>
-HTML;
     }
 
 }

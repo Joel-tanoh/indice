@@ -9,6 +9,7 @@ use App\Communication\Email;
 use App\File\Image\Image;
 use App\Model\Announce;
 use App\Communication\Notify\NotifyByHTML;
+use App\Communication\Notify\NotifyByMail;
 use App\Model\Category;
 use App\Model\Model;
 use App\Model\User\Administrator;
@@ -120,23 +121,52 @@ class AnnounceController extends AppController
                         if (Update::dataPosted()) {
                             if (!empty(self::validation(true)->getErrors())) { // Si erreur
                                 $message = $htmlNotifier->errors(self::validation(true)->getErrors(), "danger");
+                                $view = (new AnnounceView($announce))->update($message);
                             } else { // Sinon On met à jour
                                 if ($announce->update()) {
-                                    $updatedAnnounce = Model::actualize("App\Model\Announce", $announce->getId());
-                                    Utility::redirect($updatedAnnounce->getLink());
+
+                                    // Si l'annonce a été commentée, on notifie les administrateurs.
+                                    if ($announce->getLastComment()) {
+                                        NotifyByMail::administrators(
+                                            "Nouvelle mise à jour d'annonce", 
+                                            Email::content($announce->updatingEmailNotification())
+                                        );
+                                    }
+
+                                    $page->setMetatitle("L'indice | Mise à jour effectuée avec succès");
+
+                                    $page->setView(
+                                        View::success(
+                                            "Mise à jour effectuée avec succès",
+                                            "La mise à jour a été effectuée avec succès, Merci de nous faire confiance pour vos annonces.",
+                                            $announce->getLink()
+                                        )
+                                    );
                                 }
                             }
                         }
 
-                        $view = (new AnnounceView($announce))->update($message);
+                        $page->show();
                         break;
 
                     case "validate" :
+
                         if (User::authenticated()->isAdministrator()) {
-                            (new Administrator(User::authenticated()->getEmailAddress()))->changeStatus(
+                            if ((new Administrator(User::authenticated()->getEmailAddress()))->changeStatus(
                                 $announce->getId(), Announce::convertStatus("validated"), Announce::TABLE_NAME
-                            );
+                            )) {
+                                $page->setMetatitle("L'indice | Validation effectuée avec succès");
+
+                                $page->setView(
+                                    View::success(
+                                        "Mise à jour effectuée avec succès",
+                                        "La mise à jour a été effectuée avec succès, Merci de nous faire confiance pour vos annonces.",
+                                        $announce->getLink()
+                                    )
+                                );
+                            }
                         }
+
                         Utility::redirect($announce->getLink());
                         break;
 
@@ -144,12 +174,15 @@ class AnnounceController extends AppController
 
                         if (User::authenticated()->isAdministrator() && Action::dataPosted()) {
                             if(User::authenticated()->comment($announce->getId(), htmlspecialchars(trim($_POST["comment"])), Announce::TABLE_NAME)) {
-                                (new Email(
-                                    $announce->getOwner()->getEmailAddress(),
-                                    "L'indice, une nouvelle suggestion sur votre annonce",
-                                    Comment::content()
-                                ))->send();
+                                
+                                NotifyByMail::user(
+                                    $announce->getOwner()->getEmailAddress(), 
+                                    "L'indice, une nouvelle suggestion sur votre annonce.",
+                                    Comment::emailContent($announce->getTitle(), trim($_POST["comment"]), $announce->getLink("all"))
+                                );
+                                
                                 $page->setMetatitle("L'indice | Commentaire envoyé avec succès");
+
                                 $page->setView(
                                     View::success(
                                         "Commentaire envoyé avec succès",
@@ -157,6 +190,7 @@ class AnnounceController extends AppController
                                         $announce->getLink()
                                     )
                                 );
+
                                 $page->show();
                             }
                         }
@@ -165,8 +199,21 @@ class AnnounceController extends AppController
 
                     case "delete" :
                         if ($announce->delete()) {
-                            Utility::redirect($user->getProfileLink()."/posts");
+
+                            NotifyByMail::administrators("Une annonce a été supprimée", "Une annonce a été supprimée.");
+
+                            $page->setMetatitle("L'indice | Suppression effectuée avec succès");
+
+                            $page->setView(
+                                View::success(
+                                    "Suppression effectuée avec succès",
+                                    "L'annonce a été supprimée avec succès."
+                                )
+                            );
+
+                            $page->show();                            
                         }
+
                         break;
 
                     default :

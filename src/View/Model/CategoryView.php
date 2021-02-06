@@ -86,8 +86,7 @@ HTML;
     {
         $content = null;
         $colors = [
-            "green", "yellow", "red", "app-blue",
-            "purple", "gray", "orange", "blue"
+            "app-blue", "gray"
         ];
 
         foreach (Category::getAll(Category::TABLE_NAME) as $category) {

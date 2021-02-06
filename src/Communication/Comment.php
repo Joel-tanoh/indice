@@ -47,6 +47,9 @@ class Comment extends Model
 
         $result = $req->fetch();
 
+        dump($id);
+        die();
+
         $this->id = $result["id"];
         $this->content = $result["content"];
         $this->poster = new Registered($result["user_email_address"]);
@@ -128,7 +131,7 @@ class Comment extends Model
      */
     public static function getAll()
     {
-        $req = parent::connectToDb()->query("SELECT id FROM " . self::TABLE_NAME);
+        $req = parent::connectToDb()->query("SELECT id FROM " . self::TABLE_NAME . " ORDER BY posted_at DESC");
         $req->execute();
 
         $comments = [];
@@ -185,15 +188,34 @@ class Comment extends Model
      * 
      * @return string
      */
-    public static function content()
+    public static function emailContent(string $annonceTitle, string $comment, string $announceLink)
     {
-        $snippet = new Snippet;
-
-        return <<<HTML
-        <section>
-            
-        </section>
+        $content = <<<HTML
+        <p>Vous avez réçu une nouvelle suggestion concernant votre annonce.</p>
+        <p>Titre de l'annonce : {$annonceTitle}</p>
+        <p>{$comment}</p>
+        <div style="text-align:center">
+            <a href="{$announceLink}" style="background-color:#1c3467; padding:7px 11px; color:white">Voir</a>
+        </div>
 HTML;
+        return Email::content($content);
+    }
+
+    /**
+     * Retourne le dernier élément d'une table, pour retourner cet élément, l'ordre
+     * est fait sur la date de création et on récupère que le premier élément.
+     * 
+     * @param string $colForInstantiate Le nom de la colonne qui est utilisée pour instantier
+     *                                  l'occurrence obtenue et le retourner sous forme d'objet.
+     * @param string $tableName         Le nom de la table dans laquelle on récupère l'occurrence.
+     * @param string $class             Le nom de la classe, il faut mettre le chemin total de la classe.
+     * 
+     * @return $object Un objet.
+     */
+    public static function getLast(string $colForInstantiate = null, string $tableName = null, string $class = null)
+    {
+        $req = self::connectToDb()->query("SELECT id FROM ". self::TABLE_NAME ." ORDER BY posted_at DESC limit 0, 1");
+        return new self($req->fetch()[$colForInstantiate]);
     }
 
 }

@@ -178,12 +178,12 @@ abstract class Model
      * 
      * @param string $colToSelect La colonne à récupérer.
      * @param string $table
-     * @param array $whereCol    A passer si on veut filtrer les résultats.
-     * @param  $WhereValue  La valeur à prendre en compte pour le filtrage.
+     * @param string $whereCol    A passer si on veut filtrer les résultats.
+     * @param mixed  $WhereValue  La valeur à prendre en compte pour le filtrage.
      * 
      * @return array
      */
-    public static function get(string $colToSelect, string $table, array $whereCol = null, $WhereValue = null)
+    public static function get(string $colToSelect, string $table, string $whereCol = null, $WhereValue = null)
     {
         $query = "SELECT $colToSelect FROM $table";
 
@@ -302,6 +302,43 @@ abstract class Model
         }
 
         return $data;
+    }
+
+    /**
+     * Retourne le dernier élément d'une table, pour retourner cet élément, l'ordre
+     * est fait sur la date de création et on récupère que le premier élément.
+     * 
+     * @param string $colForInstantiate Le nom de la colonne qui est utilisée pour instantier
+     *                                  l'occurrence obtenue et le retourner sous forme d'objet.
+     * @param string $tableName         Le nom de la table dans laquelle on récupère l'occurrence.
+     * @param string $class             Le nom de la classe, il faut mettre le chemin total de la classe.
+     * 
+     * @return $object Un objet.
+     */
+    public static function getLast(string $colForInstantiate = null, string $tableName = null, string $class = null)
+    {
+        $req = self::connectToDb()->query("SELECT $colForInstantiate FROM $tableName ORDER BY created_at DESC limit 0, 1");
+        return new $class($req->fetch()[$colForInstantiate]);
+    }
+
+    /**
+     * Permet de vérifier si cet est nouveau.
+     * 
+     * @return bool
+     */
+    public function isNew()
+    {
+        return false;
+    }
+
+    /**
+     * Permet de vérifier si cet élément est en promotion.
+     * 
+     * @return bool
+     */
+    public function isDiscounted()
+    {
+        return false;
     }
 
 }

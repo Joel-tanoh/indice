@@ -79,4 +79,14 @@ class Administrator extends Registered
         return $comments;
     }
 
+    /**
+     * Retourne la liste des adresse email des administrators.
+     * 
+     * @return array
+     */
+    public static function emailAddresses()
+    {
+        return parent::get("email_address", Administrator::TABLE_NAME, "type", 1);
+    }
+
 }
