@@ -17,10 +17,6 @@ try {
     
     Visitor::manage();
 
-    // dump($_SESSION);
-    // dump($_COOKIE);
-    // die();
-
     $router = new Router(trim($_SERVER["REQUEST_URI"], "/"));
 
     // Route en get sans paramètre

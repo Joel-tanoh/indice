@@ -75,14 +75,11 @@ class AnnounceController extends AppController
             $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $params[1], "App\Model\Category");
             $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $params[2], "App\Model\Announce");
 
-            if ($announce->isValidated() || ($announce->isPending() && User::isAuthenticated())) {
-                if ($announce->hasCategory($category)) {
-                    $page = new Page("L'indice | " . $announce->getTitle(), (new AnnounceView($announce))->read());
-                    $page->addJs("https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons", "async");
-                    $page->show();
-                } else {
-                    throw new Exception("La ressource demandée n'a pas été trouvée !");
-                }
+            if ($announce->hasCategory($category) && $announce->isValidated() || ($announce->isPending() && User::isAuthenticated())) {
+                $announce->incrementView();
+                $page = new Page("L'indice | " . $announce->getTitle(), (new AnnounceView($announce))->read());
+                $page->addJs("https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons", "async");
+                $page->show();
             } else {
                 throw new Exception("La ressource demandée n'a pas été trouvée !");
             }

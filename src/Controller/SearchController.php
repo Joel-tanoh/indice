@@ -20,8 +20,6 @@ class SearchController extends AppController
      */
     public static function router(array $params)
     {
-        dump($params);
-        dump($_POST);
         die("Vous faites des recherches selon des paramètres");
     }
 

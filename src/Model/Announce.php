@@ -551,9 +551,6 @@ class Announce extends Model
         $data["type"] = htmlspecialchars($_POST["type"]);
         $data["direction"] = htmlspecialchars($_POST["direction"]);
 
-        //=== Fonctionnalité rétirée pour le moment ====/
-        // $data["id_sub_category"] = htmlspecialchars($_POST["id_sub_category"]);
-
         //=== Si l'user veut qu'on l'appelle pour le prix ======================/
         if (empty($_POST["price"]) && isset($_POST["price_on_call"])) {
             $data["price"] = "price_on_call";
@@ -909,6 +906,23 @@ class Announce extends Model
             <a href="{$this->getLink('all')}">Voir</a>
         </p>
 HTML;
+    }
+
+    /**
+     * Permet d'incrémenter le nombre de vue.
+     * 
+     * @return bool
+     */
+    public function incrementView()
+    {
+        if ($this->isValidated()) {
+            $req = parent::connectToDb()->prepare("UPDATE " . self::TABLE_NAME . " SET views = views + 1 WHERE id = :id");
+            $req->execute([
+                "id" => $this->id
+            ]);
+    
+            return true;
+        }
     }
 
 }

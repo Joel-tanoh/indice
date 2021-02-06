@@ -31,12 +31,6 @@ class SearchEngine extends Action
 
         $req->execute($this->dataTreated($dataSent));
         $this->data = $req->fetchAll();
-        
-        // dump($this->query);
-        // dump($dataSent);
-        // dump($this->dataTreated($dataSent));
-        // dump($this->data);
-        // die();
     }
 
     /** 
