@@ -2,6 +2,8 @@
 
 namespace App\View\Communication;
 
+use App\View\Form;
+
 /** Classe gestionnaire des vues relatives aux commentaires */
 class CommentView
 {
@@ -10,9 +12,31 @@ class CommentView
     /**
      * Constructeur d'une vue de commentaire.
      */
-    public function __construct(\App\Communication\Comment $comment)
+    public function __construct(\App\Communication\Comment $comment = null)
     {
         $this->comment = $comment;
+    }
+
+    /**
+     * Permet de laisser des commentaires(suggestions) sur l'annonce.
+     * @return string
+     */
+    public static function put()
+    {
+        $form = new Form($_SERVER["REQUEST_URI"] . "/comment", "mt-4");
+
+        return <<<HTML
+        {$form->open()}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-xs-12">
+                    <div class="form-group">
+                        <textarea id="comment" class="border px-2 w-100" name="comment" cols="45" rows="5" placeholder="Laisser une suggestion en tant qu'administrateur..." required></textarea>
+                    </div>
+                    <button type="submit" id="submit" class="btn btn-common">Envoyer</button>
+                </div>
+            </div>
+        {$form->close()}
+HTML;
     }
 
     /**
@@ -31,13 +55,36 @@ class CommentView
         return <<<HTML
         <div id="comments">
             <div class="comment-box">
-                <h3>Suggestions</h3>
+                <h3>Commentaires</h3>
                 <ol class="comments-list">
                     {$commentsList}
                 </ol>
             </div>
         </div>
 HTML;
+    }
+
+    /**
+     * Affiche le dernier commentaire.
+     * 
+     * @return string
+     */
+    public function last()
+    {
+        if (null !== $this->comment) {
+            return <<<HTML
+            <div id="comments">
+                <div class="comment-box">
+                    <h3>Dernier commentaire</h3>
+                    <ol class="comments-list">
+                        {$this->show()}
+                    </ol>
+                </div>
+            </div>
+HTML;
+        } else {
+            return $this->noComments();
+        }
     }
 
     /**
@@ -65,4 +112,17 @@ HTML;
         </li>
 HTML;
     }
+
+    /**
+     * Retourne pas de commentaires.
+     * 
+     * @return string
+     */
+    private function noComments()
+    {
+        return <<<HTML
+        <p class="h5 mt-3 p-3 border rounded">Aucun commentaire</p>
+HTML;
+    }
+
 }

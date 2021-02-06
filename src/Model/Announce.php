@@ -302,11 +302,18 @@ class Announce extends Model
     /**
      * Retourne le lien de l'annonce.
      * 
+     * @param string $type Permet de dire si on veut le lien relatif au site
+     *                     ou le lien total contenant le domaine.
+     * 
      * @return string
      */
-    public function getLink()
+    public function getLink(string $type = null)
     {
-        return $this->category->getSlug() . "/" . $this->getSlug();
+        if (in_array($type, ["all", "total", "domain", "with domain", "with_domain"])) {
+            return APP_URL . "/" . $this->category->getSlug() . "/" . $this->slug;
+        } else {
+            return $this->category->getSlug() . "/" . $this->slug;
+        }
     }
 
     /**
@@ -353,6 +360,28 @@ class Announce extends Model
         }
 
         return $comments;
+    }
+
+    /**
+     * Retourne le dernier commentaire d'une annonce.
+     * 
+     * @return \App\Communication\Comment
+     */
+    public function getLastComment()
+    {
+        $req = parent::connectToDb()->prepare(
+            "SELECT id FROM " . Comment::TABLE_NAME . " WHERE subject_id = :subject_id AND subject_type = :subject_type ORDER BY posted_at DESC limit 0, 1"
+        );
+        $req->execute([
+            "subject_id" => $this->id,
+            "subject_type" => $this->tableName
+        ]);
+
+        $commentId = $req->fetch()["id"];
+
+        if (null !== $commentId) {
+            return new Comment((int)$commentId);
+        }
     }
 
     /**
@@ -492,17 +521,16 @@ class Announce extends Model
      */
     public static function getMoreViewed(int $nbr = null) : array
     {
-        $query = "SELECT id FROM " . self::TABLE_NAME . " ORDER BY views DESC";
+        $query = "SELECT id FROM " . self::TABLE_NAME . " WHERE status IN (2, 3) ORDER BY views DESC";
 
         if (null !== $nbr) {
             $query .= " LIMIT 0, $nbr";
         }
 
-        $req = parent::connectToDb()->prepare($query);
+        $req = parent::connectToDb()->query($query);
         $result = $req->fetchAll();
 
         $announces = [];
-
         foreach($result as $announce) {
             $announces[] = new self($announce["id"]);
         }
@@ -861,6 +889,26 @@ class Announce extends Model
         }
 
         return true;
+    }
+
+    /**
+     * Message envoyé lorsqu'une mise à jour vient d'être faite.
+     * 
+     * @return string
+     */
+    public function updatingEmailNotification()
+    {
+        return <<<HTML
+        <p>Une annonce vient d'être mise à jour.</p>
+        <p>
+            Id de l'annonce : {$this->id}<br>
+            Utilisateur : {$this->owner->getEmailAddress()}
+            Date de mise à jour {$this->getUpdatedAt()}
+        </p>
+        <p>
+            <a href="{$this->getLink('all')}">Voir</a>
+        </p>
+HTML;
     }
 
 }

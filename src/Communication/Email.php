@@ -15,6 +15,7 @@
 
 namespace App\Communication;
 
+use App\File\Image\Logo;
 use Exception;
 
 /**
@@ -140,15 +141,17 @@ class Email
      */
     public static function content(string $content)
     {
-        $head = self::head();
+        $head = self::appMailHeader();
         $foot = self::appEmailFooter();
 
         return <<<HTML
-        <div style="text-align:center; width:100%">
+        <section style="text-align:justify; width:80%; background-color:white">
             {$head}
-            {$content}
+            <div style="text-align:justify; padding:1.5rem">
+                {$content}
+            </div>
             {$foot}
-        </div>
+        </section>
 HTML;
     }
 
@@ -158,11 +161,14 @@ HTML;
      * 
      * @return string
      */
-    public static function head()
+    public static function appMailHeader()
     {
+        $logoSrc =  Logo::LOGOS_DIR_URL . "/logo-colored.png";
+
         return <<<HTML
-        <section> 
-            <h2>Bienvenue sur L'indice.com</h2>
+        <section style="background-color:#110808; color:white; padding:1.5rem">
+            <img src="{$logoSrc}" alt="Logo de L'indice">
+            <h2>Bienvenue sur L'indice</h2>
         </section>
 HTML;
     }
@@ -178,8 +184,8 @@ HTML;
         $appUrl = APP_URL;
 
         return <<<HTML
-        <section>
-            Vers <a href="{$appUrl}">Indice.com</a>
+        <section style="background-color:#110808; color:white; padding:1.5rem">
+            Aller sur <a href="{$appUrl}">Indice.com</a>
         </section>
 HTML;
     }

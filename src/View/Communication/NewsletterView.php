@@ -68,9 +68,7 @@ HTML;
     public function welcomeMessage()
     {
         $content = <<<HTML
-        <section>
-            <p>Nous sommes ravis de vous compter parmi nos abonnés <br>Nous vous tiendrons informé régulièrement des nouveautés.</p>
-        </section>
+        <p>Nous sommes ravis de vous compter parmi nos abonnés <br>Nous vous tiendrons informé régulièrement des nouveautés.</p>
 HTML;
         return Email::content($content);
     }

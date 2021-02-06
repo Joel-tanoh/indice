@@ -40,13 +40,12 @@ class View
                 <aside class="col-12 col-lg-8">
                     <!-- Trending Categories Section Start -->
                     {$categoryView->trendingCategoriesSection()}
-                    <!-- Trending Categories Section End -->
 
                     <!-- Premium Listings Start -->
-                    <!-- {$annonceView->premiumSection()} -->
+                    {$annonceView->moreViewed()}
 
                     <!-- Latest Announcements Section Start -->
-                    {$annonceView->latestSection()}
+                    {$annonceView->latest()}
                     
                     <!-- Subscribe Section Start -->
                     {$newsletterView->suscribeNewsletterSection()}
