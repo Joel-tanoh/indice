@@ -29,35 +29,21 @@ class RegisteredView extends UserView
     /**
      * Affiche le dashboard de l'utilisateur.
      * 
-     * @param array $announces
+     * @param array  $announces
+     * @param string $dashboardTitle Le titre du tableau.
+     * @param string $current        Pour indiquer à l'utilisateur où il se trouve.
      * 
      * @return string
      */
-    public function dashboard(array $announces)
+    public function dashboard(array $announces, string $dashboardTitle, string $current)
     {
-        $snippet = new Snippet();
-
-        return <<<HTML
-        {$snippet->pageHeader("Mes annonces", "Mes annonces")}
-        
-        <div id="content" class="section-padding">
-            <div class="container">
-                <div class="row">
-                    {$this->sidebarNav(User::authenticated())}
-                    <div class="col-sm-12 col-md-8 col-lg-9">
-                        <div class="page-content">
-                            <div class="inner-box">
-                                <div class="dashboard-box">
-                                    <h2 class="dashbord-title">Mes annonces</h2>
-                                </div>
-                                {$this->dashboardContent($announces)}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        $content = <<<HTML
+        <section class="col-12">
+            {$this->dashboardTitle($dashboardTitle)}
+            {$this->dashboardContent($announces)}
+        </section>
 HTML;
+        return parent::administration($content, $current, $current);
     }
 
     /**
@@ -72,8 +58,8 @@ HTML;
         return <<<HTML
         {$snippet->pageHeader("Mon profil", "Mon profil")}
 
-        <div id="content" class="section-padding">
-            <div class="container">
+        <div id="content" class="my-3">
+            <div class="container-fluid">
                 <div class="row">
                     {$this->sidebarNav(User::authenticated())}
                     <div class="col-sm-12 col-md-8 col-lg-9">
@@ -97,8 +83,8 @@ HTML;
         return <<<HTML
         {$snippet->pageHeader($this->user->getFullName(), "Utilisateurs / ". $this->user->getFullName())}
 
-        <div id="content" class="section-padding">
-            <div class="container">
+        <div id="content" class="my-3">
+            <div class="container-fluid">
                 <div class="row">
                     {$this->sidebarNav(User::authenticated())}
                     <div class="col-sm-12 col-md-8 col-lg-9">
@@ -232,13 +218,29 @@ HTML;
     }
 
     /**
+     * Affiche le titre du tableau qui affiche les announces.
+     * 
+     * @param string $dashboardTitle Le titre du tableau.
+     * 
+     * @return string
+     */
+    private function dashboardTitle(string $dashboardTitle)
+    {
+        return <<<HTML
+        <div class="dashboard-box">
+            <h2 class="dashbord-title">{$dashboardTitle}</h2>
+        </div>
+HTML;
+    }
+
+    /**
      * Affiche le contenu du tableau.
      * 
      * @param array $announces
      * 
      * @return string
      */
-    protected function dashboardContent(array $announces)
+    private function dashboardContent(array $announces)
     {
         return <<<HTML
         <div class="dashboard-wrapper">
@@ -256,16 +258,29 @@ HTML;
      */
     protected function dashboardTableNav()
     {
-        return <<<HTML
-        <nav class="nav-table">
-            <ul>
-                {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts", "Tous", $this->user->getAnnounceNumber())}
-                {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/pending", "En attente", $this->user->getAnnounceNumber("pending"))}
-                {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/validated", "Validées", $this->user->getAnnounceNumber("validated"))}
-                {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/blocked", "Bloquées", $this->user->getAnnounceNumber("blocked"))}
-            </ul>
-        </nav>
+        if ($this->user !== null) {
+            return <<<HTML
+            <nav class="nav-table">
+                <ul>
+                    {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts", "Tous", $this->user->getAnnounceNumber())}
+                    {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/pending", "En attente", $this->user->getAnnounceNumber("pending"))}
+                    {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/validated", "Validées", $this->user->getAnnounceNumber("validated"))}
+                    {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/blocked", "Bloquées", $this->user->getAnnounceNumber("blocked"))}
+                </ul>
+            </nav>
 HTML;
+        } else {
+            return <<<HTML
+            <nav class="nav-table">
+                <ul>
+                    {$this->dashbaordNavStatus("/administration/annonces", "Tous", count(Announce::getAll()))}
+                    {$this->dashbaordNavStatus("/administration/annonces/pending", "En attente", count(Announce::getPending()))}
+                    {$this->dashbaordNavStatus("/administration/annonces/validated", "Validées", count(Announce::getValidated()))}
+                    {$this->dashbaordNavStatus("/administration/annonces/blocked", "Bloquées", count(Announce::getSuspended()))}
+                </ul>
+            </nav>
+HTML;
+        }
     }
 
     /**
@@ -292,7 +307,7 @@ HTML;
     protected function dashboardContentTable(array $announces)
     {
         if (!empty($announces)) {
-            $form = new Form($_SERVER["REQUEST_URI"] . "/announces/delete");
+            $form = new Form($_SERVER["REQUEST_URI"] . "/delete");
             
             return <<<HTML
             {$form->open()}

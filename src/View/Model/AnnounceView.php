@@ -86,13 +86,10 @@ HTML;
         return <<<HTML
         {$snippet->pageHeader("Poster mon Annonce", "Poster mon annonce")}
         {$message}
-        <div id="content" class="section-padding">
-            <div class="container">
+        <div id="content" class="my-3">
+            <div class="container-fluid">
                 <div class="row">
-                    <!-- Sidebar de la page de post -->
                     {$registeredView->sidebarNav(User::authenticated())}
-
-                    <!-- Contenu de la page -->
                     {$this->createPageContent()}
                 </div>
             </div>      
@@ -109,9 +106,7 @@ HTML;
         $snippet = new Snippet();
 
         return <<<HTML
-        <!-- Header de la page -->
         {$snippet->pageHeader($this->announce->getTitle(), $this->announce->getTitle())}
-        <!-- Contenu de la page -->
         {$this->details()}
 HTML;
     }
@@ -131,11 +126,10 @@ HTML;
         <!-- Message affiché en fonction de l'issue de l'action -->
         {$message}
 
-        <div id="content" class="section-padding">
-            <div class="container">
+        <div id="content" class="my-3">
+            <div class="container-fluid">
                 <div class="row">
                     {$registeredView->sidebarNav(User::authenticated())}
-                    <!-- Contenu de la page -->
                     {$this->createPageContent()}
                 </div>
             </div>
@@ -301,7 +295,7 @@ HTML;
     private function details()
     {
         return <<<HTML
-        <div class="section-padding">
+        <div class="my-3">
             <div class="container">
                 {$this->detailsInfos()}
             </div>
@@ -325,7 +319,7 @@ HTML;
                 </div>
             </div>
             <div class="media-body">
-                <h4 class="post-title"><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h4>
+                <h4 class="post-title"><a href="{$this->announce->getLink()}">{$this->announce->getTitle(20)}</a></h4>
                 <span class="date">{$this->announce->getCreatedAt()}</span>
             </div>
         </li>
@@ -934,7 +928,7 @@ HTML;
             <div class="product">
                 <a href="{$this->announce->getCategory()->getSlug()}"><i class="lni-folder"></i> {$this->announce->getCategory()->getTitle()}</a>
             </div>
-            <h4><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h4>
+            <h4><a href="{$this->announce->getLink()}">{$this->announce->getTitle(20)}</a></h4>
             <span>{$this->announce->getUpdatedAt()}</span>
             <ul class="address">
                 <li>

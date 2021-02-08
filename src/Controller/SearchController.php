@@ -4,13 +4,11 @@ namespace App\Controller;
 
 use App\Action\Action;
 use App\Engine\SearchEngine;
-use App\Model\Announce;
-use App\View\Model\AnnounceView;
 use App\View\Page\Page;
 use App\View\SearchView;
 
 /** Controller de gestion des recherches. */
-class SearchController extends AppController
+abstract class SearchController extends AppController
 {
 
     /**
@@ -20,8 +18,6 @@ class SearchController extends AppController
      */
     public static function router(array $params)
     {
-        dump($params);
-        dump($_POST);
         die("Vous faites des recherches selon des paramètres");
     }
 

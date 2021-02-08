@@ -10,7 +10,7 @@ use App\View\Page\Page;
 /**
  * Controller des catégories.
  */
-class CategoryController extends AppController
+abstract class CategoryController extends AppController
 {
     /**
      * Controlleur de création d'une catégorie.

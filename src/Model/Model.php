@@ -52,8 +52,11 @@ abstract class Model
      * 
      * @return string
      */
-    public function getTitle()
+    public function getTitle(int $length = null)
     {
+        if (null !== $length && strlen($this->title) > $length) {
+            return substr(ucfirst($this->title), 0, $length) . "...";
+        }
         return ucfirst($this->title);
     }
 

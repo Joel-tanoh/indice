@@ -17,10 +17,6 @@ try {
     
     Visitor::manage();
 
-    // dump($_SESSION);
-    // dump($_COOKIE);
-    // die();
-
     $router = new Router(trim($_SERVER["REQUEST_URI"], "/"));
 
     // Route en get sans paramètre
@@ -29,9 +25,10 @@ try {
     $router->get("/sign-in", "App\Controller\UserController@signIn");
     $router->get("/sign-out", "App\Controller\UserController@signOut");
     $router->get("/post", "App\Controller\AnnounceController@create");
-    $router->get("/users", "App\Controller\UserController@users");
+    $router->get("/administration/users", "App\Controller\UserController@users");
     $router->get("/in-progress", "App\Controller\AppController@page404");
     $router->get("/announces", "App\Controller\AnnounceController@announces");
+    $router->get("/administration/annonces", "App\Controller\AdministrationController@announces");
 
     // Route en get avec paramètre
     $router->get("/:category", "App\Controller\CategoryController@read");

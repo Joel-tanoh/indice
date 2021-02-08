@@ -46,7 +46,7 @@ class SearchView extends Snippet
         <!-- Hero Area -->
         {$snippet->heroArea2(false)}
         <!-- Main container Start -->
-        <div class="main-container section-padding">
+        <div class="main-container mb-3">
             <div class="container-fluid">
                 {$advertising->top()}
                 <div class="row">
@@ -101,7 +101,7 @@ HTML;
      */
     public function categorySearchWidget()
     {
-        $form = new Form("announces/search", null, false, "post", "search-form", "search");
+        $form = new Form("announces/search", null, "post", "search-form", "search");
         $searchQuery = !empty($_POST["query"]) ? $_POST["query"] : null;
 
         return <<<HTML

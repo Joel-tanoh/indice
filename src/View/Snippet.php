@@ -390,6 +390,36 @@ HTML;
     }
 
     /**
+     * 
+     */
+    public static function failed(string $title, string $content, string $link = null)
+    {
+        if (null !== $link) {
+            $link = '<a class="btn btn-danger" href="'. $link . '">Retour</a>';
+        } else {
+            $link = '<a class="btn btn-primary" href="'. APP_URL . '">Accueil</a>';
+        }
+
+        return <<<HTML
+        <section id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="inner-box posting">
+                            <div class="alert alert-danger alert-lg" role="alert">
+                                <h2 class="postin-title"> {$title}</h2>
+                                <p>{$content}</p>
+                                <p class="mt-3">{$link}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+HTML;
+    }
+
+    /**
      * Retourne les icônes des réseaux sociaux dans le pied de page.
      * 
      * @return string

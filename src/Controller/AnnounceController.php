@@ -21,7 +21,7 @@ use App\View\Page\Page;
 use App\View\View;
 use Exception;
 
-class AnnounceController extends AppController
+abstract class AnnounceController extends AppController
 {
     /**
      * Affiche toutes les announces.
@@ -75,14 +75,11 @@ class AnnounceController extends AppController
             $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $params[1], "App\Model\Category");
             $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $params[2], "App\Model\Announce");
 
-            if ($announce->isValidated() || ($announce->isPending() && User::isAuthenticated())) {
-                if ($announce->hasCategory($category)) {
-                    $page = new Page("L'indice | " . $announce->getTitle(), (new AnnounceView($announce))->read());
-                    $page->addJs("https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons", "async");
-                    $page->show();
-                } else {
-                    throw new Exception("La ressource demandée n'a pas été trouvée !");
-                }
+            if ($announce->hasCategory($category) && $announce->isValidated() || ($announce->isPending() && User::isAuthenticated())) {
+                $announce->incrementView();
+                $page = new Page("L'indice | " . $announce->getTitle(), (new AnnounceView($announce))->read());
+                $page->addJs("https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons", "async");
+                $page->show();
             } else {
                 throw new Exception("La ressource demandée n'a pas été trouvée !");
             }
@@ -121,7 +118,10 @@ class AnnounceController extends AppController
                         if (Update::dataPosted()) {
                             if (!empty(self::validation(true)->getErrors())) { // Si erreur
                                 $message = $htmlNotifier->errors(self::validation(true)->getErrors(), "danger");
-                                $view = (new AnnounceView($announce))->update($message);
+                                $page->setView(
+                                    (new AnnounceView($announce))->update($message)
+                                );
+
                             } else { // Sinon On met à jour
                                 if ($announce->update()) {
 
@@ -144,19 +144,20 @@ class AnnounceController extends AppController
                                     );
                                 }
                             }
+                            
+                            $page->show();
+
+                        } else {
+                            Utility::redirect($announce->getLink());
                         }
 
-                        $page->show();
                         break;
 
                     case "validate" :
 
                         if (User::authenticated()->isAdministrator()) {
-                            if ((new Administrator(User::authenticated()->getEmailAddress()))->changeStatus(
-                                $announce->getId(), Announce::convertStatus("validated"), Announce::TABLE_NAME
-                            )) {
+                            if (User::authenticated()->changeStatus($announce->getId(), Announce::convertStatus("validated"), Announce::TABLE_NAME)) {
                                 $page->setMetatitle("L'indice | Validation effectuée avec succès");
-
                                 $page->setView(
                                     View::success(
                                         "Mise à jour effectuée avec succès",
@@ -165,9 +166,17 @@ class AnnounceController extends AppController
                                     )
                                 );
                             }
+                        } else {
+                            $page->setMetatitle("L'indice | Validation impossible");
+                            $page->setView(
+                                View::failed(
+                                    "Impossible de valider cette annonce",
+                                    "Vous n'avez pas les droits suffisant pour valider une annonce."
+                                )
+                            );
                         }
 
-                        Utility::redirect($announce->getLink());
+                        $page->show();
                         break;
 
                     case "comment" :
@@ -182,7 +191,6 @@ class AnnounceController extends AppController
                                 );
                                 
                                 $page->setMetatitle("L'indice | Commentaire envoyé avec succès");
-
                                 $page->setView(
                                     View::success(
                                         "Commentaire envoyé avec succès",
@@ -190,9 +198,10 @@ class AnnounceController extends AppController
                                         $announce->getLink()
                                     )
                                 );
-
                                 $page->show();
                             }
+                        } else {
+                            Utility::redirect($_SERVER["HTTP_REFERER"]);
                         }
 
                         break;
@@ -211,7 +220,18 @@ class AnnounceController extends AppController
                                 )
                             );
 
-                            $page->show();                            
+                            $page->show();
+                        } else {
+                            $page->setMetatitle("L'indice | Suppression non effectuée");
+
+                            $page->setView(
+                                View::failed(
+                                    "La suppression a échoué.",
+                                    "La suppression de l'annonce n'a pas pû être effectuée. Nous sommes désolé, pouvez vous reprendre l'action svp"
+                                )
+                            );
+
+                            $page->show();
                         }
 
                         break;
@@ -220,10 +240,6 @@ class AnnounceController extends AppController
                         Utility::redirect($user->getProfileLink()."/posts");
                         break;
                 }
-
-                $page->setMetaTitle("L'indice | " . $announce->getTitle());
-                $page->setView($view);
-                $page->show();
 
             } else {
                 Utility::redirect(User::authenticated()->getProfileLink()."/posts");

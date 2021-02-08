@@ -47,9 +47,6 @@ class Comment extends Model
 
         $result = $req->fetch();
 
-        dump($id);
-        die();
-
         $this->id = $result["id"];
         $this->content = $result["content"];
         $this->poster = new Registered($result["user_email_address"]);
