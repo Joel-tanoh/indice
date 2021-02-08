@@ -157,7 +157,7 @@ HTML;
                                 <div class="form-group">
                                     <div class="checkbox">
                                         <input type="checkbox" name="remember_me" value="yes" id="remember_me">
-                                        <label for="remember_me">Se souvenir de moi à la prochaine connexion</label>
+                                        <label for="remember_me">Se souvenir de moi</label>
                                     </div>
                                     {$this->forgotPassword()}
                                 </div>
