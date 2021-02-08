@@ -13,7 +13,7 @@ use App\View\View;
 /**
  * Controller de la newsletter.
  */
-class NewsletterController extends AppController
+abstract class NewsletterController extends AppController
 {
     /**
      * Pour enregister un visiteur qui veut s'inscrire à la newsletter.

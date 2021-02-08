@@ -339,7 +339,7 @@ HTML;
      */
     public function usersTable(array $users)
     {
-        $form = new Form("users/delete");
+        $form = new Form("users/delete", "w-100");
         $usersRows = null;
 
         foreach ($users as $user) {
@@ -347,25 +347,38 @@ HTML;
         }
 
         return <<<HTML
-        <h5 class="mb-3 p-3">Liste des comptes</h5>
+        <h5 class="mb-3 p-3">Liste des utilisateurs</h5>
         {$form->open()}
-            <table class="table table-hover rounded bg-white">
-                <thead>
-                    <tr>
-                        <th scope="col"><input type="checkbox" name="users[]" id="checkAllUsers"></th>
-                        <th scope="col">Nom</th>
-                        <th scope="col">Prénom(s)</th>
-                        <th scope="col">Pseudo</th>
-                        <th scope="col">Adresse Email</th>
-                        <th scope="col">Statut</th>
-                        <th scope="col">Date d'inscription</th>
-                    </tr>
-                </thead>
+            <table class="table table-hover bg-white">
+                {$this->usersTableHead()}
                 <tbody>
                     {$usersRows}
                 </tbody>
             </table>
         {$form->close()}
+HTML;
+    }
+
+    /**
+     * Affiche les entêtes des colonnes dans le tableau qui liste les utilisateurs.
+     * 
+     * @return string
+     */
+    private function usersTableHead()
+    {
+        return <<<HTML
+        <thead>
+            <tr>
+                <th scope="col"><input type="checkbox" name="users[]" id="checkAllUsers"></th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prénom(s)</th>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Nbr. Post</th>
+                <th scope="col">Adresse Email</th>
+                <th scope="col">Statut</th>
+                <th scope="col">Date d'inscription</th>
+            </tr>
+        </thead>
 HTML;
     }
 
@@ -383,6 +396,7 @@ HTML;
             <td><a href="{$user->getProfileLink()}">{$user->getName()}</a></td>
             <td>{$user->getFirstNames()}</td>
             <td>{$user->getPseudo()}</th>
+            <td>{$user->getAnnounceNumber()}</th>
             <td>{$user->getEmailAddress()}</td>
             <td>{$user->getStatus()}</td>
             <td>{$user->getRegisteredAt()}</td>

@@ -4,13 +4,11 @@ namespace App\Controller;
 
 use App\Action\Action;
 use App\Engine\SearchEngine;
-use App\Model\Announce;
-use App\View\Model\AnnounceView;
 use App\View\Page\Page;
 use App\View\SearchView;
 
 /** Controller de gestion des recherches. */
-class SearchController extends AppController
+abstract class SearchController extends AppController
 {
 
     /**

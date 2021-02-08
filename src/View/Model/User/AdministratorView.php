@@ -27,27 +27,14 @@ class AdministratorView extends RegisteredView
      */
     public function users(array $users)
     {
-        $snippet = new Snippet();
         $usersTable = (new UserView())->usersTable($users);
 
-        return <<<HTML
-        {$snippet->pageHeader("Les Utilisateurs", "Les Utilisateurs")}
-        
-        <div id="content" class="section-padding">
-            <div class="container">
-                <div class="row">
-                    {$this->sidebarNav(User::authenticated())}
-                    <section class="col-sm-12 col-md-8 col-lg-9">
-                        <div class="page-content">
-                            <div class="inner-box">
-                                {$usersTable}
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </div>
+        $content = <<<HTML
+        <section class="col-12">
+            {$usersTable}
+        </section>
 HTML;
+        return parent::administration($content, "Les utilisateurs", "Administration / Utilisateurs");
     }
         
     /**
@@ -61,14 +48,26 @@ HTML;
         return <<<HTML
         <nav class="navdashboard">
             <ul>
-                {$this->defineSidebarLink("Mes annonces", $administrator->getProfileLink(). "/posts", "lni-dashboard")}
-                <!-- {$this->defineSidebarLink("Créer une catégorie", "/category/add", "lni-plus")} -->
-                {$this->defineSidebarLink("Gérer les comptes", "/users", "lni-users")}
+                {$this->defineSidebarLink("Voir toutes les annonces", "/administration/annonces", "lni-pencil-alt")}
+                {$this->defineSidebarLink("Gérer les utilisateurs", "/administration/users", "lni-users")}
                 {$this->defineSidebarLink("Ajouter un compte", "/register", "lni-user")}
+                {$this->defineSidebarLink("Mes annonces", $administrator->getProfileLink(). "/posts", "lni-dashboard")}
                 {$this->defineSidebarLink("Déconnexion", "sign-out", "lni-enter")}
             </ul>
         </nav>
 HTML;
+    }
+
+    /**
+     * Affiche la liste des annonces pour que l'administrateur puisse les manager.
+     * 
+     * @return string
+     */
+    public static function announces(array $announces)
+    {
+        $administratorView = new self();
+
+        return $administratorView->dashboard($announces, "Toutes les annonces", "Gérer les annonces");
     }
 
 }

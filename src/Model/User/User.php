@@ -69,7 +69,7 @@ abstract class User extends Model
     /**
      * Permet de retourner l'utilisateur authentifié actuellement.
      * 
-     * @return Registered
+     * @return Administrator
      */
     public static function authenticated()
     {

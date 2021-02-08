@@ -25,7 +25,7 @@ use App\View\Model\User\AdministratorView;
 use App\View\Page\Page;
 use Exception;
 
-class UserController extends AppController
+abstract class UserController extends AppController
 {
 
     /**
@@ -160,14 +160,14 @@ class UserController extends AppController
     /**
      * Controller du profil de l'utilisateur.
      * 
-     * @param array $routeParams
+     * @param array $params
      */
-    public static function userProfile(array $routeParams)
+    public static function userProfile(array $params)
     {
         User::askToAuthenticate("/sign-in");
 
         $registered = User::authenticated();
-        $user = Registered::getByPseudo($routeParams[2]);
+        $user = Registered::getByPseudo($params[2]);
 
         // $page = new Page("L'indice | Profil - " . $user->getFullName());
         // if ($registered->getPseudo() === $user->getPseudo()) {
@@ -211,18 +211,16 @@ class UserController extends AppController
     /**
      * Controller pour gérer le dashboard d'un utlisateur.
      */
-    public static function dashboard(array $routeParams = null)
+    public static function dashboard(array $params = null)
     {
         User::askToAuthenticate("/sign-in");
         
-        $registered = User::authenticated();
-        $user = Registered::getByPseudo($routeParams[2]);
-        $page = new Page("L'indice | Tableau de bord - " . $user->getFullName());
-        $page->setDescription("");
+        $user = Registered::getByPseudo($params[2]);
+        $page = new Page();
 
-        if ($registered->getPseudo() === $user->getPseudo() || $registered->isAdministrator()) {
-            if (!empty($routeParams[4])) {
-                $status = $routeParams[4];
+        if (User::authenticated()->getPseudo() === $user->getPseudo() || User::authenticated()->isAdministrator()) {
+            if (!empty($params[4])) {
+                $status = $params[4];
 
                 if (!in_array($status, Announce::getStatutes())) {
                     $announces = [];
@@ -232,32 +230,38 @@ class UserController extends AppController
             } else {
                 $announces = $user->getAnnounces();
             }
-    
-            $page->setView((new RegisteredView($user))->dashboard($announces));
-            $page->setDescription("");
-            $page->show();
+
+            $title = User::authenticated()->getPseudo() === $user->getPseudo() ? "Mes annonces" : "Les annonces de " . $user->getFullName();
+            
+            $page->setMetatitle("L'indice | Tableau de bord - " . $user->getFullName());
+            $page->setView(
+                (new RegisteredView($user))->dashboard($announces, $title, $user->getFullName() . " / Annonces")
+            );
+            $page->setDescription("Cette page affiche les annonces postées par " . $user->getFullName());
 
         } else {
-            Utility::redirect($registered->getProfileLink());
+            Utility::redirect(User::authenticated()->getProfileLink());
         }
+
+        $page->show();
     }
 
     /**
      * Controller de gestion d'un compte utilisateur.
      * 
-     * @param array $routeParams
+     * @param array $params
      */
-    public static function manage(array $routeParams)
+    public static function manage(array $params)
     {
-        if (Model::valueIssetInDB("pseudo", $routeParams[2], User::TABLE_NAME)) {
+        if (Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
             $registered = User::authenticated();
-            $user = Registered::getByPseudo($routeParams[2]);
+            $user = Registered::getByPseudo($params[2]);
 
             // Switch sur l'action.
-            switch ($routeParams[3]) {
+            switch ($params[3]) {
 
                 case "update" :
-                    if ($user->getPseudo() === $routeParams[2]) {
+                    if ($user->getPseudo() === $params[2]) {
                         $page = new Page("L'indice | " . $user->getFullName() . " - Mise à jour du compte", (new UserView($user))->update());
                     } else {
                         Utility::redirect($registered->getProfileLink());
@@ -265,7 +269,7 @@ class UserController extends AppController
                     break;
 
                 case "delete" :
-                    if ($user->getPseudo() === $routeParams[2] || $registered->isAdministrator()) {
+                    if ($user->getPseudo() === $params[2] || $registered->isAdministrator()) {
                         
                     } else {
                         Utility::redirect($registered->getProfileLink());

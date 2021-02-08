@@ -10,7 +10,7 @@ use App\View\Page\Page;
 use App\View\View;
 use Exception;
 
-class AppController
+abstract class AppController
 {
     /** @var array Les actions possibles au sein de l'application. */
     protected static $actions = [
@@ -78,6 +78,9 @@ class AppController
             else {
                 UserController::userProfile($params);
             }
+        }
+        elseif ($params[1] === "administration") {
+            echo "Administration";
         }
         else {
             throw new Exception("Ressource non trouvée !");

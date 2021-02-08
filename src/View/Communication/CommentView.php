@@ -75,7 +75,7 @@ HTML;
             return <<<HTML
             <div id="comments">
                 <div class="comment-box">
-                    <h3>Dernier commentaire</h3>
+                    <h5>Dernier commentaire</h5>
                     <ol class="comments-list">
                         {$this->show()}
                     </ol>
@@ -99,14 +99,14 @@ HTML;
         <li>
             <div class="media">
                 <div class="thumb-left">
-                    <img class="img-fluid" src="{$this->comment->getPoster()->getAvatarSrc()}" alt="Photo de profil de {$this->comment->getPoster()->getFullName()}">
+                    <img class="img-fluid circle" src="{$this->comment->getPoster()->getAvatarSrc()}" alt="Photo de profil de {$this->comment->getPoster()->getFullName()}">
                 </div>
                 <div class="info-body">
                     <div class="media-heading">
-                        <h4 class="name">{$this->comment->getPoster()->getFullName()}</h4> 
+                        <h6 class="name">{$this->comment->getPoster()->getFullName()}</h6> 
                         <span class="comment-date"><i class="lni-alarm-clock"></i> {$this->comment->getPostedAt()}</span>
-                    </div>  
-                    <p>{$this->comment->getContent()}</p>                     
+                    </div>
+                    <p>{$this->comment->getContent()}</p>
                 </div>
             </div>
         </li>
