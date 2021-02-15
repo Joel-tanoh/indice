@@ -110,7 +110,7 @@ abstract class UserController extends AppController
                     );
                     $email->send();
 
-                    Utility::redirect(User::authenticated()->getProfileLink());
+                    Utility::redirect(User::authenticated()->getProfileLink() . "/posts");
                 }
             } else { // Sinon
                 $message = (new NotifyByHTML())->errors($validate->getErrors());
@@ -142,13 +142,21 @@ abstract class UserController extends AppController
             if ($connexion->getError()) {
                 $error = (new NotifyByHTML())->error($connexion->getError(), "app-alert-danger mb-3");
             } else {
+
                 (new Visitor(Session::getVisitor()))->identify($_POST["email_address"]);
+
                 Session::activateRegistered($_POST["email_address"]);
                 if (!empty($_POST["remember_me"])) {
                     Cookie::setRegistered($_POST["email_address"]);
                 }
+
                 $registered = new Registered($_POST["email_address"]);
-                Utility::redirect($registered->getProfileLink());
+
+                if ($registered->isAdministrator()) {
+                    Utility::redirect("/administration/annonces");
+                } else {
+                    Utility::redirect($registered->getProfileLink() . "/posts");
+                }
             }
         }
 
@@ -167,7 +175,7 @@ abstract class UserController extends AppController
         User::askToAuthenticate("/sign-in");
 
         $registered = User::authenticated();
-        $user = Registered::getByPseudo($params[2]);
+        $user = Registered::getByPseudo($params[3]);
 
         // $page = new Page("L'indice | Profil - " . $user->getFullName());
         // if ($registered->getPseudo() === $user->getPseudo()) {
@@ -183,7 +191,6 @@ abstract class UserController extends AppController
         } else {
             Utility::redirect($registered->getProfileLink() . "/posts");
         }
-
     }
 
     /**
@@ -215,12 +222,13 @@ abstract class UserController extends AppController
     {
         User::askToAuthenticate("/sign-in");
         
-        $user = Registered::getByPseudo($params[2]);
+        $user = Registered::getByPseudo($params[3]);
         $page = new Page();
 
         if (User::authenticated()->getPseudo() === $user->getPseudo() || User::authenticated()->isAdministrator()) {
-            if (!empty($params[4])) {
-                $status = $params[4];
+            
+            if (!empty($params[5])) {
+                $status = $params[5];
 
                 if (!in_array($status, Announce::getStatutes())) {
                     $announces = [];
@@ -253,23 +261,23 @@ abstract class UserController extends AppController
      */
     public static function manage(array $params)
     {
-        if (Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
+        if (Model::valueIssetInDB("pseudo", $params[3], User::TABLE_NAME)) {
             $registered = User::authenticated();
-            $user = Registered::getByPseudo($params[2]);
+            $user = Registered::getByPseudo($params[3]);
 
             // Switch sur l'action.
-            switch ($params[3]) {
+            switch ($params[4]) {
 
                 case "update" :
-                    if ($user->getPseudo() === $params[2]) {
-                        $page = new Page("L'indice | " . $user->getFullName() . " - Mise à jour du compte", (new UserView($user))->update());
+                    if ($user->getPseudo() === $params[3]) {
+                        $page = new Page("L'indice | " . $user->getFullName() . " - Mise à jour du compte", (new RegisteredView($user))->update());
                     } else {
                         Utility::redirect($registered->getProfileLink());
                     }
                     break;
 
                 case "delete" :
-                    if ($user->getPseudo() === $params[2] || $registered->isAdministrator()) {
+                    if ($user->getPseudo() === $params[3] || $registered->isAdministrator()) {
                         
                     } else {
                         Utility::redirect($registered->getProfileLink());
@@ -310,5 +318,20 @@ abstract class UserController extends AppController
     public static function signOut()
     {
         Registered::signOut();
+    }
+
+    /**
+     * Permet d'afficher les posts d'un utilisateur vu d'un user simple.
+     * 
+     * @param array $params
+     */
+    public static function readPosts(array $params)
+    {
+        $page = new Page();
+        $user = Registered::getByPseudo($params[2]);
+        $page->setMetatitle("L'indice | Les meilleures annonces postées par ". $user->getFullName());
+        $page->setDescription("");
+        $page->setView(UserView::showPosts($user, $user->getAnnounces("validated")));
+        $page->show();
     }
 }

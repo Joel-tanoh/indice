@@ -53,11 +53,11 @@ class Connexion extends Authentication
 
         // Vérifier qu'on a au moins un résultat
         if ($result["user"] == 0) {
-            $this->error = "Les valeurs que vous avez saisies sont incorrectes. Veuillez réessayer !";
+            $this->error = "L'identifiant ou le mot de passe est incorrect. Veuillez réessayer !";
         } else {
             // Vérifier le mot de passe
             if (!password_verify($this->password, $result["password"])) {
-                $this->error = "Les valeurs que vous avez saisies sont incorrectes. Veuillez réessayer !";
+                $this->error = "L'identifiant ou le mot de passe est incorrect. Veuillez réessayer !";
             }
         }
     }

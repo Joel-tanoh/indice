@@ -4,7 +4,9 @@ namespace App\View\Model\User;
 
 use App\Model\Location\Town;
 use App\Model\User\User;
+use App\View\AdvertisingView;
 use App\View\Form;
+use App\View\Model\AnnounceView;
 use App\View\Model\ModelView;
 use App\View\Snippet;
 
@@ -33,16 +35,13 @@ class UserView extends ModelView
         return <<<HTML
         {$snippet->pageHeader("Je m'inscris", "inscription")}
         {$message}
-        
-        <!-- Content section Start --> 
+        <!-- Content section Start -->
         <section class="register section-padding">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-12 col-xs-12">
                         <div class="register-form login-area">
-                            <h3>
-                                Inscription
-                            </h3>
+                            <h3>Inscription</h3>
                             {$form->open()}
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
@@ -110,7 +109,6 @@ class UserView extends ModelView
                 </div>
             </div>
         </section>
-        <!-- Content section End --> 
 HTML;
     }
 
@@ -268,7 +266,7 @@ HTML;
     private function navbarForUnconnectedUser()
     {
         return <<<HTML
-        <a class="dropdown-item" href="register"><i class="lni-user"></i> Créer un compte</a>
+        <a class="dropdown-item" href="register"><i class="lni-user"></i> S'inscrire</a>
         <a class="dropdown-item" href="sign-in"><i class="lni-lock"></i> Connexion</a>
 HTML;
     }
@@ -282,11 +280,8 @@ HTML;
     {
         return <<<HTML
         <li><a href="/"><i class="lni-home"></i>Accueil</a></li>
-        <li><a href="register"> <i class="lni-user"></i>Créer un compte</a></li>
-        <li><a href="sign-in"> <i class="lni-lock"></i>Connexion</a></li>
-        <!-- <li>
-            <a href="contact.html">Contact Us</a>
-        </li> -->
+        <li><a href="register"><i class="lni-user"></i> S'inscrire</a></li>
+        <li><a href="sign-in"><i class="lni-lock"></i> Connexion</a></li>
 HTML;
     }
 
@@ -298,18 +293,6 @@ HTML;
     private function forgotPassword()
     {
         return '<a class="forgetpassword" href="forgot-password">Mot de passe oublié ?</a>';
-    }
-
-    /**
-     * Affiche les commnataires laissés par cet utilisateur.
-     * 
-     * @return string
-     */
-    public function showComments()
-    {
-        return <<<HTML
-
-HTML;
     }
 
     /**
@@ -339,7 +322,7 @@ HTML;
      */
     public function usersTable(array $users)
     {
-        $form = new Form("users/delete", "w-100");
+        $form = new Form("administration/users/delete", "w-100");
         $usersRows = null;
 
         foreach ($users as $user) {
@@ -388,7 +371,7 @@ HTML;
      * 
      * @param App\Model\User\Registered $user
      */
-    public function usersTableRow(\App\Model\User\Registered $user)
+    private function usersTableRow(\App\Model\User\Registered $user)
     {
         return <<<HTML
         <tr>
@@ -401,6 +384,32 @@ HTML;
             <td>{$user->getStatus()}</td>
             <td>{$user->getRegisteredAt()}</td>
         </tr>
+HTML;
+    }
+
+    /**
+     * La vue qui affiche les annonces vu du visiteur.
+     * 
+     * @return string
+     */
+    public static function showPosts(\App\Model\User\Registered $user, array $posts)
+    {
+        $snippet = new Snippet;
+        $announceView = new AnnounceView();
+        $advertising = new AdvertisingView();
+
+        return <<<HTML
+        {$snippet->pageHeader("Les meilleures annonces de " .$user->getFullName(), "Annonces / " .$user->getFullName())}
+        <section class="container my-4">
+            <section class="row">
+                <aside class="col-9">
+                    {$announceView->list($posts)}
+                </aside>
+                <aside class="col-3">
+                    {$advertising->right()}
+                </aside>
+            </section>
+        </section>
 HTML;
     }
 }

@@ -175,12 +175,13 @@ class Registered extends Visitor
     }
 
     /**
-     * Retourne le lien vers le profil de l'utilisateur.
+     * Retourne le lien vers le profil de l'utilisateur pour une administration.
+     * 
      * @return string
      */
     public function getProfileLink()
     {
-        return "/users/$this->pseudo";
+        return "administration/users/$this->pseudo";
     }
 
     /**

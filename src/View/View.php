@@ -30,26 +30,16 @@ class View
 
         <!-- Hero Area -->
         {$snippet->heroArea(true)}
-
-        <!-- Le corps de la page -->
         <div class="container-fluid">
-            <!-- La barre de publicité en haut -->
             {$advertising->top()}
             <div class="row">
                 <aside class="d-none d-lg-block col-lg-2">
                     {$advertising->left()}
                 </aside>
                 <aside class="col-12 col-lg-8">
-                    <!-- Trending Categories Section Start -->
                     {$categoryView->trendingCategoriesSection()}
-
-                    <!-- Premium Listings Start -->
                     {$annonceView->moreViewed()}
-
-                    <!-- Latest Announcements Section Start -->
                     {$annonceView->latest()}
-                    
-                    <!-- Subscribe Section Start -->
                     {$newsletterView->suscribeNewsletterSection()}
                 </aside>
                 <aside class="d-none d-lg-block col-lg-2">
@@ -75,7 +65,7 @@ HTML;
         {$snippet->pageHeader("404", $current)}
 
         <!-- Start Content -->
-        <div class="error section-padding">
+        <div class="error">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">

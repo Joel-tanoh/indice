@@ -61,10 +61,8 @@ abstract class AnnounceController extends AppController
     /**
      * Controller pour afficher les détails d'une annonce.
      * 
-     * @param array $params C'est le tableau qui contient l'params découpée.
-     *                   La partie de ce tableau nous interressant est
-     *                   l'index 1
-     * 
+     * @param array $params C'est le tableau qui contient les paramêtres contenus
+     *                      dans l'url.
      * @return void
      */
     static function read(array $params = null)
@@ -89,7 +87,7 @@ abstract class AnnounceController extends AppController
     }
 
     /**
-     * Controller permetant l'utilisateur authentifié de
+     * Controller permetant à l'utilisateur authentifié de
      * de modifier une annonce.
      */
     public static function manage(array $params)

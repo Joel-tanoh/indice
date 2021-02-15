@@ -35,7 +35,7 @@ class Administrator extends Registered
             $newStatus = parent::convertStatus($newStatus);
         }
 
-        $req = parent::connectToDb()->prepare("UPDATE TABLE $tableName SET status = :status WHERE id = :id");
+        $req = parent::connectToDb()->prepare("UPDATE $tableName SET status = :status WHERE id = :id");
         $req->execute([
             "status" => $newStatus,
             "id" => $itemId

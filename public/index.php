@@ -34,7 +34,8 @@ try {
     $router->get("/:category", "App\Controller\CategoryController@read");
     $router->get("/:1/:2", "App\Controller\AppController@router");
     $router->get("/:1/:2/:3", "App\Controller\AppController@router");
-    $router->get("/:1/:2/:3/:4", "App\Controller\UserController@dashboard");
+    $router->get("/:1/:2/:3/:4", "App\Controller\AppController@router");
+    $router->get("/:1/:2/:3/:4/:5", "App\Controller\AppController@router");
 
     // Routes en post
     $router->post("/register", "App\Controller\UserController@register");

@@ -16,11 +16,13 @@ abstract class AdministrationController extends UserController
         if (empty($params)) {
             $announces = Announce::getAll();
         } else {
-            $announces = [];
+            $status = $params[3];
+            if (!in_array($status, Announce::getStatutes())) {
+                $announces = [];
+            } else {
+                $announces = Announce::getAll(null, $status);
+            }
         }
-
-        // dump($announces);
-        // die();
 
         $page = new Page("L'indice | Administration - Gérer les annonces", AdministratorView::announces($announces));
         $page->show();

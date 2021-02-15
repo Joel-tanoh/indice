@@ -61,27 +61,49 @@ abstract class AppController
     public static function router(array $params)
     {
         if (Category::isCategorySlug($params[1]) && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)) {
+            
             if (isset($params[3]) && self::isAction($params[3])) {
-                AnnounceController::manage($params);
+                return AnnounceController::manage($params);
             } else {
-                AnnounceController::read($params);
+                return AnnounceController::read($params);
             }
-        }
-        elseif ($params[1] === "users" && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
-            if (isset($params[3])) {
-                if ($params[3] === "posts") {
-                    UserController::dashboard($params);
-                } elseif (self::isAction($params[3])) {
-                    UserController::manage($params);
+
+        } elseif ($params[1] === "administration") {
+
+            if (!empty($params[2]) && $params[2] === "users") {
+
+                if (Model::valueIssetInDB("pseudo", $params[3], User::TABLE_NAME)) {
+
+                    if (!empty($params[4])) {
+    
+                        if ($params[4] === "posts") {
+                            return UserController::dashboard($params);
+                        }
+                        
+                        elseif (self::isAction($params[4])) {
+                            return UserController::manage($params);
+                        }
+                    }
+
+                    return UserController::userProfile($params);
+                }
+
+            } elseif ($params[2] === "annonces") {
+
+                if (!empty($params[3])) {
+                    return AdministrationController::announces($params);
                 }
             }
-            else {
-                UserController::userProfile($params);
+        } elseif ($params[1] === "users") {
+
+            if (!empty($params[2] && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME))) {
+                
+                if (!empty($params[3]) && $params[3] === "posts") {
+                    return UserController::readPosts($params);
+                }
             }
         }
-        elseif ($params[1] === "administration") {
-            echo "Administration";
-        }
+
         else {
             throw new Exception("Ressource non trouvée !");
         }

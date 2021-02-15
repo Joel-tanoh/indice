@@ -121,7 +121,7 @@ HTML;
     private function noComments()
     {
         return <<<HTML
-        <p class="h5 mt-3 p-3 border rounded">Aucun commentaire</p>
+        <p class="mt-3 p-3 border rounded">Aucun commentaire</p>
 HTML;
     }
 

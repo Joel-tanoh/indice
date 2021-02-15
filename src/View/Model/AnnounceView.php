@@ -773,14 +773,34 @@ HTML;
                 <h3>{$this->announce->getPrice()}</h3>
             </td>
             <td data-title="Action">
-                <div class="btns-actions">
-                    <a class="btn-action btn-view" href='{$this->announce->getLink()}'><i class="lni-eye"></i></a>
-                    <a class="btn-action btn-edit" href='{$this->announce->getManageLink("update")}'><i class="lni-pencil"></i></a>
-                    <a class="btn-action btn-delete" href='{$this->announce->getManageLink("delete")}'><i class="lni-trash"></i></a>
-                </div>
+                {$this->dashboardActions()}
             </td>
         </tr>
 HTML;
+    }
+
+    /**
+     * Permet d'afficher les boutons qui permettent de faire des actions
+     * sur l'annonce dans le dashboard.
+     * 
+     * @return string
+     */
+    private function dashboardActions()
+    {
+        if (User::isAuthenticated()) {
+
+            $editButton = $this->announce->hasOwner(User::authenticated())
+                ? '<a class="btn-action btn-edit" href="' . $this->announce->getManageLink("update"). '"><i class="lni-pencil"></i></a>'
+                : null;
+
+            return <<<HTML
+            <div class="btns-actions">
+                <a class="btn-action btn-view" href='{$this->announce->getLink()}'><i class="lni-eye"></i></a>
+                {$editButton}
+                <a class="btn-action btn-delete" href='{$this->announce->getManageLink("delete")}'><i class="lni-trash"></i></a>
+            </div>
+HTML;
+        }
     }
     
     /**
@@ -816,11 +836,9 @@ HTML;
     public static function noAnnounces()
     {
         return <<<HTML
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-12">
-                <section class="d-flex justify-content-center">
-                    <p class="h5 text-muted text-center">Aucunes annonces</p>
-                </section>
+                <p class="text-muted text-center">Aucunes annonces</p>
             </div>
         </div>
 HTML;

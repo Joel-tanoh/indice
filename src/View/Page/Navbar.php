@@ -54,10 +54,8 @@ class Navbar extends Snippet
         return <<<HTML
         <!-- Header Area wrapper Starts -->
         <header id="header-wrap">
-            <!-- Navbar Start -->
             <nav class="navbar navbar-expand-lg fixed-top scrolling-navbar">
                 <div class="container">
-                    <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -68,7 +66,6 @@ class Navbar extends Snippet
                         <a href="{$appUrl}" class="navbar-brand"><img id="logo" src="{$this->brandImgSrc}" alt="{$logoAltText}"></a>
                     </div>
                     <div class="collapse navbar-collapse" id="main-navbar">
-                        <!-- Partie pour afficher les liens dans la Navabr -->
                         <ul class="navbar-nav mr-auto">
                             {$categoryView->navbarList()}
                             <li>
@@ -79,16 +76,9 @@ class Navbar extends Snippet
                         <a class="tg-btn" href="post"><i class="lni-pencil-alt"></i> Poster une annonce</a>
                     </div>
                 </div>
-
-                <!-- Mobile Menu Start -->
                 {$this->mobileMenu()}
-                <!-- Mobile Menu End -->
-
             </nav>
-            <!-- Navbar End -->
-
         </header>
-    <!-- Header Area wrapper End -->
 HTML;
     }
 

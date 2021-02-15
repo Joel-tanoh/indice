@@ -104,10 +104,18 @@ HTML;
      */
     public function navbar($registered)
     {
-        return <<<HTML
-        <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-dashboard"></i> Mes annonces</a>
-        <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Déconnexion</a>
+        if (User::isAuthenticated()) {
+
+            $administrationLink = User::authenticated()->isAdministrator()
+                ? '<a class="dropdown-item" href="administration/annonces"><i class="lni-dashboard"></i> Administration</a>'
+                : null;
+
+            return <<<HTML
+            {$administrationLink}
+            <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-dashboard"></i> Mes annonces</a>
+            <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Déconnexion</a>
 HTML;
+        }
     }
 
     /**
@@ -119,12 +127,12 @@ HTML;
     public function mobileNavbarForConnectedUser($registered)
     {
         return <<<HTML
-        <li><a class="active" href="/">Accueil</a></li>
+        <li><a href="/">Accueil</a></li>
         <li>
             <a>Mon compte</a>
             <ul class="dropdown">
                 <li><a href="{$registered->getProfileLink()}"><i class="lni-home"></i> Mon profil</a></li>
-                <li><a href="{$registered->getProfileLink()}/posts"><i class="lni-wallet"></i> Mes annouces</a></li>
+                <li><a href="{$registered->getProfileLink()}/posts"><i class="lni-wallet"></i> Mes annonces</a></li>
                 <li><a href="sign-out"><i class="lni-close"></i> Déconnexion</a></li>
             </ul>
         </li>
@@ -404,6 +412,28 @@ HTML;
         return <<<HTML
         <img src="{$this->user->getAvatarSrc()}" alt="" class="img-fluid"/>
 HTML;
+    }
+
+    /**
+     * Affiche les commnataires laissés par cet utilisateur.
+     * 
+     * @return string
+     */
+    public function showComments()
+    {
+        return <<<HTML
+        
+HTML;
+    }
+
+    /**
+     * Affiche le formulaire pour changer le mot de passe.
+     * 
+     * @return string
+     */
+    public function changePassword()
+    {
+        
     }
 
 }
