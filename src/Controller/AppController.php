@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\UserController\RegisteredController;
 use App\Model\Announce;
 use App\Model\Category;
 use App\Model\Model;
@@ -27,7 +28,6 @@ abstract class AppController
         , "comment"
     ];
 
-
     /** Index du site. */
     public static function index()
     {
@@ -45,13 +45,6 @@ abstract class AppController
     }
 
     /**
-     * Pour gérer les tests.
-     */
-    public static function test() {
-        echo 'Test';
-    }
-
-    /**
      * Une couche qui permet de gérer le routage vers le bon controller
      * lorsqu'il le faut.
      * 
@@ -61,47 +54,28 @@ abstract class AppController
     public static function router(array $params)
     {
         if (Category::isCategorySlug($params[1]) && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)) {
-            
             if (isset($params[3]) && self::isAction($params[3])) {
-                return AnnounceController::manage($params);
+                return RegisteredController::manageAnnounce($params);
             } else {
-                return AnnounceController::read($params);
+                return RegisteredController::readAnnounce($params);
             }
+        }
 
-        } elseif ($params[1] === "administration") {
-
-            if (!empty($params[2]) && $params[2] === "users") {
-
-                if (Model::valueIssetInDB("pseudo", $params[3], User::TABLE_NAME)) {
-
-                    if (!empty($params[4])) {
-    
-                        if ($params[4] === "posts") {
-                            return UserController::dashboard($params);
-                        }
-                        
-                        elseif (self::isAction($params[4])) {
-                            return UserController::manage($params);
-                        }
-                    }
-
-                    return UserController::userProfile($params);
-                }
-
-            } elseif ($params[2] === "annonces") {
-
-                if (!empty($params[3])) {
-                    return AdministrationController::announces($params);
+        elseif ($params[1] === "users" && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
+            if (isset($params[3])) {
+                if ($params[3] === "posts") {
+                    return RegisteredController::myDashboard($params);
+                } elseif (self::isAction($params[3])) {
+                    return RegisteredController::manage($params);
                 }
             }
-        } elseif ($params[1] === "users") {
-
-            if (!empty($params[2] && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME))) {
-                
-                if (!empty($params[3]) && $params[3] === "posts") {
-                    return UserController::readPosts($params);
-                }
+            else {
+                return AdministratorController::readUser($params);
             }
+        }
+        
+        elseif ($params[1] === "administration") {
+            return AdministratorController::index();
         }
 
         else {
@@ -111,7 +85,6 @@ abstract class AppController
 
     /**
      * Gère les actions qu'on veut faire dans l'application.
-     * 
      * @return bool
      */
     public static function isAction(string $action)
