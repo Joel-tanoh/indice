@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Controller\UserController\RegisteredController;
+use App\Controller\UserController\AdministratorController;
+use App\Controller\UserController\UserController;
 use App\Model\Announce;
 use App\Model\Category;
 use App\Model\Model;
@@ -51,7 +53,7 @@ abstract class AppController
      * @param array $params La liste des paramètres de la route.
      * @return void
      */
-    public static function router(array $params)
+    public static function subRouter(array $params)
     {
         if (Category::isCategorySlug($params[1]) && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)) {
             if (isset($params[3]) && self::isAction($params[3])) {
@@ -61,16 +63,24 @@ abstract class AppController
             }
         }
 
-        elseif ($params[1] === "users" && Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
-            if (isset($params[3])) {
-                if ($params[3] === "posts") {
-                    return RegisteredController::myDashboard($params);
-                } elseif (self::isAction($params[3])) {
-                    return RegisteredController::manage($params);
+        elseif ($params[1] === "users") {
+
+            if (Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
+
+                if (isset($params[3])) {
+                    if ($params[3] === "posts") {
+                        return UserController::readRegisteredAnnounces($params);
+                    } elseif (self::isAction($params[3])) {
+                        return RegisteredController::selfManage($params);
+                    }
                 }
-            }
-            else {
-                return AdministratorController::readUser($params);
+
+                else {
+                    return AdministratorController::readUser($params);
+                }
+
+            } else {
+                throw new Exception("Ressource non trouvée !");
             }
         }
         

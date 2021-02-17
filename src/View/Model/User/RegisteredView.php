@@ -43,7 +43,7 @@ class RegisteredView extends UserView
             {$this->dashboardContent($announces)}
         </section>
 HTML;
-        return parent::administration($content, $current, $current);
+        return parent::administrationTemplate($content, $current, $current);
     }
 
     /**
@@ -64,31 +64,6 @@ HTML;
                     {$this->sidebarNav(User::authenticated())}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         C'est mon profil.
-                    </div>
-                </div>
-            </div>
-        </div>
-HTML;
-    }
-
-    /**
-     * Vue qui affiche le profile d'un autre utilisateur dont on veut
-     * voir le profile.
-     * @return string
-     */
-    public function userProfile()
-    {
-        $snippet = new Snippet;
-
-        return <<<HTML
-        {$snippet->pageHeader($this->user->getFullName(), "Utilisateurs / ". $this->user->getFullName())}
-
-        <div id="content" class="my-3">
-            <div class="container-fluid">
-                <div class="row">
-                    {$this->sidebarNav(User::authenticated())}
-                    <div class="col-sm-12 col-md-8 col-lg-9">
-                        Profil de {$this->user->getFullName()}
                     </div>
                 </div>
             </div>

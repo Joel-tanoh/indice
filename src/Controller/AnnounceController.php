@@ -127,7 +127,7 @@ abstract class AnnounceController extends AppController
      * Permet de valider une annonce.
      * @param array $params
      */
-    public static function validate(array $params)
+    public static function validateAnnounce(array $params)
     {
         $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
         $page = new Page();

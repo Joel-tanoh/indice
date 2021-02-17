@@ -70,7 +70,6 @@ HTML;
         $searchView = new SearchView();
 
         return <<<HTML
-        <!-- Hero Area Start -->
         <div id="hero-area">
             <div class="overlay"></div>
             <div class="container">
@@ -390,7 +389,11 @@ HTML;
     }
 
     /**
+     * Bloc de code qui s'affiche lorsque l'action menée a échoué.
      * 
+     * @param string $title   Le titre pour indiquer en grand un message.
+     * @param string $content Le message à afficher.
+     * @param string $link    Peut être null.
      */
     public static function failed(string $title, string $content, string $link = null)
     {
@@ -437,12 +440,13 @@ HTML;
     }
 
     /**
-     * 
+     * Retourne une section qui permet d'afficher quelques annonces.
+     * @return string
      */
-    public static function list(string $title, string $content)
+    public static function listingAnnouncesSection(string $title, string $content)
     {
         return <<<HTML
-        <section class="featured section-padding">
+        <section class="featured py-3">
             <div class="container">
                 <h1 class="section-title">{$title}</h1>
                 <div class="row">
@@ -474,6 +478,52 @@ HTML;
                             {$items}
                         </div>
                     </div> 
+                </div>
+            </div>
+        </section>
+HTML;
+    }
+
+    /**
+     * Cta Section. Section qui présente un peu la pub du site.
+     * 
+     * @return string
+     */
+    public function ctaSection()
+    {
+        return <<<HTML
+        <!-- Cta Section Start -->
+        <section class="cta section-padding">
+            <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="single-cta">
+                                <div class="cta-icon">
+                                    <i class="lni-grid"></i>
+                                </div>
+                                <h4>Refreshing Design</h4>
+                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="single-cta">
+                                <div class="cta-icon">
+                                    <i class="lni-brush"></i>
+                                </div>
+                                <h4>Easy to Customize</h4>
+                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="single-cta">
+                                <div class="cta-icon">
+                                    <i class="lni-headphone-alt"></i>
+                                </div>
+                                <h4>24/7 Support</h4>
+                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

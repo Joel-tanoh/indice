@@ -36,38 +36,17 @@ class AnnounceView extends View
      * @param array $announces
      * @return string
      */
-    public function announces(array $announces)
+    public function showAll(array $announces)
     {
-        $snippet = new Snippet;
-        $advertising = new AdvertisingView;
         $categoryView = new CategoryView();
 
-        return <<<HTML
-        <!-- Hero Area -->
-        {$snippet->pageHeader("Toutes les Annonces", "Annonces")}
-        <!-- Main container Start -->
-        <div class="main-container pb-3">
-            <div class="container-fluid">
-                {$advertising->top()}
-                <div class="row">
-                    <aside class="d-none d-lg-block col-lg-2">
-                        {$advertising->left()}
-                    </aside>
-                    <aside class="col-12 col-lg-8">
-                        <section class="row">
-                            <!-- Sidebar -->
-                            {$categoryView->sidebar()}
-                            <!-- Content -->
-                            {$this->list($announces)}
-                        </section>
-                    </aside>
-                    <aside class="d-none d-lg-block col-lg-2">
-                        {$advertising->right()}
-                    </aside>
-                </div>
-            </div>
-        </div> 
+        $content = <<<HTML
+        <section class="row">
+            {$categoryView->sidebar()}
+            {$this->list($announces)}
+        </section>
 HTML;
+        return parent::pageHeaderWithAdvertisingTemplate("Toutes les meilleures annonces", "Toutes les annonces", $content);
     }
 
     /**
@@ -199,7 +178,7 @@ HTML;
             }
         }
 
-        return Snippet::list("Postés récemment", $content);
+        return Snippet::listingAnnouncesSection("Postés récemment", $content);
     }
 
     /**
@@ -836,11 +815,7 @@ HTML;
     public static function noAnnounces()
     {
         return <<<HTML
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <p class="text-muted text-center">Aucunes annonces</p>
-            </div>
-        </div>
+        <p class="text-muted text-center">Aucunes annonces</p>
 HTML;
     }
 
@@ -999,13 +974,13 @@ HTML;
      */
     private function discountTag()
     {
-        if ($this->announce->isDiscounted()) {
-            return <<<HTML
-            <div class="btn-product bg-red">
-                <a href="#">En promotion 50%</a>
-            </div>
-HTML;
-        }
+//         if ($this->announce->isDiscounted()) {
+//             return <<<HTML
+//             <div class="btn-product bg-red">
+//                 <a href="#">En promotion {$this->announce->getDiscountValue()}%</a>
+//             </div>
+// HTML;
+//         }
     }
 
     /**

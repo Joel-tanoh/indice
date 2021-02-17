@@ -21,11 +21,13 @@ use App\Exception\PageNotFoundException;
 use App\Model\Announce;
 use App\Model\Category;
 use App\Model\Model;
+use App\Model\User\Registered;
 use App\Model\User\Visitor;
 use App\View\Model\AnnounceView;
 use App\View\Model\CategoryView;
 use App\View\Page\Page;
 use App\View\SearchView;
+use App\View\View;
 use Exception;
 
 abstract class UserController extends AppController
@@ -189,8 +191,49 @@ abstract class UserController extends AppController
             $page->setDescription($category->getDescription());
             $page->show();
         } else {
-            throw new PageNotFoundException("La catégorie que vous cherchez n'a pas été trouvée.");
+            throw new PageNotFoundException("Oup's ! Nous n'avons pas pu trouver la catégorie que vous recherchiez.");
         }
+    }
+
+    /**
+     * Permet d'afficher les annouces validées de l'utilisateur
+     * qui a un compte.
+     */
+    public static function readRegisteredAnnounces(array $params)
+    {
+        $user = Registered::getByPseudo($params[2]);
+        $page = new Page("L'indice | Les meilleures annonces de " . $user->getFullName());
+        $page->setView(UserView::readRegisteredValidatedAnnounces($user));
+        $page->setDescription(
+            ""
+        );
+        $page->show();
+    }
+
+    /**
+     * Permet de lire la page à propos.
+     */
+    public static function readAbout()
+    {
+        $page = new Page(
+            "L'indice | A propos de nous",
+            View::about(),
+            ""
+        );
+        $page->show();
+    }
+
+    /**
+     * Permet de lire la page à propos.
+     */
+    public static function readFAQ()
+    {
+        $page = new Page(
+            "L'indice | FAQs Frequently Asked Questions - Nous repondons à toutes vos questions.",
+            View::about(),
+            ""
+        );
+        $page->show();
     }
 
 }

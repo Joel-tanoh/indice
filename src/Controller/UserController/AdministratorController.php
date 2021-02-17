@@ -11,13 +11,20 @@ use App\Model\User\Registered;
 use App\Model\User\User;
 use App\Utility\Utility;
 use App\View\Model\User\AdministratorView;
-use App\View\Model\User\RegisteredView;
 use App\View\Page\Page;
 use App\View\View;
 use Exception;
 
 abstract class AdministratorController extends RegisteredController
 {
+    /**
+     * Controller de l'index de la partie administration pour l'administrateur.
+     */
+    public static function index()
+    {
+
+    }
+
     /**
      * Controller qui permet de gérer les annonces.
      * 
@@ -32,7 +39,7 @@ abstract class AdministratorController extends RegisteredController
             $announces = [];
         }
 
-        $page = new Page("L'indice | Administration - Gérer les annonces", AdministratorView::announces($announces));
+        $page = new Page("L'indice | Administration - Gérer les annonces", AdministratorView::readAnnounces($announces));
         $page->show();
     }
 
@@ -47,8 +54,9 @@ abstract class AdministratorController extends RegisteredController
         User::askToAuthenticate("/sign-in");
 
         $registered = User::authenticated();
+
         if ($registered->isAdministrator()) {
-            (new Page("L'indice | Profil - " . $user->getFullName(), (new RegisteredView($user))->userProfile()))->show();
+            (new Page("L'indice | Profil - " . $user->getFullName(), (new AdministratorView($registered))->readUserProfile($user)))->show();
         } else {
             Utility::redirect($registered->getProfileLink() . "/posts");
         }
@@ -66,7 +74,7 @@ abstract class AdministratorController extends RegisteredController
             if ($registered->isAdministrator()) {
                 $users = Registered::getAll();
                 $page = new Page("L'indice | Administratrion - Liste des utilisateurs");
-                $page->setView((new AdministratorView($registered))->users($users));
+                $page->setView((new AdministratorView($registered))->readUsers($users));
                 $page->show();
             } else {
                 throw new Exception("Ressource non trouvée !");

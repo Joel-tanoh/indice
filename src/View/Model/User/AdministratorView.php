@@ -21,11 +21,23 @@ class AdministratorView extends RegisteredView
     }
 
     /**
+     * Vue d'accueil de l'administrateur dans la partie administration.
+     * 
+     * @return string
+     */
+    public static function index()
+    {
+        return <<<HTML
+
+HTML;
+    }
+
+    /**
      * Affiche les utilisateurs.
      * @author Joel-tanoh
      * @return string
      */
-    public function users(array $users)
+    public function readUsers(array $users)
     {
         $usersTable = (new UserView())->usersTable($users);
 
@@ -34,9 +46,35 @@ class AdministratorView extends RegisteredView
             {$usersTable}
         </section>
 HTML;
-        return parent::administration($content, "Les utilisateurs", "Administration / Utilisateurs");
+        return parent::administrationTemplate($content, "Les utilisateurs", "Administration / Utilisateurs");
     }
-        
+    
+    /**
+     * Vue qui affiche le profile d'un autre utilisateur dont on veut
+     * voir le profile.
+     * @param \App\Model\User\Registered $user
+     * @return string
+     */
+    public function readUserProfile(\App\Model\User\Registered $user)
+    {
+        $snippet = new Snippet;
+
+        return <<<HTML
+        {$snippet->pageHeader($user->getFullName(), "Utilisateurs / ". $user->getFullName())}
+
+        <div id="content" class="my-3">
+            <div class="container-fluid">
+                <div class="row">
+                    {$this->sidebarNav(User::authenticated())}
+                    <div class="col-sm-12 col-md-8 col-lg-9">
+                        Profil de {$user->getFullName()}
+                    </div>
+                </div>
+            </div>
+        </div>
+HTML;
+    }
+
     /**
      * Affiche le menu du dashboard de l'utilisateur.
      * 
@@ -63,11 +101,21 @@ HTML;
      * 
      * @return string
      */
-    public static function announces(array $announces)
+    public static function readAnnounces(array $announces)
     {
         $administratorView = new self();
 
-        return $administratorView->dashboard($announces, "Toutes les annonces", "Gérer les annonces");
+        return $administratorView->dashboard($announces, "Toutes les annonces", "Gestion des annonces");
+    }
+
+    /**
+     * Permet à l'administrateur de voir les statistiques du site.
+     * 
+     * @return string
+     */
+    public static function readStatistics()
+    {
+
     }
 
 }

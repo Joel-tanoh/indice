@@ -101,7 +101,7 @@ class RegisteredController extends VisitorController
                         break;
 
                     case "validate" :
-                        AnnounceController::validate($params);
+                        AnnounceController::validateAnnounce($params);
                         break;
 
                     case "comment" :
@@ -171,7 +171,7 @@ class RegisteredController extends VisitorController
      * 
      * @param array $params
      */
-    public static function manage(array $params)
+    public static function selfManage(array $params)
     {
         if (Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
             $registered = User::authenticated();

@@ -16,6 +16,18 @@ use App\View\Snippet;
 class UserView extends ModelView
 {
     /**
+     * Affiche les annonces validées d'un utlisateur.
+     * @param \App\Model\User\Registered $user
+     * @return  string
+     */
+    public static function readRegisteredValidatedAnnounces(\App\Model\User\Registered $user)
+    {
+        return <<<HTML
+
+HTML;
+    }
+
+    /**
      * Vue pour la création d'un compte.
      * 
      * @param string $message
@@ -35,7 +47,6 @@ class UserView extends ModelView
         return <<<HTML
         {$snippet->pageHeader("Je m'inscris", "inscription")}
         {$message}
-        <!-- Content section Start -->
         <section class="register section-padding">
             <div class="container">
                 <div class="row justify-content-center">
@@ -126,7 +137,6 @@ HTML;
 
         return <<<HTML
         {$snippet->pageHeader("S'identifier", "S'identifier")}
-        <!-- Content section Start --> 
         <section class="login section-padding">
             <div class="container">
                 <div class="row justify-content-center">
@@ -168,7 +178,6 @@ HTML;
                 </div>
             </div>
         </section>
-        <!-- Content section End --> 
 HTML;
     }
 
@@ -209,53 +218,6 @@ HTML;
         } else {
             return $this->mobileNavbarForUnconnectedUser();
         }
-    }
-
-    /**
-     * Cta Section. Section qui présente un peu la pub du site.
-     * 
-     * @return string
-     */
-    public function ctaSection()
-    {
-        return <<<HTML
-        <!-- Cta Section Start -->
-        <section class="cta section-padding">
-            <div class="container">
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6 col-lg-4">
-                            <div class="single-cta">
-                                <div class="cta-icon">
-                                    <i class="lni-grid"></i>
-                                </div>
-                                <h4>Refreshing Design</h4>
-                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6 col-lg-4">
-                            <div class="single-cta">
-                                <div class="cta-icon">
-                                    <i class="lni-brush"></i>
-                                </div>
-                                <h4>Easy to Customize</h4>
-                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6 col-lg-4">
-                            <div class="single-cta">
-                                <div class="cta-icon">
-                                    <i class="lni-headphone-alt"></i>
-                                </div>
-                                <h4>24/7 Support</h4>
-                                <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Cta Section End -->
-HTML;
     }
 
     /**
