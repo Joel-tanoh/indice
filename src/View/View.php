@@ -53,7 +53,7 @@ HTML;
      * 
      * @return string
      */
-    public static function page404(string $message, string $current)
+    public static function pageNotFound(string $message, string $current)
     {
         $snippet = new Snippet();
         $home = APP_URL;
@@ -188,7 +188,7 @@ HTML;
     }
 
     /**
-     * Template avec la barre heraoArea 1 les publicités sur les cotés et haut.
+     * Template avec la barre heraoArea avec la barre de recherche et les publicités sur les cotés et haut.
      * Hero area est une bannière avec un formulaire de recherche.
      * @param string $content Le contenu de la page.
      * @return string
@@ -200,7 +200,7 @@ HTML;
 
         return <<<HTML
         {$snippet->heroArea2()}
-        <div class="container-fluid">
+        <div class="container-fluid mb-3">
             {$advertising->top()}
             <div class="row">
                 <aside class="d-none d-lg-block col-lg-2">
@@ -213,6 +213,28 @@ HTML;
                     {$advertising->right()}
                 </aside>
             </div>
+        </div>
+HTML;
+    }
+
+    /**
+     * Template avec la barre heraoArea 1 les publicités sur les cotés et haut.
+     * Hero area est une bannière avec un formulaire de recherche.
+     * @param string $content Le contenu de la page.
+     * @return string
+     */
+    public static function heroArea2WithTopAdvertising(string $content)
+    {
+        $snippet = new Snippet();
+        $advertising = new AdvertisingView();
+
+        return <<<HTML
+        {$snippet->heroArea2()}
+        <div class="container">
+            {$advertising->top()}
+            <aside>
+                {$content}
+            </aside>
         </div>
 HTML;
     }
@@ -282,7 +304,7 @@ HTML;
      * 
      * @return string
      */
-    public static function about()
+    public static function aboutUs()
     {
         return <<<HTML
 

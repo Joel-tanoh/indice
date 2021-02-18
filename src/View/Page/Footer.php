@@ -123,7 +123,7 @@ HTML;
         $content = null;
 
         if (empty($announces)) {
-            $content = AnnounceView::noAnnounces();
+            $content = Snippet::noResult();
         } else {
             foreach ($announces as $announce) {
                 $content .= (new AnnounceView($announce))->lastPostedCardInFooter();

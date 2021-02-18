@@ -72,28 +72,6 @@ HTML;
     }
 
     /**
-     * Menu qui sera affiché si l'utilsateur s'est authentifié.
-     * 
-     * @param App\Model\User\Registered
-     * @return string
-     */
-    public function navbar($registered)
-    {
-        if (User::isAuthenticated()) {
-
-            $administrationLink = User::authenticated()->isAdministrator()
-                ? '<a class="dropdown-item" href="administration/annonces"><i class="lni-dashboard"></i> Administration</a>'
-                : null;
-
-            return <<<HTML
-            {$administrationLink}
-            <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-dashboard"></i> Mes annonces</a>
-            <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Déconnexion</a>
-HTML;
-        }
-    }
-
-    /**
      * Affiche le menu dans la version mobile pour un utilisateur connecté.
      * 
      * @param App\Model\User\Registered
@@ -301,7 +279,7 @@ HTML;
             {$form->close()}
 HTML;
         } else {
-            return AnnounceView::noAnnounces();
+            return Snippet::noResult();
         }
     }
 
@@ -390,25 +368,38 @@ HTML;
     }
 
     /**
-     * Affiche les commnataires laissés par cet utilisateur.
-     * 
-     * @return string
-     */
-    public function showComments()
-    {
-        return <<<HTML
-        
-HTML;
-    }
-
-    /**
      * Affiche le formulaire pour changer le mot de passe.
      * 
      * @return string
      */
     public function changePassword()
     {
-        
+        $content = <<<HTML
+
+HTML;
+        return parent::administrationTemplate($content, "Modification de mon mot passe", $this->user->getFullName() . " / Administration / Modification du mot de passe");
+    
+    }
+
+    /**
+     * Affiche la vue de l'index de l'administration pour cet utilisateur enrgistré.
+     * @return string
+     */
+    public function administrationIndex()
+    {
+        $content = <<<HTML
+
+HTML;
+        return parent::administrationTemplate($content, "Administration", $this->user->getFullName() . " / Administration");
+    }
+
+    /**
+     * Retourne une vue pour afficher les annonces de cet utilisateur.
+     * @return string
+     */
+    public function showMyAnnounces()
+    {
+        return (new AnnounceView())->show($this->user->getAnnounces("validated"), "Les annonces de " . $this->user->getFullName());
     }
 
 }

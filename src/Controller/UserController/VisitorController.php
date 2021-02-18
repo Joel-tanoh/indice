@@ -26,16 +26,19 @@ class VisitorController extends UserController
 
         if (!$validator->getErrors()) {
             if (Newsletter::register($_POST["email_address"])) {
+
                 $email = new Email(
                     $_POST["email_address"], "Bienvenue sur L'indice.com", (new NewsletterView)->welcomeMessage()
                 );
-                if ($email->send()) {
-                    $page->setMetaTitle("L'indice | Abonnement à la Newsletter Réussie");
-                    $page->setView(View::success("Félicitations !", "Vous êtes bien enregistré dans la newsletter ! Vous recevrez un email de confirmation."));
-                    $page->show();
-                } else {
-                    Utility::redirect("/");
-                }
+                $email->send();
+
+                $page->setMetaTitle("L'indice | Abonnement à la Newsletter Réussie");
+                $page->setView(View::success("Félicitations !", "Vous êtes bien enregistré dans la newsletter ! Vous recevrez un email de confirmation."));
+                $page->show();
+            } else {
+                $page->setMetaTitle("L'indice | Echec de l'abonnement à la Newsletter");
+                $page->setView(View::success("Oup's !", "Nous avons rencontré une erreur lors de l'enregistrement de votre compte à la newsletter, veuillez essayer ultérieurement svp."));
+                $page->show();
             }
         }
     }

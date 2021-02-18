@@ -43,37 +43,7 @@ HTML;
      */
     public function read()
     {
-        $snippet = new Snippet();
-        $advertising = new AdvertisingView();
-        $announceView = new AnnounceView();
-
-        return <<<HTML
-        <!-- Hero Area -->
-        {$snippet->pageHeader($this->category->getTitle(), $this->category->getTitle())} 
-        <!-- Main container Start -->
-        <div class="main-container pb-3">
-            <div class="container-fluid">
-                <!-- La barre de publicité en haut -->
-                {$advertising->top()}
-                <div class="row">
-                    <aside class="d-none d-lg-block col-lg-2">
-                        {$advertising->left()}
-                    </aside>
-                    <aside class="col-12 col-lg-8">
-                        <section class="row">
-                            <!-- Sidebar -->
-                            {$this->sidebar()}
-                            <!-- Content -->
-                            {$announceView->list($this->category->getAnnounces("validated"))}
-                        </section>
-                    </aside>
-                    <aside class="d-none d-lg-block col-lg-2">
-                        {$advertising->right()}
-                    </aside>
-                </div>
-            </div>
-        </div> 
-HTML;
+        return parent::heroArea2WithAdvertisingTemplate((new AnnounceView())->show($this->category->getAnnounces("validated"), "Les annonces de la catégorie " . $this->category->getTitle()));
     }
 
     /**

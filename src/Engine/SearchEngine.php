@@ -27,6 +27,7 @@ class SearchEngine extends Action
     public function searchAnnounces(array $dataSent)
     {
         $this->searchAnnounceQuery($dataSent);
+        
         $req = parent::connectToDb($this->dbLogin, $this->dbPassword)->prepare($this->query);
 
         $req->execute($this->dataTreated($dataSent));
@@ -117,8 +118,10 @@ class SearchEngine extends Action
     {
         $data = [];
 
-        if (!empty($dataSent["query"])) {
-            $data["query"] = "%" . htmlspecialchars(trim($dataSent["query"])) . "%";
+        $query = $dataSent["query"] ?? $dataSent["search_query"] ?? $dataSent["request"] ?? $dataSent["q"];
+
+        if (!empty($query)) {
+            $data["query"] = "%" . htmlspecialchars(trim($query)) . "%";
         }
 
         if (!empty($dataSent["id_category"])) {

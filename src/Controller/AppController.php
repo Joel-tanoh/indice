@@ -24,7 +24,6 @@ abstract class AppController
         , "show"
         , "view"
         , "validate"
-        , "set-premium"
         , "suspend"
         , "block"
         , "comment"
@@ -34,15 +33,16 @@ abstract class AppController
     public static function index()
     {
         $page = new Page("L'indice | Le leader des petites annonces de Côte d'Ivoire", View::index());
+        $page->setDescription("Pour tous vos besoins, vos annonces, besoins vestimentaires, appareils electroménagers, ventes d'équipements, vous pouvez faire confiance au meilleur site d'annonce de Côte d'Ivoire, L'indice est la reponse à vos besoins.");
         $page->show();
     }
 
     /**
      * Cette page s'affiche pour les ressources pas encore développées.
      */
-    public static function page404()
+    public static function pageNotFound()
     {
-        $page = new Page("L'indice | Le leader des petites annonces de Côte d'Ivoire", View::page404("Page en cours de développement", "En cours"));
+        $page = new Page("L'indice | Le leader des petites annonces de Côte d'Ivoire", View::pageNotFound("Page en cours de développement", "En cours"));
         $page->show();
     }
 

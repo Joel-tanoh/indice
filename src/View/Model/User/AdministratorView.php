@@ -25,7 +25,7 @@ class AdministratorView extends RegisteredView
      * 
      * @return string
      */
-    public static function index()
+    public function administrationIndex()
     {
         return <<<HTML
 
@@ -116,6 +116,18 @@ HTML;
     public static function readStatistics()
     {
 
+    }
+
+    /**
+     * Affiche les commentaires postés par cet utilisateur.
+     * 
+     * @return string
+     */
+    public function showComments()
+    {
+        return <<<HTML
+        
+HTML;
     }
 
 }

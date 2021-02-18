@@ -366,7 +366,7 @@ HTML;
         if (null !== $link) {
             $link = '<a class="btn btn-success" href="'. $link . '">Voir</a>';
         } else {
-            $link = '<a class="btn btn-primary" href="'. APP_URL . '">Accueil</a>';
+            $link = '<a class="btn btn-success" href="'. APP_URL . '">Accueil</a>';
         }
 
         return <<<HTML
@@ -527,6 +527,22 @@ HTML;
                 </div>
             </div>
         </section>
+HTML;
+    }
+        
+    /**
+     * Un bloc de code HTML qui affiche aucune annonce lorqu'il n'y a pas 
+     * d'annonce à afficher dans une partie de la page.
+     * 
+     * @return string
+     */
+    public static function noResult()
+    {
+        return <<<HTML
+        <div class="col-12 text-muted text-center">
+            <h2>Oup's</h2>
+            Oup's nous n'avons trouvé aucun résultat.
+        </div>
 HTML;
     }
 

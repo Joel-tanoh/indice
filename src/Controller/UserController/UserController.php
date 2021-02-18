@@ -36,7 +36,8 @@ abstract class UserController extends AppController
      * Permet d'afficher une annonce.
      * @param array $params
      */
-    public static function readAnnounce(array $params = null) {
+    public static function readAnnounce(array $params = null)
+    {
         if (Category::valueIssetInDB("slug", $params[1], Category::TABLE_NAME)
             && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)
         ) {
@@ -45,7 +46,7 @@ abstract class UserController extends AppController
 
             if ($announce->hasCategory($category) && $announce->isValidated() || ($announce->isPending() && User::isAuthenticated())) {
                 $announce->incrementView();
-                $page = new Page("L'indice | " . $announce->getTitle(), (new AnnounceView($announce))->read());
+                $page = new Page("L'indice | " . $announce->getCategory()->getTitle() . " > " . $announce->getTitle(), (new AnnounceView($announce))->read());
                 $page->addJs("https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons", "async");
                 $page->show();
             } else {
@@ -58,11 +59,12 @@ abstract class UserController extends AppController
 
     /**
      * Permet d'afficher toutes les annonces.
-     * @param array $params
      */
-    public static function readAnnounces(array $params = null) {
-        $page = new Page("L'indice | Toutes les announces", (new AnnounceView())->announces(Announce::getAll(null, "validated")));
-        $page->setDescription("Toutes les announces, Vente, Offre et demande, Toutes vos recherches, vos besoins.");
+    public static function readAnnounces() {
+        $page = new Page("L'indice | Toutes les announces", UserView::readAnnounces(Announce::getAll(null, "validated")));
+        $page->setDescription(
+            "Toutes les announces, Vente, Offre et demande, Toutes vos recherches, vos besoins, vous pouvez les trouver sur L'indice."
+        );
         $page->show();
     }
 
@@ -166,13 +168,14 @@ abstract class UserController extends AppController
     public static function searchAnnounce()
     {
         $announces = [];
-        $pageTitle = "L'indice | Announces";
+        $pageTitle = "L'indice | Recherche d'announces";
         $searchEngine = new SearchEngine();
 
         if (Action::dataPosted()) {
             $searchEngine->searchAnnounces($_POST);
             $announces = $searchEngine->getResult("App\Model\Announce", "id");
-            $pageTitle .= " - Recherche " . $_POST["query"];
+            $query = $_POST["query"] ?? $_POST["search_query"] ?? $_POST["request"] ?? $_POST["q"];
+            $pageTitle .= " - " . $query;
         }
 
         $page = new Page($pageTitle);
@@ -187,7 +190,7 @@ abstract class UserController extends AppController
     {
         if (Category::isCategorySlug($params["category"])) {
             $category = Category::getBySlug($params["category"], Category::TABLE_NAME, "App\Model\Category");
-            $page = new Page("L'indice | " . $category->getTitle(), (new CategoryView($category))->read());
+            $page = new Page("L'indice | " . $category->getTitle() . " - Les meilleures annonces", (new CategoryView($category))->read());
             $page->setDescription($category->getDescription());
             $page->show();
         } else {
@@ -213,11 +216,11 @@ abstract class UserController extends AppController
     /**
      * Permet de lire la page à propos.
      */
-    public static function readAbout()
+    public static function readAboutUs()
     {
         $page = new Page(
             "L'indice | A propos de nous",
-            View::about(),
+            View::aboutUs(),
             ""
         );
         $page->show();
@@ -230,7 +233,7 @@ abstract class UserController extends AppController
     {
         $page = new Page(
             "L'indice | FAQs Frequently Asked Questions - Nous repondons à toutes vos questions.",
-            View::about(),
+            View::aboutUs(),
             ""
         );
         $page->show();

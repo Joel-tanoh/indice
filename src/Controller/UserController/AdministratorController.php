@@ -18,14 +18,6 @@ use Exception;
 abstract class AdministratorController extends RegisteredController
 {
     /**
-     * Controller de l'index de la partie administration pour l'administrateur.
-     */
-    public static function index()
-    {
-
-    }
-
-    /**
      * Controller qui permet de gérer les annonces.
      * 
      * @param array $params

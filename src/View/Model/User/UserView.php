@@ -16,15 +16,23 @@ use App\View\Snippet;
 class UserView extends ModelView
 {
     /**
+     * Affiche toutes les annonces validées.
+     * @param array $announces Liste des annonces.
+     * @return string
+     */
+    public static function readAnnounces(array $announces)
+    {
+        return parent::heroArea2WithTopAdvertising((new AnnounceView)->show($announces, "Toutes les annonces"));
+    }
+    
+    /**
      * Affiche les annonces validées d'un utlisateur.
      * @param \App\Model\User\Registered $user
      * @return  string
      */
     public static function readRegisteredValidatedAnnounces(\App\Model\User\Registered $user)
     {
-        return <<<HTML
-
-HTML;
+        return parent::heroArea2WithAdvertisingTemplate((new RegisteredView($user))->showMyAnnounces());
     }
 
     /**
@@ -182,72 +190,6 @@ HTML;
     }
 
     /**
-     * Affiche le navbar des utilisateurs.
-     * 
-     * @return string
-     */
-    public function navbarMenu()
-    {
-        if (User::isAuthenticated()) {
-            $content = (new RegisteredView())->navbar(User::authenticated());
-        } else {
-            $content = $this->navbarForUnconnectedUser();
-        }
-
-        return <<<HTML
-        <ul class="sign-in">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="lni-user"></i> Mon compte</a>
-                <div class="dropdown-menu">
-                    {$content}                    
-                </div>
-            </li>
-        </ul>
-HTML;
-    }
-
-    /**
-     * Affiche la navbar dans le menu version mobile.
-     * 
-     * @return string
-     */
-    public function mobileNavbar()
-    {
-        if (User::isAuthenticated()) {
-            return (new RegisteredView())->mobileNavbarForConnectedUser(User::authenticated());
-        } else {
-            return $this->mobileNavbarForUnconnectedUser();
-        }
-    }
-
-    /**
-     * Menu qui sera affiché si l'utilisateur n'est pas encore authentifé.
-     * 
-     * @return string
-     */
-    private function navbarForUnconnectedUser()
-    {
-        return <<<HTML
-        <a class="dropdown-item" href="register"><i class="lni-user"></i> S'inscrire</a>
-        <a class="dropdown-item" href="sign-in"><i class="lni-lock"></i> Connexion</a>
-HTML;
-    }
-
-    /**
-     * Affiche le menu dans la version mobile pour un visitor non connecté.
-     * 
-     * @return string
-     */
-    private function mobileNavbarForUnconnectedUser()
-    {
-        return <<<HTML
-        <li><a href="/"><i class="lni-home"></i>Accueil</a></li>
-        <li><a href="register"><i class="lni-user"></i> S'inscrire</a></li>
-        <li><a href="sign-in"><i class="lni-lock"></i> Connexion</a></li>
-HTML;
-    }
-
-    /**
      * Affiche un lien pour changer le mot de passe.
      * 
      * @return string
@@ -349,29 +291,4 @@ HTML;
 HTML;
     }
 
-    /**
-     * La vue qui affiche les annonces vu du visiteur.
-     * 
-     * @return string
-     */
-    public static function showPosts(\App\Model\User\Registered $user, array $posts)
-    {
-        $snippet = new Snippet;
-        $announceView = new AnnounceView();
-        $advertising = new AdvertisingView();
-
-        return <<<HTML
-        {$snippet->pageHeader("Les meilleures annonces de " .$user->getFullName(), "Annonces / " .$user->getFullName())}
-        <section class="container my-4">
-            <section class="row">
-                <aside class="col-9">
-                    {$announceView->list($posts)}
-                </aside>
-                <aside class="col-3">
-                    {$advertising->right()}
-                </aside>
-            </section>
-        </section>
-HTML;
-    }
 }

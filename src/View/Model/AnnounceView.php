@@ -36,17 +36,16 @@ class AnnounceView extends View
      * @param array $announces
      * @return string
      */
-    public function showAll(array $announces)
+    public function show(array $announces, string $smallTitle)
     {
         $categoryView = new CategoryView();
 
-        $content = <<<HTML
+        return <<<HTML
         <section class="row">
             {$categoryView->sidebar()}
-            {$this->list($announces)}
+            {$this->list($announces, $smallTitle)}
         </section>
 HTML;
-        return parent::pageHeaderWithAdvertisingTemplate("Toutes les meilleures annonces", "Toutes les annonces", $content);
     }
 
     /**
@@ -82,12 +81,7 @@ HTML;
      */
     public function read()
     {
-        $snippet = new Snippet();
-
-        return <<<HTML
-        {$snippet->pageHeader($this->announce->getTitle(), $this->announce->getTitle())}
-        {$this->details()}
-HTML;
+        return parent::heroArea2WithTopAdvertising($this->details());
     }
 
     /**
@@ -102,9 +96,7 @@ HTML;
 
         return <<<HTML
         {$snippet->pageHeader($this->announce->getTitle(), "Gestion de mon announce")}
-        <!-- Message affiché en fonction de l'issue de l'action -->
         {$message}
-
         <div id="content" class="my-3">
             <div class="container-fluid">
                 <div class="row">
@@ -123,10 +115,11 @@ HTML;
      * 
      * @return string
      */
-    public function list(array $announces)
+    public function list(array $announces, string $smallTitle)
     {
         return <<<HTML
         <div class="col-lg-9 col-md-12 col-xs-12 page-content">
+            <h5 class="py-3">{$smallTitle}</h5>
             {$this->announceFilter()}
             <div class="adds-wrapper">
                 <div class="tab-content">
@@ -149,7 +142,7 @@ HTML;
         $announces = Announce::getMoreViewed(10);
 
         if (empty($announces)) {
-            $content = self::noAnnounces();
+            $content = Snippet::noResult();
         } else {
             $content = null;
             foreach ($announces as $announce) {
@@ -171,7 +164,7 @@ HTML;
         $announces = Announce::getLastPosted(6);
 
         if (empty($announces)) {
-            $content = self::noAnnounces();
+            $content = Snippet::noResult();
         } else {
             foreach ($announces as $announce) {
                 $content .= (new self($announce))->card("col-xs-6 col-sm-6 col-md-4 col-lg-4");
@@ -207,7 +200,7 @@ HTML;
         $content = null;
 
         if (empty($announces)) {
-            $content = self::noAnnounces();
+            $content = Snippet::noResult();
         } else {
             foreach ($announces as $announce) {
                 $content .= (new self($announce))->card("col-xs-12 col-sm-12 col-md-6 col-lg-6");
@@ -233,7 +226,7 @@ HTML;
         $content = null;
 
         if (empty($announces)) {
-            $content = self::noAnnounces();
+            $content = Snippet::noResult();
         } else {
             foreach ($announces as $announce) {
                 $content .= (new self($announce))->card("col-xs-12 col-sm-12 col-md-12 col-lg-12");
@@ -275,9 +268,7 @@ HTML;
     {
         return <<<HTML
         <div class="my-3">
-            <div class="container">
-                {$this->detailsInfos()}
-            </div>
+            {$this->detailsInfos()}
         </div>
 HTML;
     }
@@ -803,19 +794,6 @@ HTML;
 
         return <<<HTML
         <span class="adstatus {$statusClass}">{$statusText}</span>
-HTML;
-    }
-        
-    /**
-     * Un bloc de code HTML qui affiche aucune annonce lorqu'il n'y a pas 
-     * d'annonce à afficher dans une partie de la page.
-     * 
-     * @return string
-     */
-    public static function noAnnounces()
-    {
-        return <<<HTML
-        <p class="text-muted text-center">Aucunes annonces</p>
 HTML;
     }
 

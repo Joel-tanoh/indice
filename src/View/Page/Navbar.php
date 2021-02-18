@@ -15,7 +15,9 @@
 namespace App\View\Page;
 
 use App\File\Image\Logo;
+use App\Model\User\User;
 use App\View\Model\CategoryView;
+use App\View\Model\User\RegisteredView;
 use App\View\Model\User\UserView;
 use App\View\Snippet;
 
@@ -48,11 +50,9 @@ class Navbar extends Snippet
     {
         $appUrl = APP_URL;
         $logoAltText = Logo::ALT_TEXT;
-        $userView = new UserView();
         $categoryView = new CategoryView();
 
         return <<<HTML
-        <!-- Header Area wrapper Starts -->
         <header id="header-wrap">
             <nav class="navbar navbar-expand-lg fixed-top scrolling-navbar">
                 <div class="container">
@@ -69,10 +69,10 @@ class Navbar extends Snippet
                         <ul class="navbar-nav mr-auto">
                             {$categoryView->navbarList()}
                             <li>
-                                <a class="nav-link" href="announces">Annonces</a>
+                                <a class="nav-link" href="annonces">Annonces</a>
                             </li>
                         </ul>
-                        {$userView->navbarMenu()}
+                        {$this->navbarMenu()}
                         <a class="tg-btn" href="post"><i class="lni-pencil-alt"></i> Poster une annonce</a>
                     </div>
                 </div>
@@ -89,11 +89,9 @@ HTML;
      */
     private function mobileMenu()
     {
-        $userView = new UserView();
-
         return <<<HTML
         <ul class="mobile-menu">
-            {$userView->mobileNavbar()}
+            {$this->mobileNavbar()}
         </ul>
 HTML;
     }
@@ -131,6 +129,94 @@ HTML;
             <img src="{$avatarSrc}" alt="{$caption}" class="navbar-user-avatar img-circle shdw mr-2"/>
         </div>
 HTML;
+    }
+
+    /**
+     * Affiche le navbar des utilisateurs.
+     * 
+     * @return string
+     */
+    public function navbarMenu()
+    {
+        if (User::isAuthenticated()) {
+            $content = $this->navbar(User::authenticated());
+        } else {
+            $content = $this->navbarForUnconnectedUser();
+        }
+
+        return <<<HTML
+        <ul class="sign-in">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="lni-user"></i> Mon compte</a>
+                <div class="dropdown-menu">
+                    {$content}                    
+                </div>
+            </li>
+        </ul>
+HTML;
+    }
+
+    /**
+     * Affiche la navbar dans le menu version mobile.
+     * 
+     * @return string
+     */
+    public function mobileNavbar()
+    {
+        if (User::isAuthenticated()) {
+            return (new RegisteredView())->mobileNavbarForConnectedUser(User::authenticated());
+        } else {
+            return $this->mobileNavbarForUnconnectedUser();
+        }
+    }
+
+    /**
+     * Menu qui sera affiché si l'utilisateur n'est pas encore authentifé.
+     * 
+     * @return string
+     */
+    private function navbarForUnconnectedUser()
+    {
+        return <<<HTML
+        <a class="dropdown-item" href="register"><i class="lni-user"></i> S'inscrire</a>
+        <a class="dropdown-item" href="sign-in"><i class="lni-lock"></i> Connexion</a>
+HTML;
+    }
+
+    /**
+     * Affiche le menu dans la version mobile pour un visitor non connecté.
+     * 
+     * @return string
+     */
+    private function mobileNavbarForUnconnectedUser()
+    {
+        return <<<HTML
+        <li><a href="/"><i class="lni-home"></i> Accueil</a></li>
+        <li><a href="register"><i class="lni-user"></i> S'inscrire</a></li>
+        <li><a href="sign-in"><i class="lni-lock"></i> Connexion</a></li>
+HTML;
+    }
+
+    /**
+     * Menu qui sera affiché si l'utilsateur s'est authentifié.
+     * 
+     * @param App\Model\User\Registered
+     * @return string
+     */
+    public function navbar($registered)
+    {
+        if (User::isAuthenticated()) {
+
+            $administrationLink = User::authenticated()->isAdministrator()
+                ? '<a class="dropdown-item" href="administration/annonces"><i class="lni-dashboard"></i> Administration</a>'
+                : null;
+
+            return <<<HTML
+            {$administrationLink}
+            <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-dashboard"></i> Mes annonces</a>
+            <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Déconnexion</a>
+HTML;
+        }
     }
 
 }

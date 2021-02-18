@@ -17,6 +17,7 @@ use App\Model\User\User;
 use App\Model\User\Visitor;
 use App\Utility\Utility;
 use App\View\Model\AnnounceView;
+use App\View\Model\User\AdministratorView;
 use App\View\Model\User\RegisteredView;
 use App\View\Model\User\UserView;
 use App\View\Page\Page;
@@ -127,6 +128,23 @@ class RegisteredController extends VisitorController
     }
 
     /**
+     * Controller de l'index de la partie administration pour le registered.
+     */
+    public static function administrationIndex()
+    {
+        User::askToAuthenticate("sign-in");
+
+        if (User::authenticated()->isAdministrator()) {
+            $view = (new AdministratorView(User::authenticated()))->administrationIndex();
+        } else {
+            $view = (new RegisteredView(User::authenticated()))->administrationIndex();
+        }
+        
+        $page = new Page("L'indice | " . User::authenticated()->getFullName() . " - Administration", $view);
+        $page->show();
+    }
+
+    /**
      * Controller pour gérer le dashboard d'un utlisateur.
      * @param array $params
      */
@@ -152,7 +170,7 @@ class RegisteredController extends VisitorController
 
             $title = User::authenticated()->getPseudo() === $user->getPseudo() ? "Mes annonces" : "Les annonces de " . $user->getFullName();
             
-            $page->setMetatitle("L'indice | Tableau de bord - " . $user->getFullName());
+            $page->setMetatitle("L'indice | " . $user->getFullName() . " - Tableau de bord - ");
             $page->setView(
                 (new RegisteredView($user))->dashboard($announces, $title, $user->getFullName() . " / Annonces")
             );
@@ -178,7 +196,7 @@ class RegisteredController extends VisitorController
             $user = Registered::getByPseudo($params[2]);
 
             if ($params[3] === "update") {
-                self::update($user);
+                self::update($params);
             } elseif ($params[3] === "delete") {
                 AdministratorController::deleteUser($user);
             } else {
@@ -193,9 +211,10 @@ class RegisteredController extends VisitorController
     /**
      * Controlleur de mise à jour d'un user.
      */
-    public static function update(\App\Model\User\Registered $user)
+    public static function update(array $params)
     {
-        dump($user);
+        dump($params);
+        die();
     }
 
     /**

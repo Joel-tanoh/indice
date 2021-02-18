@@ -16,7 +16,7 @@ abstract class SearchController extends AppController
      * routes du même format.
      * @param array $params
      */
-    public static function router(array $params)
+    public static function subRouter(array $params)
     {
         die("Vous faites des recherches selon des paramètres");
     }

@@ -20,54 +20,18 @@ class SearchView extends Snippet
     public function result(string $modelType, array $data)
     {
         if (empty($data)) {
-            return $this->noResult();
+            return Snippet::noResult();
         } elseif ($modelType === "announces") {
             return $this->announcesResult($data);
         }
     }
 
     /**
-     * Retourne la vue à 
+     * Retourne la vue qui affiche les résultats de recherches d'annonces.
      */
-    public function announcesResult(array $data)
+    public function announcesResult(array $annouces)
     {
-        $snippet = new Snippet();
-        $advertising = new AdvertisingView();
-        $categoryView = new CategoryView();
-        $announceView = new AnnounceView();
-
-        if (empty($data)) {
-            $content = $this->noResult();
-        } else {
-            $content = $announceView->list($data);
-        }
-
-        return <<<HTML
-        <!-- Hero Area -->
-        {$snippet->heroArea2(false)}
-        <!-- Main container Start -->
-        <div class="main-container mb-3">
-            <div class="container-fluid">
-                {$advertising->top()}
-                <div class="row">
-                    <aside class="d-none d-lg-block col-lg-2">
-                        {$advertising->left()}
-                    </aside>
-                    <aside class="col-12 col-lg-8">
-                        <section class="row">
-                            <!-- Sidebar -->
-                            {$categoryView->sidebar()}
-                            <!-- Content -->
-                            {$content}
-                        </section>
-                    </aside>
-                    <aside class="d-none d-lg-block col-lg-2">
-                        {$advertising->right()}
-                    </aside>
-                </div>
-            </div>
-        </div> 
-HTML;
+        return parent::heroArea2WithAdvertisingTemplate((new AnnounceView)->show($annouces, "Résultats de la récherche"));
     }
 
     /**
@@ -77,7 +41,7 @@ HTML;
      */
     public function heroAreaSearchBar()
     {
-        $form = new Form("/announces/search", "search-form", "post", "heroSearchForm", "search");
+        $form = new Form("/annonces/search", "search-form", "post", "heroSearchForm", "search");
 
         return <<<HTML
         <div class="search-bar">
@@ -101,7 +65,7 @@ HTML;
      */
     public function categorySearchWidget()
     {
-        $form = new Form("announces/search", null, "post", "search-form", "search");
+        $form = new Form("annonces/search", null, "post", "search-form", "search");
         $searchQuery = !empty($_POST["query"]) ? $_POST["query"] : null;
 
         return <<<HTML
@@ -121,11 +85,11 @@ HTML;
      */
     public function notFoundSearch()
     {
-        $form = new Form("/announces/search", "form-error-search");
+        $form = new Form("/annonces/search", "form-error-search");
 
         return <<<HTML
         {$form->open()}
-            <input type="search" name="search_query" class="form-control" placeholder="Une recherche..." required>
+            <input type="search" name="query" class="form-control" placeholder="Une recherche..." required>
             <button class="btn btn-common btn-search" type="submit">Chercher</button>
         {$form->close()}
 HTML;
@@ -240,21 +204,6 @@ HTML;
         <div class="form-group inputwithicon">
             <i class="lni-menu"></i>
             <input type="number" name="price" class="form-control" placeholder="Entrer un prix" scale="5">
-        </div>
-HTML;
-    }
-
-    /**
-     * Retourne la vue à afficher si n'y a pas de resultat.
-     * 
-     * @return string
-     */
-    private function noResult()
-    {
-        return <<<HTML
-        <div class="col-lg-9 col-md-12 col-xs-12 page-content">
-            <h2>Oup's</h2>
-            <p class="text-muted">Aucun résultat.</p>
         </div>
 HTML;
     }
