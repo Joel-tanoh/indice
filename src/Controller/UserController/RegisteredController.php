@@ -45,13 +45,21 @@ class RegisteredController extends VisitorController
             if ($connexion->getError()) {
                 $error = (new NotifyByHTML())->error($connexion->getError(), "app-alert-danger mb-3");
             } else {
+
                 (new Visitor(Session::getVisitor()))->identify($_POST["email_address"]);
                 Session::activateRegistered($_POST["email_address"]);
                 if (!empty($_POST["remember_me"])) {
                     Cookie::setRegistered($_POST["email_address"]);
                 }
+
                 $registered = new Registered($_POST["email_address"]);
-                Utility::redirect($registered->getProfileLink());
+
+                if ($registered->isAdministrator()) {
+                    Utility::redirect("administration/annonces");
+                } else {
+                    Utility::redirect($registered->getProfileLink() . "/posts");
+                }
+                
             }
         }
 
@@ -105,6 +113,10 @@ class RegisteredController extends VisitorController
                         AnnounceController::validateAnnounce($params);
                         break;
 
+                    case "suspend" :
+                        AnnounceController::suspendAnnounce($params);
+                        break;
+
                     case "comment" :
                         AdministratorController::commentAnnounce($announce);
                         break;
@@ -145,6 +157,30 @@ class RegisteredController extends VisitorController
     }
 
     /**
+     * Permet d'afficher le profil de l'utilisateur.
+     */
+    public static function myProfile(array $params)
+    {
+        User::askToAuthenticate("/sign-in");
+
+        $page = new Page();
+        $user = Registered::getByPseudo($params[3]); // $params[3] = pseudo
+
+        if (User::authenticated()->getPseudo() === $user->getPseudo()) {
+            $page->setMetatitle("L'indice | Administration - " . $user->getFullName() . " - Mon profil");
+            $view = (new RegisteredView($user))->myProfile();
+        } elseif (User::authenticated()->isAdministrator()) {
+            $page->setMetatitle("L'indice | Administration - " . $user->getFullName() . " - Profil");
+            $view = (new AdministratorView(User::authenticated()))->readUserProfile($user);
+        } else {
+            Utility::redirect($user->getProfileLink());
+        }
+
+        $page->setView($view);
+        $page->show();
+    }
+
+    /**
      * Controller pour gérer le dashboard d'un utlisateur.
      * @param array $params
      */
@@ -152,12 +188,13 @@ class RegisteredController extends VisitorController
     {
         User::askToAuthenticate("/sign-in");
         
-        $user = Registered::getByPseudo($params[2]);
+        $user = Registered::getByPseudo($params[3]);
         $page = new Page();
 
         if (User::authenticated()->getPseudo() === $user->getPseudo() || User::authenticated()->isAdministrator()) {
-            if (!empty($params[4])) {
-                $status = $params[4];
+           
+            if (!empty($params[5])) {
+                $status = $params[5];
 
                 if (!in_array($status, Announce::getStatutes())) {
                     $announces = [];
@@ -168,13 +205,13 @@ class RegisteredController extends VisitorController
                 $announces = $user->getAnnounces();
             }
 
-            $title = User::authenticated()->getPseudo() === $user->getPseudo() ? "Mes annonces" : "Les annonces de " . $user->getFullName();
-            
-            $page->setMetatitle("L'indice | " . $user->getFullName() . " - Tableau de bord - ");
+            $title = User::authenticated()->getPseudo() === $user->getPseudo() ? $user->getFullName() . " - Mes annonces" : "Les annonces de " . $user->getFullName();
+
+            $page->setMetatitle("L'indice | Administration - " . $title);
             $page->setView(
                 (new RegisteredView($user))->dashboard($announces, $title, $user->getFullName() . " / Annonces")
             );
-
+            
             $page->setDescription("Cette page affiche les annonces postées par " . $user->getFullName());
             $page->show();
 

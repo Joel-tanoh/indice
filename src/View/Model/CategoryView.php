@@ -69,7 +69,7 @@ HTML;
         }
 
         return <<<HTML
-        <div id="categories-icon-slider" class="owl-carousel owl-theme pt-5">
+        <div id="categories-icon-slider" class="owl-carousel owl-theme py-4">
             {$content}
         </div>
 HTML;

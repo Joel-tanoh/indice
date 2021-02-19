@@ -67,6 +67,9 @@ class Navbar extends Snippet
                     </div>
                     <div class="collapse navbar-collapse" id="main-navbar">
                         <ul class="navbar-nav mr-auto">
+                            <li>
+                                <a class="nav-link" href="/">Accueil</a>
+                            </li>
                             {$categoryView->navbarList()}
                             <li>
                                 <a class="nav-link" href="annonces">Annonces</a>

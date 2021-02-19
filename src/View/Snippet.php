@@ -361,12 +361,12 @@ HTML;
      * 
      * @return string 
      */
-    public static function success(string $title, string $content, string $link = null)
+    public static function success(string $title, string $content, string $linkCaption = null, string $href = null, string $current = null)
     {
-        if (null !== $link) {
-            $link = '<a class="btn btn-success" href="'. $link . '">Voir</a>';
+        if (null !== $linkCaption && null !== $href) {
+            $link = '<a class="btn btn-success" href="'. $href . '">'. $linkCaption . '</a>';
         } else {
-            $link = '<a class="btn btn-success" href="'. APP_URL . '">Accueil</a>';
+            $link = '<a class="btn btn-success" href="'. $_SERVER["HTTP_REFERER"] . '">Retour</a>';
         }
 
         return <<<HTML
@@ -395,12 +395,12 @@ HTML;
      * @param string $content Le message à afficher.
      * @param string $link    Peut être null.
      */
-    public static function failed(string $title, string $content, string $link = null)
+    public static function failed(string $title, string $content, string $linkCaption = null, string $href = null, string $current = null)
     {
-        if (null !== $link) {
-            $link = '<a class="btn btn-danger" href="'. $link . '">Retour</a>';
+        if (null !== $linkCaption && null !== $href) {
+            $link = '<a class="btn btn-danger" href="'. $href . '">'. $linkCaption . '</a>';
         } else {
-            $link = '<a class="btn btn-primary" href="'. APP_URL . '">Accueil</a>';
+            $link = '<a class="btn btn-primary" href="'. $_SERVER["HTTP_REFERER"] . '">Retour</a>';
         }
 
         return <<<HTML
@@ -486,13 +486,11 @@ HTML;
 
     /**
      * Cta Section. Section qui présente un peu la pub du site.
-     * 
      * @return string
      */
     public function ctaSection()
     {
         return <<<HTML
-        <!-- Cta Section Start -->
         <section class="cta section-padding">
             <div class="container">
                     <div class="row">
@@ -545,5 +543,33 @@ HTML;
         </div>
 HTML;
     }
-
+    
+    /**
+     * Bloc de code pour les effets accordéons.
+     * 
+     * @param string $title
+     * @param string $content
+     * @param string $tag
+     * 
+     * @return string
+     */
+    public function accordeon(string $title, string $content, $tag)
+    {
+        return <<<HTML
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#{$tag}">
+                        {$title}
+                    </a>
+                </h4>
+            </div>
+            <div id="{$tag}" class="panel-collapse collapse">
+                <div class="panel-body">
+                    {$content}
+                </div>
+            </div>
+        </div>
+HTML;
+    }
 }

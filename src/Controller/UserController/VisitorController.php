@@ -33,11 +33,27 @@ class VisitorController extends UserController
                 $email->send();
 
                 $page->setMetaTitle("L'indice | Abonnement à la Newsletter Réussie");
-                $page->setView(View::success("Félicitations !", "Vous êtes bien enregistré dans la newsletter ! Vous recevrez un email de confirmation."));
+                $page->setView(
+                    View::success(
+                        "Félicitations !",
+                        "Vous êtes bien enregistré dans la newsletter ! Vous recevrez un email de confirmation.",
+                        "Accueil",
+                        APP_URL,
+                        "Abonnement à la newsletter"
+                    )
+                );
                 $page->show();
             } else {
                 $page->setMetaTitle("L'indice | Echec de l'abonnement à la Newsletter");
-                $page->setView(View::success("Oup's !", "Nous avons rencontré une erreur lors de l'enregistrement de votre compte à la newsletter, veuillez essayer ultérieurement svp."));
+                $page->setView(
+                    View::success(
+                        "Oup's !", 
+                        "Nous avons rencontré une erreur lors de l'enregistrement de votre compte à la newsletter, veuillez essayer ultérieurement svp.",
+                        "Accueil",
+                        APP_URL,
+                        "Abonnement à la newsletter"
+                    )
+                );
                 $page->show();
             }
         }

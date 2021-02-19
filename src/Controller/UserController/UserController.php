@@ -44,14 +44,16 @@ abstract class UserController extends AppController
             $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $params[1], "App\Model\Category");
             $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $params[2], "App\Model\Announce");
 
-            if ($announce->hasCategory($category) && $announce->isValidated() || ($announce->isPending() && User::isAuthenticated())) {
+            if ($announce->hasCategory($category) && $announce->isValidated() || (($announce->isPending() || $announce->isSuspended()) && User::isAuthenticated())) {
                 $announce->incrementView();
                 $page = new Page("L'indice | " . $announce->getCategory()->getTitle() . " > " . $announce->getTitle(), (new AnnounceView($announce))->read());
                 $page->addJs("https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons", "async");
                 $page->show();
+
             } else {
                 throw new Exception("La ressource demandée n'a pas été trouvée !");
             }
+
         } else {
             throw new Exception("La ressource demandée n'a pas été trouvée !");
         }
@@ -61,7 +63,7 @@ abstract class UserController extends AppController
      * Permet d'afficher toutes les annonces.
      */
     public static function readAnnounces() {
-        $page = new Page("L'indice | Toutes les announces", UserView::readAnnounces(Announce::getAll(null, "validated")));
+        $page = new Page("L'indice | Toutes les annonces", UserView::readAnnounces(Announce::getAll(null, "validated")));
         $page->setDescription(
             "Toutes les announces, Vente, Offre et demande, Toutes vos recherches, vos besoins, vous pouvez les trouver sur L'indice."
         );
@@ -219,7 +221,7 @@ abstract class UserController extends AppController
     public static function readAboutUs()
     {
         $page = new Page(
-            "L'indice | A propos de nous",
+            "L'indice | A propos de nous - Toutes les informations concernant le fondateur de L'indice.ci",
             View::aboutUs(),
             ""
         );
@@ -227,13 +229,13 @@ abstract class UserController extends AppController
     }
 
     /**
-     * Permet de lire la page à propos.
+     * Permet de lire la page des questions fréquentes.
      */
     public static function readFAQ()
     {
         $page = new Page(
-            "L'indice | FAQs Frequently Asked Questions - Nous repondons à toutes vos questions.",
-            View::aboutUs(),
+            "L'indice | FAQs Questions fréquentes - Nous repondons à toutes vos questions sur L'indice.ci",
+            View::FAQ(),
             ""
         );
         $page->show();

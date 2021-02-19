@@ -26,7 +26,7 @@ try {
     $router->get("/sign-out", "App\Controller\UserController\RegisteredController@signOut");
     $router->get("/post", "App\Controller\UserController\RegisteredController@post");
     $router->get("/administration/users", "App\Controller\UserController\AdministratorController@readUsers");
-    $router->get("/administration/annonces", "App\Controller\UserController\AdministratorController@readAnnounces");
+    $router->get("/administration/annonces", "App\Controller\UserController\AdministratorController@administrateAnnounces");
     $router->get("/about-us", "App\Controller\UserController\UserController@readAboutUs");
     $router->get("/faq", "App\Controller\UserController\UserController@readFAQ");
     $router->get("/in-progress", "App\Controller\AppController@pageNotFound");
@@ -34,7 +34,8 @@ try {
     $router->get("/:category", "App\Controller\UserController\UserController@readCategory");
     $router->get("/:1/:2", "App\Controller\AppController@subRouter");
     $router->get("/:1/:2/:3", "App\Controller\AppController@subRouter");
-    $router->get("/:1/:2/:3/:4", "App\Controller\UserController\RegisteredController@myDashboard");
+    $router->get("/:1/:2/:3/:4", "App\Controller\AppController@subRouter");
+    $router->get("/:1/:2/:3/:4/:5", "App\Controller\AppController@subRouter");
 
     $router->post("/register", "App\Controller\UserController\UserController@register");
     $router->post("/sign-in", "App\Controller\UserController\RegisteredController@signIn");

@@ -48,7 +48,7 @@ abstract class AnnounceController extends AppController
         $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
         $htmlNotifier = new NotifyByHTML();
         $message = null;
-        $page = new Page("Modifier " . $announce->getTitle(), (new AnnounceView($announce))->update());
+        $page = new Page("L'indice | " . $announce->getTitle() . " - Modification", (new AnnounceView($announce))->update());
 
         if (Update::dataPosted()) {
 
@@ -61,6 +61,8 @@ abstract class AnnounceController extends AppController
             } else {
                 if ($announce->update()) {
 
+                    $announce = Announce::actualize("App\Model\Announce", $announce->getId());
+
                     if ($announce->getLastComment()) {
                         NotifyByMail::administrators(
                             "Nouvelle mise à jour d'annonce",
@@ -71,18 +73,25 @@ abstract class AnnounceController extends AppController
                     $page->setMetatitle("L'indice | Mise à jour effectuée avec succès");
                     $page->setView(
                         View::success(
-                            "Mise à jour effectuée avec succès",
-                            "La mise à jour a été effectuée avec succès, Merci de nous faire confiance pour vos annonces.",
-                            $announce->getLink()
+                            "Mise à jour effectuée avec succès"
+                            , "La mise à jour a été effectuée avec succès, Merci de nous faire confiance pour vos annonces."
+                            , "Voir"
+                            , $announce->getLink()
+                            , "Succès de la mise à jour"
                         )
                     );
                 } else {
+
+                    $announce = Announce::actualize("App\Model\Announce", $announce->getId());
+
                     $page->setMetatitle("L'indice | Oup's ! Nous avons rencontré une erreur lors de la modification de votre annonce.");
                     $page->setView(
-                        View::success(
-                            "Oup's ! Erreur lors de la modification",
-                            "Nous avons rencontré une erreur lors de la mise à jour de votre annonce, veuillez réessayer ultérieurement.",
-                            $announce->getLink()
+                        View::failed(
+                            "Oup's ! Erreur lors de la modification"
+                            , "Nous avons rencontré une erreur lors de la mise à jour de votre annonce, veuillez réessayer ultérieurement."
+                            , "Retour"
+                            , $announce->getLink()
+                            , "Echec de la mise à jour"
                         )
                     );
                 }
@@ -101,12 +110,18 @@ abstract class AnnounceController extends AppController
         $page = new Page();
 
         if ($announce->delete()) {
+
             NotifyByMail::administrators("Une annonce a été supprimée", "Une annonce a été supprimée.");
+
+            $link = User::authenticated()->isAdministrator() ? "administration/annonces" : User::authenticated()->getProfileLink() . "/posts";
             $page->setMetatitle("L'indice | Suppression effectuée avec succès");
             $page->setView(
                 View::success(
-                    "Suppression effectuée avec succès",
-                    "L'annonce a été supprimée avec succès."
+                    "Suppression effectuée avec succès"
+                    , "L'annonce a été supprimée avec succès."
+                    , "Mon Dashboard"
+                    , $link
+                    , "Suppression d'annonce"
                 )
             );
             $page->show();
@@ -115,8 +130,11 @@ abstract class AnnounceController extends AppController
             $page->setMetatitle("L'indice | Suppression non effectuée");
             $page->setView(
                 View::failed(
-                    "La suppression a échoué.",
-                    "La suppression de l'annonce n'a pas pû être effectuée. Nous sommes désolé, pouvez vous reprendre l'action svp"
+                    "Echec de la suppression",
+                    "Nous avons rencontré une erreur lors de la tentative de suppression, veuillez réessayer ultérieurement",
+                    "Retour",
+                    $announce->getLink(),
+                    "Suppression d'annonce"
                 )
             );
             $page->show();
@@ -137,9 +155,11 @@ abstract class AnnounceController extends AppController
                 $page->setMetatitle("L'indice | Validation effectuée avec succès");
                 $page->setView(
                     View::success(
-                        "Mise à jour effectuée avec succès",
-                        "La mise à jour a été effectuée avec succès, Merci de nous faire confiance pour vos annonces.",
-                        $announce->getLink()
+                        "Annonce validée avec succès",
+                        "L'annonce a été validée avec succès, merci de nous faire confiance pour vos annonces.",
+                        "Voir",
+                        $announce->getLink(),
+                        "Validation d'annonce"
                     )
                 );
             }
@@ -147,8 +167,49 @@ abstract class AnnounceController extends AppController
             $page->setMetatitle("L'indice | Validation impossible");
             $page->setView(
                 View::failed(
-                    "Impossible de valider cette annonce",
-                    "Vous n'avez pas les droits suffisant pour valider une annonce."
+                    "Echec de la validation",
+                    "Oup's ! Nous avons rencontré une erreur lors de la validation de l'annonce, veuillez réessayer utltérieurement.",
+                    "Retour",
+                    $announce->getLink(),
+                    "Validation d'annonce"
+                )
+            );
+        }
+
+        $page->show();
+    }
+
+    /**
+     * Permet de valider une annonce.
+     * @param array $params
+     */
+    public static function suspendAnnounce(array $params)
+    {
+        $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
+        $page = new Page();
+
+        if (User::authenticated()->isAdministrator()) {
+            if (User::authenticated()->changeStatus($announce->getId(), Announce::convertStatus("suspended"), Announce::TABLE_NAME)) {
+                $page->setMetatitle("L'indice | Suspension effectuée avec succès");
+                $page->setView(
+                    View::success(
+                        "Annonce suspendue avec succès",
+                        "L'annonce a été suspendu avec succès, merci de nous faire confiance pour vos annonces.",
+                        "Voir",
+                        $announce->getLink(),
+                        "Suspension d'annonce"
+                    )
+                );
+            }
+        } else {
+            $page->setMetatitle("L'indice | Suspension impossible");
+            $page->setView(
+                View::failed(
+                    "Echec de la suspension",
+                    "Oup's ! Nous avons rencontré une erreur lors de la suspension de l'annonce, veuillez réessayer utltérieurement.",
+                    "Retour",
+                    $announce->getLink(),
+                    "Suspendion d'annonce"
                 )
             );
         }

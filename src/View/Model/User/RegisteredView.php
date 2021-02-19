@@ -38,10 +38,8 @@ class RegisteredView extends UserView
     public function dashboard(array $announces, string $dashboardTitle, string $current)
     {
         $content = <<<HTML
-        <section class="col-12">
-            {$this->dashboardTitle($dashboardTitle)}
-            {$this->dashboardContent($announces)}
-        </section>
+        {$this->dashboardTitle($dashboardTitle)}
+        {$this->dashboardContent($announces)}
 HTML;
         return parent::administrationTemplate($content, $current, $current);
     }
@@ -63,7 +61,7 @@ HTML;
                 <div class="row">
                     {$this->sidebarNav(User::authenticated())}
                     <div class="col-sm-12 col-md-8 col-lg-9">
-                        C'est mon profil.
+                        <h4>Mon profil</h4>
                     </div>
                 </div>
             </div>
@@ -101,11 +99,9 @@ HTML;
     public function sidebarNav($registered) : string
     {
         return <<<HTML
-        <div class="col-sm-12 col-md-4 col-lg-3 page-sidebar">
-            <aside>
-                {$this->sidebarContent($registered)}
-            </aside>
-        </div>
+        <aside class="col-sm-12 col-md-3 col-lg-3 page-sidebar">
+            {$this->sidebarContent($registered)}
+        </aside>
 HTML;
     }
 
@@ -226,7 +222,7 @@ HTML;
                     {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts", "Tous", $this->user->getAnnounceNumber())}
                     {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/pending", "En attente", $this->user->getAnnounceNumber("pending"))}
                     {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/validated", "Validées", $this->user->getAnnounceNumber("validated"))}
-                    {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/blocked", "Bloquées", $this->user->getAnnounceNumber("blocked"))}
+                    {$this->dashbaordNavStatus($this->user->getProfileLink()."/posts/suspended", "Suspendues", $this->user->getAnnounceNumber("suspended"))}
                 </ul>
             </nav>
 HTML;
@@ -237,7 +233,7 @@ HTML;
                     {$this->dashbaordNavStatus("/administration/annonces", "Tous", count(Announce::getAll()))}
                     {$this->dashbaordNavStatus("/administration/annonces/pending", "En attente", count(Announce::getPending()))}
                     {$this->dashbaordNavStatus("/administration/annonces/validated", "Validées", count(Announce::getValidated()))}
-                    {$this->dashbaordNavStatus("/administration/annonces/blocked", "Bloquées", count(Announce::getSuspended()))}
+                    {$this->dashbaordNavStatus("/administration/annonces/suspended", "Suspendues", count(Announce::getSuspended()))}
                 </ul>
             </nav>
 HTML;
@@ -375,7 +371,7 @@ HTML;
     public function changePassword()
     {
         $content = <<<HTML
-
+        <h4>Modification de mon mot de passe</h4>
 HTML;
         return parent::administrationTemplate($content, "Modification de mon mot passe", $this->user->getFullName() . " / Administration / Modification du mot de passe");
     
@@ -388,7 +384,7 @@ HTML;
     public function administrationIndex()
     {
         $content = <<<HTML
-
+        <h4>Administration</h4>
 HTML;
         return parent::administrationTemplate($content, "Administration", $this->user->getFullName() . " / Administration");
     }

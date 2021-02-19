@@ -8,6 +8,7 @@ use App\Controller\UserController\UserController;
 use App\Model\Announce;
 use App\Model\Category;
 use App\Model\Model;
+use App\Model\User\Registered;
 use App\Model\User\User;
 use App\View\Page\Page;
 use App\View\View;
@@ -38,15 +39,6 @@ abstract class AppController
     }
 
     /**
-     * Cette page s'affiche pour les ressources pas encore développées.
-     */
-    public static function pageNotFound()
-    {
-        $page = new Page("L'indice | Le leader des petites annonces de Côte d'Ivoire", View::pageNotFound("Page en cours de développement", "En cours"));
-        $page->show();
-    }
-
-    /**
      * Une couche qui permet de gérer le routage vers le bon controller
      * lorsqu'il le faut.
      * 
@@ -56,11 +48,12 @@ abstract class AppController
     public static function subRouter(array $params)
     {
         if (Category::isCategorySlug($params[1]) && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)) {
+
             if (isset($params[3]) && self::isAction($params[3])) {
                 return RegisteredController::manageAnnounce($params);
-            } else {
-                return RegisteredController::readAnnounce($params);
             }
+
+            return UserController::readAnnounce($params);
         }
 
         elseif ($params[1] === "users") {
@@ -68,6 +61,7 @@ abstract class AppController
             if (Model::valueIssetInDB("pseudo", $params[2], User::TABLE_NAME)) {
 
                 if (isset($params[3])) {
+
                     if ($params[3] === "posts") {
                         return UserController::readRegisteredAnnounces($params);
                     } elseif (self::isAction($params[3])) {
@@ -79,13 +73,40 @@ abstract class AppController
                     return AdministratorController::readUser($params);
                 }
 
+                return UserController::readRegisteredAnnounces($params);
+
             } else {
                 throw new Exception("Ressource non trouvée !");
             }
         }
         
         elseif ($params[1] === "administration") {
-            return AdministratorController::index();
+
+            if (isset($params[2])) {
+
+                if ($params[2] === "users") {
+
+                    if (isset($params[3])) {
+
+                        if (Model::valueIssetInDB("pseudo", $params[3], User::TABLE_NAME)) {
+
+                            if (!empty($params[4])) {
+                                return RegisteredController::myDashboard($params);
+                            }
+        
+                            return RegisteredController::myProfile($params);
+                        }
+
+                    }
+
+                    return AdministratorController::readUsers();
+
+                } elseif ($params[2] === "annonces") {
+                    return AdministratorController::administrateAnnounces($params);
+                }
+            }
+
+            return RegisteredController::administrationIndex();
         }
 
         else {
@@ -100,6 +121,15 @@ abstract class AppController
     public static function isAction(string $action)
     {
         return in_array($action, self::$actions);
+    }
+
+    /**
+     * Cette page s'affiche pour les ressources pas encore développées.
+     */
+    public static function pageNotFound()
+    {
+        $page = new Page("L'indice | Le leader des petites annonces de Côte d'Ivoire", View::pageNotFound("Page en cours de développement", "En cours"));
+        $page->show();
     }
 
 }

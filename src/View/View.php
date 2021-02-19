@@ -68,7 +68,7 @@ HTML;
                         <div class="error-content">
                             <div class="error-message">
                                 <h2>404</h2>
-                                <h3>Oup's ! Nous n'avons trouvé la page que vous recherchez</h3>
+                                <h3>Oup's ! Nous n'avons trouvé la page que vous recherchez...</h3>
                                 <p>{$message}</p>
                             </div>
                             {$searchView->notFoundSearch()}
@@ -106,13 +106,13 @@ HTML;
      * 
      * @return string
      */
-    public static function success(string $title, string $content, string $link = null)
+    public static function success(string $title, string $content, string $linkCaption = null, string $href = null, string $current = null)
     {
         $snippet = new Snippet;
 
         return <<<HTML
-        {$snippet->pageHeader("Félicitation !", "")}
-        {$snippet->success($title, $content, $link)}
+        {$snippet->pageHeader("Félicitation !", $current)}
+        {$snippet->success($title, $content, $linkCaption, $href, $current)}
 HTML;
     }
 
@@ -121,13 +121,13 @@ HTML;
      * 
      * @return string
      */
-    public static function failed(string $title, string $content, string $link = null)
+    public static function failed(string $title, string $content, string $linkCaption = null, string $href = null, string $current = null)
     {
         $snippet = new Snippet;
 
         return <<<HTML
-        {$snippet->pageHeader("Oup's !", "")}
-        {$snippet->failed($title, $content, $link)}
+        {$snippet->pageHeader("Oup's !", $current)}
+        {$snippet->failed($title, $content, $linkCaption, $href, $current)}
 HTML;
     }
 
@@ -142,25 +142,21 @@ HTML;
      * @param string $current Le texte qui sera affiché dans le
      * @return string
      */
-    public static function administrationTemplate(string $content, string $title, string $current)
+    public static function administrationTemplate(string $content, string $title, string $current, string $message = null)
     {
         $snippet = new Snippet;
         $registeredView = new RegisteredView();
 
         return <<<HTML
         {$snippet->pageHeader($title, $current)}
-        
+        {$message}
         <div id="content" class="my-3">
             <div class="container-fluid">
                 <div class="row">
                     {$registeredView->sidebarNav(User::authenticated())}
-                    <section class="col-sm-12 col-md-8 col-lg-9">
-                        <div class="page-content">
-                            <section class="row">
-                                {$content}
-                            </section>
-                        </div>
-                    </section>
+                    <div class="col-sm-12 col-md-9">
+                        {$content}
+                    </div>
                 </div>
             </div>
         </div>
@@ -306,9 +302,26 @@ HTML;
      */
     public static function aboutUs()
     {
-        return <<<HTML
-
+        $content = <<<HTML
+        <section id="about" class="section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-xs-12">
+                        <div class="about-wrapper">
+                            <h2 class="intro-title">Lorem Ipsum Dolor Sit Amet, Consectetur Adipisicing Elit Sed Do</h2>
+                            <p class="intro-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum, doloremque quaerat sit tempora eius est reiciendis accusamus magnam quae. Explicabo dolore officia, iure a ullam aliquam nemo excepturi, repellat. uod ut delectus ad tempora.
+                            </p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi laboriosam sit nam animi, distinctio maiores possimus! Suscipit officiis reiciendis vitae omnis eligendi? Tempora at ullam repudiandae, magnam nemo fuga omnis.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xs-12">
+                        <img class="img-fluid" src="assets/img/about/about.png" alt="Une image du fondateur de L'indice.ci">
+                    </div>
+                </div>
+            </div>
+        </section>
 HTML;
+        return self::pageHeaderTemplate("A propos de nous", "A propos de nous", $content);
     }
 
     /**
@@ -318,9 +331,44 @@ HTML;
      */
     public static function FAQ()
     {
-        return <<<HTML
+        $faqs = null;
+        $tag = 0;
 
+        foreach(self::faqs() as $title => $value) {
+            $tag = $tag + 1;
+            $faqs .= (new Snippet)->accordeon(ucfirst($title), ucfirst($value), $tag);
+        }
+
+        $content = <<<HTML
+        <div class="faq section-padding">
+            <div class="container">        
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="head-faq text-center">
+                            <h2 class="section-title">QUESTIONS FREQUENTES</h2>
+                        </div>
+                        <p class="mb-3">Vous vous posez des questions, trouvez la reponse ici.</p>
+                        <div class="panel-group" id="accordion">
+                            {$faqs}
+                        </div>  
+                    </div>      
+                </div>
+            </div>      
+        </div>
 HTML;
+        return self::pageHeaderTemplate("QUESTIONS FREQUENTES", "Questions fréquentes", $content);
+    }
+
+    /**
+     * Les questions de la Faqs.
+     * @return array
+     */
+    private static function faqs()
+    {
+        return [
+            "Title" => "value"
+            , "Title_2" => "value"
+        ];
     }
 
 }

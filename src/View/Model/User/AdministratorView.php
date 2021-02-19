@@ -39,14 +39,7 @@ HTML;
      */
     public function readUsers(array $users)
     {
-        $usersTable = (new UserView())->usersTable($users);
-
-        $content = <<<HTML
-        <section class="col-12">
-            {$usersTable}
-        </section>
-HTML;
-        return parent::administrationTemplate($content, "Les utilisateurs", "Administration / Utilisateurs");
+        return parent::administrationTemplate((new UserView())->usersTable($users), "Les utilisateurs", "Administration / Utilisateurs");
     }
     
     /**
@@ -104,7 +97,6 @@ HTML;
     public static function readAnnounces(array $announces)
     {
         $administratorView = new self();
-
         return $administratorView->dashboard($announces, "Toutes les annonces", "Gestion des annonces");
     }
 

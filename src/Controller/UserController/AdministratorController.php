@@ -23,12 +23,12 @@ abstract class AdministratorController extends RegisteredController
      * @param array $params
      * @return void
      */
-    public static function readAnnnounces(array $params = null)
+    public static function administrateAnnounces(array $params = null)
     {
         if (empty($params)) {
             $announces = Announce::getAll();
         } else {
-            $announces = [];
+            $announces = Announce::getAll(null, $params[3]);
         }
 
         $page = new Page("L'indice | Administration - Gérer les annonces", AdministratorView::readAnnounces($announces));
@@ -60,18 +60,13 @@ abstract class AdministratorController extends RegisteredController
      */
     public static function readUsers(array $params = null)
     {
-        if (User::isAuthenticated()) {
-            $registered = User::authenticated();
+        User::askToAuthenticate("/sign-in");
 
-            if ($registered->isAdministrator()) {
-                $users = Registered::getAll();
-                $page = new Page("L'indice | Administratrion - Liste des utilisateurs");
-                $page->setView((new AdministratorView($registered))->readUsers($users));
-                $page->show();
-            } else {
-                throw new Exception("Ressource non trouvée !");
-            }
-
+        if (User::authenticated()->isAdministrator()) {
+            $users = Registered::getAll();
+            $page = new Page("L'indice | Administratrion - Liste des utilisateurs");
+            $page->setView((new AdministratorView(User::authenticated()))->readUsers($users));
+            $page->show();
         } else {
             throw new Exception("Ressource non trouvée !");
         }
@@ -120,7 +115,9 @@ abstract class AdministratorController extends RegisteredController
                     View::success(
                         "Commentaire envoyé avec succès",
                         "Le commentaire a été posté avec succès, l'utilisateur sera informé. Merci !",
-                        $announce->getLink()
+                        "Retour",
+                        $announce->getLink(),
+                        "Suggestion"
                     )
                 );
                 $page->show();

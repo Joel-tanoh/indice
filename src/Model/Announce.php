@@ -30,7 +30,6 @@ class Announce extends Model
     private $postedAt;
     private $views;
     private $iconClass;
-    private $comments = [];
     private $premiumImgPath;
     private $premiumImgSrc;
     private $productImgPath;
@@ -43,7 +42,7 @@ class Announce extends Model
     const IMG_DIR_PATH = Image::IMG_DIR_PATH . DIRECTORY_SEPARATOR . "productinfo" . DIRECTORY_SEPARATOR;
     const IMG_DIR_URL = Image::IMG_DIR_URL . "/productinfo";
     const DEFAULT_THUMBS = Image::IMG_DIR_URL . "/defaul-thumbs" . Image::EXTENSION;
-    private static $statutes = ["blocked", "pending", "validated", "premium"];
+    private static $statutes = ["suspended", "pending", "validated", "premium"];
 
     /**
      * Constructeur de l'objet annonce.
@@ -385,7 +384,7 @@ class Announce extends Model
     }
 
     /**
-     * Permet de vérifier si c'est une annonce suspendue|bloquée.
+     * Permet de vérifier si c'est une annonce suspendue.
      * @return bool
      */
     public function isSuspended() : bool

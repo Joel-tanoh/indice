@@ -58,21 +58,7 @@ HTML;
      */
     public function create(string $message = null)
     {
-        $registeredView = new RegisteredView(User::authenticated());
-        $snippet = new Snippet();
-
-        return <<<HTML
-        {$snippet->pageHeader("Poster mon Annonce", "Poster mon annonce")}
-        {$message}
-        <div id="content" class="my-3">
-            <div class="container-fluid">
-                <div class="row">
-                    {$registeredView->sidebarNav(User::authenticated())}
-                    {$this->createPageContent()}
-                </div>
-            </div>      
-        </div>
-HTML;
+        return parent::administrationTemplate($this->createPageContent(), "Poster une annonce", "Poster une annonce", $message);
     }
 
     /**
@@ -91,21 +77,7 @@ HTML;
      */
     public function update(string $message = null)
     {
-        $snippet = new Snippet;
-        $registeredView = new RegisteredView();
-
-        return <<<HTML
-        {$snippet->pageHeader($this->announce->getTitle(), "Gestion de mon announce")}
-        {$message}
-        <div id="content" class="my-3">
-            <div class="container-fluid">
-                <div class="row">
-                    {$registeredView->sidebarNav(User::authenticated())}
-                    {$this->createPageContent()}
-                </div>
-            </div>
-        </div>
-HTML;
+        return parent::administrationTemplate($this->createPageContent(), $this->announce->getTitle() . " - Modification", $this->announce->getTitle() . " / Modifier", $message);
     }
 
     /**
@@ -306,14 +278,10 @@ HTML;
         $form = new Form($_SERVER["REQUEST_URI"], "row page-content");
 
         return <<<HTML
-        <div class="col-sm-12 col-md-8 col-lg-9">
-            {$form->open()}
-                <!-- Announce detail -->
-                {$this->enterAnnounceDetails()}
-                <!-- Contact detail -->
-                {$this->contactDetails()}
-            {$form->close()}
-        </div>
+        {$form->open()}
+            {$this->enterAnnounceDetails()}
+            {$this->contactDetails()}
+        {$form->close()}
 HTML;
     }
 
@@ -327,9 +295,7 @@ HTML;
     {
         return <<<HTML
         <div class="product-info row pb-4">
-            <!-- Images Section -->
             {$this->productInfosImgSection()}
-            <!-- Title and others informations section -->
             {$this->detailsBox()}
         </div>
 HTML;
@@ -415,7 +381,7 @@ HTML;
                         <p><strong><i class="lni-folder"></i></strong> <a href="{$this->announce->getCategory()->getSlug()}">{$this->announce->getCategory()->getTitle()}</a></p>
                     </li>
                     <li>
-                        <p><a href="/users/{$this->announce->getOwner()->getPseudo()}/posts"><i class="lni-users"></i> Plus d'annonces de <span>{$this->announce->getOwner()->getName()}</span></a></p>
+                        <p><a href="/users/{$this->announce->getOwner()->getPseudo()}/posts"><i class="lni-users"></i> Plus d'annonces de <span>{$this->announce->getOwner()->getFullName()}</span></a></p>
                     </li>
                 </ul>
                 {$this->specifications()}
@@ -467,9 +433,9 @@ HTML;
     private function infosForJoinUser()
     {
         return <<<HTML
-        <div class="ads-btn mb-4">
-            <a class="btn btn-common text-white btn-reply"><i class="lni-envelope"></i> {$this->announce->getUserToJoin()}</a>
-            <a class="btn btn-common text-white"><i class="lni-phone-handset"></i> {$this->announce->getPhoneNumber()}</a>
+        <div class="ads-btn mb-2">
+            <a class="btn btn-common text-white btn-reply mb-2"><i class="lni-envelope"></i> {$this->announce->getUserToJoin()}</a>
+            <a class="btn btn-common text-white mb-2"><i class="lni-phone-handset"></i> {$this->announce->getPhoneNumber()}</a>
         </div>
 HTML;
     }
@@ -522,7 +488,7 @@ HTML;
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
             <div class="inner-box">
                 <div class="dashboard-box">
-                    <h1 class="dashbord-title">Détails de l'annonce</h1>
+                    <h1 class="dashboard-title">Détails de l'annonce</h1>
                 </div>
                 <div class="dashboard-wrapper">
                     <div class="form-group mb-3">
@@ -728,8 +694,8 @@ HTML;
         <tr data-category="active">
             <td>
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="adone">
-                    <label class="custom-control-label" for="done"></label>
+                    <input type="checkbox" class="custom-control-input" id="{$this->announce->getId()}">
+                    <label class="custom-control-label" for="{$this->announce->getId()}"></label>
                 </div>
             </td>
             <td class="photo"><img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Image de {$this->announce->getSlug()}"></td>
@@ -789,7 +755,7 @@ HTML;
             $statusText = "Validée";
         } else {
             $statusClass = "adstatusexpired";
-            $statusText = "Bloquée";
+            $statusText = "Suspendue";
         }
 
         return <<<HTML
@@ -862,6 +828,7 @@ HTML;
                 </div>
                 <div class="product-content pb-3">
                     <h3 class="product-title"><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h3>
+                    {$this->showViews()}
                 </div>
             </div>
         </div>
@@ -984,11 +951,11 @@ HTML;
      * 
      * @return string
      */
-    private function views()
+    private function showViews()
     {
         return <<<HTML
         <span class="count-review">
-            <span>{$this->announce->getViews()}</span> Vue(s)
+            <span>{$this->announce->getViews()}</span> vue(s)
         </span>
 HTML;
     }

@@ -59,17 +59,17 @@ class Footer extends Snippet
                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                             <div class="widget">
                                 <h3 class="block-title">Dernières posté(e)s</h3>
-                                {$this->lastPostedInFooter("Titre de l'annonce", "28 Fev. 2020", "500")}
+                                {$this->lastPostedInFooter()}
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
                             <div class="widget">
                                 <h3 class="block-title">Liens rapides</h3>
                                 <ul class="menu">
-                                    <li><a href="#">Privacy Policy</a></li>
-                                    <li><a href="#">Purchase Protection</a></li>
-                                    <li><a href="#">Support</a></li>
-                                    <li><a href="#">Contact us</a></li>
+                                    <li><a href="annonces">Toutes les annonces</a></li>
+                                    <li><a href="about-us">A propos</a></li>
+                                    <li><a href="faq">FAQ</a></li>
+                                    <li><a href="about-us#contact">Nous contacter</a></li>
                                 </ul>
                             </div>
                         </div>

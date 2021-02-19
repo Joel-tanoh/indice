@@ -114,7 +114,7 @@ abstract class User extends Model
      * @param string $where Le lien vers lequel on redirige l'utilisateur
      *                      s'il n'est pas authentifié.
      */
-    public static function askToAuthenticate(string $where)
+    public static function askToAuthenticate(string $where = "/sign-in")
     {
         Authentication::askToAuthenticate($where);
     }
