@@ -187,7 +187,7 @@ CREATE TABLE `newsletters` (
   `email_address` varchar(255) COLLATE utf8_bin NOT NULL,
   `suscribed_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -196,7 +196,7 @@ CREATE TABLE `newsletters` (
 
 LOCK TABLES `newsletters` WRITE;
 /*!40000 ALTER TABLE `newsletters` DISABLE KEYS */;
-INSERT INTO `newsletters` VALUES (2,'tanohbassapatrick@gmail.com','2021-01-31 22:37:09'),(3,'joel.developpeur@gmail.com','2021-01-31 23:13:21'),(4,'indice@indice.com','2021-02-03 21:12:10');
+INSERT INTO `newsletters` VALUES (2,'tanohbassapatrick@gmail.com','2021-01-31 22:37:09'),(3,'joel.developpeur@gmail.com','2021-01-31 23:13:21'),(4,'indice@indice.com','2021-02-03 21:12:10'),(5,'jsame@inoveinn.com','2021-02-20 07:01:45');
 /*!40000 ALTER TABLE `newsletters` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -246,11 +246,11 @@ CREATE TABLE `users` (
   `registered_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   `type` int(11) DEFAULT '0',
-  `status` int(11) DEFAULT '0',
+  `status` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_pseudo` (`pseudo`),
   UNIQUE KEY `un_email` (`email_address`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -259,7 +259,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'IdUqwvLaEK4','tanohbassapatrick@gmail.com','TANOH','Joel','jojo1509','$2y$10$kRrZ5L6LsT1T3LI3iaU./eHQgdYAH53zcDJy64DNY1DGsaEv97JDq','+225 45996095','2021-01-01 23:03:25',NULL,1,0),(8,'fbPP60','joel.developpeur@gmail.com','Bassa','Patrick','dieudesannounces','$2y$10$rEabaRX.C1iVB2DKMU9e3OIFoBYS/l7oFPbWK61ZK6HQteHuTiZE6','0749324696','2021-02-01 19:07:15',NULL,0,0),(9,'pIBhZ7Wtng','indice@indice.com','Administrateur','Indice','admin','$2y$10$0dz6BpN//ZJSYOgwW04iHebTzX5ioJo2UcQTJhhkCSNYFvBFODC0y','0749324696','2021-02-03 21:12:09',NULL,1,0);
+INSERT INTO `users` VALUES (1,'IdUqwvLaEK4','tanohbassapatrick@gmail.com','TANOH','Joel','jojo1509','$2y$10$kRrZ5L6LsT1T3LI3iaU./eHQgdYAH53zcDJy64DNY1DGsaEv97JDq','+225 45996095','2021-01-01 23:03:25',NULL,1,1),(8,'fbPP60','joel.developpeur@gmail.com','Bassa','Patrick','dieudesannounces','$2y$10$rEabaRX.C1iVB2DKMU9e3OIFoBYS/l7oFPbWK61ZK6HQteHuTiZE6','0749324696','2021-02-01 19:07:15',NULL,0,1),(9,'pIBhZ7Wtng','indice@indice.com','Administrateur','Indice','admin','$2y$10$0dz6BpN//ZJSYOgwW04iHebTzX5ioJo2UcQTJhhkCSNYFvBFODC0y','0749324696','2021-02-03 21:12:09',NULL,1,1),(10,'ypsYhY','jsame@inoveinn.com','jsame','jsame','jsame','$2y$10$GH7y8HoH6uiKI00r4OGLxuT58arPNdMthtKMMmzLkGk27t.N9.kjC','12345678','2021-02-20 07:01:45',NULL,1,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -276,7 +276,7 @@ CREATE TABLE `visitors` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_action_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -285,7 +285,7 @@ CREATE TABLE `visitors` (
 
 LOCK TABLES `visitors` WRITE;
 /*!40000 ALTER TABLE `visitors` DISABLE KEYS */;
-INSERT INTO `visitors` VALUES (11,'tanohbassapatrick@gmail.com','2021-01-30 22:15:57','2021-01-30 22:16:48'),(12,'4ETIYcbq','2021-01-30 22:17:38','2021-01-30 22:44:26'),(13,'tLfReJDDqw','2021-01-31 10:34:23','2021-02-01 01:02:34'),(14,'joel.developpeur@gmail.com','2021-02-01 07:13:57','2021-02-01 07:17:50'),(15,'tanohbassapatrick@gmail.com','2021-02-01 18:59:04','2021-02-01 19:02:15'),(16,'oXXgs2KT0F','2021-02-01 23:53:55','2021-02-01 23:57:36'),(17,'tanohbassapatrick@gmail.com','2021-02-02 18:57:16','2021-02-02 19:01:16'),(18,'tanohbassapatrick@gmail.com','2021-02-02 19:50:46','2021-02-02 19:58:36'),(19,'joel.developpeur@gmail.com','2021-02-02 19:59:02','2021-02-02 19:59:28'),(20,'D7iXz6A','2021-02-02 20:30:05','2021-02-02 20:30:05'),(21,'WMkbYiGCE','2021-02-02 20:30:05','2021-02-02 20:30:05'),(22,'ia1OpMwQe','2021-02-02 22:12:01','2021-02-02 22:12:01'),(23,'7hcfMbIA','2021-02-03 07:52:37','2021-02-03 09:06:26'),(24,'tanohbassapatrick@gmail.com','2021-02-03 08:12:03','2021-02-03 08:16:06'),(25,'indice@indice.com','2021-02-03 20:58:50','2021-02-03 21:12:08'),(26,'Z1IIRgHoSX','2021-02-04 06:46:18','2021-02-04 06:46:18'),(27,'J2AE0jq','2021-02-04 20:24:48','2021-02-04 21:18:11'),(28,'MdLrR_VKcLO','2021-02-05 19:44:08','2021-02-06 23:34:22'),(29,'7Ekc_Lj','2021-02-07 11:14:20','2021-02-07 18:01:33'),(30,'tanohbassapatrick@gmail.com','2021-02-07 18:03:34','2021-02-08 00:19:16'),(31,'joel.developpeur@gmail.com','2021-02-08 00:20:37','2021-02-08 00:28:16'),(32,'tanohbassapatrick@gmail.com','2021-02-08 00:28:38','2021-02-08 00:28:53'),(33,'joel.developpeur@gmail.com','2021-02-08 20:15:24','2021-02-08 20:24:08'),(34,'indice@indice.com','2021-02-08 20:25:49','2021-02-08 20:26:23'),(35,'indice@indice.com','2021-02-08 22:12:57','2021-02-09 20:19:03'),(36,'joel.developpeur@gmail.com','2021-02-10 06:00:45','2021-02-10 06:01:35'),(37,'uYGxVB8kEc_','2021-02-10 06:32:44','2021-02-11 22:14:08'),(38,'KrPnzrj','2021-02-15 06:28:25','2021-02-15 06:28:25'),(39,'TMBavbui','2021-02-15 06:28:29','2021-02-16 20:49:32'),(40,'0iRaCT','2021-02-15 06:28:36','2021-02-15 06:36:02'),(41,'VjUt3HK6e2','2021-02-16 20:49:58','2021-02-17 18:32:03'),(42,'QMrR8I3kC','2021-02-16 20:51:22','2021-02-19 21:32:45'),(43,'k_wpvjsfj','2021-02-17 17:56:14','2021-02-17 22:45:36'),(44,'HOiXOO8FOL','2021-02-18 19:38:55','2021-02-18 19:38:55'),(45,'joel.developpeur@gmail.com','2021-02-18 19:38:57','2021-02-18 21:24:05'),(46,'xYbw6B','2021-02-19 19:42:52','2021-02-19 20:39:52'),(47,'indice@indice.com','2021-02-19 20:50:11','2021-02-19 20:51:05'),(48,'tanohbassapatrick@gmail.com','2021-02-19 21:03:28','2021-02-19 21:03:43'),(49,'JDAyWKlx','2021-02-19 21:25:52','2021-02-19 21:30:48'),(50,'joel.developpeur@gmail.com','2021-02-19 21:28:30','2021-02-19 21:31:35');
+INSERT INTO `visitors` VALUES (11,'tanohbassapatrick@gmail.com','2021-01-30 22:15:57','2021-01-30 22:16:48'),(12,'4ETIYcbq','2021-01-30 22:17:38','2021-01-30 22:44:26'),(13,'tLfReJDDqw','2021-01-31 10:34:23','2021-02-01 01:02:34'),(14,'joel.developpeur@gmail.com','2021-02-01 07:13:57','2021-02-01 07:17:50'),(15,'tanohbassapatrick@gmail.com','2021-02-01 18:59:04','2021-02-01 19:02:15'),(16,'oXXgs2KT0F','2021-02-01 23:53:55','2021-02-01 23:57:36'),(17,'tanohbassapatrick@gmail.com','2021-02-02 18:57:16','2021-02-02 19:01:16'),(18,'tanohbassapatrick@gmail.com','2021-02-02 19:50:46','2021-02-02 19:58:36'),(19,'joel.developpeur@gmail.com','2021-02-02 19:59:02','2021-02-02 19:59:28'),(20,'D7iXz6A','2021-02-02 20:30:05','2021-02-02 20:30:05'),(21,'WMkbYiGCE','2021-02-02 20:30:05','2021-02-02 20:30:05'),(22,'ia1OpMwQe','2021-02-02 22:12:01','2021-02-02 22:12:01'),(23,'7hcfMbIA','2021-02-03 07:52:37','2021-02-03 09:06:26'),(24,'tanohbassapatrick@gmail.com','2021-02-03 08:12:03','2021-02-03 08:16:06'),(25,'indice@indice.com','2021-02-03 20:58:50','2021-02-03 21:12:08'),(26,'Z1IIRgHoSX','2021-02-04 06:46:18','2021-02-04 06:46:18'),(27,'J2AE0jq','2021-02-04 20:24:48','2021-02-04 21:18:11'),(28,'MdLrR_VKcLO','2021-02-05 19:44:08','2021-02-06 23:34:22'),(29,'7Ekc_Lj','2021-02-07 11:14:20','2021-02-07 18:01:33'),(30,'tanohbassapatrick@gmail.com','2021-02-07 18:03:34','2021-02-08 00:19:16'),(31,'joel.developpeur@gmail.com','2021-02-08 00:20:37','2021-02-08 00:28:16'),(32,'tanohbassapatrick@gmail.com','2021-02-08 00:28:38','2021-02-08 00:28:53'),(33,'joel.developpeur@gmail.com','2021-02-08 20:15:24','2021-02-08 20:24:08'),(34,'indice@indice.com','2021-02-08 20:25:49','2021-02-08 20:26:23'),(35,'indice@indice.com','2021-02-08 22:12:57','2021-02-09 20:19:03'),(36,'joel.developpeur@gmail.com','2021-02-10 06:00:45','2021-02-10 06:01:35'),(37,'uYGxVB8kEc_','2021-02-10 06:32:44','2021-02-11 22:14:08'),(38,'KrPnzrj','2021-02-15 06:28:25','2021-02-15 06:28:25'),(39,'TMBavbui','2021-02-15 06:28:29','2021-02-16 20:49:32'),(40,'0iRaCT','2021-02-15 06:28:36','2021-02-15 06:36:02'),(41,'VjUt3HK6e2','2021-02-16 20:49:58','2021-02-17 18:32:03'),(42,'QMrR8I3kC','2021-02-16 20:51:22','2021-02-19 21:32:45'),(43,'k_wpvjsfj','2021-02-17 17:56:14','2021-02-17 22:45:36'),(44,'HOiXOO8FOL','2021-02-18 19:38:55','2021-02-18 19:38:55'),(45,'joel.developpeur@gmail.com','2021-02-18 19:38:57','2021-02-18 21:24:05'),(46,'xYbw6B','2021-02-19 19:42:52','2021-02-19 20:39:52'),(47,'indice@indice.com','2021-02-19 20:50:11','2021-02-19 20:51:05'),(48,'tanohbassapatrick@gmail.com','2021-02-19 21:03:28','2021-02-19 21:03:43'),(49,'tanohbassapatrick@gmail.com','2021-02-19 21:25:52','2021-02-20 07:17:02'),(50,'joel.developpeur@gmail.com','2021-02-19 21:28:30','2021-02-19 21:31:35'),(53,'jsame@inoveinn.com','2021-02-20 06:58:33','2021-02-20 07:01:45'),(54,'tanohbassapatrick@gmail.com','2021-02-20 11:39:09','2021-02-20 12:59:11'),(55,'joel.developpeur@gmail.com','2021-02-20 13:11:55','2021-02-20 13:13:18'),(56,'joel.developpeur@gmail.com','2021-02-20 13:15:32','2021-02-20 13:16:59'),(57,'duQpyj9','2021-02-20 16:56:57','2021-02-20 18:03:48'),(58,'zQGIFLSfiE2','2021-02-20 17:51:08','2021-02-20 17:51:08');
 /*!40000 ALTER TABLE `visitors` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -298,4 +298,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-19 21:43:38
+-- Dump completed on 2021-02-20 18:07:27

@@ -64,7 +64,7 @@ abstract class AdministratorController extends RegisteredController
 
         if (User::authenticated()->isAdministrator()) {
             $users = Registered::getAll();
-            $page = new Page("L'indice | Administratrion - Liste des utilisateurs");
+            $page = new Page("L'indice | Administration - Liste des utilisateurs");
             $page->setView((new AdministratorView(User::authenticated()))->readUsers($users));
             $page->show();
         } else {

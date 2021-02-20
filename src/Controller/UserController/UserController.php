@@ -124,12 +124,12 @@ abstract class UserController extends AppController
                 $validate->password("password", $_POST["password"], $_POST["confirm_password"]);
             }
 
-            // Validation du numéro
-            if (empty($_POST["phone_number"])) {
-                $validate->addError("phone_number", "Veuillez entrer un numéro svp !");
-            } else {
-                $validate->phoneNumber("phone_number", $_POST["phone_number"], "Veuillez entrer un numéro valide svp !");
-            }
+            // Validation du numéro de téléphone
+            // if (empty($_POST["phone_number"])) {
+            //     $validate->addError("phone_number", "Veuillez entrer un numéro svp !");
+            // } else {
+            //     $validate->phoneNumber("phone_number", $_POST["phone_number"], "Veuillez entrer un numéro valide svp !");
+            // }
 
             // Validation de l'avatar
             if (Create::fileIsUploaded("avatar")) {

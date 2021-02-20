@@ -294,17 +294,21 @@
         let i;
         // On récupère les slides
         let slides = document.querySelectorAll(".advertising.top .slide");
-        // On parcours le tableau des slides
-        for(i = 0; i < slides.length; i++) { // On cache les images
-          slides[i].style.display = "none";
-        }
 
-        index1 = index1 + 1;
-        if (index1 > slides.length) {
-          index1 = 1;
+        if (slides.length !== 0) {
+          // On parcours le tableau des slides
+          for(i = 0; i < slides.length; i++) { // On cache les images
+            slides[i].style.display = "none";
+          }
+  
+          index1 = index1 + 1;
+          if (index1 > slides.length) {
+            index1 = 1;
+          }
+
+          slides[index1 - 1].style.display = "block";
+          setTimeout(topSlider, 10000);
         }
-        slides[index1 - 1].style.display = "block";
-        setTimeout(topSlider, 10000);
       }
 
       /**
@@ -314,17 +318,20 @@
         let i;
         // On récupère les slides
         let slides = document.querySelectorAll(".advertising.left .slide");
-        // On parcours le tableau des slides
-        for(i = 0; i < slides.length; i++) { // On cache les images
-          slides[i].style.display = "none";
-        }
 
-        index2 = index2 + 1;
-        if (index2 > slides.length) {
-          index2 = 1;
+        if (slides.length !== 0) {
+          // On parcours le tableau des slides
+          for(i = 0; i < slides.length; i++) { // On cache les images
+            slides[i].style.display = "none";
+          }
+  
+          index2 = index2 + 1;
+          if (index2 > slides.length) {
+            index2 = 1;
+          }
+          slides[index2 - 1].style.display = "block";
+          setTimeout(leftSlider, 10000);
         }
-        slides[index2 - 1].style.display = "block";
-        setTimeout(leftSlider, 10000);
       }
 
       /**
@@ -334,18 +341,21 @@
         let i;
         // On récupère les slides
         let slides = document.querySelectorAll(".advertising.right .slide");
-        // On parcours le tableau des slides
-        for(i = 0; i < slides.length; i++) { // On cache les images
-          slides[i].style.display = "none";
-        }
 
-        index3 = index3 + 1;
-        if (index3 > slides.length) {
-          index3 = 1;
+        if (slides.length !== 0) {
+          // On parcours le tableau des slides
+          for(i = 0; i < slides.length; i++) { // On cache les images
+            slides[i].style.display = "none";
+          }
+  
+          index3 = index3 + 1;
+          if (index3 > slides.length) {
+            index3 = 1;
+          }
+  
+          slides[index3 - 1].style.display = "block";
+          setTimeout(rightSlider, 10000);
         }
-
-        slides[index3 - 1].style.display = "block";
-        setTimeout(rightSlider, 10000);
       }
 
       /**
@@ -355,19 +365,130 @@
         let i;
         // On récupère les slides
         let slides = document.querySelectorAll(".advertising.side .slide");
-        // On parcours le tableau des slides
-        for(i = 0; i < slides.length; i++) { // On cache les images
-          slides[i].style.display = "none";
-        }
 
-        index = index+1;
-        if (index > slides.length) {
-          index = 1;
+        if (slides.length !== 0) {
+          // On parcours le tableau des slides
+          for(i = 0; i < slides.length; i++) { // On cache les images
+            slides[i].style.display = "none";
+          }
+  
+          index = index+1;
+          if (index > slides.length) {
+            index = 1;
+          }
+
+          slides[index-1].style.display = "block";
+          setTimeout(bothSideSlider, 10000);
         }
-        slides[index-1].style.display = "block";
-        setTimeout(bothSideSlider, 10000);
       }
 
+      // Treat Img Size
+      function treatImgSize(size) {
+        return Math.round((size/1024/1024) * 100) / 100 + " Mo";
+      }
+
+      // Delete node childs
+      function deleteChilds(node) {
+        while(node.firstChild) {
+          node.removeChild(node.firstChild);
+        }
+      }
+
+      // For validate img uploaded size
+      function fileIsValid(size, extension) {
+        return (size < 20971152 && (extension === "image/jpeg" || extension === "image/jpg" || extension === "image/png"));
+      }
+
+      /** For showing uploaded avatar when user is creating his account.
+      ================================= */
+      (function () {
+        let avatarInput = document.getElementById("avatarInput"),
+          avatarPreview = document.querySelector('.preview-avatar');
+          
+        function updateAvatarDisplay() {
+
+          deleteChilds(avatarPreview);
+
+          let uAvatar = avatarInput.files[0];
+          
+          if(uAvatar.name === "") {
+            let para = document.createElement('p');
+            para.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i>Veuillez sélectionner un fichier svp !</span>';
+            avatarPreview.appendChild(para);
+          } else {
+            let list = document.createElement('ol');
+            avatarPreview.appendChild(list);
+            
+            let listItem = document.createElement('li');
+            let para = document.createElement('p');
+
+            if (fileIsValid(uAvatar.size, uAvatar.type)) {
+              para.innerHTML = '<span class="text-success"><i class="fas fa-check-circle"></i>'+ uAvatar.name +'</span>';
+              listItem.appendChild(para);
+            } else {
+              para.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i>'+ uAvatar.name +'</span>';
+              listItem.appendChild(para);
+            }
+
+            list.appendChild(listItem);
+          }
+        }
+
+        if (avatarInput !== null && avatarPreview !== null) {
+          avatarInput.addEventListener("change", updateAvatarDisplay);
+        }
+
+      })();
+
+      /** For showing uploaded Img infos when user is posting an announce.
+      ================================= */
+      (function(){
+         
+        // Selecting label zone
+        let inputImgAnnounces = document.getElementById("tg-photogallery"),
+          preview = document.querySelector('.preview');
+
+        // Pour afficher les infos des images
+        function updateImageDisplay() {
+
+          deleteChilds(preview);
+
+          let uFiles = inputImgAnnounces.files;
+
+          if(uFiles.length === 0 || uFiles.length > 3) {
+            let para = document.createElement('p');
+            para.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i>Nous avons besoin de 3 images pour vous !</span>';
+            preview.appendChild(para);
+          } else {
+
+            let list = document.createElement('ol');
+            preview.appendChild(list);
+
+            for (var i = 0; i < uFiles.length; i ++) {
+
+              let listItem = document.createElement('li');
+              let para = document.createElement('p');
+
+              if (fileIsValid(uFiles[i].size, uFiles[i].type)) {
+                para.innerHTML = '<span class="text-success"><i class="fas fa-check-circle"></i>'+ uFiles[i].name +'</span>';
+                listItem.appendChild(para);
+              } else {
+                para.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i>'+ uFiles[i].name +'</span>';
+                listItem.appendChild(para);
+              }
+
+              list.appendChild(listItem);
+            }
+          }
+          
+        }
+
+        // Detect when user put Images
+        if (inputImgAnnounces !== null && preview !== null) {
+          inputImgAnnounces.addEventListener("change", updateImageDisplay);
+        }
+
+      })();
 
   });      
 

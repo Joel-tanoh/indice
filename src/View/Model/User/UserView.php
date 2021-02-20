@@ -103,17 +103,17 @@ class UserView extends ModelView
                                 <div class="form-group">
                                     <div class="input-icon">
                                         <i class="lni-phone"></i>
-                                        <input type="text" id="phone_number" class="form-control" name="phone_number" placeholder="Entrer Votre Numéro de téléphone" value="$phoneNumber" required>
+                                        <input type="text" id="phone_number" class="form-control" name="phone_number" placeholder="Entrer Votre Numéro de téléphone" value="$phoneNumber">
                                     </div>
                                 </div> 
-                                <div class="form-group">
+                                <div class="form-group d-flex justify-content-start align-items-center">
                                     <div class="input-icon">
-                                        <label for="avatar">Charger votre avatar :</label>
-                                        <i class="lni-file"></i>
-                                        <input type="file" id="avatar" class="form-control" name="avatar">
+                                        <label for="avatarInput" class="btn btn-common"><i class="fas fa-user fa-1x"></i> Charger votre avatar</label>
+                                        <input type="file" id="avatarInput" class="form-control d-none" name="avatar">
                                     </div>
-                                </div> 
-                                <div class="form-group mb-3">
+                                    <span class="preview-avatar border rounded p-1 ml-2">Aucun avatar</span>
+                                </div>
+                                <div class="form-group">
                                     <div class="checkbox">
                                         <input type="checkbox" name="accept_condition" value="yes" id="accept_condition" required>
                                         <label for="accept_condition">J'accepte les conditions d'utilisations</label>

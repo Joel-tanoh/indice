@@ -535,12 +535,13 @@ HTML;
                             <textarea name="description" id="summernote">{$description}</textarea>
                         </section>
                     </div>
-                    <label class="tg-fileuploadlabel" for="tg-photogallery">
+                    <label id="uploadImgLabel" class="tg-fileuploadlabel" for="tg-photogallery">
                         <span>Glissez votre fichier pour le charger</span>
                         <span>Ou</span>
                         <span class="btn btn-common">Cliquez et séléctionner 3 images</span>
                         <span>Taille maximum d'une image : 2 MB</span>
                         <input id="tg-photogallery" class="tg-fileinput" type="file" name="images[]" multiple>
+                        <span class="preview"></span>
                     </label>
                 </div>
             </div>

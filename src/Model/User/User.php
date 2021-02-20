@@ -137,4 +137,20 @@ abstract class User extends Model
         return true;
     }
 
+    /**
+     * Retourne tous les utilisateurs.
+     * 
+     * @return array
+     */
+    public static function getAll()
+    {
+        $rep = parent::connectToDb()->query("SELECT email_address FROM " . self::TABLE_NAME);
+
+        $users = [];
+        foreach ($rep->fetchAll() as $user) {
+            $users[] = new Registered($user["email_address"]);
+        }
+        return $users;
+    }
+
 }

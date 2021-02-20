@@ -28,7 +28,7 @@ class Registered extends Visitor
     protected $type;
     protected static $types = ["annonceur", "administrateur"];
     protected $status;
-    protected static $statutes = ["activé", "prémium", "suspendu"];
+    protected static $statutes = ["suspended", "activated"];
     protected $announces = [];
     const TABLE_NAME = "users";
 
@@ -47,7 +47,7 @@ class Registered extends Visitor
         $query = $queryFormatter->select(
             "id, code, name, first_names, email_address, pseudo, password,
             phone_number, registered_at, updated_at, type, status"
-            )->from(self::TABLE_NAME)->where("email_address = ?")->returnQueryString();
+        )->from(self::TABLE_NAME)->where("email_address = ?")->returnQueryString();
 
         $req = parent::connectToDb()->prepare($query);
         $req->execute([$emailAddress]);
@@ -171,7 +171,11 @@ class Registered extends Visitor
      */
     public function getStatus()
     {
-        return ucfirst(self::$statutes[$this->status]);
+        if(self::$statutes[$this->status] === "activated") {
+            return "Activé";
+        } elseif (self::$statutes[$this->status] === "suspended") {
+            return "Suspendu";
+        }
     }
 
     /**
@@ -269,6 +273,7 @@ class Registered extends Visitor
         ];
 
         /** Gestion du pseudo et des images*/
+
         // Si le pseudo ne change pas mais un nouvel avatar est posté
         if ($_POST["pseudo"] === $this->pseudo && Update::fileIsUploaded("avatar")) {
             $imageManager->save($_FILES["avatar"]["tmp_name"], $_POST["pseudo"], Avatar::AVATARS_DIR_PATH, 80, 80);
@@ -300,8 +305,7 @@ class Registered extends Visitor
     }
 
     /**
-     * Convertit le statut passé en chaîne de caractère
-     * en chiffre.
+     * Convertit le statut passé de chaîne de caractère à chiffre.
      * 
      * @param mixed $status Le statut peut être une chaîne de caractères ou un entier.
      * 
@@ -409,12 +413,14 @@ class Registered extends Visitor
      */
     public static function getAll()
     {
-        $query = "SELECT email_address FROM " . self::TABLE_NAME;
-        $req = parent::connectToDb()->query($query);
+        $req = parent::connectToDb()->prepare("SELECT email_address FROM " . self::TABLE_NAME . " WHERE type = :type");
+        $req->execute([
+            "type" => 0
+        ]);
 
         $registered = [];
-        foreach($req->fetchAll() as $result) {
-            $registered[] = new self($result["email_address"]);
+        foreach($req->fetchAll() as $user) {
+            $registered[] = new self($user["email_address"]);
         }
 
         return $registered;
@@ -447,21 +453,12 @@ class Registered extends Visitor
     }
 
     /**
-     * Retourne les annonces postées selon une date.
+     * Retourne les utilisateurs inscrit dans la période passée en paramètre.
+     * @return array
      */
     public function getByDate()
     {
         
-    }
-
-    /**
-     * Retourne la liste des adresse email des administrators.
-     * 
-     * @return array
-     */
-    public static function emailAddresses()
-    {
-        return parent::get("email_address", Administrator::TABLE_NAME);
     }
 
     /**

@@ -22,7 +22,7 @@ class NotifyByMail extends Notify
     public static function administrators(string $subject, string $content)
     {
         if ((new Email(
-                Administrator::emailAddresses(),
+                Administrator::getEmailAddresses(),
                 $subject,
                 $content
             )

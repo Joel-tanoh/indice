@@ -247,4 +247,50 @@ class Visitor extends User
         return (int)$req->fetch()["counter"] !== 0;
     }
 
+    /**
+     * Retourne le nombre de fois que ce visiteur est venu sur le site.
+     * 
+     * @param string $beginDate
+     * @param string $endDate
+     * 
+     * @return int
+     */
+    public function getVisitNumberPerInterval(string $beginDate, string $endDate)
+    {
+
+    }
+
+    /**
+     * Retourne le nombre de visite totale par jour.
+     * 
+     * @param string $date 
+     * @return int
+     */
+    public static function perDay(string $date)
+    {
+
+    }
+
+    /**
+     * Retourne le nombre de visite totale par mois.
+     * 
+     * @param string $month 
+     * @return int
+     */
+    public static function perMonth(string $month)
+    {
+
+    }
+
+    /**
+     * Retourne le nombre de visite par ans.
+     * 
+     * @param string $year
+     * @return int
+     */
+    public static function perYear(string $year)
+    {
+
+    }
+
 }

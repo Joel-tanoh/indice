@@ -84,9 +84,29 @@ class Administrator extends Registered
      * 
      * @return array
      */
-    public static function emailAddresses()
+    public static function getEmailAddresses()
     {
         return parent::get("email_address", Administrator::TABLE_NAME, "type", 1);
+    }
+
+    /**
+     * Retourne tous les administrateurs.
+     * @return array
+     */
+    public static function getAll()
+    {
+        $rep = parent::connectToDb()->prepare("SELECT email_address FROM " . self::TABLE_NAME . " WHERE type = :type");
+        $rep->execute([
+            "type" => 1
+        ]);
+        
+        $administrators = [];
+
+        foreach ($rep->fetchAll() as $user) {
+            $administrators[] = new self($user["email_address"]);
+        }
+
+        return $administrators;
     }
 
 }
