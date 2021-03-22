@@ -12,6 +12,8 @@ use App\File\Image\Image;
 use App\Router\Router;
 use App\Model\Entity;
 use App\Model\User\Visitor;
+use App\View\Effect\Animation\Slider\Slide;
+use App\View\Effect\Animation\Slider\Slider;
 use App\View\Model\CategoryView;
 use App\View\Model\User\UserView;
 
@@ -30,7 +32,7 @@ class Snippet extends View
      * 
      * @return string
      */
-    public function heroArea(bool $showWelcomeText = true)
+    public function heroArea(bool $showWelcomeText = null)
     {
         $searchView = new SearchView();
         $welcomeText = null;
@@ -43,7 +45,6 @@ HTML;
         }
 
         return <<<HTML
-        <!-- Hero Area Start -->
         <div id="hero-area">
             <div class="overlay"></div>
             <div class="container">
@@ -65,7 +66,7 @@ HTML;
      * 
      * @return string
      */
-    public function heroArea2()
+    public function heroAreaWithSearchBar()
     {
         $searchView = new SearchView();
 
@@ -99,8 +100,7 @@ HTML;
         $home = APP_URL;
 
         return <<<HTML
-        <!-- Page Header Start -->
-        <div class="page-header" style="background: url(assets/img/banner1.jpg);">
+        <div class="page-header" style="background: url(assets/img/slides/hero-area-2.jpg);">
             <div class="container">
                 <div class="row">         
                     <div class="col-md-12">
@@ -115,8 +115,15 @@ HTML;
                 </div>
             </div>
         </div>
-        <!-- Page Header End -->
 HTML;
+    }
+
+    /**
+     * Affiche un slider qui fait défiler des images.
+     */
+    public function slider()
+    {
+        return (new Slider)->show();
     }
 
     /**
@@ -128,11 +135,9 @@ HTML;
     public function counterArea()
     {
         return <<<HTML
-        <!-- Counter Area Start-->
         <section class="counter-section section-padding">
             <div class="container">
                 <div class="row">
-                    <!-- Counter Item -->
                     <div class="col-md-3 col-sm-6 work-counter-widget text-center">
                         <div class="counter">
                             <div class="icon"><i class="lni-layers"></i></div>
@@ -140,7 +145,6 @@ HTML;
                             <p>Annonces</p>
                         </div>
                     </div>
-                    <!-- Counter Item -->
                     <div class="col-md-3 col-sm-6 work-counter-widget text-center">
                         <div class="counter">
                             <div class="icon"><i class="lni-map"></i></div>
@@ -148,7 +152,6 @@ HTML;
                             <p>Catégories</p>
                         </div>
                     </div>
-                    <!-- Counter Item -->
                     <div class="col-md-3 col-sm-6 work-counter-widget text-center">
                         <div class="counter">
                             <div class="icon"><i class="lni-user"></i></div>
@@ -156,7 +159,6 @@ HTML;
                             <p>Membres actifs</p>
                         </div>
                     </div>
-                    <!-- Counter Item -->
                     <div class="col-md-3 col-sm-6 work-counter-widget text-center">
                         <div class="counter">
                             <div class="icon"><i class="lni-briefcase"></i></div>
@@ -167,7 +169,6 @@ HTML;
                 </div>
             </div>
         </section>
-        <!-- Counter Area End-->
 HTML;
     }
 
@@ -179,7 +180,6 @@ HTML;
     public function pricingSection()
     {
         return <<<HTML
-        <!-- Pricing section Start --> 
         <section id="pricing-table" class="section-padding">
             <div class="container">
                 <div class="row">
@@ -251,7 +251,6 @@ HTML;
                 </div>
             </div>
         </section>
-        <!-- Pricing Table Section End -->
 HTML;
     }
 
@@ -263,7 +262,6 @@ HTML;
     public function testimonialSection()
     {
         return <<<HTML
-        <!-- Testimonial Section Start -->
         <section class="testimonial section-padding">
             <div class="container">
                 <div class="row">
@@ -334,7 +332,6 @@ HTML;
                 </div>
             </div>
         </section>
-        <!-- Testimonial Section End -->
 HTML;
     }
 
@@ -364,9 +361,9 @@ HTML;
     public static function success(string $title, string $content, string $linkCaption = null, string $href = null, string $current = null)
     {
         if (null !== $linkCaption && null !== $href) {
-            $link = '<a class="btn btn-success" href="'. $href . '">'. $linkCaption . '</a>';
+            $link = '<a class="btn btn-success" href="/'. trim($href, "/") . '">'. $linkCaption . '</a>';
         } else {
-            $link = '<a class="btn btn-success" href="'. $_SERVER["HTTP_REFERER"] . '">Retour</a>';
+            $link = '<a class="btn btn-success" href="/'. trim($_SERVER["HTTP_REFERER"], "/") . '">Retour</a>';
         }
 
         return <<<HTML
@@ -431,10 +428,10 @@ HTML;
     {
         return <<<HTML
         <ul class="footer-social">
-            <li><a class="facebook" href="#"><i class="lni-facebook-filled"></i></a></li>
-            <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>
+            <li><a class="facebook" href="https://www.facebook.com/Lindice-101740878555286/"><i class="lni-facebook-filled"></i></a></li>
+            <!-- <li><a class="twitter" href="#"><i class="lni-twitter-filled"></i></a></li>
             <li><a class="linkedin" href="#"><i class="lni-linkedin-fill"></i></a></li>
-            <li><a class="google-plus" href="#"><i class="lni-google-plus"></i></a></li>
+            <li><a class="google-plus" href="#"><i class="lni-google-plus"></i></a></li> -->
         </ul>
 HTML;
     }
@@ -539,7 +536,7 @@ HTML;
         return <<<HTML
         <div class="col-12 text-muted text-center">
             <h2>Oup's</h2>
-            Oup's nous n'avons trouvé aucun résultat.
+            <p>Nous n'avons trouvé aucun résultat.</p>
         </div>
 HTML;
     }
@@ -572,4 +569,40 @@ HTML;
         </div>
 HTML;
     }
+
+    /**
+     * Permet de filtrer les announces.
+     * 
+     * @return string
+     * 
+     * @return string
+     */
+    public function viewChanger()
+    {
+        return <<<HTML
+        <div class="product-filter">
+            {$this->changeViewButton()}
+        </div>
+HTML;
+    }
+
+    /**
+     * Bouton qui permet de changer l'affichage des annonces.
+     * 
+     * @return string
+     */
+    private function changeViewButton()
+    {
+        return <<<HTML
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#grid-view"><i class="lni-grid"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#list-view"><i class="lni-list"></i></a>
+            </li>
+        </ul>
+HTML;
+    }
+
 }

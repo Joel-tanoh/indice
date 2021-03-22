@@ -155,7 +155,7 @@ HTML;
      * @param bool $navbarState True si on veut que la navbar apparaisse sur la page,
      *                          False sinon.
      */
-    public function showNavbar(bool $navbarState)
+    public function setNavbar(bool $navbarState)
     {
         $this->navbarState = $navbarState;
     }
@@ -166,7 +166,7 @@ HTML;
      * @param bool $navbarState true si on veut que le footer apparaisse sur la page,
      *                          false sinon.
      */
-    public function showFooter(bool $footerState)
+    public function setFooter(bool $footerState)
     {
         $this->footerState = $footerState;
     }
@@ -259,19 +259,26 @@ HTML;
     private function cssFiles()
     {
         // Bootstrap CSS
-        $this->addCss(ASSETS_DIR_URL."/css/bootstrap.min.css");
-        // Slicknav
-        $this->addCss(ASSETS_DIR_URL."/css/slicknav.css");
-        // Nivo Lightbox
-        $this->addCss(ASSETS_DIR_URL."/css/nivo-lightbox.css");
+        // $this->addCss(ASSETS_DIR_URL."/css/bootstrap.min.css");
+        $this->addCss("https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css");
+        // Fontawesome
+        // $this->addCss(ASSETS_DIR_URL."/fontawesome/css/all.css");
+        $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css");
         // Animate
-        $this->addCss(ASSETS_DIR_URL."/css/animate.css");
+        // $this->addCss(ASSETS_DIR_URL."/css/animate.css");
+        $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css");
+        // Slicknav
+        // $this->addCss(ASSETS_DIR_URL."/css/slicknav.css");
+        $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/slicknav.min.css");
+        // Nivo Lightbox
+        // $this->addCss(ASSETS_DIR_URL."/css/nivo-lightbox.css");
+        $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/nivo-lightbox/1.3.1/nivo-lightbox.min.css");
+        // Summernote
+        $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.css");
+        // Owl Theme
+        $this->addCss(ASSETS_DIR_URL."/css/owl.theme.css");
         // Owl carousel
         $this->addCss(ASSETS_DIR_URL."/css/owl.carousel.css");
-        // Summernote
-        $this->addCss(ASSETS_DIR_URL."/css/summernote.css");
-        // Main Style
-        $this->addCss(ASSETS_DIR_URL."/css/main.css");
         // Color Switcher
         $this->addCss(ASSETS_DIR_URL."/css/color-switcher.css");
         // Settings
@@ -280,47 +287,65 @@ HTML;
         $this->addCss(ASSETS_DIR_URL."/fonts/line-icons.css");
         // Responsive Style
         $this->addCss(ASSETS_DIR_URL."/css/responsive.css");
-        // Owl Theme
-        $this->addCss(ASSETS_DIR_URL."/css/owl.theme.css");
-        // Fontawesome
-        $this->addCss(ASSETS_DIR_URL."/fontawesome/css/all.css");
+        // Main Style
+        $this->addCss(ASSETS_DIR_URL."/css/main.css");
     }
 
     /**
      * Retourne les fichiers JS appelés sur toutes les pages.
-     * 
      * @return string
      */
     private function jsFiles()
     {
         // Jquery
         $this->addJs(ASSETS_DIR_URL."/js/jquery-min.js");
+        // $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js");
+        
         // Popper
-        $this->addJs(ASSETS_DIR_URL."/js/popper.min.js");
+        // $this->addJs(ASSETS_DIR_URL."/js/popper.min.js");
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.8.6/umd/popper.min.js");
+        
+        // Fontawesome
+        // $this->addJs(ASSETS_DIR_URL."/fontawesome/js/all.js");
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js");
+        
         // Bootstrap
-        $this->addJs(ASSETS_DIR_URL."/js/bootstrap.min.js");
+        // $this->addJs(ASSETS_DIR_URL."/js/bootstrap.min.js");
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js");
+        
+        // WOW
+        // $this->addJs(ASSETS_DIR_URL."/js/wow.js");
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js");
+        
+        // Carousel
+        // $this->addJs(ASSETS_DIR_URL."/js/owl.carousel.min.js");
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js");
+        
+        // SlickNav
+        // $this->addJs(ASSETS_DIR_URL."/js/jquery.slicknav.js");
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/jquery.slicknav.min.js");
+
         // Summernote
-        $this->addJs(ASSETS_DIR_URL."/js/summernote.js");
-        $this->addJs(ASSETS_DIR_URL . "/js/summernote-fr-FR.min.js");
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.js");
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-fr-FR.min.js");
+        
         // CounterUp
         $this->addJs(ASSETS_DIR_URL."/js/jquery.counterup.min.js");
+
         // Waypoints
         $this->addJs(ASSETS_DIR_URL."/js/waypoints.min.js");
-        // WOW
-        $this->addJs(ASSETS_DIR_URL."/js/wow.js");
-        // Carousel
-        $this->addJs(ASSETS_DIR_URL."/js/owl.carousel.min.js");
+        
         // Nivo Lightbox
         $this->addJs(ASSETS_DIR_URL."/js/nivo-lightbox.js");
-        $this->addJs(ASSETS_DIR_URL."/js/jquery.slicknav.js");
-        // Main Js
-        $this->addJs(ASSETS_DIR_URL."/js/main.js");
+        
         // Form Validator
         $this->addJs(ASSETS_DIR_URL."/js/form-validator.min.js");
+        
         // Contact Form script
         $this->addJs(ASSETS_DIR_URL."/js/contact-form-script.min.js");
-        // Fontawesome
-        $this->addJs(ASSETS_DIR_URL."/fontawesome/js/all.js");
+        
+        // Main Js
+        $this->addJs(ASSETS_DIR_URL."/js/main.js");
     }
 
     /**

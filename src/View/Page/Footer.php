@@ -14,7 +14,8 @@
 
 namespace App\View\Page;
 
-use App\Model\Announce;
+use App\Model\Post\Announce;
+use App\SEO\PageDescription;
 use App\View\Model\AnnounceView;
 use App\View\Snippet;
 use App\File\Image\Logo;
@@ -41,9 +42,9 @@ class Footer extends Snippet
         $logo = Logo::LOGOS_DIR_URL ."/logo-white.png";
         $newsletterView = new NewsletterView();
         $snippet = new Snippet;
+        $description = PageDescription::index();
 
         return <<<HTML
-        <!-- Footer Section Start -->
         <footer>
             <section class="footer-Content">
                 <div class="container">
@@ -52,7 +53,7 @@ class Footer extends Snippet
                             <div class="widget">
                                 <h3 class="footer-logo"><img src="{$logo}" alt=""></h3>
                                 <div class="textwidget">
-                                    <p>Petit texte descrioptif, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque lobortis tincidunt est, et euismod purus suscipit quis. Etiam euismod ornare elementum. Sed ex est, consectetur eget facilisis sed, auctor ut purus.</p>
+                                    <p>$description</p>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +68,7 @@ class Footer extends Snippet
                                 <h3 class="block-title">Liens rapides</h3>
                                 <ul class="menu">
                                     <li><a href="annonces">Toutes les annonces</a></li>
-                                    <li><a href="about-us">A propos</a></li>
+                                    <li><a href="about-us">A propos de nous</a></li>
                                     <li><a href="faq">FAQ</a></li>
                                     <li><a href="about-us#contact">Nous contacter</a></li>
                                 </ul>
@@ -82,8 +83,6 @@ class Footer extends Snippet
                     </div>
                 </div>
             </section>
-            <!-- Footer area End -->
-            <!-- Copyright Start  -->
             <div id="copyright">
                 <div class="container">
                     <div class="row">
@@ -95,20 +94,13 @@ class Footer extends Snippet
                     </div>
                 </div>
             </div>
-            <!-- Copyright End -->
         </footer>
-        <!-- Footer Section End -->
-
-        <!-- Go to Top Link -->
         <a href="#" class="back-to-top">
             <i class="lni-chevron-up"></i>
         </a>
-
-        <!-- Preloader -->
         <div id="preloader">
             <div class="loader" id="loader-1"></div>
         </div>
-        <!-- End Preloader -->
 HTML;
     }
 

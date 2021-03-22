@@ -31,7 +31,7 @@ class SearchView extends Snippet
      */
     public function announcesResult(array $annouces)
     {
-        return parent::heroArea2WithAdvertisingTemplate((new AnnounceView)->show($annouces, "Résultats de la récherche"));
+        return parent::sliderWithTopAdvertisingTemplate((new AnnounceView)->show($annouces, "Résultats de la récherche"));
     }
 
     /**

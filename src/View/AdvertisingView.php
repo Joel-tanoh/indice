@@ -41,8 +41,15 @@ HTML;
     public function top()
     {
         return <<<HTML
-        <div class="advertising top slide-container py-3 d-none d-lg-block">
-            {$this->showImages($this->advertisingEngine->getImages("top"))}
+        <div class="row">
+            <div class="d-none d-md-block col-md-2"></div>
+            <div class="col-12 col-md-8">
+                <div class="advertising top slide-container my-3 py-3">
+                    <span class="text-muted">Publicité</span>
+                    {$this->showImages($this->advertisingEngine->getImages("top"))}
+                </div>
+            </div>
+            <div class="d-none d-md-block col-md-2"></div>
         </div>
 HTML;
     }
@@ -84,9 +91,12 @@ HTML;
     public function right()
     {
         return <<<HTML
-        <div class="advertising right slide-container">
-            {$this->showImages($this->advertisingEngine->getImages("right"))}
-        </div>
+        <aside>
+            <span class="text-muted">Publicité</span>
+            <div class="advertising right slide-container">
+                {$this->showImages($this->advertisingEngine->getImages("right"))}
+            </div>
+        </aside>
 HTML;
     }
 
@@ -105,7 +115,7 @@ HTML;
         foreach($imagesSrc as $imgSrc) {
             $return .= <<<HTML
             <div class="effect slide">
-                <img class="img-fluid" src="{$imgSrc}" alt="publicité indice annonce vente location">
+                <img class="img-fluid" src="{$imgSrc}" alt="publicité-indice-annonce-vente-location-cote-d-ivoire">
             </div>
 HTML;
         }

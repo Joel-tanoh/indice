@@ -15,6 +15,8 @@
 
 namespace App\View\Page;
 
+use App\Model\User\User;
+use App\View\Model\User\AdministratorView;
 use App\View\Snippet;
 
 /**
@@ -29,74 +31,141 @@ use App\View\Snippet;
  */
 class SideBar extends Snippet
 {
+
     /**
-     * Affiche le logo dans la sidebar.
-     *
-     * @param string $brandSrc Le lien vers l'image.
-     * @param string $href     L'url exécuté lors du click sur le logo.
+     * Affiche la sidebar de l'utilisateur afin de lui permettre de naviguer dans 
+     * sa session personnelle.
      * 
      * @return string
      */
-    public function brand(string $brandSrc, string $href = "admin") : string
+    public function sidebarNav() : string
     {
-        return <<<HTML
-        <a class="brand text-center" href="{$href}">
-            <img src="{$brandSrc}" alt="Attitude efficace" class="brand sidebar-brand mb-2">
-        </a>
+        if (User::isAuthenticated()) {
+            $registered = User::authenticated();
+            return <<<HTML
+            <aside class="col-sm-12 col-md-3 col-lg-3 page-sidebar">
+                {$this->sidebarContent($registered)}
+            </aside>
 HTML;
+        }
     }
 
     /**
-     * Peremet d'afficher l'avatar de l'utilisateur dans la sidebar.
-     * 
-     * @param string $avatarSrc
-     * @param string $altText
+     * Affiche l'avatar et les liens de la sidebar de l'utilisateur.
      * 
      * @return string
      */
-    public function userAvatar(string $avatarSrc, string $altText = null)
+    private function sidebarContent() : string
     {
-        return <<<HTML
-        <div class="text-center my-2">
-            <img src="{$avatarSrc}" alt="{$altText}" class="sidebar-user-avatar img-circle img-fluid"/>
-        </div>
-HTML;
-    }
+        if (User::isAuthenticated()) {
 
-    /**
-     * Retourne les liens.
-     * 
-     * @return string
-     */
-    private function links()
-    {
-        $links = null;
-        return $links;
-    }
+            $registered = User::authenticated();
 
-    /**
-     * Retourne une ligne dans la sidebar. Prend en paramètre le lien de la sidebar,
-     * la classe pour l'icône fontawesome et le texte qui sera affiché dans la
-     * sidebar.
-     * 
-     * @param string $href                 Le lien vers lequel le bouton va diriger.
-     * @param string $iconClass La classe fontawesome pour l'icône.
-     * @param string $caption              Le texte qui sera visible dans la sidebar.
-     * 
-     * @return string
-     */
-    private function setLink(string $href = null, string $iconClass = null, string $caption = null)
-    {
-        $badge = null;
-
-        return <<<HTML
-        <a class="py-2 px-4" href="{$href}">
-            <div class="row">
-                <span class="col-2"><i class="{$iconClass} fa-lg"></i></span>
-                <span class="col-8">{$caption}</span>
-                {$badge}
+            if ($registered->isAdministrator()) {
+                $sidebarLinks = $this->administratorSidebar();
+            } else {
+                $sidebarLinks = $this->registeredSidebar();
+            }
+            
+            return <<<HTML
+            <div class="sidebar-box">
+                <div class="user">
+                    <figure>
+                        <a href="{$registered->getProfileLink()}"><img src="{$registered->getAvatarSrc()}" alt="Image de {$registered->getPseudo()}" title="Mon profil"></a>
+                    </figure>
+                    <div class="usercontent">
+                        <h3><a href="{$registered->getProfileLink()}" class="text-white">{$registered->getFullName()}</a></h3>
+                        <h4>{$registered->getType()}</h4>
+                    </div>
+                </div>
+                {$sidebarLinks}
             </div>
-        </a>
+HTML;
+        } else {
+            return <<<HTML
+            <div class="sidebar-box">
+                <nav class="navdashboard">
+                    <p class="text-muted">Veuillez vous <a href="sign-in">connecter</a>, ou vous <a href="register">inscrire</a> si vous n'avez pas de compte</p>
+                </nav>
+            </div>
+HTML;
+        }
+    }
+    
+    /**
+     * Affiche le menu du dashboard de l'utilisateur.
+     * @return string
+     */
+    private function registeredSidebar() : string
+    {
+        if (User::isAuthenticated()) {
+            $registered = User::authenticated();
+            return <<<HTML
+            <nav class="navdashboard">
+                <ul>
+                    {$this->defineSidebarLink("Mes annonces", $registered->getProfileLink(). "/posts", "lni-dashboard")}
+                    {$this->defineSidebarLink("Déconnexion", "sign-out", "lni-enter")}
+                </ul>
+            </nav>
+HTML;
+        } else {
+            return <<<HTML
+            <nav class="navdashboard">
+                <p class="text-muted">Veuillez vous <a href="sign-in">connecter</a>, ou vous <a href="register">inscrire</a> si vous n'avez pas de compte</p>
+            </nav>
+HTML;
+        }
+    }
+
+    /**
+     * Affiche le menu du dashboard de l'utilisateur.
+     * 
+     * @return string
+     */
+    private function administratorSidebar() : string
+    {
+        if (User::isAuthenticated() && User::authenticated()->isAdministrator()) {
+
+            $administrator = User::authenticated();
+            $sidebar = new SideBar;
+
+            return <<<HTML
+            <nav class="navdashboard">
+                <ul>
+                    {$sidebar->defineSidebarLink("Voir toutes les annonces", "/administration/annonces", "lni-pencil-alt")}
+                    {$sidebar->defineSidebarLink("Gérer les utilisateurs", "/administration/users", "lni-users")}
+                    {$sidebar->defineSidebarLink("Ajouter un compte", "/register", "lni-user")}
+                    {$sidebar->defineSidebarLink("Mes annonces", $administrator->getProfileLink(). "/posts", "lni-dashboard")}
+                    {$sidebar->defineSidebarLink("Déconnexion", "sign-out", "lni-enter")}
+                </ul>
+            </nav>
+HTML;
+        } else {
+            return <<<HTML
+            <nav class="navdashboard">
+                <p class="text-muted">Veuillez vous <a href="sign-in">connecter</a>, ou vous <a href="register">inscrire</a> si vous n'avez pas de compte</p>
+            </nav>
+HTML;
+        }
+    }
+
+    /**
+     * Permet de créer une ligne de lien dans la sidebar du user.
+     * 
+     * @param string $text
+     * @param string $href
+     * @param string $iconClass
+     * 
+     * @return string
+     */
+    private function defineSidebarLink(string $text, string $href, string $iconClass = null)
+    {
+        return <<<HTML
+        <li>
+            <a href="{$href}">
+                <i class="{$iconClass}"></i><span>{$text}</span>
+            </a>
+        </li>
 HTML;
     }
 

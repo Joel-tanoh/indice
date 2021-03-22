@@ -28,12 +28,12 @@ abstract class SearchController extends AppController
     public static function searchAnnonce(array $params = null)
     {
         $announces = [];
-        $pageTitle = "L'indice | Announces";
+        $pageTitle = "L'indice &#149 Announces";
         $searchEngine = new SearchEngine();
 
         if (Action::dataPosted()) {
             $searchEngine->searchAnnounces($_POST);
-            $announces = $searchEngine->getResult("App\Model\Announce", "id");
+            $announces = $searchEngine->getResult("App\Model\Post\Announce", "id");
             $pageTitle .= " - Recherche " . $_POST["query"];
         }
 

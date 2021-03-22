@@ -8,7 +8,7 @@ use App\Auth\Cookie;
 use App\File\Image\Image;
 use App\Model\User\User;
 use App\Auth\Session;
-use App\Communication\Email;
+use App\Communication\MailSender;
 use App\Communication\Newsletter;
 use App\Utility\Utility;
 use App\Utility\Validator;
@@ -18,7 +18,7 @@ use App\Communication\Notify\NotifyByHTML;
 use App\Controller\AppController;
 use App\Engine\SearchEngine;
 use App\Exception\PageNotFoundException;
-use App\Model\Announce;
+use App\Model\Post\Announce;
 use App\Model\Category;
 use App\Model\Model;
 use App\Model\User\Registered;
@@ -42,11 +42,11 @@ abstract class UserController extends AppController
             && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)
         ) {
             $category = Model::instantiate("id", Category::TABLE_NAME, "slug", $params[1], "App\Model\Category");
-            $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $params[2], "App\Model\Announce");
+            $announce = Model::instantiate("id", Announce::TABLE_NAME, "slug", $params[2], "App\Model\Post\Announce");
 
             if ($announce->hasCategory($category) && $announce->isValidated() || (($announce->isPending() || $announce->isSuspended()) && User::isAuthenticated())) {
                 $announce->incrementView();
-                $page = new Page("L'indice | " . $announce->getCategory()->getTitle() . " > " . $announce->getTitle(), (new AnnounceView($announce))->read());
+                $page = new Page($announce->getCategory()->getTitle() . " &#155 " . $announce->getTitle(). " &#149; L'indice", (new AnnounceView($announce))->read());
                 $page->addJs("https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons", "async");
                 $page->show();
 
@@ -63,7 +63,7 @@ abstract class UserController extends AppController
      * Permet d'afficher toutes les annonces.
      */
     public static function readAnnounces() {
-        $page = new Page("L'indice | Toutes les annonces", UserView::readAnnounces(Announce::getAll(null, "validated")));
+        $page = new Page("Toutes les annonces &#149; L'indice", UserView::readAnnounces(Announce::getAll(null, "validated")));
         $page->setDescription(
             "Toutes les announces, Vente, Offre et demande, Toutes vos recherches, vos besoins, vous pouvez les trouver sur L'indice."
         );
@@ -145,21 +145,22 @@ abstract class UserController extends AppController
                     Cookie::setRegistered($_POST["email_address"]);
 
                     Newsletter::register($_POST["email_address"]);
-                    $email = new Email(
+                    $email = new MailSender(
                         $_POST["email_address"],
                         "Bienvenue sur L'indice.com",
                         (new RegisteredView(User::authenticated()))->welcomeMessage()
                     );
+                    
                     $email->send();
 
                     Utility::redirect(User::authenticated()->getProfileLink());
                 }
-            } else { // Sinon
-                $message = (new NotifyByHTML())->errors($validate->getErrors());
+            } else {
+                $message = (new NotifyByHTML())->errorsByToast($validate->getErrors());
             }
         }
 
-        $page = new Page("L'indice | Je crée mon compte", UserView::register($message));
+        $page = new Page("Je crée mon compte &#149; L'indice", UserView::register($message));
         $page->setDescription("");
         $page->show();
     }
@@ -170,12 +171,12 @@ abstract class UserController extends AppController
     public static function searchAnnounce()
     {
         $announces = [];
-        $pageTitle = "L'indice | Recherche d'announces";
+        $pageTitle = "Recherche d'announces &#149; L'indice";
         $searchEngine = new SearchEngine();
 
         if (Action::dataPosted()) {
             $searchEngine->searchAnnounces($_POST);
-            $announces = $searchEngine->getResult("App\Model\Announce", "id");
+            $announces = $searchEngine->getResult("App\Model\Post\Announce", "id");
             $query = $_POST["query"] ?? $_POST["search_query"] ?? $_POST["request"] ?? $_POST["q"];
             $pageTitle .= " - " . $query;
         }
@@ -192,7 +193,7 @@ abstract class UserController extends AppController
     {
         if (Category::isCategorySlug($params["category"])) {
             $category = Category::getBySlug($params["category"], Category::TABLE_NAME, "App\Model\Category");
-            $page = new Page("L'indice | " . $category->getTitle() . " - Les meilleures annonces", (new CategoryView($category))->read());
+            $page = new Page($category->getTitle() . " &#155; Les meilleures annonces &#149; L'indice", (new CategoryView($category))->read());
             $page->setDescription($category->getDescription());
             $page->show();
         } else {
@@ -207,7 +208,7 @@ abstract class UserController extends AppController
     public static function readRegisteredAnnounces(array $params)
     {
         $user = Registered::getByPseudo($params[2]);
-        $page = new Page("L'indice | Les meilleures annonces de " . $user->getFullName());
+        $page = new Page("Les meilleures annonces de " . $user->getFullName() . " &#149; L'indice");
         $page->setView(UserView::readRegisteredValidatedAnnounces($user));
         $page->setDescription(
             ""
@@ -221,9 +222,8 @@ abstract class UserController extends AppController
     public static function readAboutUs()
     {
         $page = new Page(
-            "L'indice | A propos de nous - Toutes les informations concernant le fondateur de L'indice.ci",
-            View::aboutUs(),
-            ""
+            "A propos de nous - Toutes les informations sur L'indice.ci &#149; L'indice",
+            View::aboutUs()
         );
         $page->show();
     }
@@ -234,9 +234,8 @@ abstract class UserController extends AppController
     public static function readFAQ()
     {
         $page = new Page(
-            "L'indice | FAQs Questions fréquentes - Nous repondons à toutes vos questions sur L'indice.ci",
-            View::FAQ(),
-            ""
+            "FAQs Questions fréquentes - Nous repondons à toutes vos questions sur L'indice.ci &#149; L'indice",
+            View::FAQ()
         );
         $page->show();
     }

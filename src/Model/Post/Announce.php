@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\Post;
 
 use App\Action\Create\Create;
 use App\Action\Create\InsertInDb;
@@ -11,6 +11,8 @@ use App\Database\SqlQueryFormater;
 use App\Model\User\Registered;
 use App\Utility\Utility;
 use App\Communication\Comment;
+use App\Model\Category;
+use App\Model\Model;
 
 /**
  * Classe de gestion d'une annonce.
@@ -518,7 +520,7 @@ class Announce extends Model
      * 
      * @return array
      */
-    public static function getMoreViewed(int $nbr = null) : array
+    public static function getMostViewed(int $nbr = null) : array
     {
         $query = "SELECT id FROM " . self::TABLE_NAME . " WHERE status IN (2, 3) ORDER BY views DESC";
 

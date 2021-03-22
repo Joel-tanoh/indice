@@ -109,18 +109,23 @@ abstract class Model
     /**
      * C'est la requête basique pour la mise à jour d'un champ.
      * 
-     * @param string $colName
-     * @param mixed  $value
-     * @param string $selector      Le nom de la colonne qui permet
-     *                              d'identifier l'élément à mettre à jour.
-     * @param mixed  $selectorValue La valeur de la colonne qui permet
-     *                              d'identifier l'élément à mettre à jour.
+     * @param string $colName       Le nom de la colonne dont on veut modifier la valeur.
+     * @param mixed  $value         La valeur à insérer dans cette colonne.
+     * @param string $selector      Le nom de la colonne qui va permettre d'identifier l'occurence
+     *                              à mettre à jour.
+     * @param mixed  $selectorValue La valeur de la colonne qui permet d'identifier l'occurence
+     *                              à mettre à jour.
      * 
      * @return bool
      */
-    protected function set(string $colName, $value, string $selector, $selectorValue)
+    public function set(string $colName, $value, string $selector, $selectorValue)
     {
+        if ($colName === "password") {
+            $value = PASSWORD_HASH($value, PASSWORD_DEFAULT);
+        }
+
         $req = self::connectToDb()->prepare("UPDATE $this->tableName SET $colName = ? WHERE $selector = ?");
+        
         if ($req->execute([$value, $selectorValue])) {
             return true;
         }

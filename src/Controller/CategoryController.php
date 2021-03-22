@@ -17,7 +17,7 @@ abstract class CategoryController extends AppController
      */
     static function create()
     {
-        $page = new Page("L'indice | Créer une annonce", CategoryView::create());
+        $page = new Page("Créer une annonce &#149; L'indice", CategoryView::create());
         $page->setDescription("");
         $page->show();
     }
@@ -29,7 +29,7 @@ abstract class CategoryController extends AppController
     {
         if (Category::isCategorySlug($params["category"])) {
             $category = Category::getBySlug($params["category"], Category::TABLE_NAME, "App\Model\Category");
-            $page = new Page("L'indice | " . $category->getTitle(), (new CategoryView($category))->read());
+            $page = new Page($category->getTitle() . " &#149; L'indice", (new CategoryView($category))->read());
             $page->setDescription($category->getDescription());
             $page->show();
         } else {

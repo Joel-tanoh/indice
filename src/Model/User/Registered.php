@@ -6,7 +6,7 @@ use App\Action\Update\Update;
 use App\Database\SqlQueryFormater;
 use App\File\Image\Image;
 use App\File\Image\Avatar;
-use App\Model\Announce;
+use App\Model\Post\Announce;
 use App\Utility\Utility;
 use App\Auth\Session;
 use App\Auth\Cookie;
@@ -171,10 +171,10 @@ class Registered extends Visitor
      */
     public function getStatus()
     {
-        if(self::$statutes[$this->status] === "activated") {
-            return "Activé";
-        } elseif (self::$statutes[$this->status] === "suspended") {
+        if($this->status == 0) {
             return "Suspendu";
+        } elseif ($this->status == 1) {
+            return "Activé";
         }
     }
 
@@ -389,7 +389,7 @@ class Registered extends Visitor
     public function deleteComment(int $commentId)
     {
         $comment = new Comment($commentId);
-        if ($comment->getPoster()->getEmailAdress() == $this->emailAddress) {
+        if ($comment->getPoster()->getEmailAddress() == $this->emailAddress) {
             if ($comment->delete()) {
                 return true;
             }

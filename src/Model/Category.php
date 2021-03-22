@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Database\SqlQueryFormater;
+use App\Model\Post\Announce;
 
 /**
  * Classe de gestion des catégories.

@@ -6,7 +6,7 @@ use App\Action\Action;
 use App\Communication\Comment;
 use App\Communication\Notify\NotifyByMail;
 use App\Controller\UserController\RegisteredController;
-use App\Model\Announce;
+use App\Model\Post\Announce;
 use App\Model\User\Registered;
 use App\Model\User\User;
 use App\Utility\Utility;
@@ -31,7 +31,7 @@ abstract class AdministratorController extends RegisteredController
             $announces = Announce::getAll(null, $params[3]);
         }
 
-        $page = new Page("L'indice | Administration - Gérer les annonces", AdministratorView::readAnnounces($announces));
+        $page = new Page("Administration - Gérer les annonces &#149; L'indice", AdministratorView::readAnnounces($announces));
         $page->show();
     }
 
@@ -48,7 +48,7 @@ abstract class AdministratorController extends RegisteredController
         $registered = User::authenticated();
 
         if ($registered->isAdministrator()) {
-            (new Page("L'indice | Profil - " . $user->getFullName(), (new AdministratorView($registered))->readUserProfile($user)))->show();
+            (new Page("Profil - " . $user->getFullName(). " &#149; L'indice", (new AdministratorView($registered))->readUserProfile($user)))->show();
         } else {
             Utility::redirect($registered->getProfileLink() . "/posts");
         }
@@ -64,7 +64,7 @@ abstract class AdministratorController extends RegisteredController
 
         if (User::authenticated()->isAdministrator()) {
             $users = Registered::getAll();
-            $page = new Page("L'indice | Administration - Liste des utilisateurs");
+            $page = new Page("Administration - Liste des utilisateurs &#149; L'indice");
             $page->setView((new AdministratorView(User::authenticated()))->readUsers($users));
             $page->show();
         } else {
@@ -95,9 +95,9 @@ abstract class AdministratorController extends RegisteredController
 
     /**
      * Permet à un administrateur de commenter une annonce.
-     * @param \App\Model\Announce $announce
+     * @param \App\Model\Post\Announce $announce
      */
-    public static function commentAnnounce(\App\Model\Announce $announce)
+    public static function commentAnnounce(\App\Model\Post\Announce $announce)
     {
         $page = new Page();
 
@@ -110,11 +110,11 @@ abstract class AdministratorController extends RegisteredController
                     Comment::emailContent($announce->getTitle(), trim($_POST["comment"]), $announce->getLink("all"))
                 );
                 
-                $page->setMetatitle("L'indice | Commentaire envoyé avec succès");
+                $page->setMetatitle("Suggestion envoyé avec succès &#149; L'indice");
                 $page->setView(
                     View::success(
-                        "Commentaire envoyé avec succès",
-                        "Le commentaire a été posté avec succès, l'utilisateur sera informé. Merci !",
+                        "Suggestion envoyée avec succès",
+                        "La suggestion a été postée avec succès, l'utilisateur sera informé. Merci !",
                         "Retour",
                         $announce->getLink(),
                         "Suggestion"

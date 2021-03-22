@@ -25,11 +25,13 @@ try {
     $router->get("/sign-in", "App\Controller\UserController\RegisteredController@signIn");
     $router->get("/sign-out", "App\Controller\UserController\RegisteredController@signOut");
     $router->get("/post", "App\Controller\UserController\RegisteredController@post");
-    $router->get("/administration/users", "App\Controller\UserController\AdministratorController@readUsers");
-    $router->get("/administration/annonces", "App\Controller\UserController\AdministratorController@administrateAnnounces");
     $router->get("/about-us", "App\Controller\UserController\UserController@readAboutUs");
     $router->get("/faq", "App\Controller\UserController\UserController@readFAQ");
     $router->get("/in-progress", "App\Controller\AppController@pageNotFound");
+    $router->get("/forgot-password", "App\Controller\UserController\RegisteredController@forgotPassword");
+    $router->get("/administration/users", "App\Controller\UserController\AdministratorController@readUsers");
+    $router->get("/administration/annonces", "App\Controller\UserController\AdministratorController@administrateAnnounces");
+    $router->get("/test", "App\Controller\AppController@test");
     
     $router->get("/:category", "App\Controller\UserController\UserController@readCategory");
     $router->get("/:1/:2", "App\Controller\AppController@subRouter");
@@ -40,6 +42,7 @@ try {
     $router->post("/register", "App\Controller\UserController\UserController@register");
     $router->post("/sign-in", "App\Controller\UserController\RegisteredController@signIn");
     $router->post("/post", "App\Controller\UserController\RegisteredController@post");
+    $router->post("/forgot-password", "App\Controller\UserController\RegisteredController@forgotPassword");
     $router->post("/newsletters/register", "App\Controller\UserController\VisitorController@registerToNewsletter");
     $router->post("/annonces/search", "App\Controller\UserController\UserController@searchAnnounce");
     $router->post("/:1/:2", "App\Controller\SearchController@subRouter");
@@ -48,6 +51,6 @@ try {
     $router->run();
 
 } catch(Exception $e) {
-    $page = new Page("L'indice | Le leader des petites annonces en Côte d'Ivoire", View::pageNotFound($e, "404"));
+    $page = new Page("Le leader des petites annonces en Côte d'Ivoire &#149; L'indice", View::pageNotFound($e, "404"));
     $page->show();
 }

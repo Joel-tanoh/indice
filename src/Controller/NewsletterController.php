@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Communication\Email;
+use App\Communication\MailSender;
 use App\Communication\Newsletter;
 use App\Utility\Utility;
 use App\Utility\Validator;
@@ -26,11 +26,11 @@ abstract class NewsletterController extends AppController
 
         if (!$validator->getErrors()) {
             if (Newsletter::register($_POST["email_address"])) {
-                $email = new Email(
+                $email = new MailSender(
                     $_POST["email_address"], "Bienvenue sur L'indice.com", (new NewsletterView)->welcomeMessage()
                 );
                 if ($email->send()) {
-                    $page->setMetaTitle("L'indice | Abonnement à la Newsletter Réussie");
+                    $page->setMetaTitle("Abonnement à la Newsletter réussie &#149; L'indice");
                     $page->setView(View::success("Félicitations !", "Vous êtes bien enregistré dans la newsletter ! Vous recevrez un email de confirmation."));
                     $page->show();
                 } else {

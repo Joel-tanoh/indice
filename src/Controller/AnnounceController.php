@@ -4,25 +4,24 @@ namespace App\Controller;
 
 use App\Action\Action;
 use App\Action\Update\Update;
-use App\Communication\Comment;
-use App\Communication\Email;
+use App\Communication\MailContentManager;
 use App\File\Image\Image;
-use App\Model\Announce;
+use App\Model\Post\Announce;
 use App\Communication\Notify\NotifyByHTML;
 use App\Communication\Notify\NotifyByMail;
-use App\Model\Category;
 use App\Model\User\User;
-use App\Utility\Utility;
 use App\Utility\Validator;
 use App\View\Model\AnnounceView;
 use App\View\Page\Page;
 use App\View\View;
-use Exception;
 
 abstract class AnnounceController extends AppController
 {
     /**
      * Permet de créer une annonce.
+     * 
+     * @return array Un champ nomme resultType : true ou false et le message contenant les erreurs
+     *               dans le cas ou le resultType  = false.            
      */
     public static function create()
     {
@@ -30,12 +29,18 @@ abstract class AnnounceController extends AppController
             $htmlNotifier = new NotifyByHTML();
 
             if (!empty(self::validation(false)->getErrors())) {
-                return $htmlNotifier->errors(self::validation(false)->getErrors(), "danger");
-            } else {
-                if (Announce::create()) {
-                    return $htmlNotifier->toast("Enregistrement effectué avec succès", "success");
-                }
+                return [
+                    "resultType" => false,
+                    "message" => $htmlNotifier->errorsByToast(self::validation(false)->getErrors(), "danger")
+                ];
+            } elseif (Announce::create()) {
+                return [
+                    "resultType" => true,
+                    "message" => null
+                ];
             }
+
+            // return $htmlNotifier->toast("Enregistrement effectué avec succès", "success");          
         }
     }    
 
@@ -43,17 +48,16 @@ abstract class AnnounceController extends AppController
      * Permet de mettre à jour une annonce.
      * @param array $params
      */
-    public static function update(array $params)
+    public static function update(\App\Model\Post\Announce $announce)
     {
-        $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
         $htmlNotifier = new NotifyByHTML();
         $message = null;
-        $page = new Page("L'indice | " . $announce->getTitle() . " - Modification", (new AnnounceView($announce))->update());
+        $page = new Page("" . $announce->getTitle() . " - Modification &#149; L'indice", (new AnnounceView($announce))->update());
 
         if (Update::dataPosted()) {
 
             if (!empty(self::validation(true)->getErrors())) {
-                $message = $htmlNotifier->errors(self::validation(true)->getErrors(), "danger");
+                $message = $htmlNotifier->errorsByToast(self::validation(true)->getErrors(), "danger");
                 $page->setView(
                     (new AnnounceView($announce))->update($message)
                 );
@@ -61,16 +65,16 @@ abstract class AnnounceController extends AppController
             } else {
                 if ($announce->update()) {
 
-                    $announce = Announce::actualize("App\Model\Announce", $announce->getId());
+                    $announce = Announce::actualize("App\Model\Post\Announce", $announce->getId());
 
                     if ($announce->getLastComment()) {
                         NotifyByMail::administrators(
                             "Nouvelle mise à jour d'annonce",
-                            Email::content($announce->updatingEmailNotification())
+                            MailContentManager::contentFormater($announce->updatingEmailNotification())
                         );
                     }
 
-                    $page->setMetatitle("L'indice | Mise à jour effectuée avec succès");
+                    $page->setMetatitle("Mise à jour effectuée avec succès &#149; L'indice");
                     $page->setView(
                         View::success(
                             "Mise à jour effectuée avec succès"
@@ -82,9 +86,9 @@ abstract class AnnounceController extends AppController
                     );
                 } else {
 
-                    $announce = Announce::actualize("App\Model\Announce", $announce->getId());
+                    $announce = Announce::actualize("App\Model\Post\Announce", $announce->getId());
 
-                    $page->setMetatitle("L'indice | Oup's ! Nous avons rencontré une erreur lors de la modification de votre annonce.");
+                    $page->setMetatitle("Oup's ! Nous avons rencontré une erreur lors de la modification de votre annonce &#149; L'indice");
                     $page->setView(
                         View::failed(
                             "Oup's ! Erreur lors de la modification"
@@ -103,9 +107,9 @@ abstract class AnnounceController extends AppController
 
     /**
      * Permet de supprimer une annonce.
-     * @param \App\Model\Announce $announce
+     * @param \App\Model\Post\Announce $announce
      */
-    public static function delete(\App\Model\Announce $announce)
+    public static function delete(\App\Model\Post\Announce $announce)
     {
         $page = new Page();
 
@@ -114,12 +118,12 @@ abstract class AnnounceController extends AppController
             NotifyByMail::administrators("Une annonce a été supprimée", "Une annonce a été supprimée.");
 
             $link = User::authenticated()->isAdministrator() ? "administration/annonces" : User::authenticated()->getProfileLink() . "/posts";
-            $page->setMetatitle("L'indice | Suppression effectuée avec succès");
+            $page->setMetatitle("Suppression effectuée avec succès &#149; L'indice");
             $page->setView(
                 View::success(
                     "Suppression effectuée avec succès"
                     , "L'annonce a été supprimée avec succès."
-                    , "Mon Dashboard"
+                    , "Dashboard"
                     , $link
                     , "Suppression d'annonce"
                 )
@@ -127,7 +131,7 @@ abstract class AnnounceController extends AppController
             $page->show();
 
         } else {
-            $page->setMetatitle("L'indice | Suppression non effectuée");
+            $page->setMetatitle("Echec de la suppression &#149; L'indice");
             $page->setView(
                 View::failed(
                     "Echec de la suppression",
@@ -143,16 +147,14 @@ abstract class AnnounceController extends AppController
 
     /**
      * Permet de valider une annonce.
-     * @param array $params
      */
-    public static function validateAnnounce(array $params)
+    public static function validateAnnounce(\App\Model\Post\Announce $announce)
     {
-        $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
         $page = new Page();
 
         if (User::authenticated()->isAdministrator()) {
             if (User::authenticated()->changeStatus($announce->getId(), Announce::convertStatus("validated"), Announce::TABLE_NAME)) {
-                $page->setMetatitle("L'indice | Validation effectuée avec succès");
+                $page->setMetatitle("Validation effectuée avec succès &#149; L'indice");
                 $page->setView(
                     View::success(
                         "Annonce validée avec succès",
@@ -164,7 +166,7 @@ abstract class AnnounceController extends AppController
                 );
             }
         } else {
-            $page->setMetatitle("L'indice | Validation impossible");
+            $page->setMetatitle("Validation impossible &#149; L'indice");
             $page->setView(
                 View::failed(
                     "Echec de la validation",
@@ -183,14 +185,13 @@ abstract class AnnounceController extends AppController
      * Permet de valider une annonce.
      * @param array $params
      */
-    public static function suspendAnnounce(array $params)
+    public static function suspendAnnounce(\App\Model\Post\Announce $announce)
     {
-        $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
         $page = new Page();
 
         if (User::authenticated()->isAdministrator()) {
             if (User::authenticated()->changeStatus($announce->getId(), Announce::convertStatus("suspended"), Announce::TABLE_NAME)) {
-                $page->setMetatitle("L'indice | Suspension effectuée avec succès");
+                $page->setMetatitle("Suspension effectuée avec succès &#149; L'indice");
                 $page->setView(
                     View::success(
                         "Annonce suspendue avec succès",
@@ -202,7 +203,7 @@ abstract class AnnounceController extends AppController
                 );
             }
         } else {
-            $page->setMetatitle("L'indice | Suspension impossible");
+            $page->setMetatitle("Suspension impossible &#149; L'indice");
             $page->setView(
                 View::failed(
                     "Echec de la suspension",

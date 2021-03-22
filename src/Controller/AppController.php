@@ -5,12 +5,13 @@ namespace App\Controller;
 use App\Controller\UserController\RegisteredController;
 use App\Controller\UserController\AdministratorController;
 use App\Controller\UserController\UserController;
-use App\Model\Announce;
+use App\Model\Post\Announce;
 use App\Model\Category;
 use App\Model\Model;
 use App\Model\User\Registered;
 use App\Model\User\User;
 use App\View\Page\Page;
+use App\View\Slider\Splide;
 use App\View\View;
 use Exception;
 
@@ -30,10 +31,12 @@ abstract class AppController
         , "comment"
     ];
 
-    /** Index du site. */
+    /**
+     * Index du site.
+     */
     public static function index()
     {
-        $page = new Page("L'indice | Le leader des petites annonces de Côte d'Ivoire", View::index());
+        $page = new Page("Le leader des petites annonces de Côte d'Ivoire &#149; L'indice", View::index());
         $page->setDescription("Pour tous vos besoins, vos annonces, besoins vestimentaires, appareils electroménagers, ventes d'équipements, vous pouvez faire confiance au meilleur site d'annonce de Côte d'Ivoire, L'indice est la reponse à vos besoins.");
         $page->show();
     }
@@ -128,8 +131,13 @@ abstract class AppController
      */
     public static function pageNotFound()
     {
-        $page = new Page("L'indice | Le leader des petites annonces de Côte d'Ivoire", View::pageNotFound("Page en cours de développement", "En cours"));
+        $page = new Page("Le leader des petites annonces de Côte d'Ivoire &#149; L'indice", View::pageNotFound("Page en cours de développement", "En cours"));
         $page->show();
     }
 
+    public static function test()
+    {
+        $page = new Page("test", View::test(), null, false, false);
+        $page->show();
+    }
 }

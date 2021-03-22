@@ -61,7 +61,7 @@ class Form extends View
         string $action,
         string $class = null, 
         string $method = "post", 
-        string $id="myForm",
+        string $id = null,
         string $role = null,
         string $name = null
     ) {

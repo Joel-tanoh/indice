@@ -2,8 +2,8 @@
 
 namespace App\View\Model\User;
 
-use App\Communication\Email;
-use App\Model\Announce;
+use App\Communication\MailSender;
+use App\Model\Post\Announce;
 use App\Model\User\User;
 use App\View\Snippet;
 use App\View\Form;
@@ -51,127 +51,13 @@ HTML;
      */
     public function myProfile()
     {
-        $snippet = new Snippet;
-
-        return <<<HTML
-        {$snippet->pageHeader("Mon profil", "Mon profil")}
-
-        <div id="content" class="my-3">
-            <div class="container-fluid">
-                <div class="row">
-                    {$this->sidebarNav(User::authenticated())}
-                    <div class="col-sm-12 col-md-8 col-lg-9">
-                        <h4>Mon profil</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
+        $content = <<<HTML
+        <section>
+            <h4>Mon profil</h4>
+        </section>
 HTML;
-    }
 
-    /**
-     * Affiche le menu dans la version mobile pour un utilisateur connecté.
-     * 
-     * @param App\Model\User\Registered
-     * @return string
-     */
-    public function mobileNavbarForConnectedUser($registered)
-    {
-        return <<<HTML
-        <li><a href="/">Accueil</a></li>
-        <li>
-            <a>Mon compte</a>
-            <ul class="dropdown">
-                <li><a href="{$registered->getProfileLink()}"><i class="lni-home"></i> Mon profil</a></li>
-                <li><a href="{$registered->getProfileLink()}/posts"><i class="lni-wallet"></i> Mes annonces</a></li>
-                <li><a href="sign-out"><i class="lni-close"></i> Déconnexion</a></li>
-            </ul>
-        </li>
-HTML;
-    }
-
-    /**
-     * Affiche la sidebar de l'utilisateur afin de lui permettre de naviguer dans 
-     * sa session personnelle.
-     * 
-     * @return string
-     */
-    public function sidebarNav($registered) : string
-    {
-        return <<<HTML
-        <aside class="col-sm-12 col-md-3 col-lg-3 page-sidebar">
-            {$this->sidebarContent($registered)}
-        </aside>
-HTML;
-    }
-
-    /**
-     * Affiche l'avatar et les liens de la sidebar de l'utilisateur.
-     * 
-     * @param App\Model\User\Registered $registered 
-     * @return string
-     */
-    protected function sidebarContent($registered) : string
-    {
-        if (User::isAuthenticated()) {
-            if ($registered->isAdministrator()) {
-                $sidebarLinks = (new AdministratorView())->sidebarLinks($registered);
-            } else {
-                $sidebarLinks = (new self())->sidebarLinks($registered);
-            }
-            
-            return <<<HTML
-            <div class="sidebar-box">
-                <div class="user">
-                    <figure>
-                        <a href="{$registered->getProfileLink()}"><img src="{$registered->getAvatarSrc()}" alt="Image de {$registered->getPseudo()}" title="Mon profil"></a>
-                    </figure>
-                    <div class="usercontent">
-                        <h3><a href="{$registered->getProfileLink()}" class="text-white">{$registered->getFullName()}</a></h3>
-                        <h4>{$registered->getType()}</h4>
-                    </div>
-                </div>
-                {$sidebarLinks}
-            </div>
-HTML;
-        }
-    }
-    
-    /**
-     * Affiche le menu du dashboard de l'utilisateur.
-     * @param App\Model\User\Registered $registered 
-     * @return string
-     */
-    public function sidebarLinks($registered) : string
-    {
-        return <<<HTML
-        <nav class="navdashboard">
-            <ul>
-                {$this->defineSidebarLink("Mes annonces", $registered->getProfileLink(). "/posts", "lni-dashboard")}
-                {$this->defineSidebarLink("Déconnexion", "sign-out", "lni-enter")}
-            </ul>
-        </nav>
-HTML;
-    }
-
-    /**
-     * Permet de créer une ligne de lien dans la sidebar du user.
-     * 
-     * @param string $text
-     * @param string $href
-     * @param string $iconClass
-     * 
-     * @return string
-     */
-    protected function defineSidebarLink(string $text, string $href, string $iconClass = null)
-    {
-        return <<<HTML
-        <li>
-            <a href="{$href}">
-                <i class="{$iconClass}"></i><span>{$text}</span>
-            </a>
-        </li>
-HTML;
+        return parent::administrationTemplate($content, "Mon profil", "Profil / " . $this->user->getFullName());
     }
 
     /**
@@ -348,7 +234,7 @@ HTML;
             recherchées tout en espérant vous fournir du contenu en relation avec ce que vous recherchez.
         </p>
 HTML;
-        return Email::content($content);
+        return MailSender::content($content);
     }
 
     /**
@@ -359,7 +245,7 @@ HTML;
     public function avatar()
     {
         return <<<HTML
-        <img src="{$this->user->getAvatarSrc()}" alt="" class="img-fluid"/>
+        <img src="{$this->user->getAvatarSrc()}" alt="photo-de-profil-de-{$this->user->getFullName()}" class="img-fluid img-circle"/>
 HTML;
     }
 
@@ -371,7 +257,10 @@ HTML;
     public function changePassword()
     {
         $content = <<<HTML
-        <h4>Modification de mon mot de passe</h4>
+        <section>
+            <h4>Modification de mon mot de passe</h4>
+
+        </section>
 HTML;
         return parent::administrationTemplate($content, "Modification de mon mot passe", $this->user->getFullName() . " / Administration / Modification du mot de passe");
     
@@ -396,6 +285,78 @@ HTML;
     public function showMyAnnounces()
     {
         return (new AnnounceView())->show($this->user->getAnnounces("validated"), "Les annonces de " . $this->user->getFullName());
+    }
+
+    /**
+     * Un tableau qui affiche la liste des utilisateurs.
+     * 
+     * @return string
+     */
+    public function list(array $users)
+    {
+        $form = new Form("administration/users/delete", "w-100");
+        $usersRows = null;
+
+        foreach ($users as $user) {
+            $usersRows .= $this->listRow($user);
+        }
+
+        return <<<HTML
+        <h5 class="mb-3 p-3">Liste des utilisateurs</h5>
+        {$form->open()}
+            <table class="table table-hover bg-white">
+                {$this->listHead()}
+                <tbody>
+                    {$usersRows}
+                </tbody>
+            </table>
+        {$form->close()}
+HTML;
+    }
+
+    /**
+     * Affiche une ligne dans le tableau qui affiche la liste
+     * des utilisateurs.
+     * 
+     * @param App\Model\User\Registered $user
+     */
+    private function listRow(\App\Model\User\Registered $user)
+    {
+        return <<<HTML
+        <tr>
+            <td><input type="checkbox" name="{$user->getId()}" id="checkAllUsers"></td>
+            <td><a href="{$user->getProfileLink()}">{$user->getName()}</a></td>
+            <td>{$user->getFirstNames()}</td>
+            <td>{$user->getPseudo()}</th>
+            <td>{$user->getAnnounceNumber()}</th>
+            <td>{$user->getEmailAddress()}</td>
+            <td>{$user->getStatus()}</td>
+            <td>{$user->getRegisteredAt()}</td>
+        </tr>
+HTML;
+    }
+
+    /**
+     * Affiche les entêtes des colonnes dans le tableau qui liste les utilisateurs.
+     * 
+     * @return string
+     */
+    private function listHead()
+    {
+        return <<<HTML
+        <thead>
+            <tr>
+                <th scope="col"><input type="checkbox" name="users[]" id="checkAllUsers"></th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prénom(s)</th>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Nbr. Post</th>
+                <th scope="col">Adresse Email</th>
+                <th scope="col">Statut</th>
+                <th scope="col">Date d'inscription</th>
+            </tr>
+        </thead>
+HTML;
     }
 
 }

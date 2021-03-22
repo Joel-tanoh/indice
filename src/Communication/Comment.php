@@ -5,7 +5,6 @@ namespace App\Communication;
 use App\Model\Model;
 use App\Model\User\Registered;
 use App\Utility\Utility;
-use App\View\Snippet;
 
 /**
  * Classe de gestion des commentaires.
@@ -58,6 +57,8 @@ class Comment extends Model
 
     /** 
      * Retourne l'utilisateur qui a posté l'annonce
+     * 
+     * @return \App\Model\User\Registered
      */
     public function getPoster()
     {
@@ -178,24 +179,6 @@ class Comment extends Model
         }
 
         return $comments;
-    }
-
-    /**
-     * Contenu d'un commentaire.
-     * 
-     * @return string
-     */
-    public static function emailContent(string $annonceTitle, string $comment, string $announceLink)
-    {
-        $content = <<<HTML
-        <p>Vous avez réçu une nouvelle suggestion concernant votre annonce.</p>
-        <p>Titre de l'annonce : {$annonceTitle}</p>
-        <p>{$comment}</p>
-        <div style="text-align:center">
-            <a href="{$announceLink}" style="background-color:#1c3467; padding:7px 11px; color:white">Voir</a>
-        </div>
-HTML;
-        return Email::content($content);
     }
 
     /**

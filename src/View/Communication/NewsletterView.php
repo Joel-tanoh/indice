@@ -2,7 +2,7 @@
 
 namespace App\View\Communication;
 
-use App\Communication\Email;
+use App\Communication\MailSender;
 use App\View\Form;
 use App\View\Snippet;
 
@@ -48,7 +48,7 @@ HTML;
     {
         return <<<HTML
         <h3 class="block-title">Newsletter</h3>
-        <p class="text-sub">Ici un petit texte pour inciter l'utilisateur à s'inscrire à la newsletter.</p>
+        <p class="text-sub">Rejoignez nos plus de 1000 abonnés et accédez aux meilleures annonces de Côte d'Ivoire !</p>
         <form action="newsletters/register" method="post" id="subscribe-form" name="subscribe-form" class="validate">
             <div class="form-group is-empty">
                 <input type="email" name="email_address" class="form-control" id="EMAIL" placeholder="Adresse Email" required>
@@ -70,7 +70,7 @@ HTML;
         $content = <<<HTML
         <p>Nous sommes ravis de vous compter parmi nos abonnés <br>Nous vous tiendrons informé régulièrement des nouveautés.</p>
 HTML;
-        return Email::content($content);
+        return MailSender::content($content);
     }
 
 }

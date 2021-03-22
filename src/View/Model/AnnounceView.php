@@ -3,7 +3,7 @@
 namespace App\View\Model;
 
 use App\Communication\SocialNetwork\SocialNetwork;
-use App\Model\Announce;
+use App\Model\Post\Announce;
 use App\View\Snippet;
 use App\View\View;
 use App\View\Form;
@@ -23,9 +23,9 @@ class AnnounceView extends View
     /**
      * Constructeur de la vue des annonces.
      * 
-     * @param \App\Model\Announce $announce
+     * @param \App\Model\Post\Announce $announce
      */
-    public function __construct(\App\Model\Announce $announce = null)
+    public function __construct(\App\Model\Post\Announce $announce = null)
     {
         $this->announce = $announce;
     }
@@ -63,11 +63,12 @@ HTML;
 
     /**
      * Permet  d'afficher la vue des détails de l'annonce.
+     * 
      * @return string Le code HTML de la vue.
      */
     public function read()
     {
-        return parent::heroArea2WithTopAdvertising($this->details());
+        return parent::sliderWithTopAdvertisingTemplate($this->details());
     }
 
     /**
@@ -89,10 +90,12 @@ HTML;
      */
     public function list(array $announces, string $smallTitle)
     {
+        $snippet = new Snippet;
+
         return <<<HTML
         <div class="col-lg-9 col-md-12 col-xs-12 page-content">
-            <h5 class="py-3">{$smallTitle}</h5>
-            {$this->announceFilter()}
+            <h4 class="py-1">{$smallTitle}</h4>
+            {$snippet->viewChanger()}
             <div class="adds-wrapper">
                 <div class="tab-content">
                     {$this->gridView($announces)}
@@ -108,10 +111,10 @@ HTML;
      * 
      * @return string
      */
-    public static function moreViewed()
+    public static function mostViewed()
     {
         $content = null;
-        $announces = Announce::getMoreViewed(10);
+        $announces = Announce::getMostViewed(10);
 
         if (empty($announces)) {
             $content = Snippet::noResult();
@@ -144,22 +147,6 @@ HTML;
         }
 
         return Snippet::listingAnnouncesSection("Postés récemment", $content);
-    }
-
-    /**
-     * Permet de filtrer les announces.
-     * 
-     * @return string
-     * 
-     * @return string
-     */
-    private function announceFilter()
-    {
-        return <<<HTML
-        <div class="product-filter">
-            {$this->changeViewButton()}
-        </div>
-HTML;
     }
 
     /**
@@ -806,8 +793,8 @@ HTML;
         return <<<HTML
         <div class="{$responsiveDesignClass}">
             <div class="featured-box">
-                {$this->announceCardImg()}
-                {$this->announceCardContent()}
+                {$this->cardImg()}
+                {$this->cardContent()}
             </div>
         </div>
 HTML;
@@ -822,12 +809,8 @@ HTML;
         return <<<HTML
         <div class="item">
             <div class="product-item">
-                <div class="carousel-thumb">
-                    <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Image annonce {$this->announce->getTitle()}">
-                    <div class="overlay">
-                    </div>
-                </div>
-                <div class="product-content pb-3">
+                {$this->cardImg(false)}
+                <div class="px-3 pb-3">
                     <h3 class="product-title"><a href="{$this->announce->getLink()}">{$this->announce->getTitle()}</a></h3>
                     {$this->showViews()}
                 </div>
@@ -841,16 +824,22 @@ HTML;
      * 
      * @return string
      */
-    private function announceCardImg()
+    private function cardImg(bool $heartIcon = true)
     {
+        if ($heartIcon) {
+            $heartIcon = '<div class="icon"><i class="lni-heart"></i></div>';
+        } else {
+            $heartIcon = null;
+        }
+
         return <<<HTML
         <figure>
-            <div class="icon">
-                <i class="lni-heart"></i>
-            </div>
+            {$heartIcon}
             <a href="{$this->announce->getLink()}">
-                <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="Photo de {$this->announce->getSlug()}">
+                <img class="img-fluid" src="{$this->announce->getProductImgSrc()}" alt="annonce-{$this->announce->getSlug()}">
             </a>
+            <div class="overlay">
+            </div>
         </figure>
 HTML;
     }
@@ -860,7 +849,7 @@ HTML;
      * 
      * @return string
      */
-    private function announceCardContent()
+    private function cardContent()
     {
         return <<<HTML
         <div class="feature-content">
@@ -936,15 +925,15 @@ HTML;
      */
     private function stars()
     {
-//         return <<<HTML
-//         <span class="icon-wrap">
-//             <i class="lni-star-filled"></i>
-//             <i class="lni-star-filled"></i>
-//             <i class="lni-star-filled"></i>
-//             <i class="lni-star"></i>
-//             <i class="lni-star"></i>
-//         </span>
-// HTML;
+        return <<<HTML
+        <span class="icon-wrap">
+            <i class="lni-star-filled"></i>
+            <i class="lni-star-filled"></i>
+            <i class="lni-star-filled"></i>
+            <i class="lni-star"></i>
+            <i class="lni-star"></i>
+        </span>
+HTML;
     }
 
     /**
@@ -956,7 +945,7 @@ HTML;
     {
         return <<<HTML
         <span class="count-review">
-            <span>{$this->announce->getViews()}</span> vue(s)
+            <span>{$this->announce->getViews()}</span> Vue(s)
         </span>
 HTML;
     }
@@ -1051,25 +1040,6 @@ HTML;
             <a href="{$this->announce->getManageLink('validate')}" class="btn-sm btn-success">Valider</a>
 HTML;
         }
-    }
-
-    /**
-     * Bouton qui permet de changer l'affichage des annonces.
-     * 
-     * @return string
-     */
-    private function changeViewButton()
-    {
-        return <<<HTML
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#grid-view"><i class="lni-grid"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#list-view"><i class="lni-list"></i></a>
-            </li>
-        </ul>
-HTML;
     }
 
     /**

@@ -37,7 +37,7 @@ class Navbar extends Snippet
 
     public function __construct(string $brandImgSrc = null, string $userAvatarSrc = null)
     {
-        $this->brandImgSrc = Logo::LOGOS_DIR_URL ."/logo-white.png";
+        $this->brandImgSrc = Logo::LOGOS_DIR_URL ."/logo-colored.png";
         $this->userAvatarSrc = $userAvatarSrc;
     }
 
@@ -54,7 +54,7 @@ class Navbar extends Snippet
 
         return <<<HTML
         <header id="header-wrap">
-            <nav class="navbar navbar-expand-lg fixed-top scrolling-navbar">
+            <nav class="navbar navbar-expand-lg fixed-top scrolling-navbar top-nav-collapse">
                 <div class="container">
                     <div class="navbar-header">
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -167,7 +167,7 @@ HTML;
     public function mobileNavbar()
     {
         if (User::isAuthenticated()) {
-            return (new RegisteredView())->mobileNavbarForConnectedUser(User::authenticated());
+            return self::mobileNavbarForConnectedUser(User::authenticated());
         } else {
             return $this->mobileNavbarForUnconnectedUser();
         }
@@ -203,12 +203,13 @@ HTML;
     /**
      * Menu qui sera affiché si l'utilsateur s'est authentifié.
      * 
-     * @param App\Model\User\Registered
      * @return string
      */
-    public function navbar($registered)
+    public function navbar()
     {
         if (User::isAuthenticated()) {
+
+            $registered = User::authenticated();
 
             $administrationLink = User::authenticated()->isAdministrator()
                 ? '<a class="dropdown-item" href="administration/annonces"><i class="lni-dashboard"></i> Administration</a>'
@@ -218,6 +219,29 @@ HTML;
             {$administrationLink}
             <a class="dropdown-item" href="{$registered->getProfileLink()}/posts"><i class="lni-dashboard"></i> Mes annonces</a>
             <a class="dropdown-item" href="sign-out"><i class="lni-close"></i> Déconnexion</a>
+HTML;
+        }
+    }
+
+    /**
+     * Affiche le menu dans la version mobile pour un utilisateur connecté.
+     * 
+     * @return string
+     */
+    public static function mobileNavbarForConnectedUser()
+    {
+        if (User::authenticated()) {
+            $registered = User::authenticated();
+            return <<<HTML
+            <li><a href="/">Accueil</a></li>
+            <li>
+                <a>Mon compte</a>
+                <ul class="dropdown">
+                    <li><a href="{$registered->getProfileLink()}"><i class="lni-home"></i> Mon profil</a></li>
+                    <li><a href="{$registered->getProfileLink()}/posts"><i class="lni-wallet"></i> Mes annonces</a></li>
+                    <li><a href="sign-out"><i class="lni-close"></i> Déconnexion</a></li>
+                </ul>
+            </li>
 HTML;
         }
     }

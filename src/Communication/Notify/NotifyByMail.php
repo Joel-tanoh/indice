@@ -2,8 +2,7 @@
 
 namespace App\Communication\Notify;
 
-use App\Communication\Email;
-use App\Model\Model;
+use App\Communication\MailSender;
 use App\Model\User\Administrator;
 
 /**
@@ -21,7 +20,7 @@ class NotifyByMail extends Notify
      */
     public static function administrators(string $subject, string $content)
     {
-        if ((new Email(
+        if ((new MailSender(
                 Administrator::getEmailAddresses(),
                 $subject,
                 $content
@@ -51,7 +50,7 @@ class NotifyByMail extends Notify
      */
     public static function users($emailAddresses, string $subject, string $content)
     {
-        if ((new Email($emailAddresses, $subject, $content))->send()) {
+        if ((new MailSender($emailAddresses, $subject, $content))->send()) {
             return true;
         }
     }
@@ -68,12 +67,7 @@ class NotifyByMail extends Notify
      */
     public static function user(string $emailAddress, string $subject, string $content)
     {
-        if ((new Email(
-                $emailAddress,
-                $subject,
-                $content
-            ))->send()
-        ) {
+        if ((new MailSender($emailAddress, $subject, $content))->send()) {
             return true;
         }
     }

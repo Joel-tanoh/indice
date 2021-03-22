@@ -43,7 +43,7 @@ HTML;
      */
     public function read()
     {
-        return parent::heroArea2WithAdvertisingTemplate((new AnnounceView())->show($this->category->getAnnounces("validated"), "Les annonces de la catégorie " . $this->category->getTitle()));
+        return parent::sliderWithTopAdvertisingTemplate((new AnnounceView())->show($this->category->getAnnounces("validated"), "Catégorie : " . $this->category->getTitle()));
     }
 
     /**
@@ -69,9 +69,12 @@ HTML;
         }
 
         return <<<HTML
-        <div id="categories-icon-slider" class="owl-carousel owl-theme py-4">
-            {$content}
-        </div>
+        <section>
+            <h1 class="section-title">LES CATEGORIES</h1>
+            <div id="categories-icon-slider" class="owl-carousel owl-theme">
+                {$content}
+            </div>
+        </section>
 HTML;
     }
 

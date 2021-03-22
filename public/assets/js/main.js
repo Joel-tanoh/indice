@@ -11,14 +11,13 @@
   /* Sticky Nav
     ========================================================*/
     $(window).on('scroll', function() {
-        if ($(window).scrollTop() > 100) {
-			$('.scrolling-navbar').addClass('top-nav-collapse');
-			$('#logo').attr('src', 'assets/img/logo/logo-colored.png');
-
-        } else {
-			$('.scrolling-navbar').removeClass('top-nav-collapse');
-			$('#logo').attr('src', 'assets/img/logo/logo-white.png');
-		}
+      if ($(window).scrollTop() > 100) {
+        // $('.scrolling-navbar').addClass('top-nav-collapse');
+        // $('#logo').attr('src', 'assets/img/logo/logo-colored.png');
+      } else {
+        // $('.scrolling-navbar').removeClass('top-nav-collapse');
+        // $('#logo').attr('src', 'assets/img/logo/logo-white.png');
+      }
     });
 
   /* slicknav mobile menu active 
@@ -268,7 +267,7 @@
         }
       });
 
-      /* Hide or show someonelse section when user is posting announcement
+      /* Hide or show someonelse section on post announce view
       ====================================================================*/
       $('#tg-sameuser').click(function () {
         $('#someone_else').hide(500);
@@ -281,11 +280,9 @@
       /** For Slider of Advertising
       ================================= */
       let index1 = 0;
-      let index2 = 0;
       let index3 = 0;
       topSlider();
       rightSlider();
-      leftSlider();
 
       /**
        * Créer un effet de Slide pour la barre en haut.
@@ -307,30 +304,7 @@
           }
 
           slides[index1 - 1].style.display = "block";
-          setTimeout(topSlider, 10000);
-        }
-      }
-
-      /**
-       * Créer un effet de Slide pour la barre à gauche.
-       */
-      function leftSlider() {
-        let i;
-        // On récupère les slides
-        let slides = document.querySelectorAll(".advertising.left .slide");
-
-        if (slides.length !== 0) {
-          // On parcours le tableau des slides
-          for(i = 0; i < slides.length; i++) { // On cache les images
-            slides[i].style.display = "none";
-          }
-  
-          index2 = index2 + 1;
-          if (index2 > slides.length) {
-            index2 = 1;
-          }
-          slides[index2 - 1].style.display = "block";
-          setTimeout(leftSlider, 10000);
+          setTimeout(topSlider, 2000);
         }
       }
 
@@ -354,31 +328,7 @@
           }
   
           slides[index3 - 1].style.display = "block";
-          setTimeout(rightSlider, 10000);
-        }
-      }
-
-      /**
-       * Crée un effet de slide pour les deux cotés.
-       */
-      function bothSideSlider() {
-        let i;
-        // On récupère les slides
-        let slides = document.querySelectorAll(".advertising.side .slide");
-
-        if (slides.length !== 0) {
-          // On parcours le tableau des slides
-          for(i = 0; i < slides.length; i++) { // On cache les images
-            slides[i].style.display = "none";
-          }
-  
-          index = index+1;
-          if (index > slides.length) {
-            index = 1;
-          }
-
-          slides[index-1].style.display = "block";
-          setTimeout(bothSideSlider, 10000);
+          setTimeout(rightSlider, 2000);
         }
       }
 
@@ -441,7 +391,7 @@
       })();
 
       /** For showing uploaded Img infos when user is posting an announce.
-      ================================= */
+      ====================================================================*/
       (function(){
          
         // Selecting label zone
@@ -490,6 +440,6 @@
 
       })();
 
-  });      
+  });
 
 }(jQuery));

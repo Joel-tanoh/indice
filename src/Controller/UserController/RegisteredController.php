@@ -6,21 +6,25 @@ use App\Action\Action;
 use App\Auth\Connexion;
 use App\Auth\Cookie;
 use App\Auth\Session;
+use App\Communication\MailContentManager;
 use App\Communication\Notify\NotifyByHTML;
+use App\Communication\Notify\NotifyByMail;
 use App\Controller\UserController\AdministratorController;
 use App\Controller\AnnounceController;
-use App\Model\Announce;
+use App\Model\Post\Announce;
 use App\Model\Category;
 use App\Model\Model;
 use App\Model\User\Registered;
 use App\Model\User\User;
 use App\Model\User\Visitor;
 use App\Utility\Utility;
+use App\Utility\Validator;
 use App\View\Model\AnnounceView;
 use App\View\Model\User\AdministratorView;
 use App\View\Model\User\RegisteredView;
 use App\View\Model\User\UserView;
 use App\View\Page\Page;
+use App\View\View;
 use Exception;
 
 class RegisteredController extends VisitorController
@@ -31,8 +35,7 @@ class RegisteredController extends VisitorController
     public static function signIn()
     {
         if (User::isAuthenticated()) {
-            $registered = User::authenticated();
-            Utility::redirect($registered->getProfileLink() . "/posts");
+            Utility::redirect(User::authenticated()->getProfileLink() . "/posts");
         }
 
         $error = null;
@@ -43,7 +46,7 @@ class RegisteredController extends VisitorController
             $connexion->execute();
 
             if ($connexion->getError()) {
-                $error = (new NotifyByHTML())->error($connexion->getError(), "app-alert-danger mb-3");
+                $error = NotifyByHTML::error($connexion->getError(), "app-alert-danger mb-3");
             } else {
 
                 (new Visitor(Session::getVisitor()))->identify($_POST["email_address"]);
@@ -63,8 +66,8 @@ class RegisteredController extends VisitorController
             }
         }
 
-        $page = new Page("L'indice | Je m'identifie", (new UserView())->signIn($error));
-        $page->setDescription("");
+        $page = new Page("Je m'identifie &#149; L'indice", (new UserView())->signIn($error));
+        $page->setDescription("Connecter vous et accéder à de nombreuses annonces, des détails époustouflants, des articles, des posts repondant à vos besoins.");
         $page->show();
     }
 
@@ -74,14 +77,32 @@ class RegisteredController extends VisitorController
     public static function post()
     {
         User::askToAuthenticate("/sign-in");
+
+        $page = new Page;
         
-        $message = null;
         if (Action::dataPosted()) {
-            $message = AnnounceController::create();
+            $result = AnnounceController::create();
+
+            if ($result["resultType"] === false) {
+                $page->setMetatitle("Poster une annonce &#149; L'indice");
+                $page->setView((new AnnounceView())->create($result["message"]));
+            } else {
+                $page->setMetatitle("Votre annonce a été créée avec succès &#149; L'indice");
+                $page->setView(
+                    View::success(
+                        "Annonce créée avec succès"
+                        , "L'annonce a été créée avec succès, Merci de nous faire confiance pour vos annonces."
+                        , "Mes annonces"
+                        , User::authenticated()->getProfileLink() . "/posts"
+                        , "Succès de la création de l'annonce"
+                    )
+                );
+            }
+        } else {
+            $page->setMetatitle("Poster une annonce &#149; L'indice");
+            $page->setView((new AnnounceView())->create());
         }
 
-        $page = new Page("L'indice | Poster une annonce", (new AnnounceView())->create($message));
-        $page->setDescription("");
         $page->show();
     }
 
@@ -98,7 +119,7 @@ class RegisteredController extends VisitorController
             && Category::valueIssetInDB("slug", $params[1], Category::TABLE_NAME)
             && Announce::valueIssetInDB("slug", $params[2], Announce::TABLE_NAME)
         ) {
-            $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Announce");
+            $announce = Announce::getBySlug($params[2], Announce::TABLE_NAME, "App\Model\Post\Announce");
             $user = $announce->getOwner();
 
             if ($announce->hasOwner(User::authenticated()) || User::authenticated()->isAdministrator()) {
@@ -106,15 +127,15 @@ class RegisteredController extends VisitorController
                 switch ($params[3]) {
 
                     case "update" :
-                        AnnounceController::update($params);
+                        AnnounceController::update($announce);
                         break;
 
                     case "validate" :
-                        AnnounceController::validateAnnounce($params);
+                        AnnounceController::validateAnnounce($announce);
                         break;
 
                     case "suspend" :
-                        AnnounceController::suspendAnnounce($params);
+                        AnnounceController::suspendAnnounce($announce);
                         break;
 
                     case "comment" :
@@ -152,7 +173,7 @@ class RegisteredController extends VisitorController
             $view = (new RegisteredView(User::authenticated()))->administrationIndex();
         }
         
-        $page = new Page("L'indice | " . User::authenticated()->getFullName() . " - Administration", $view);
+        $page = new Page("Administration - " . User::authenticated()->getFullName() . " &#149; L'indice", $view);
         $page->show();
     }
 
@@ -167,10 +188,10 @@ class RegisteredController extends VisitorController
         $user = Registered::getByPseudo($params[3]); // $params[3] = pseudo
 
         if (User::authenticated()->getPseudo() === $user->getPseudo()) {
-            $page->setMetatitle("L'indice | Administration - " . $user->getFullName() . " - Mon profil");
+            $page->setMetatitle("Administration | Profil " . $user->getFullName() . " &#149; L'indice");
             $view = (new RegisteredView($user))->myProfile();
         } elseif (User::authenticated()->isAdministrator()) {
-            $page->setMetatitle("L'indice | Administration - " . $user->getFullName() . " - Profil");
+            $page->setMetatitle("Administration | Profil " . $user->getFullName() . " &#149; L'indice");
             $view = (new AdministratorView(User::authenticated()))->readUserProfile($user);
         } else {
             Utility::redirect($user->getProfileLink());
@@ -207,7 +228,7 @@ class RegisteredController extends VisitorController
 
             $title = User::authenticated()->getPseudo() === $user->getPseudo() ? $user->getFullName() . " - Mes annonces" : "Les annonces de " . $user->getFullName();
 
-            $page->setMetatitle("L'indice | Administration - " . $title);
+            $page->setMetatitle("Administration | " . $title . " &#149; L'indice");
             $page->setView(
                 (new RegisteredView($user))->dashboard($announces, $title, $user->getFullName() . " / Annonces")
             );
@@ -261,4 +282,49 @@ class RegisteredController extends VisitorController
     {
         Registered::signOut();
     }
+
+    /**
+     * Controller de mot de passe oublié.
+     */
+    public static function forgotPassword()
+    {
+        $error = null;
+
+        if (Action::dataPosted()) {
+            $validate = new Validator;
+            $validate->email("email_address", $_POST["email_address"]);
+
+            if ($validate->noErrors() && Registered::valueIssetInDB("email_address", $_POST["email_address"], Registered::TABLE_NAME)) {
+                $newPwd = Utility::generateCode(8);
+                $user = new Registered($_POST["email_address"]);
+
+                if ($user->set("password", $newPwd, "id", $user->getId())) {
+                    NotifyByMail::registered($_POST["email_address"], "Nouveau mot de passe", MailContentManager::passwordChanged($user, $newPwd));
+                    $metaTitle = "Mot de passe envoyé avec succès";
+                    $view = View::success(
+                        "Mot de passe envoyé avec succès !",
+                        "Nous vous avons envoyé votre nouveau mot de passe par email, vous devriez le recevoir dans quelques instants.",
+                        "Page de connexion",
+                        "sign-in",
+                        "Modification du mot de passe"
+                    );
+                } else {
+                    $error = (new NotifyByHTML)->toast("Nous avons rencontré un soucis lors de la modification du mot de passe, veuillez réessayer ultérieurement.", "danger");
+                    $metaTitle = "Mot de passe oublié";
+                    $view = UserView::forgotPassword();
+                }  
+            } else {
+                $error = (new NotifyByHTML)->errors($validate->getErrors());
+                $metaTitle = "Mot de passe oublié";
+                $view = UserView::forgotPassword($error);
+            }
+        } else {
+            $metaTitle = "Mot de passe oublié";
+            $view = UserView::forgotPassword();
+        }
+
+        $page = new Page($metaTitle . " &#149; L'indice", $view);
+        $page->show();
+    }
+
 }

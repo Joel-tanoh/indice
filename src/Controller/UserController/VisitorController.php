@@ -2,7 +2,7 @@
 
 namespace App\Controller\UserController;
 
-use App\Communication\Email;
+use App\Communication\MailSender;
 use App\Communication\Newsletter;
 use App\Utility\Utility;
 use App\Utility\Validator;
@@ -27,12 +27,12 @@ class VisitorController extends UserController
         if (!$validator->getErrors()) {
             if (Newsletter::register($_POST["email_address"])) {
 
-                $email = new Email(
+                $email = new MailSender(
                     $_POST["email_address"], "Bienvenue sur L'indice.com", (new NewsletterView)->welcomeMessage()
                 );
                 $email->send();
 
-                $page->setMetaTitle("L'indice | Abonnement à la Newsletter Réussie");
+                $page->setMetaTitle("Abonnement à la Newsletter Réussie &#149; L'indice");
                 $page->setView(
                     View::success(
                         "Félicitations !",
@@ -44,7 +44,7 @@ class VisitorController extends UserController
                 );
                 $page->show();
             } else {
-                $page->setMetaTitle("L'indice | Echec de l'abonnement à la Newsletter");
+                $page->setMetaTitle("Echec de l'abonnement à la Newsletter &#149; L'indice");
                 $page->setView(
                     View::success(
                         "Oup's !", 

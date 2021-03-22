@@ -15,7 +15,6 @@
 
 namespace App\Communication;
 
-use App\File\Image\Logo;
 use Exception;
 
 /**
@@ -30,7 +29,7 @@ use Exception;
  * @version  "Release: <package_version>"
  * @link     Link
  */
-class Email
+class MailSender
 {
     /** Le ou les destinataires du mail */
     private $to = [];
@@ -54,7 +53,7 @@ class Email
     private $separator;
 
     /**
-     * Constructeur de EmailManager
+     * Constructeur de MailSender
      * 
      * @param string|array $destinataire Ceux à qui on envoit le mail.
      * @param string       $subject      Le sujet du mail.
@@ -132,62 +131,6 @@ class Email
         } elseif (is_int($this->to)) {
             throw new Exception("Une erreur s'est produite lors de l'envoi de mail.");
         }
-    }
-
-    /**
-     * Retourne le contenu du mail.
-     * 
-     * @return string
-     */
-    public static function content(string $content)
-    {
-        $head = self::appMailHeader();
-        $foot = self::appEmailFooter();
-
-        return <<<HTML
-        <section style="text-align:justify; width:80%; background-color:white">
-            {$head}
-            <div style="text-align:justify; padding:1.5rem">
-                {$content}
-            </div>
-            {$foot}
-        </section>
-HTML;
-    }
-
-    /**
-     * Dans l'email qu'on envoit aux users, cette partie représente
-     * l'entente non variable du mail avec le logo, et d' autres infos.
-     * 
-     * @return string
-     */
-    public static function appMailHeader()
-    {
-        $logoSrc =  Logo::LOGOS_DIR_URL . "/logo-colored.png";
-
-        return <<<HTML
-        <section style="background-color:#110808; color:white; padding:1.5rem">
-            <img src="{$logoSrc}" alt="Logo de L'indice">
-            <h2>Bienvenue sur L'indice</h2>
-        </section>
-HTML;
-    }
-    
-    /**
-     * Dans l'email qu'on envoit aux users, cette partie représente
-     * le pied non variable du mail avec certaines infos.
-     * 
-     * @return string
-     */
-    public static function appEmailFooter()
-    {
-        $appUrl = APP_URL;
-
-        return <<<HTML
-        <section style="background-color:#110808; color:white; padding:1.5rem">
-            Aller sur <a href="{$appUrl}">Indice.com</a>
-        </section>
-HTML;
     }
 
 }

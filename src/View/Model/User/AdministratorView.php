@@ -2,8 +2,10 @@
 
 namespace App\View\Model\User;
 
+use App\Model\User\Registered;
 use App\View\Snippet;
 use App\Model\User\User;
+use App\View\Page\SideBar;
 
 /**
  * Classe de gestion de la vue pour l'administrateur.
@@ -39,7 +41,7 @@ HTML;
      */
     public function readUsers(array $users)
     {
-        return parent::administrationTemplate((new UserView())->usersTable($users), "Les utilisateurs", "Administration / Utilisateurs");
+        return parent::administrationTemplate((new RegisteredView())->list($users), "Les utilisateurs", "Administration / Utilisateurs");
     }
     
     /**
@@ -51,6 +53,7 @@ HTML;
     public function readUserProfile(\App\Model\User\Registered $user)
     {
         $snippet = new Snippet;
+        $sidebar = new Sidebar;
 
         return <<<HTML
         {$snippet->pageHeader($user->getFullName(), "Utilisateurs / ". $user->getFullName())}
@@ -58,34 +61,13 @@ HTML;
         <div id="content" class="my-3">
             <div class="container-fluid">
                 <div class="row">
-                    {$this->sidebarNav(User::authenticated())}
+                    {$sidebar->sidebarNav()}
                     <div class="col-sm-12 col-md-8 col-lg-9">
                         Profil de {$user->getFullName()}
                     </div>
                 </div>
             </div>
         </div>
-HTML;
-    }
-
-    /**
-     * Affiche le menu du dashboard de l'utilisateur.
-     * 
-     * @param App\Model\User\Administrator $administrator 
-     * @return string
-     */
-    public function sidebarLinks($administrator) : string
-    {
-        return <<<HTML
-        <nav class="navdashboard">
-            <ul>
-                {$this->defineSidebarLink("Voir toutes les annonces", "/administration/annonces", "lni-pencil-alt")}
-                {$this->defineSidebarLink("Gérer les utilisateurs", "/administration/users", "lni-users")}
-                {$this->defineSidebarLink("Ajouter un compte", "/register", "lni-user")}
-                {$this->defineSidebarLink("Mes annonces", $administrator->getProfileLink(). "/posts", "lni-dashboard")}
-                {$this->defineSidebarLink("Déconnexion", "sign-out", "lni-enter")}
-            </ul>
-        </nav>
 HTML;
     }
 

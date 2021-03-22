@@ -56,6 +56,8 @@ class File
 
     const FILES_DIR_URL = APP_URL . "/files";
 
+    use FileFinder;
+
     /**
      * Constructeur d'un fichier.
      * 
@@ -125,5 +127,5 @@ class File
     {
         return $this->date;
     }
-    
+
 }

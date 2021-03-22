@@ -3,7 +3,7 @@
 namespace App\Engine;
 
 use App\Action\Action;
-use App\Model\Announce;
+use App\Model\Post\Announce;
 
 /**
  * Moteur de recherche de l'application.
