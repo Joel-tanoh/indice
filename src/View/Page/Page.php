@@ -15,7 +15,6 @@
 
 namespace App\View\Page;
 
-use App\Communication\SocialNetwork\SocialNetwork;
 use App\File\Image\Logo;
 use App\View\View;
 use App\View\Page\Template;
@@ -41,8 +40,6 @@ class Page extends View
     private $jsFiles = [];
 
     /**
-     * Permet de créer une page.
-     * 
      * @param string   $metaTitle   Le titre qui sera affiché dans la page.
      * @param string   $view        Le contenu de la page qui sera affiché dans
      *                              la page.
@@ -79,11 +76,11 @@ class Page extends View
         {$this->debutDePage("fr")}
         <head>
             {$this->metaData()}
-            {$this->appCss()}
+            {$this->returnCssTags()}
         </head>
         <body>
             {$this->template()}
-            {$this->appJs()}
+            {$this->returnJsTags()}
         </body>
         </html>
 HTML;
@@ -100,13 +97,13 @@ HTML;
         $footer = new Footer();
         $template = new Template();
 
-        if ($this->navbarState == true && $this->footerState == true) {
+        if ($this->navbarState && $this->footerState) {
             return $template->navbarAndContentAndFooter(
                 $navbar->get(), $this->view, $footer->get()
             );
-        } elseif ($this->navbarState == true && $this->footerState == false) {
+        } elseif ($this->navbarState && !$this->footerState) {
             return $template->navbarAndContent($navbar->get(), $this->view);
-        } elseif ($this->navbarState == false && $this->footerState == true) {
+        } elseif (!$this->navbarState && $this->footerState) {
             return $template->contentAndFooter($this->view, $footer->get());
         } else {
             return $this->view;
@@ -222,16 +219,16 @@ HTML;
      *  
      * @return string
      */
-    private function appCss()
+    private function returnCssTags()
     {
-        $css = null;
-        $this->cssFiles();
+        $cssTagsList = null;
+        $this->cssFilesList();
 
         foreach($this->cssFiles as $cssFile) {
-            $css .= $this->cssFile($cssFile["href"]);
+            $cssTagsList .= $this->cssTag($cssFile["href"]);
         }
 
-        return $css;
+        return $cssTagsList;
     }
 
     /**
@@ -239,39 +236,32 @@ HTML;
      * 
      * @return string
      */
-    private function appJs()
+    private function returnJsTags()
     {
-        $js = null;
-        $this->jsFiles();
-
+        $jsTagsList = null;
+        $this->jsFilesList();
         foreach($this->jsFiles as $jsFile) {
-            $js .= $this->jsFile($jsFile["src"], $jsFile["async"]);
+            $jsTagsList .= $this->jsTag($jsFile["src"], $jsFile["async"]);
         }
-
-        return $js;
+        return $jsTagsList;
     }
 
     /**
-     * Retourne eles fichiers CSS utilisés sur toutes les pages.
+     * Retourne les fichiers CSS utilisés sur toutes les pages.
      * 
      * @return string
      */
-    private function cssFiles()
+    private function cssFilesList()
     {
         // Bootstrap CSS
-        // $this->addCss(ASSETS_DIR_URL."/css/bootstrap.min.css");
         $this->addCss("https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css");
         // Fontawesome
-        // $this->addCss(ASSETS_DIR_URL."/fontawesome/css/all.css");
         $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css");
         // Animate
-        // $this->addCss(ASSETS_DIR_URL."/css/animate.css");
         $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css");
         // Slicknav
-        // $this->addCss(ASSETS_DIR_URL."/css/slicknav.css");
         $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/slicknav.min.css");
         // Nivo Lightbox
-        // $this->addCss(ASSETS_DIR_URL."/css/nivo-lightbox.css");
         $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/nivo-lightbox/1.3.1/nivo-lightbox.min.css");
         // Summernote
         $this->addCss("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.css");
@@ -295,55 +285,35 @@ HTML;
      * Retourne les fichiers JS appelés sur toutes les pages.
      * @return string
      */
-    private function jsFiles()
+    private function jsFilesList()
     {
         // Jquery
         $this->addJs(ASSETS_DIR_URL."/js/jquery-min.js");
-        // $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js");
-        
         // Popper
-        // $this->addJs(ASSETS_DIR_URL."/js/popper.min.js");
         $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.8.6/umd/popper.min.js");
-        
         // Fontawesome
-        // $this->addJs(ASSETS_DIR_URL."/fontawesome/js/all.js");
-        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js");
-        
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js");    
         // Bootstrap
-        // $this->addJs(ASSETS_DIR_URL."/js/bootstrap.min.js");
-        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js");
-        
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js");       
         // WOW
-        // $this->addJs(ASSETS_DIR_URL."/js/wow.js");
-        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js");
-        
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js");      
         // Carousel
-        // $this->addJs(ASSETS_DIR_URL."/js/owl.carousel.min.js");
-        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js");
-        
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js");   
         // SlickNav
-        // $this->addJs(ASSETS_DIR_URL."/js/jquery.slicknav.js");
         $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/jquery.slicknav.min.js");
-
         // Summernote
         $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.js");
-        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-fr-FR.min.js");
-        
+        $this->addJs("https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-fr-FR.min.js");      
         // CounterUp
         $this->addJs(ASSETS_DIR_URL."/js/jquery.counterup.min.js");
-
         // Waypoints
-        $this->addJs(ASSETS_DIR_URL."/js/waypoints.min.js");
-        
+        $this->addJs(ASSETS_DIR_URL."/js/waypoints.min.js");        
         // Nivo Lightbox
-        $this->addJs(ASSETS_DIR_URL."/js/nivo-lightbox.js");
-        
+        $this->addJs(ASSETS_DIR_URL."/js/nivo-lightbox.js");       
         // Form Validator
-        $this->addJs(ASSETS_DIR_URL."/js/form-validator.min.js");
-        
+        $this->addJs(ASSETS_DIR_URL."/js/form-validator.min.js");      
         // Contact Form script
-        $this->addJs(ASSETS_DIR_URL."/js/contact-form-script.min.js");
-        
+        $this->addJs(ASSETS_DIR_URL."/js/contact-form-script.min.js");      
         // Main Js
         $this->addJs(ASSETS_DIR_URL."/js/main.js");
     }
@@ -363,13 +333,14 @@ HTML;
     /**
      * Permet d'ajouter un fichier js à cette page.
      * 
-     * @param string $jsFileUrl L'url du fichier Js.
+     * @param string $jsFileUrl      L'url du fichier Js.
+     * @param string $async          Pour dire si le fichier est uploadé de façon asynchrone ou pas.
      */
     public function addJs(string $src, string $async = null)
     {
         $this->jsFiles[] = [
             "src" => $src,
-            "async" => $async
+            "async" => $async,
         ];
     }
 
@@ -380,7 +351,7 @@ HTML;
      * 
      * @return string
      */
-    private function cssFile(string $href)
+    private function cssTag(string $href)
     {
         return <<<HTML
         <link rel="stylesheet" type="text/css" href="{$href}">
@@ -395,7 +366,7 @@ HTML;
      * 
      * @return string
      */
-    private function jsFile($jsFileUrl, string $async = null)
+    private function jsTag($jsFileUrl, string $async = null)
     {
         if (null !== $async) {
             $async = "async = " . $async;

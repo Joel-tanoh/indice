@@ -29,9 +29,9 @@ try {
     $router->get("/faq", "App\Controller\UserController\UserController@readFAQ");
     $router->get("/in-progress", "App\Controller\AppController@pageNotFound");
     $router->get("/forgot-password", "App\Controller\UserController\RegisteredController@forgotPassword");
+    $router->get("/administration", "App\Controller\UserController\AdministratorController@index");
     $router->get("/administration/users", "App\Controller\UserController\AdministratorController@readUsers");
     $router->get("/administration/annonces", "App\Controller\UserController\AdministratorController@administrateAnnounces");
-    $router->get("/test", "App\Controller\AppController@test");
     
     $router->get("/:category", "App\Controller\UserController\UserController@readCategory");
     $router->get("/:1/:2", "App\Controller\AppController@subRouter");

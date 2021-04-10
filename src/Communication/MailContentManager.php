@@ -106,4 +106,49 @@ HTML;
         return self::contentFormater($content);
     }
 
+    /**
+     * Le conteu du mail envoyé lorsqu'une annonce est supprimée.
+     * 
+     * @param \App\Model\Post\Announce $announce
+     * 
+     * @return string
+     */
+    public static function announceDeleted(\App\Model\Post\Announce $announce)
+    {
+        $content = <<<HTML
+        <p>Une announce vient a été supprimée.</p>
+        <p>Détails de l'annonce : <br>
+            Titre : {$announce->getTitle()} <br>
+            Postée par {$announce->getOwner()->getFullName()}
+            Date de création : {$announce->getCreatedAt()} <br>
+        </p>
+HTML;
+        return self::contentFormater($content);
+    }
+
+    /**
+     * Message d'accueil qui est envoyé par mail lorsque quelqu'un vient de s'inscrire sur
+     * le site.
+     * 
+     * @param \App\Model\User\Registered $user
+     * 
+     * @return string
+     */
+    public static function welcomeMessage(\App\Model\User\Registered $user)
+    {
+        $content = <<<HTML
+        <p>Hello {$user->getName()}</p>
+        <p>
+            Nous sommes heureux de vous compter parmi nos abonnés. Nous ferons le nécessaire pour vous
+            accompagner et vous fournir dans la mésure du possible ce que vous cherchez par du contenu
+            de qualités, des annonces pertinentes en relation avec vos besoins.
+        </p>
+        <p>
+            Vous recevrez régulièrement les nouvelles informations, les tendances, les annonces les plus
+            recherchées tout en espérant vous fournir du contenu en relation avec ce que vous recherchez.
+        </p>
+HTML;
+        return self::contentFormater($content);
+    }
+
 }

@@ -7,27 +7,26 @@ use App\Database\Database;
 class Connexion extends Authentication
 {
     private $credentialIndex;
+    private $credential;
     private $password;
     private $tableName;
     private $error;
 
     /**
-     * Constructeur d'une connexion.
-     * 
      * @param string $credentialIndex La clé de la valeur à utiliser pour faire
      *                                l'authentification. Cette clé(index) doit
      *                                être identique à celle à utiliser dans la base    
      *                                données. E.g = email_address, login, pseudo, etc.
      * @param string $password
-     * @param string $tableName       Le npm de la table qui contient les occurences des
+     * @param string $tableName       Le nom de la table qui contient les occurences des
      *                                utilisateurs.
      */
     public function __construct(
         string $credentialIndex,
         string $password,
-        string $dbName,
-        string $dbLogin,
-        string $dbPassword,
+        string $dbName =  DB_NAME,
+        string $dbLogin = DB_LOGIN,
+        string $dbPassword = DB_PASSWORD,
         string $tableName)
     {
         $this->credentialIndex = $credentialIndex;
@@ -58,6 +57,8 @@ class Connexion extends Authentication
             // Vérifier le mot de passe
             if (!password_verify($this->password, $result["password"])) {
                 $this->error = "L'identifiant ou le mot de passe est incorrect. Veuillez réessayer !";
+            } else {
+                $this->saveInDb();
             }
         }
     }
@@ -73,9 +74,9 @@ class Connexion extends Authentication
     }
 
     /**
-     * Permet d'enregistrer la connexion de l'utilisateur.
+     * Enregistre la connexion de l'utilisateur.
      */
-    public function save()
+    private function saveInDb()
     {
         
     }

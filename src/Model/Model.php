@@ -161,10 +161,7 @@ abstract class Model
         $req = self::connectToDb()->prepare("SELECT id FROM $tableName WHERE slug = ?");
         $req->execute([$slug]);
         $item = $req->fetch();
-
-        if ($item["id"]) {
-            return new $class($item["id"]);
-        }
+        return new $class($item["id"]);
     }
 
     /**

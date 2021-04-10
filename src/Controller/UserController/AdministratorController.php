@@ -3,9 +3,10 @@
 namespace App\Controller\UserController;
 
 use App\Action\Action;
-use App\Communication\Comment;
+use App\Communication\MailContentManager;
 use App\Communication\Notify\NotifyByMail;
 use App\Controller\UserController\RegisteredController;
+use App\Exception\PageNotFoundException;
 use App\Model\Post\Announce;
 use App\Model\User\Registered;
 use App\Model\User\User;
@@ -17,6 +18,16 @@ use Exception;
 
 abstract class AdministratorController extends RegisteredController
 {
+    /**
+     * Index de la partie administration.
+     */
+    public static function index()
+    {
+        $page = new Page("Administration &#149; L'indice", (new AdministratorView)->adminIndex());
+        $page->setDescription("Vous êtes sur la partie Administration de votre site");
+        $page->show();
+    }
+
     /**
      * Controller qui permet de gérer les annonces.
      * 
@@ -79,22 +90,38 @@ abstract class AdministratorController extends RegisteredController
      */
     public static function deleteUser(\App\Model\User\Registered $user)
     {
-        echo "Nous voulons supprimer un utilisateur";
-        dump($user);
-    }
-
-    /**
-     * Controller de suppression de plusieurs utilisateurs.
-     * @param array $params
-     * @return void
-     */
-    public static function deleteUsers(?array $params = null)
-    {
         
     }
 
     /**
+     * Controller de suppression de plusieurs utilisateurs.
+     * 
+     * @param array $params
+     * 
+     * @return void
+     */
+    public static function deleteUsers(array $params = null)
+    {
+        if (!User::authenticated()) {
+            User::askToAuthenticate();
+        } else {
+            $page = new Page;
+            
+            // 1 - Récupérer les utilisateurs à supprimer
+            // 2a - Si le tableau est vide, on revient sur la page de suppression et on affiche une notif
+            // 2b - Si le tableau n'est pas vide
+            // 3a - Si les identifiants ne sont pas dans la base de données, on revient sur la page de suppression et on affiche une notif
+            // 3b - Si les identifiants sont dans la base de données
+            // 4 - On récupère le nombre d'utilisateurs
+            // 5 - On les supprime
+            // 6a - Si la suppression a marché, on affiche la page de succès
+            // 6b - Si la suppression n'a pas marché, revient sur la page de suppression et n affiche une notif
+        }
+    }
+
+    /**
      * Permet à un administrateur de commenter une annonce.
+     * 
      * @param \App\Model\Post\Announce $announce
      */
     public static function commentAnnounce(\App\Model\Post\Announce $announce)
@@ -107,23 +134,35 @@ abstract class AdministratorController extends RegisteredController
                 NotifyByMail::user(
                     $announce->getOwner()->getEmailAddress(), 
                     "L'indice, une nouvelle suggestion sur votre annonce.",
-                    Comment::emailContent($announce->getTitle(), trim($_POST["comment"]), $announce->getLink("all"))
+                    MailContentManager::commentReceived($announce->getTitle(), trim($_POST["comment"]), $announce->getLink("all"))
                 );
                 
                 $page->setMetatitle("Suggestion envoyé avec succès &#149; L'indice");
                 $page->setView(
                     View::success(
                         "Suggestion envoyée avec succès",
-                        "La suggestion a été postée avec succès, l'utilisateur sera informé. Merci !",
+                        "La suggestion a été envoyée à l'utilisateur avec succès !",
                         "Retour",
                         $announce->getLink(),
-                        "Suggestion"
+                        "Suggestion envoyée"
+                    )
+                );
+                $page->show();
+            } else {
+                $page->setMetatitle("Echec de l'envoi de la suggestion &#149; L'indice");
+                $page->setView(
+                    View::failed(
+                        "Echec lors de l'envoi de la suggestion",
+                        "Nous avons rencontré une erreur lors de l'envoi de la suggestion, veuillez réessayer ultérieurement.",
+                        "Retour",
+                        $announce->getLink(),
+                        "Echec de l'envoi de la suggestion"
                     )
                 );
                 $page->show();
             }
         } else {
-            Utility::redirect($_SERVER["HTTP_REFERER"]);
+            throw new PageNotFoundException("Oup's ! Nous n'avons pas pu repondre à votre requête, veuillez réessayer ultérieurement.");
         }
     }
 

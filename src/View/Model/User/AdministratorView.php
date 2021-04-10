@@ -2,10 +2,7 @@
 
 namespace App\View\Model\User;
 
-use App\Model\User\Registered;
-use App\View\Snippet;
-use App\Model\User\User;
-use App\View\Page\SideBar;
+use App\Admin\Dashboard\DashboardView;
 
 /**
  * Classe de gestion de la vue pour l'administrateur.
@@ -27,11 +24,21 @@ class AdministratorView extends RegisteredView
      * 
      * @return string
      */
-    public function administrationIndex()
+    public function adminIndex()
     {
-        return <<<HTML
-
+        $visitorsOnlineBox = DashboardView::showvisitorsOnline();
+        $currentDayVisitorsNumberBox = DashboardView::showCurrentDayVisitorsNumber();
+        $allVisitorsNumber = DashboardView::showAllVisitorsNumber();
+        
+        $content = <<<HTML
+        <h1 class="mb-4">Tableau de Bord</h1>
+        <div class="row">
+            {$visitorsOnlineBox}
+            {$currentDayVisitorsNumberBox}
+            {$allVisitorsNumber}
+        <div>
 HTML;
+        return parent::administrationTemplate($content, "Administration", "Administration");
     }
 
     /**
@@ -52,23 +59,11 @@ HTML;
      */
     public function readUserProfile(\App\Model\User\Registered $user)
     {
-        $snippet = new Snippet;
-        $sidebar = new Sidebar;
-
-        return <<<HTML
-        {$snippet->pageHeader($user->getFullName(), "Utilisateurs / ". $user->getFullName())}
-
-        <div id="content" class="my-3">
-            <div class="container-fluid">
-                <div class="row">
-                    {$sidebar->sidebarNav()}
-                    <div class="col-sm-12 col-md-8 col-lg-9">
-                        Profil de {$user->getFullName()}
-                    </div>
-                </div>
-            </div>
-        </div>
+        $content = <<<HTML
+        <h4>{$user->getFullName()}</h4>
+        <div></div>
 HTML;
+        return parent::administrationTemplate($content, "Profil - ". $user->getFullName(), "Profil / ". $user->getFullName());
     }
 
     /**
@@ -78,8 +73,7 @@ HTML;
      */
     public static function readAnnounces(array $announces)
     {
-        $administratorView = new self();
-        return $administratorView->dashboard($announces, "Toutes les annonces", "Gestion des annonces");
+        return (new self())->dashboard($announces, "Toutes les annonces", "Gestion des annonces");
     }
 
     /**

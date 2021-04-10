@@ -355,4 +355,12 @@ class Database
         }
     }
 
+    /**
+     * Crée une table si elle n'existe pas.
+     */
+    public function createTable()
+    {
+
+    }
+
 }

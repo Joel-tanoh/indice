@@ -135,9 +135,4 @@ abstract class AppController
         $page->show();
     }
 
-    public static function test()
-    {
-        $page = new Page("test", View::test(), null, false, false);
-        $page->show();
-    }
 }

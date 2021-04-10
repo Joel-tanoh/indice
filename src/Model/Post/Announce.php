@@ -104,7 +104,7 @@ class Announce extends Model
     /**
      * Retourne la catégorie de l'annonce.
      * 
-     * @return Category
+     * @return \App\Model\Category
      */
     public function getCategory()
     {
@@ -134,7 +134,7 @@ class Announce extends Model
     /**
      * Retourne l'adresse email de l'utilisateur à joindre.
      * 
-     * @return string|null
+     * @return string
      */
     public function getUserToJoin()
     {

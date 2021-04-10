@@ -8,13 +8,14 @@ use App\Auth\Cookie;
 use App\File\Image\Image;
 use App\Model\User\User;
 use App\Auth\Session;
+use App\Communication\MailContentManager;
 use App\Communication\MailSender;
 use App\Communication\Newsletter;
 use App\Utility\Utility;
 use App\Utility\Validator;
 use App\View\Model\User\UserView;
-use App\View\Model\User\RegisteredView;
 use App\Communication\Notify\NotifyByHTML;
+use App\Communication\SocialNetwork\SocialNetwork;
 use App\Controller\AppController;
 use App\Engine\SearchEngine;
 use App\Exception\PageNotFoundException;
@@ -47,7 +48,7 @@ abstract class UserController extends AppController
             if ($announce->hasCategory($category) && $announce->isValidated() || (($announce->isPending() || $announce->isSuspended()) && User::isAuthenticated())) {
                 $announce->incrementView();
                 $page = new Page($announce->getCategory()->getTitle() . " &#155 " . $announce->getTitle(). " &#149; L'indice", (new AnnounceView($announce))->read());
-                $page->addJs("https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons", "async");
+                $page->addJs(SocialNetwork::getShareThisId(), "async");
                 $page->show();
 
             } else {
@@ -124,13 +125,6 @@ abstract class UserController extends AppController
                 $validate->password("password", $_POST["password"], $_POST["confirm_password"]);
             }
 
-            // Validation du numéro de téléphone
-            // if (empty($_POST["phone_number"])) {
-            //     $validate->addError("phone_number", "Veuillez entrer un numéro svp !");
-            // } else {
-            //     $validate->phoneNumber("phone_number", $_POST["phone_number"], "Veuillez entrer un numéro valide svp !");
-            // }
-
             // Validation de l'avatar
             if (Create::fileIsUploaded("avatar")) {
                 $validate->fileExtensions("avatar", $_FILES["avatar"]["type"], ["image/png", "image/jpg"], "Veuillez charger une image svp !");
@@ -145,12 +139,13 @@ abstract class UserController extends AppController
                     Cookie::setRegistered($_POST["email_address"]);
 
                     Newsletter::register($_POST["email_address"]);
+
+                    $user = new Registered($_POST["email_address"]);
                     $email = new MailSender(
                         $_POST["email_address"],
                         "Bienvenue sur L'indice.com",
-                        (new RegisteredView(User::authenticated()))->welcomeMessage()
+                        MailContentManager::welcomeMessage($user)
                     );
-                    
                     $email->send();
 
                     Utility::redirect(User::authenticated()->getProfileLink());
@@ -193,9 +188,15 @@ abstract class UserController extends AppController
     {
         if (Category::isCategorySlug($params["category"])) {
             $category = Category::getBySlug($params["category"], Category::TABLE_NAME, "App\Model\Category");
-            $page = new Page($category->getTitle() . " &#155; Les meilleures annonces &#149; L'indice", (new CategoryView($category))->read());
-            $page->setDescription($category->getDescription());
-            $page->show();
+
+            if ($category) {
+                $page = new Page($category->getTitle() . " &#155; Les meilleures annonces &#149; L'indice", (new CategoryView($category))->read());
+                $page->setDescription($category->getDescription());
+                $page->show();
+            } else {
+                throw new PageNotFoundException("Oup's ! Nous n'avons pas pu trouver la catégorie que vous recherchiez.");
+            }
+            
         } else {
             throw new PageNotFoundException("Oup's ! Nous n'avons pas pu trouver la catégorie que vous recherchiez.");
         }
