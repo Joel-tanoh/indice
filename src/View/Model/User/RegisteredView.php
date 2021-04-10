@@ -215,29 +215,6 @@ HTML;
     }
 
     /**
-     * Message d'accueil qui est envoyé par mail lorsque quelqu'un vient de s'inscrire sur
-     * le site.
-     * 
-     * @return string
-     */
-    public function welcomeMessage()
-    {
-        $content = <<<HTML
-        <p>Salut {$this->user->getName()}</p>
-        <p>
-            Nous sommes heureux de vous compter parmi nos abonnés. Nous ferons le nécessaire pour vous
-            accompagner et vous fournir dans la mésure du possible ce que vous cherchez par du contenu
-            de qualités, des annonces pertinentes en relation avec vos besoins.
-        </p>
-        <p>
-            Vous recevrez régulièrement les nouvelles informations, les tendances, les annonces les plus
-            recherchées tout en espérant vous fournir du contenu en relation avec ce que vous recherchez.
-        </p>
-HTML;
-        return MailSender::content($content);
-    }
-
-    /**
      * Affiche l'avatar de l'utilisateur.
      * 
      * @return string

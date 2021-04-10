@@ -88,7 +88,7 @@ class Visitor extends User
             $visitor = new self(Session::getVisitor());
             $visitor->updateLastActionDate();
         } else {
-            self::register();
+            self::create();
         }
     }
 
@@ -100,9 +100,10 @@ class Visitor extends User
      */
     public function updateLastActionDate()
     {
-        $req = parent::connectToDb()->prepare("UPDATE " . self::TABLE_NAME . " set last_action_date = :last_action_date WHERE id = :id");
+        $req = parent::connectToDb()->prepare("UPDATE " . self::TABLE_NAME . " set last_action_date = :last_action_date, last_action_timestamp = :last_action_timestamp WHERE id = :id");
         $req->execute([
             "last_action_date" => date("Y-m-d H:i:s"),
+            "last_action_timestamp" => date('U'),
             "id" => $this->sessionId
         ]);
         return true;
@@ -116,7 +117,7 @@ class Visitor extends User
     public static function getAll()
     {
         $req = parent::connectToDb()->query("SELECT session_value FROM " . self::TABLE_NAME);
-        $result = $req->fetcAll();
+        $result = $req->fetchAll();
 
         $visitors = [];
         foreach ($result as $visitor) {
@@ -136,17 +137,100 @@ class Visitor extends User
     }
 
     /**
+     * Permet d'identifier le visiteur en changer son ID de visite inconnu à son arrivée
+     * par son adresse email.
+     * 
+     * @param string $sessionValue
+     * 
+     * @return bool
+     */
+    public function identify(string $sessionValue) : bool
+    {
+        $req = parent::connectToDb()->prepare("UPDATE $this->tableName SET session_value = :session_value WHERE id = :id");
+        $req->execute([
+            "session_value" => $sessionValue,
+            "id" => $this->sessionId
+        ]);
+        
+        return true;
+    }
+
+    /**
+     * Permet d'enregistrer un nouveau visiteur.
+     * 
+     * @return bool
+     */
+    private static function create()
+    {
+        do {
+            $sessionValue = Utility::generateCode();
+        } while (self::sessionValueIssetInDb($sessionValue));
+
+        if (self::saveVisitorDataInDb($sessionValue)) {
+            Session::activateVisitor($sessionValue);
+        }
+
+        return true;
+    }
+
+    /**
+     * Permet de vérifier si une instance de visite existe.
+     * 
+     * @return bool
+     */
+    private static function isset()
+    {
+        return (Session::visitorActivated() || Session::registeredActivated())
+            && (self::sessionValueIssetInDb(Session::getVisitor()) || self::sessionValueIssetInDb(Session::getRegistered()));
+    }
+
+    /**
+     * Enregistre l'id de session et la date dans la base de données.
+     * 
+     * @param string $sessionValue La valeur de la session.
+     * 
+     * @return bool
+     */
+    private static function saveVisitorDataInDb(string $sessionValue)
+    {
+        $query = "INSERT INTO " . self::TABLE_NAME . "(session_value, last_action_timestamp) VALUES(:session_value, :last_action_timestamp)";
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([
+            "session_value" => $sessionValue,
+            "last_action_timestamp" => date('U'),
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Permet de vérifier que la variable de session est enregistrée.
+     * 
+     * @param string $sessionValue
+     * @return bool
+     */
+    public static function sessionValueIssetInDb($sessionValue)
+    {
+        $req = parent::connectToDb()->prepare("SELECT COUNT(id) as counter FROM " . self::TABLE_NAME . " WHERE session_value = :session_value");
+        $req->execute([
+            "session_value" => $sessionValue
+        ]);
+
+        return (int)$req->fetch()["counter"] !== 0;
+    }
+
+    /**
      * Permet de récupérer les visiteurs en ligne.
      * 
      * @return array
      */
     public static function online()
     {
-        $query = "SELECT session_value FROM " . self::TABLE_NAME . " WHERE last_action_date >= ?";
+        $query = "SELECT session_value FROM " . self::TABLE_NAME . " WHERE last_action_timestamp >= ?";
 
         $rep = parent::connectToDb()->prepare($query);
         $rep->execute([
-            time() - (3*60)
+            time() - (5*60)
         ]);
         $result = $rep->fetchAll();
 
@@ -168,129 +252,58 @@ class Visitor extends User
     }
 
     /**
-     * Permet de mettre à jour la valeur de la l'id de session.
+     * Retourne les visiteurs selon un intervalle de date.
      * 
-     * @param string $sessionValue
-     * @return bool
+     * @param string $firstDate
+     * @param string $secondDate
+     * 
+     * @return array
      */
-    public function identify(string $sessionValue)
+    public function getVisitorsListByDateInterval(string $firstDate, string $secondDate) : array
     {
-        $req = parent::connectToDb()->prepare("UPDATE $this->tableName SET session_value = :session_value WHERE id = :id");
-        $req->execute([
-            "session_value" => $sessionValue,
-            "id" => $this->sessionId
-        ]);
-        
-        return true;
+        return [];
+    }
+
+    public static function getCurrentDayVisitorsList() : array
+    {
+        return self::getDailyVisitorsList(date('Y-m-d'));
+    }
+
+    public static function getCurrentDayVisitorsNumber() : int
+    {
+        return count(self::getDailyVisitorsList(date('Y-m-d')));
     }
 
     /**
-     * Permet d'enregister un nouveau visiteur.
+     * Retourne la liste des visiteurs selon un jour donné.
      * 
-     * @return bool
+     * @param string $date
      */
-    private static function register()
+    public static function getDailyVisitorsList(string $date) : array
     {
-        do {
-            $sessionValue = Utility::generateCode();
-        } while (self::isSaved($sessionValue));
-
-        if (self::saveInDb($sessionValue)) {
-            Session::activateVisitor($sessionValue);
-        }
-
-        return true;
-    }
-
-    /**
-     * Permet de vérifier si une instance de visite existe.
-     * 
-     * @return bool
-     */
-    private static function isset()
-    {
-        return (Session::visitorActivated() || Session::registeredActivated())
-            && (self::isSaved(Session::getVisitor()) || self::isSaved(Session::getRegistered()));
-    }
-
-    /**
-     * Enregistre l'id de session et la date dans la base de données.
-     * 
-     * @param string $sessionValue La valeur de la session.
-     * 
-     * @return bool
-     */
-    private static function saveInDb(string $sessionValue)
-    {
-        $query = "INSERT INTO " . self::TABLE_NAME . "(session_value) VALUES(:session_value)";
+        $query = "SELECT session_value FROM " . self::TABLE_NAME . " WHERE DATE(date) = :date";
         $req = parent::connectToDb()->prepare($query);
         $req->execute([
-            "session_value" => $sessionValue
+            "date" => $date
         ]);
+        $result = $req->fetchAll();
 
-        return true;
+        $dailyVisitors = [];
+        foreach($result as $v) {
+            $dailyVisitors[] = new self($v["session_value"]);
+        }
+
+        return $dailyVisitors;
     }
 
-    /**
-     * Permet de vérifier que la variable de session est enregistrée.
-     * 
-     * @param string $sessionValue
-     * @return bool
-     */
-    public static function isSaved($sessionValue)
+    public static function getMonthlyVisitorsList(string $month) : array
     {
-        $req = parent::connectToDb()->prepare("SELECT COUNT(id) as counter FROM " . self::TABLE_NAME . " WHERE session_value = :session_value");
-        $req->execute([
-            "session_value" => $sessionValue
-        ]);
-
-        return (int)$req->fetch()["counter"] !== 0;
+        return [];
     }
 
-    /**
-     * Retourne le nombre de fois que ce visiteur est venu sur le site.
-     * 
-     * @param string $beginDate
-     * @param string $endDate
-     * 
-     * @return int
-     */
-    public function getVisitNumberPerInterval(string $beginDate, string $endDate)
+    public static function getYearlyVisitorsList(string $year) : array
     {
-
-    }
-
-    /**
-     * Retourne le nombre de visite totale par jour.
-     * 
-     * @param string $date 
-     * @return int
-     */
-    public static function perDay(string $date)
-    {
-
-    }
-
-    /**
-     * Retourne le nombre de visite totale par mois.
-     * 
-     * @param string $month 
-     * @return int
-     */
-    public static function perMonth(string $month)
-    {
-
-    }
-
-    /**
-     * Retourne le nombre de visite par ans.
-     * 
-     * @param string $year
-     * @return int
-     */
-    public static function perYear(string $year)
-    {
-
+        return [];
     }
 
 }

@@ -421,6 +421,7 @@ HTML;
     {
         return <<<HTML
         <div class="ads-btn mb-2">
+            <h5>Contact : </h5>
             <a class="btn btn-common text-white btn-reply mb-2"><i class="lni-envelope"></i> {$this->announce->getUserToJoin()}</a>
             <a class="btn btn-common text-white mb-2"><i class="lni-phone-handset"></i> {$this->announce->getPhoneNumber()}</a>
         </div>
@@ -624,11 +625,11 @@ HTML;
             <div class="tg-selectgroup">
                 <span class="tg-radio">
                     <input id="tg-offre" type="radio" name="direction" value="offre" $checkOffer>
-                    <label for="tg-offre">Offre</label>
+                    <label for="tg-offre" title="Je propose un produit">Offre</label>
                 </span>
                 <span class="tg-radio">
                     <input id="tg-demande" type="radio" name="direction" value="demande" $checkAsking>
-                    <label for="tg-demande">Demande</label>
+                    <label for="tg-demande" title="J'ai besoin d'un produit">Demande</label>
                 </span>
             </div>
         </div>
@@ -660,12 +661,12 @@ HTML;
             <strong>Type :</strong>
             <div class="tg-selectgroup">
                 <span class="tg-radio">
-                    <input id="tg-particular" type="radio" name="type" value="particulier" $checkParticular>
-                    <label for="tg-particular">Particulier</label>
+                    <input id="tg-professionnal" type="radio" name="type" value="professionnel" $checkPro>
+                    <label for="tg-professionnal" title="Je poste une annonce concernant une entreprise">Professionnel</label>
                 </span>
                 <span class="tg-radio">
-                    <input id="tg-professionnal" type="radio" name="type" value="professionnel" $checkPro>
-                    <label for="tg-professionnal">Professionnel</label>
+                    <input id="tg-particular" type="radio" name="type" value="particulier" $checkParticular>
+                    <label for="tg-particular" title="Je poste une annonce ne concernant pas une entreprise">Particulier</label>
                 </span>
             </div>
         </div>

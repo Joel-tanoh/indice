@@ -113,9 +113,11 @@ abstract class AnnounceController extends AppController
     {
         $page = new Page();
 
+        $deletedAnnounce = $announce;
+
         if ($announce->delete()) {
 
-            NotifyByMail::administrators("Une annonce a été supprimée", "Une annonce a été supprimée.");
+            NotifyByMail::administrators("Une annonce a été supprimée", MailContentManager::announceDeleted($deletedAnnounce));
 
             $link = User::authenticated()->isAdministrator() ? "administration/annonces" : User::authenticated()->getProfileLink() . "/posts";
             $page->setMetatitle("Suppression effectuée avec succès &#149; L'indice");

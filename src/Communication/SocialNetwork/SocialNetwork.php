@@ -7,11 +7,9 @@ abstract class SocialNetwork
     /**
      * Retourne le script.
      */
-    public static function script()
+    public static function getShareThisId()
     {
-        return <<<HTML
-        <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=6019d0cb4ab17d001285f40d&product=inline-share-buttons" async="async"></script>
-HTML;
+        return 'https://platform-api.sharethis.com/js/sharethis.js#property=6068a0bb9269c20011a2a2ba&product=sop';
     }
 
     /**
@@ -25,4 +23,5 @@ HTML;
         <div class="sharethis-inline-share-buttons"></div>
 HTML;
     }
+
 }

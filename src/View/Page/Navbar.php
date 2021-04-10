@@ -212,7 +212,7 @@ HTML;
             $registered = User::authenticated();
 
             $administrationLink = User::authenticated()->isAdministrator()
-                ? '<a class="dropdown-item" href="administration/annonces"><i class="lni-dashboard"></i> Administration</a>'
+                ? '<a class="dropdown-item" href="administration"><i class="lni-dashboard"></i> Administration</a>'
                 : null;
 
             return <<<HTML
