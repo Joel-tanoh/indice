@@ -143,7 +143,7 @@ abstract class UserController extends AppController
                     $user = new Registered($_POST["email_address"]);
                     $email = new MailSender(
                         $_POST["email_address"],
-                        "Bienvenue sur L'indice.com",
+                        "Bienvenue sur lindice.ci",
                         MailContentManager::welcomeMessage($user)
                     );
                     $email->send();

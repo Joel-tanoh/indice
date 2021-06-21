@@ -72,7 +72,7 @@ class Navbar extends Snippet
                             </li>
                             {$categoryView->navbarList()}
                             <li>
-                                <a class="nav-link" href="annonces">Annonces</a>
+                                <a class="nav-link" href="annonces">Nos Annonces</a>
                             </li>
                         </ul>
                         {$this->navbarMenu()}
@@ -201,7 +201,7 @@ HTML;
     }
 
     /**
-     * Menu qui sera affiché si l'utilsateur s'est authentifié.
+     * Menu qui sera affiché si l'utilisateur s'est authentifié.
      * 
      * @return string
      */
@@ -232,12 +232,18 @@ HTML;
     {
         if (User::authenticated()) {
             $registered = User::authenticated();
+
+            $administrationLink = User::authenticated()->isAdministrator()
+                ? '<li><a href="administration"><i class="lni-dashboard"></i> Administration</a></li>'
+                : null;
+
             return <<<HTML
             <li><a href="/">Accueil</a></li>
+            {$administrationLink}
             <li>
                 <a>Mon compte</a>
                 <ul class="dropdown">
-                    <li><a href="{$registered->getProfileLink()}"><i class="lni-home"></i> Mon profil</a></li>
+                    <li><a href="{$registered->getProfileLink()}"><i class="lni-user"></i> Mon profil</a></li>
                     <li><a href="{$registered->getProfileLink()}/posts"><i class="lni-wallet"></i> Mes annonces</a></li>
                     <li><a href="sign-out"><i class="lni-close"></i> Déconnexion</a></li>
                 </ul>

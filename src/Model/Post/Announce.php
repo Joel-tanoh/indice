@@ -2,15 +2,17 @@
 
 namespace App\Model\Post;
 
-use App\Action\Create\Create;
 use App\Action\Create\InsertInDb;
 use App\Action\Update\UpdateDb;
 use App\Auth\Session;
+use App\Auth\Cookie;
+use App\Communication\MailContentManager;
 use App\File\Image\Image;
 use App\Database\SqlQueryFormater;
+use App\File\File;
 use App\Model\User\Registered;
 use App\Utility\Utility;
-use App\Communication\Comment;
+use App\Model\Post\Comment;
 use App\Model\Category;
 use App\Model\Model;
 
@@ -138,7 +140,7 @@ class Announce extends Model
      */
     public function getUserToJoin()
     {
-        if (null !== $this->userToJoin) {
+        if ($this->userToJoin) {
             return $this->userToJoin;
         } else {
             return $this->owner->getEmailAddress();
@@ -162,7 +164,7 @@ class Announce extends Model
      */
     public function getPhoneNumber()
     {
-        if (null !== $this->phoneNumber) {
+        if ($this->phoneNumber) {
             return $this->phoneNumber;
         } else {
             return $this->owner->getPhoneNumber();
@@ -223,7 +225,10 @@ class Announce extends Model
      */
     public function getPremiumImgSrc()
     {
-        return $this->premiumImgSrc;
+        if (file_exists(Image::PREMIUM_DIR_PATH . $this->slug . Image::EXTENSION))
+            return $this->premiumImgSrc;
+        else
+            return Image::PREMIUM_DIR_URL . "/default-img" . Image::EXTENSION;
     }
 
     /**
@@ -234,7 +239,10 @@ class Announce extends Model
      */
     public function getProductImgSrc()
     {
-        return $this->productImgSrc;
+        if (file_exists(Image::PRODUCT_DIR_PATH . $this->slug . Image::EXTENSION))
+            return $this->productImgSrc;
+        else
+            return Image::PRODUCT_DIR_URL . "/default-img" . Image::EXTENSION;
     }
     
     /**
@@ -245,7 +253,10 @@ class Announce extends Model
      */
     public function getProductInfoImgSrc()
     {
-        return $this->productInfoImgSrc;
+        if (file_exists(Image::PRODUCT_INFO_DIR_PATH . $this->slug . Image::EXTENSION))
+            return $this->productInfoImgSrc;
+        else
+            return Image::PRODUCT_INFO_DIR_URL . "/default-img" . Image::EXTENSION;
     }
 
     /**
@@ -253,13 +264,19 @@ class Announce extends Model
      * 
      * @return array
      */
-    public function getAllProductInfoImg()
+    public function getProductAllImg()
     {
-        return [
-            Image::PRODUCT_INFO_DIR_URL . "/$this->slug" . "-0" . Image::EXTENSION,
-            Image::PRODUCT_INFO_DIR_URL . "/$this->slug" . "-1" . Image::EXTENSION,
-            Image::PRODUCT_INFO_DIR_URL . "/$this->slug" . "-2" . Image::EXTENSION,
-        ];
+        if (file_exists(Image::PRODUCT_INFO_DIR_PATH . "/$this->slug" . "-0" . Image::EXTENSION)) {
+            return [
+                Image::PRODUCT_INFO_DIR_URL . "/$this->slug" . "-0" . Image::EXTENSION,
+                Image::PRODUCT_INFO_DIR_URL . "/$this->slug" . "-1" . Image::EXTENSION,
+                Image::PRODUCT_INFO_DIR_URL . "/$this->slug" . "-2" . Image::EXTENSION,
+            ];
+        } else {
+            return [
+                Image::PRODUCT_INFO_DIR_URL . "/default-img" . Image::EXTENSION,
+            ];
+        }
     }
 
     /**
@@ -366,7 +383,7 @@ class Announce extends Model
     /**
      * Retourne le dernier commentaire d'une annonce.
      * 
-     * @return \App\Communication\Comment
+     * @return \App\Model\Post\Comment
      */
     public function getLastComment()
     {
@@ -380,7 +397,7 @@ class Announce extends Model
 
         $commentId = $req->fetch()["id"];
 
-        if (null !== $commentId) {
+        if ($commentId) {
             return new Comment((int)$commentId);
         }
     }
@@ -435,33 +452,33 @@ class Announce extends Model
     {
         // Format de la requête à la base.
         $query = "SELECT id FROM " . self::TABLE_NAME;
-        if (null !== $status) {
+        if ($status) {
             $status = self::convertStatus($status);
         }
 
         // Si on passe une catégorie précise et un status précise.
-        if (null !== $idCategory && null !== $status) {
+        if ($idCategory && $status) {
             $query .= " WHERE id_category = ? AND status = ?";
             // Si on spécifie un nombre d'annonces précis
-            if (null !== $nbr) {
+            if ($nbr) {
                 $query .= " LIMIT $begining, $nbr";
             }
             $req = parent::connectToDb()->prepare($query);
             $req->execute([$idCategory, $status]);
 
-        } elseif (null !== $idCategory && null == $status) { // Si on spécifie que la catégorie
+        } elseif ($idCategory && !$status) { // Si on spécifie que la catégorie
             $query .= " WHERE id_category = ?";
             // Si on spécifie un nombre d'annonces précis
-            if (null !== $nbr) {
+            if ($nbr) {
                 $query .= " LIMIT $begining, $nbr";
             }
             $req = parent::connectToDb()->prepare($query);
             $req->execute([$idCategory]);
 
-        } elseif (null == $idCategory && null !== $status) { // Si on spécifie que la sous-catégorie
+        } elseif (!$idCategory && $status) { // Si on spécifie que la sous-catégorie
             $query .= " WHERE status = ?";
             // Si on spécifie un nombre d'annonces précis
-            if (null !== $nbr) {
+            if ($nbr) {
                 $query .= " LIMIT $begining, $nbr";
             }
             $req = parent::connectToDb()->prepare($query);
@@ -469,7 +486,7 @@ class Announce extends Model
 
         } else {
             // Si on spécifie un nombre d'annonces précis
-            if (null !== $nbr) {
+            if ($nbr) {
                 $query .= " LIMIT $begining, $nbr";
             }
             $req = parent::connectToDb()->query($query);
@@ -497,7 +514,7 @@ class Announce extends Model
     {
         $query = "SELECT id FROM " . self::TABLE_NAME . " WHERE status IN (2, 3) ORDER BY status DESC, created_at DESC";
 
-        if (null !== $nbr) {
+        if ($nbr) {
             $query .= " LIMIT 0, $nbr";
         }
 
@@ -524,7 +541,7 @@ class Announce extends Model
     {
         $query = "SELECT id FROM " . self::TABLE_NAME . " WHERE status IN (2, 3) ORDER BY views DESC";
 
-        if (null !== $nbr) {
+        if ($nbr) {
             $query .= " LIMIT 0, $nbr";
         }
 
@@ -552,38 +569,30 @@ class Announce extends Model
         $data["type"] = htmlspecialchars($_POST["type"]);
         $data["direction"] = htmlspecialchars($_POST["direction"]);
 
-        //=== Si l'user veut qu'on l'appelle pour le prix ======================/
         if (empty($_POST["price"]) && isset($_POST["price_on_call"])) {
             $data["price"] = "price_on_call";
         } else {
             $data["price"] = htmlspecialchars($_POST["price"]);
         }
 
-        //=== Si user à choisi un autre utilisateur à contacter =================/
         if (isset($_POST["usertype"]) && $_POST["usertype"] === "someone_else") {
             $data["user_to_join"] = $_POST["user_to_join"];
             $data["phone_number"] = $_POST["phone_number"];
         }
 
-        // Enregistrement de l'utilisateur qui a sa session active
-        $data["user_email_address"] = Session::getRegistered();
+        $data["user_email_address"] = Session::getRegistered() ?? Cookie::getRegistered();
 
-        // Insertion des données
         $insertion = new InsertInDb($data, self::TABLE_NAME, DB_NAME, DB_LOGIN, DB_PASSWORD);
         $insertion->run();
 
-        /** Récupérer l'annonce qui vient d'être enregistrée */
         $currentAnnounce = new self($insertion->getPDO()->lastInsertId());
 
-        // Enregistrement du slug et insertion dans la db
         $slug = Utility::slugify($_POST["title"]) . "-" . $currentAnnounce->getId();
         $currentAnnounce->set("slug", $slug, "id", $currentAnnounce->getId());
 
-        /** Récupérer l'annonce qui vient d'être enregistrée */
         $currentAnnounce = new self($insertion->getPDO()->lastInsertId());
 
-        // S'il y'a des images
-        if (Create::fileIsUploaded("images")) {
+        if (File::fileIsUploaded("images")) {
             $currentAnnounce->saveImages($currentAnnounce->getSlug());
         }
         
@@ -924,6 +933,47 @@ HTML;
     
             return true;
         }
+    }
+
+    public static function getCurrentDayPosts()
+    {
+        $query = "SELECT id FROM " . self::TABLE_NAME . " WHERE DATE(created_at) = :date";
+        $req = parent::connectToDb()->prepare($query);
+        $req->execute([
+            "date" => date("Y-m-d"),
+        ]);
+        $result = $req->fetchAll();
+
+        $currentDayAnnounces = [];
+        foreach($result as $item) {
+            $currentDayAnnounces[] = new self($item["id"]);
+        }
+
+        return $currentDayAnnounces;
+    }
+
+    /**
+     * Retourne le sujet du mail envoyé lorsque l'announce est validée.
+     * 
+     * @return string
+     */
+    public function validatedAnnounceEmailSubject()
+    {
+        return "Votre annonce $this->title vient d'être validée";
+    }
+
+    /**
+     * Retourne le contenu du mail envoyé lorsque l'annonce est validée.
+     * 
+     * @return string
+     */
+    public function validatedAnnounceEmailContent()
+    {
+        $content = <<<HTML
+        Félicitations !
+        Votre annonce avec le titre : {$this->title} a été validée. Elle est maintenant visible par tous les utilisateurs.
+HTML;
+        return MailContentManager::contentFormater($content);
     }
 
 }

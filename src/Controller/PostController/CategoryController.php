@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\PostController;
 
+use App\Controller\AppController;
 use App\Exception\PageNotFoundException;
 use App\Model\Category;
 use App\View\Model\CategoryView;

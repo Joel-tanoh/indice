@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\PostController;
+
+use App\Controller\AppController;
 
 /**
  * Controlleur de sous-categorie.

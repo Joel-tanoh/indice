@@ -137,7 +137,7 @@ HTML;
 
         return <<<HTML
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégories</a>
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nos Catégories</a>
             <div class="dropdown-menu">
                 {$list}
             </div>

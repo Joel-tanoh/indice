@@ -317,7 +317,7 @@ HTML;
     private function productInfosImgSection(string $bootstrapColClass = "col-lg-7 col-md-12 col-xs-12")
     {
         $imgSection = null;
-        foreach ($this->announce->getAllProductInfoImg() as $src) {
+        foreach ($this->announce->getProductAllImg() as $src) {
             $imgSection .= $this->productInfoImg($src, "Photo de " . $this->announce->getSlug(), $this->announce->getPrice());
         }
         

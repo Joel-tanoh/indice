@@ -10,7 +10,7 @@ use App\Model\Post\Announce;
 use App\Utility\Utility;
 use App\Auth\Session;
 use App\Auth\Cookie;
-use App\Communication\Comment;
+use App\Model\Post\Comment;
 use Exception;
 
 /**

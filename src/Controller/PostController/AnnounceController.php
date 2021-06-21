@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\PostController;
 
 use App\Action\Action;
 use App\Action\Update\Update;
@@ -9,6 +9,8 @@ use App\File\Image\Image;
 use App\Model\Post\Announce;
 use App\Communication\Notify\NotifyByHTML;
 use App\Communication\Notify\NotifyByMail;
+use App\Controller\AppController;
+use App\File\File;
 use App\Model\User\User;
 use App\Utility\Validator;
 use App\View\Model\AnnounceView;
@@ -52,11 +54,11 @@ abstract class AnnounceController extends AppController
     {
         $htmlNotifier = new NotifyByHTML();
         $message = null;
-        $page = new Page("" . $announce->getTitle() . " - Modification &#149; L'indice", (new AnnounceView($announce))->update());
+        $page = new Page($announce->getTitle() . " - Modification &#149; L'indice", (new AnnounceView($announce))->update());
 
         if (Update::dataPosted()) {
 
-            if (!empty(self::validation(true)->getErrors())) {
+            if (!empty(self::validation(true, false)->getErrors())) {
                 $message = $htmlNotifier->errorsByToast(self::validation(true)->getErrors(), "danger");
                 $page->setView(
                     (new AnnounceView($announce))->update($message)
@@ -166,6 +168,12 @@ abstract class AnnounceController extends AppController
                         "Validation d'annonce"
                     )
                 );
+
+                NotifyByMail::user(
+                    $announce->getOwner()->getEmailAddress(),
+                    $announce->validatedAnnounceEmailSubject(),
+                    $announce->validatedAnnounceEmailContent()
+                );
             }
         } else {
             $page->setMetatitle("Validation impossible &#149; L'indice");
@@ -240,7 +248,7 @@ abstract class AnnounceController extends AppController
             $validate->addError("category", "Veuillez vérifier que vous avez choisi la catégorie de l'annonce.");
         }
 
-        // Valider la direction
+        // Valider le sens
         if (empty($_POST["direction"])) {
             $validate->addError("direction", "Veuillez vérifier que vous avez choisi le sens de l'annonce.");
         } else {
@@ -265,6 +273,7 @@ abstract class AnnounceController extends AppController
             $validate->price("price", $_POST["price"]);
         }
 
+        // Validation de la description
         $validate->description("description", $_POST["description"]);
 
         // Si user à coché someone_else
@@ -275,11 +284,11 @@ abstract class AnnounceController extends AppController
             $validate->phoneNumber("phone", $_POST["phone_number"], "Veuillez vérifier que vous avez entré un numéro de téléphone valide !");
         }
 
-        if ($validateImages) {
+        if ($validateImages && File::fileIsUploaded('images')) {
             // Si des images ont été postées
             if (!$updating) {
                 // Validation du nombre d'images uploadées
-                $validate->fileNumber("images", "equal", 3, "Veuillez charger 3 images svp !");
+                $validate->fileNumber("images", "less", 3, "Veuillez charger 3 images svp !");
 
                 // Validation des extensions
                 foreach ($_FILES["images"]["type"] as $extension) {
@@ -290,7 +299,7 @@ abstract class AnnounceController extends AppController
                 foreach ($_FILES["images"]["size"] as $size) {
                     $validate->fileSize("images", $size, Image::MAX_VALID_SIZE, "Veuillez charger des fichiers de taille inférieur à 2 Mb svp !");
                 }
-            } elseif (!empty($_FILES["images"]["name"][0])) {
+            } elseif (File::fileIsUploaded('images')) {
                 // Validation du nombre d'images uploadées
                 $validate->fileNumber("images", "equal", 3, "Veuillez charger 3 images svp !");
 
