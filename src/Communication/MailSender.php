@@ -120,7 +120,7 @@ class MailSender
      * Permet de traiter les destinataires, si $destinataires est un tableau,
      * les valeurs sont collées en les séparant par ", ".
      * 
-     * @return string[]
+     * @return string
      */
     private function treatTo()
     {

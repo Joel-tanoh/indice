@@ -2,6 +2,7 @@
 
 namespace App\View\Communication;
 
+use App\Communication\MailContentManager;
 use App\Communication\MailSender;
 use App\View\Form;
 use App\View\Snippet;
@@ -65,12 +66,12 @@ HTML;
      * 
      * @return string
      */
-    public function welcomeMessage()
+    public static function welcomeMessage()
     {
         $content = <<<HTML
-        <p>Nous sommes ravis de vous compter parmi nos abonnés <br>Nous vous tiendrons informé régulièrement des nouveautés.</p>
+        <p>Nous sommes ravis de vous compter parmi nos abonnés. <br>Nous vous tiendrons informé régulièrement des nouveautés.</p>
 HTML;
-        return MailSender::content($content);
+        return MailContentManager::contentFormater($content);
     }
 
 }

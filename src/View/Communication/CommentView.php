@@ -12,7 +12,7 @@ class CommentView
     /**
      * Constructeur d'une vue de commentaire.
      */
-    public function __construct(\App\Communication\Comment $comment = null)
+    public function __construct(\App\Model\Post\Comment $comment = null)
     {
         $this->comment = $comment;
     }

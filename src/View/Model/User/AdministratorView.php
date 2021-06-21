@@ -29,14 +29,32 @@ class AdministratorView extends RegisteredView
         $visitorsOnlineBox = DashboardView::showvisitorsOnline();
         $currentDayVisitorsNumberBox = DashboardView::showCurrentDayVisitorsNumber();
         $allVisitorsNumber = DashboardView::showAllVisitorsNumber();
+        $publishedPosts = DashboardView::showPublishedPostsNumber();
+        $awaitingPosts = DashboardView::showPendingPostsNumber();
+        $suspendedPosts = DashboardView::showSuspendedPostsNumber();
+        $currentDayPostsNumber = DashboardView::showCurrentDayPostsNumber();
+        $allPostsNumber = DashboardView::showAllPostsNumber();
         
         $content = <<<HTML
         <h1 class="mb-4">Tableau de Bord</h1>
-        <div class="row">
-            {$visitorsOnlineBox}
-            {$currentDayVisitorsNumberBox}
-            {$allVisitorsNumber}
-        <div>
+            <section class="mb-4">
+                <h5 class="mb-3">Vos visites</h5>
+                <div class="row">
+                    {$visitorsOnlineBox}
+                    {$currentDayVisitorsNumberBox}
+                    {$allVisitorsNumber}
+                <div>
+            </section>
+            <section class="mb-4">
+                <h5 class="mb-3">Vos annonces</h5>
+                <div class="row">
+                    {$publishedPosts}
+                    {$awaitingPosts}
+                    {$suspendedPosts}
+                    {$currentDayPostsNumber}
+                    {$allPostsNumber}
+                <div>
+            </section>
 HTML;
         return parent::administrationTemplate($content, "Administration", "Administration");
     }

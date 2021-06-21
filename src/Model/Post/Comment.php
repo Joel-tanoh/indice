@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Communication;
+namespace App\Model\Post;
 
 use App\Model\Model;
 use App\Model\User\Registered;
@@ -25,10 +25,8 @@ class Comment extends Model
     /** @var string Le contenu du commentaire. */
     private $content;
 
-    /**
-     * La date de post du commentaire.
-     * @var string
-     */
+    /** @var string La date de post du commentaire */
+    private $postedAt;
 
     /**
      * Constructeur d'un commentaire.

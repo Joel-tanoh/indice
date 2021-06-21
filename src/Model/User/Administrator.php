@@ -2,7 +2,7 @@
 
 namespace App\Model\User;
 
-use App\Communication\Comment;
+use App\Model\Post\Comment;
 
 /**
  * Classe de gestion d'un administrateur.

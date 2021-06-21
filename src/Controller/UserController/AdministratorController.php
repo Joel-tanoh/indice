@@ -79,7 +79,7 @@ abstract class AdministratorController extends RegisteredController
             $page->setView((new AdministratorView(User::authenticated()))->readUsers($users));
             $page->show();
         } else {
-            throw new Exception("Ressource non trouvée !");
+            throw new Exception("Oup's ! Nous n'avons pas trouvé la ressource que vous cherchez !");
         }
     }
     

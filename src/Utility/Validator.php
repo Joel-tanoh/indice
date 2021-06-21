@@ -355,9 +355,9 @@ class Validator
     {
         $this->toValidate[$name] = $_FILES[$name]["name"];
 
-        if ($comparison == "less" || $comparison == "<") {
+        if ($comparison == "less" || $comparison == "<=") {
             $condition = count($_FILES[$name]["name"]) <= $fileNumber;
-        } elseif ($comparison == "more" || $comparison == ">") {
+        } elseif ($comparison == "more" || $comparison == ">=") {
             $condition = count($_FILES[$name]["name"]) >= $fileNumber;
         } elseif ($comparison == "equal" || $comparison == "=") {
             $condition = count($_FILES[$name]["name"]) == $fileNumber;

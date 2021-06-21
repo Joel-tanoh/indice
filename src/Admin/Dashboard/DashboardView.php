@@ -10,17 +10,42 @@ class DashboardView
 
     public static function showvisitorsOnline() : string
     {
-        return self::KPIBox(Dashboard::visitorsOnline(), "Visiteur(s) en ligne", "fas fa-users");
+        return self::KPIBox(Dashboard::visitorsOnline(), "Visiteur(s) en ligne", "fas fa-users fa-2x");
     }
 
     public static function showCurrentDayVisitorsNumber() : string
     {
-        return self::KPIBox(Dashboard::getCurrentDayVisitorsNumber(), "Visiteur(s) aujourd'hui", "fas fa-users");
+        return self::KPIBox(Dashboard::getCurrentDayVisitorsNumber(), "Visite(s) aujourd'hui", "fas fa-users fa-2x");
     }
 
     public static function showAllVisitorsNumber() : string
     {
-        return self::KPIBox(Dashboard::getAllVisitorsNumber(), "Visiteur(s) au total", "fas fa-users");
+        return self::KPIBox(Dashboard::getAllVisitorsNumber(), "Visite(s) au total", "fas fa-users fa-2x");
+    }
+
+    public static function showAllPostsNumber() : string
+    {
+        return self::KPIBox(Dashboard::getAllPostsNumber(), "Announce(s) postée(s) au total", "fas fa-folder fa-2x");
+    }
+
+    public static function showCurrentDayPostsNumber() : string
+    {
+        return self::KPIBox(Dashboard::getCurrentDayPostsNumber(), "Annonce(s) postée(s) aujourd'hui", "fas fa-folder fa-2x");
+    }
+
+    public static function showPendingPostsNumber() : string
+    {
+        return self::KPIBox(Dashboard::getPendingPostsNumber(), "Annonce(s) en attente", "fas fa-folder fa-2x");
+    }
+
+    public static function showPublishedPostsNumber() : string
+    {
+        return self::KPIBox(Dashboard::getPublishedPostsNumber(), "Annonce(s) validée(s)", "fas fa-folder fa-2x");
+    }
+
+    public static function showSuspendedPostsNumber() : string
+    {
+        return self::KPIBox(Dashboard::getSuspendedPostsNumber(), "Annonce(s) suspendue(s)", "fas fa-folder fa-2x");
     }
 
     /**
@@ -37,11 +62,11 @@ class DashboardView
     {
         $icon = null;
         if ($iconClass) {
-            $icon = '<i class="' . $iconClass . '"></i>';
+            $icon = '<span class="mr-2"><i class="' . $iconClass . '"></i></span>';
         }
 
         return <<<HTML
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
             <div class="bg-light border p-3 mb-2 rounded">
                 <div class="mb-2">
                     $icon<span class="h1">$number</span>

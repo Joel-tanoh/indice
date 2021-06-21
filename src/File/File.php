@@ -64,7 +64,7 @@ class File
      * @param $path Tableau $_FILES qui contient les informations relatives
      *                      à l'image.
      */
-    public function __construct(array $path = null)
+    public function __construct($path = null)
     {
         if (null !== $path) {
             $fileInfos = pathinfo($path);
@@ -126,6 +126,18 @@ class File
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Permet de vérifier qu'un ou plusieurs fichiers ont été uploadés.
+     * 
+     * @param string $key La clé dans le tableau.
+     * 
+     * @return bool
+     */
+    public static function fileIsUploaded(string $key)
+    {
+        return !empty($_FILES[$key]["name"][0]);
     }
 
 }

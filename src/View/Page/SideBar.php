@@ -38,7 +38,7 @@ class SideBar extends Snippet
      * 
      * @return string
      */
-    public function sidebarNav() : string
+    public function sidebarNav()
     {
         if (User::isAuthenticated()) {
             $registered = User::authenticated();

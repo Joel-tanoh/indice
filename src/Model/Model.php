@@ -9,12 +9,28 @@ use App\Utility\Utility;
 /** Gère tout ce qui concerne les données. */
 abstract class Model
 {
+
+    /** @var int ID de l'élément. */
     protected $id;
+
+    /** @var string Titre de l'élément. */
     protected $title;
+
+    /** @var string Slug de l'élement = titre de l'élément sans accent et les mots
+     * reliés avec des tirets; ex : toto-tata.
+     */
     protected $slug;
+
+    /** @var string Description de l'élément. */
     protected $description;
+
+    /** @var string Date de création. */
     protected $createdAt;
+
+    /** @var string Date de mise à jour. */
     protected $updatedAt;
+
+    /** @var string Le nom de la table dans la base de données. */
     protected $tableName;
 
     /**

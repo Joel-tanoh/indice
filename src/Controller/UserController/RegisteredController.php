@@ -10,7 +10,7 @@ use App\Communication\MailContentManager;
 use App\Communication\Notify\NotifyByHTML;
 use App\Communication\Notify\NotifyByMail;
 use App\Controller\UserController\AdministratorController;
-use App\Controller\AnnounceController;
+use App\Controller\PostController\AnnounceController;
 use App\Model\Post\Announce;
 use App\Model\Category;
 use App\Model\Model;
@@ -46,11 +46,13 @@ class RegisteredController extends VisitorController
             $connexion->execute();
 
             if ($connexion->getError()) {
-                $error = NotifyByHTML::error($connexion->getError(), "app-alert-danger mb-3");
+                $error = NotifyByHTML::error($connexion->getError());
             } else {
 
                 (new Visitor(Session::getVisitor()))->identify($_POST["email_address"]);
+
                 Session::activateRegistered($_POST["email_address"]);
+                
                 if (!empty($_POST["remember_me"])) {
                     Cookie::setRegistered($_POST["email_address"]);
                 }
@@ -58,11 +60,10 @@ class RegisteredController extends VisitorController
                 $registered = new Registered($_POST["email_address"]);
 
                 if ($registered->isAdministrator()) {
-                    Utility::redirect("administration/annonces");
+                    Utility::redirect("administration");
                 } else {
                     Utility::redirect($registered->getProfileLink() . "/posts");
                 }
-                
             }
         }
 
@@ -81,11 +82,11 @@ class RegisteredController extends VisitorController
         $page = new Page;
         
         if (Action::dataPosted()) {
-            $result = AnnounceController::create();
+            $createResult = AnnounceController::create();
 
-            if ($result["resultType"] === false) {
+            if ($createResult["resultType"] === false) {
                 $page->setMetatitle("Poster une annonce &#149; L'indice");
-                $page->setView((new AnnounceView())->create($result["message"]));
+                $page->setView((new AnnounceView())->create($createResult["message"]));
             } else {
                 $page->setMetatitle("Votre annonce a été créée avec succès &#149; L'indice");
                 $page->setView(
@@ -254,7 +255,7 @@ class RegisteredController extends VisitorController
             $user = Registered::getByPseudo($params[2]);
 
             if ($params[3] === "update") {
-                self::update($params);
+                self::updateAccount($params);
             } elseif ($params[3] === "delete") {
                 AdministratorController::deleteUser($user);
             } else {
@@ -262,14 +263,14 @@ class RegisteredController extends VisitorController
             }
 
         } else {
-            throw new Exception("La ressource non trouvée !");
+            throw new Exception("Désolé, nous n'avons pas trouver la ressource que vous avez demandé !");
         }
     }
 
     /**
      * Controlleur de mise à jour d'un user.
      */
-    public static function update(array $params)
+    public static function updateAccount(array $params)
     {
         dump($params);
         die();
@@ -303,16 +304,16 @@ class RegisteredController extends VisitorController
                     $metaTitle = "Mot de passe envoyé avec succès";
                     $view = View::success(
                         "Mot de passe envoyé avec succès !",
-                        "Nous vous avons envoyé votre nouveau mot de passe par email, vous devriez le recevoir dans quelques instants.",
+                        "Vous recevrez dans quelques instant un mail avec votre nouveau mot de passe. Veuillez vous connecter avec ce nouveau mot de passe et le modifier à la première connexion.",
                         "Page de connexion",
                         "sign-in",
                         "Modification du mot de passe"
                     );
                 } else {
-                    $error = (new NotifyByHTML)->toast("Nous avons rencontré un soucis lors de la modification du mot de passe, veuillez réessayer ultérieurement.", "danger");
+                    $error = (new NotifyByHTML)->toast("Nous avons rencontré un souci lors de la modification du mot de passe, veuillez réessayer ultérieurement.", "danger");
                     $metaTitle = "Mot de passe oublié";
                     $view = UserView::forgotPassword();
-                }  
+                }
             } else {
                 $error = (new NotifyByHTML)->errors($validate->getErrors());
                 $metaTitle = "Mot de passe oublié";
@@ -325,6 +326,14 @@ class RegisteredController extends VisitorController
 
         $page = new Page($metaTitle . " &#149; L'indice", $view);
         $page->show();
+    }
+
+    /**
+     * Controller de mise à jour du mot de passe.
+     */
+    public static function updatePassword()
+    {
+        $page = new Page();
     }
 
 }

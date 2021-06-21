@@ -27,9 +27,7 @@ class VisitorController extends UserController
         if (!$validator->getErrors()) {
             if (Newsletter::register($_POST["email_address"])) {
 
-                $email = new MailSender(
-                    $_POST["email_address"], "Bienvenue sur L'indice.com", (new NewsletterView)->welcomeMessage()
-                );
+                $email = new MailSender($_POST["email_address"], "Bienvenue sur L'indice.com", NewsletterView::welcomeMessage());
                 $email->send();
 
                 $page->setMetaTitle("Abonnement à la Newsletter Réussie &#149; L'indice");
@@ -43,6 +41,7 @@ class VisitorController extends UserController
                     )
                 );
                 $page->show();
+                
             } else {
                 $page->setMetaTitle("Echec de l'abonnement à la Newsletter &#149; L'indice");
                 $page->setView(
